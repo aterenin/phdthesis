@@ -1,0 +1,287 @@
+\documentclass[11pt]{book}
+
+\usepackage[T1]{fontenc}
+\usepackage{hyperref}
+\usepackage{microtype}
+\usepackage{lettrine}
+
+\usepackage[commands,environments,enumerate,citations,notes,a4paper]{AVT}
+
+\bibliography{citations}
+
+\title{Gaussian Processes and Statistical Decision-making in Non-Euclidean Spaces}
+\author{Alexander Terenin}
+\date{August 2021}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitlehooka
+\centering
+\huge
+\null
+\vfill
+\thetitle
+\par
+\vfill
+\LARGE
+\theauthor
+\par
+\large
+Department of Mathematics
+\par
+Imperial College London
+\par
+\vfill
+\null
+\vfill
+a dissertation submitted for the degree of
+\par
+Doctor of Philosophy
+\par
+\strut
+\par
+\thedate
+\par
+\vfill
+\null
+\maketitlehookd
+\end{titlepage}
+
+\chapter*{Declaration}
+
+No more than 100,000 words
+
+\chapter*{Copyright}
+
+The copyright of this thesis rests with the author. Unless otherwise indicated, its contents are licensed under a Creative Commons Attribution 4.0 International Licence (CC BY).
+
+Under this licence, you may copy and redistribute the material in any medium or format for both commercial and non-commercial purposes. You may also create and distribute modified versions of the work. This on the condition that you credit the author.
+
+When reusing or sharing this work, ensure you make the licence terms clear to others by naming the licence and linking to the licence text. Where a work has been adapted, you should indicate that the work has been changed and describe those changes.
+
+Please seek permission from the copyright holder for uses of this work that are not included in this licence or permitted under UK Copyright Law.
+
+\chapter*{Acknowledgments}
+
+\chapter*{Abstract}
+
+Not more than 300 words
+
+\tableofcontents
+
+
+
+
+
+\chapter{Introduction}
+
+\lettrine{M}{achine learning} provides a variety of frameworks for reasoning about unknown quantities of interest on basis of data, but most of these focus on pure learning, with comparatively less focus on decision
+
+Gaussian processes are some of the simplest models usable for decision, but working with them takes effort, particularly if one is in a non-vanilla setting
+
+This thesis: make Gaussian processes easier to work with through better numerics, and expand the settings they are usable in
+
+\section{Gaussian processes}
+
+Here we describe the GP formalism from scratch, starting from the simplest and ending with the most general and abstract setting
+
+\subsection{Gaussian random variables}
+
+Gaussian density
+
+\subsection{Gaussian random vectors}
+
+Matrix square root
+
+\subsection{Gaussian random functions}
+
+Let $X$ be a set. 
+
+\subsection{Gaussian processes in general vector spaces}
+
+Duality
+
+Covariance form
+
+Covariance operator
+
+\section{Bayesian learning}
+
+Posterior
+
+Variational inference
+
+\section{Statistical decision-making}
+
+Decision
+
+\subsection{Multi-armed bandits}
+
+Setup
+
+Basic regret analysis
+
+\subsection{Bayesian optimization}
+
+Setup
+
+Regret analysis
+
+\section{Contributions}
+
+This work is either published or under review: \textcite{wilson20,borovitskiy20,borovitskiy21,wilson21,hutchinson21}.
+
+
+
+\chapter{Pathwise Conditioning}
+
+\section{Introduction}
+
+The standard view of GP conditioning is to think about distributions
+
+In the early 1970s, an alternative view emerged: work with RVs directly
+
+This view, for whatever reason, never made it into the ML literature
+
+This chapter of the thesis will explore its consequences and use it to solve what has been an open issue in Bayesian optimization for quite some time
+
+The ideas in this chapter are published at ICML and JMLR
+
+\section{Conditioning multivariate Gaussians}
+
+Defn of MVN
+
+\subsection{Distributional conditioning}
+
+Formulas
+
+Discussion
+
+\subsection{Pathwise conditioning}
+
+Formulas
+
+Proof
+
+Discussion
+
+Second proof
+
+Discussion
+
+\section{Conditioning Gaussian processes}
+
+Brief recollection of GPs 
+
+\subsection{Distributional conditioning}
+
+Formula
+
+Discussion
+
+\subsection{Pathwise conditioning}
+
+Formula
+
+Discussion
+
+\section{Sampling from prior Gaussian processes}
+
+The previous formula suggests an interesting class of approximations: discretize the prior
+
+Finite basis expansion
+
+This section: explore different expansions
+
+\subsection{Random feature methods}
+
+Construct a finite-dimensional feature map by discretizing the white noise integral
+
+Closely related to stationarity in embedded spaces
+
+\subsection{Karhunen--Loéve expansions}
+
+Alternatively: work with a different kind of spectral theory directly in the space
+
+Obtain the KL expansion
+
+\subsection{Finite element methods}
+
+Completely different idea: represent GP as SPDE and solve the SPDE
+
+Derivation
+
+\section{Approximating pathwise data-dependent terms}
+
+Previous part as about approximating the prior, which gets us to linear test-time costs
+
+What about reinterpreting training-time costs from this viewpoint?
+
+\subsection{Inducing points}
+
+Reinterpret classical constructions
+
+\subsection{Approximations which change the model}
+
+RFF GP can be reinterpreted as replacing the prior with a finite-dim version
+
+This results in unnecessarily large approximation error and variance starvation
+
+\section{Error analysis}
+
+Theorems
+
+\section{Applications}
+
+\subsection{Bayesian optimization}
+
+Experiment
+
+\section{Discussion}
+
+Very useful technique for optimizing GP trajectories
+
+Lets you do lots of awesome stuff
+
+This work lets us understand it a lot better
+
+
+
+
+
+\chapter{Non-Euclidean Matérn Gaussian Processes}
+
+\section{Riemannian Matérn Gaussian Processes}
+
+\subsection{Review of Riemannian geometry}
+\subsection{The Laplace--Beltrami operator}
+\subsection{A no-go theorem for kernels on manifolds}
+\subsection{Stochastic partial differential equations}
+\subsection{The Riemannian Matérn kernel}
+\subsection{Illustrated examples}
+
+\section{Graph Matérn Gaussian Processes}
+
+\subsection{Review of graph theory}
+\subsection{The graph Laplacian}
+\subsection{The graph Matérn kernel}
+\subsection{Illustrated examples}
+
+\section{Gaussian Vector Fields on Riemannian Manifolds}
+
+\subsection{Review of vector fields on manifolds}
+\subsection{Gauge-equivariant projected kernels}
+\subsection{Illustrated examples}
+
+\section{Discussion}
+
+
+
+
+
+\chapter{Conclusion}
+
+\printbibliography
+
+\end{document}

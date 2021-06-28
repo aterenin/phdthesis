@@ -1,0 +1,534 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{AVT}
+
+\newif\ifAVT@commands
+\DeclareOption{commands}{\AVT@commandstrue}
+
+\newif\ifAVT@environments
+\DeclareOption{environments}{\AVT@environmentstrue}
+\newif\ifAVT@environments@nonumber
+\DeclareOption{nonumber}{\AVT@environments@nonumbertrue}
+
+\newif\ifAVT@enumerate
+\DeclareOption{enumerate}{\AVT@enumeratetrue}
+
+\newif\ifAVT@citations
+\DeclareOption{citations}{\AVT@citationstrue}
+\newif\ifAVT@citations@authoryear
+\DeclareOption{authoryear}{\AVT@citations@authoryeartrue}
+
+\newif\ifAVT@notes
+\DeclareOption{notes}{\AVT@notestrue}
+\newif\ifAVT@notes@afourpaper
+\DeclareOption{a4paper}{\AVT@notes@afourpapertrue}
+\newif\ifAVT@notes@nofonts
+\DeclareOption{nofonts}{\AVT@notes@nofontstrue}
+
+\newif\ifAVT@centerfigures
+\DeclareOption{centerfigures}{\AVT@centerfigurestrue}
+
+\newif\ifAVT@theorems
+\DeclareOption{theorems}{\AVT@theoremstrue}
+
+\newif\ifAVT@poster
+\DeclareOption{poster}{\AVT@postertrue}
+
+\ProcessOptions\relax
+
+
+
+
+
+% code readability macros
+\ifAVT@commands
+
+\RequirePackage{csquotes}
+\MakeOuterQuote{"}
+
+\RequirePackage{amssymb}
+\RequirePackage{amsmath}
+\RequirePackage[scr]{rsfso}
+\RequirePackage{mathtools}
+\RequirePackage{mathcommand}
+\RequirePackage{stmaryrd}
+\SetSymbolFont{stmry}{bold}{U}{stmry}{m}{n}
+\DeclareMathAlphabet\bc{OMS}{cmsy}{b}{n}
+
+% requires packages bbold and bbold-type1 to avoid bitmap font
+\DeclareSymbolFont{bbold}{U}{bbold}{m}{n}
+\DeclareSymbolFontAlphabet{\mathbbold}{bbold}
+
+\newcommand{\RegisterPairedDelimiter}[3][1]{
+\ifnum#1=1 \newcommand{#2}[2][-1]{%
+\ifnum##1=-1 #3*{##2}\relax\fi%
+\ifnum##1=0 #3{##2}\relax\fi%
+\ifnum##1=1 #3[\big]{##2}\relax\fi%
+\ifnum##1=2 #3[\Big]{##2}\relax\fi%
+\ifnum##1=3 #3[\bigg]{##2}\relax\fi%
+\ifnum##1=4 #3[\Bigg]{##2}\relax\fi%
+}\fi%
+\ifnum#1=2 \newcommand{#2}[3][-1]{%
+\ifnum##1=-1 #3*{##2}{##3}\relax\fi%
+\ifnum##1=0 #3{##2}{##3}\relax\fi%
+\ifnum##1=1 #3[\big]{##2}{##3}\relax\fi%
+\ifnum##1=2 #3[\Big]{##2}{##3}\relax\fi%
+\ifnum##1=3 #3[\bigg]{##2}{##3}\relax\fi%
+\ifnum##1=4 #3[\Bigg]{##2}{##3}\relax\fi%
+}\fi%
+}
+
+\DeclarePairedDelimiter{\deldelim}{(}{)}
+\RegisterPairedDelimiter{\del}{\deldelim}
+
+\DeclarePairedDelimiter{\sbrdelim}{[}{]}
+\RegisterPairedDelimiter{\sbr}{\sbrdelim}
+
+\DeclarePairedDelimiter{\dbrdelim}{\llbracket}{\rrbracket}
+\RegisterPairedDelimiter{\dbr}{\dbrdelim}
+
+\DeclarePairedDelimiter{\cbrdelim}{\{}{\}}
+\RegisterPairedDelimiter{\cbr}{\cbrdelim}
+
+\DeclarePairedDelimiter{\absdelim}{|}{|}
+\RegisterPairedDelimiter{\abs}{\absdelim}
+
+\DeclarePairedDelimiter{\normdelim}{\lVert}{\rVert}
+\RegisterPairedDelimiter{\norm}{\normdelim}
+
+\DeclarePairedDelimiterX{\innerproddelim}[3]{\langle}{\rangle}{#1,#2}
+\RegisterPairedDelimiter[2]{\innerprod}{\innerproddelim}
+
+\DeclarePairedDelimiterX{\dualproddelim}[3]{\langle}{\rangle}{#1\;\delimsize|\;\mathopen{}#2}
+\RegisterPairedDelimiter[2]{\dualprod}{\dualproddelim}
+
+\DeclarePairedDelimiter{\evaldelim}{.}{|}
+\RegisterPairedDelimiter{\evalpaired}{\evaldelim}
+
+\newcommand{\eval}[1][-1]{\@ifnextchar\bgroup{\expandafter\evalpaired[#1]}{\ifnum#1=-1 |\fi\ifnum#1=0 |\fi\ifnum#1=1 \big|\fi\ifnum#1=2 \Big|\fi\ifnum#1=3 \bigg|\fi\ifnum#1=4 \Bigg|\fi}}
+
+\newcommand{\email}[1]{\href{mailto:#1}{\UrlFont#1}} % correct email hyperlinking
+
+\renewmathcommand{\P}{\operatorname{\mathbb{P}}} % probability
+\DeclareMathOperator{\E}{\mathbb{E}} % expectation
+\DeclareMathOperator{\Var}{Var} % variance
+\DeclareMathOperator{\Cov}{Cov} % covariance
+\renewmathcommand{\ae}[1][]{\ifx-#1\mathpunct{\text{-a.e.}}\else\t{a.e.}\fi} % almost everywhere with dash
+\newcommand{\notindep}{\mathrel{\hspace*{0.3ex}\not\hspace*{-0.9ex}\rotatebox[origin=c]{90}{\ensuremath{\models}}}} % not independent
+\newcommand{\indep}{\mathrel{\rotatebox[origin=c]{90}{\ensuremath{\models}}}} % independent
+\newcommand{\given}{\mid} % conditional probability
+\newcommand{\from}{\mid\mid} % double bars in divergences
+
+\newcommand{\N}{\mathbb{N}} % natural numbers
+\newcommand{\Z}{\mathbb{Z}} % integers
+\newcommand{\Q}{\mathbb{Q}} % rational numbers
+\newcommand{\R}{\mathbb{R}} % real numbers
+\declaremathcommand{\C}{\mathbb{C}} % complex numbers
+\newcommand{\eps}{\varepsilon} % epsilon
+
+\renewmathcommand{\u}{\cup}
+\declaremathcommand{\U}{\bigcup} % sigma notation union
+\renewmathcommand{\^}{\cap} % intersection
+\newcommand{\Int}{\bigcap} % sigma notation intersection
+\newcommand{\takeaway}{\setminus} % take away
+\newcommand{\x}{\times} % Cartesian product
+\let\nothing\emptyset
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\st}{\t{s.t.}} % such that
+\renewmathcommand{\~}[1][]{\sim\ifx\\#1\\\else\operatorname{#1}\fi} % tilde
+\newcommand{\after}{\circ} % composition
+
+\renewmathcommand{\v}{\expandafter\boldsymbol} % vector
+\newcommand{\m}{\expandafter\mathbf} % matrix
+\declaremathcommand{\f}{\expandafter\operatorname} % function
+\renewmathcommand{\c}{\expandafter\mathcal} % calligraphic
+\newcommand{\s}[1]{\mathscr{#1}} % script
+\newcommand{\fr}[1]{\mathfrak{#1}} % fraktur
+\newcommand{\bb}[1]{\in@{#1}{ABCDEFGHIJKLMNOPQRSTUVWXYZ}\ifin@\mathbb{#1}\else\mathbbold{#1}\fi} % blackboard bold
+\renewmathcommand{\t}{\expandafter\mathrel\expandafter\text} % text with spacing
+\newcommand{\h}[1]{\widehat{#1}} % hat
+\newcommand{\tl}[1]{\widetilde{#1}} % tilde
+
+\let\@dash\-
+\newcommandPIE{\@xrightarrow}{\IfEmptyTF{#2#3}{\rightarrow}{\xrightarrow[\GetIndex{#2}]{\GetExponent{#3}}}#1}
+\renewmathcommand{\-}{\@ifnextchar>{\expandafter\@xrightarrow\@gobble}{\@dash}}
+\let\@vert\|
+\newcommandPIE{\@xmapsto}{\IfEmptyTF{#2#3}{\mapsto}{\xmapsto[\GetIndex{#2}]{\GetExponent{#3}}}#1}
+\renewcommand{\|}{\@ifnextchar>{\expandafter\@xmapsto\@gobble}{\@vert}}
+
+\newcommand{\grad}{\nabla} % gradient
+\newcommand{\lap}{\Delta} % laplacian
+\renewmathcommand{\d}{\mathop{}\!\mathrm{d}} % differental
+\newcommand{\D}{\mathrm{D}} % Jacobian
+\newcommand{\od}[3][]{\left.\frac{\d^{#1}{#2}}{\d{#3}^{#1}}\@ifnextchar_{\right|}{\right.}} % fix commath bad display style
+\newcommand{\@pd}[3][]{\frac{\partial^{#1}{#2}}{\partial{#3}^{#1}}} % fix commath bad display style
+\newcommand{\pd}{\@ifnextchar\bgroup{\expandafter\@pd}{\@ifnextchar[{\expandafter\@pd}{\partial}}} % partial derivative with smart multi-index notation
+
+\newcommand{\widebar}[1]{\overline{#1}} % wide bar over symbols
+\renewmathcommand{\k}{\Bbbk} % blackboard bold k
+\newcommand{\conj}[1]{\overline{#1}} %complex conjugate
+\newcommand{\cl}[1]{\overline{#1}} % closure
+\newcommand{\orth}{\perp} % orthogonal
+\newcommand{\directsum}{\bigoplus} % direct sum
+\newcommand{\embeds}{\hookrightarrow} % embedding
+\newcommand{\boundedby}{\lesssim} % bounded by
+\renewmathcommand{\o}{\circ} % circle product
+\newcommand{\ox}{\otimes} % tensor product
+\newcommand{\OX}{\bigotimes} % big tensor product
+\renewmathcommand{\.}{\cdot} % dot binary operation
+\newcommand{\bdot}{\mathbin{\vcenter{\hbox{\scalebox{0.5}{\ensuremath{\bullet}}}}}} % big dot binary operation
+\newcommand{\lacts}{\triangleright} % left action
+\newcommand{\racts}{\triangleleft} % right action
+
+\DeclareMathOperator*{\argmin}{\arg\min} % argmin
+\DeclareMathOperator*{\argmax}{\arg\max} % argmax
+
+\newcommand{\ubr}[1]{\underbracket[0.1ex]{#1}} % underbracket
+\newcommand{\obr}[1]{\overbracket[0.1ex]{#1}} % overbracket
+
+\DeclareMathOperator{\id}{id} % identity
+\DeclareMathOperator{\im}{im} % image
+\DeclareMathOperator{\tr}{tr} % trace
+\DeclareMathOperator{\sgn}{sgn} % sign
+\DeclareMathOperator{\ad}{ad} % adjoint
+\DeclareMathOperator{\Ad}{Ad} % adjoint
+\DeclareMathOperator{\AD}{AD} % adjoint
+\DeclareMathOperator{\proj}{proj} % projection
+\DeclareMathOperator{\Span}{span} % span
+\DeclareMathOperator{\Hom}{Hom} % space of homomorphisms
+\DeclareMathOperator{\End}{End} % space of endomorprhisms
+\DeclareMathOperator{\Aut}{Aut} % space of automorphisms
+\DeclareMathOperator{\Grad}{grad} % gradient
+\DeclareMathOperator{\Ob}{Ob} % objects
+\DeclareMathOperator{\vol}{vol} % volume
+\DeclareMathOperator{\supp}{supp} % support
+
+\newcommand{\isom}{\cong} % isomorphic
+\newcommand{\newisom}[2]{\newcommand{#1}{\mathrel{\mathchoice{\underset{\operatorname{#2}}{\cong}}{\cong_{\operatorname{#2}}}{\cong_{\operatorname{#2}}}{\cong_{\operatorname{#2}}}}}}
+\newisom{\isomset}{set} % set isomorphic
+\newisom{\isomtop}{top} % topologically isomorphic
+\newisom{\isomgrp}{grp} % group isomorphic
+\newisom{\isomdiff}{diff} % diffeomorphic
+\newisom{\isomvec}{vec} % vector isomorphic
+\newisom{\isommod}{mod} % module isomorphic
+\newisom{\isomlie}{Lie} % Lie isomorphic
+\newisom{\isombdl}{bdl} % bundle isomorphic
+\newisom{\isommeas}{meas} % measure isomorphic
+\newisom{\isombool}{bool} % boolean isomorphic
+\newisom{\isomring}{ring} % ring isomorphic
+
+\fi
+
+
+
+
+
+% easy-to-read enumerate
+\ifAVT@enumerate
+
+\providecommand{\1}{} % xymatrix workaround
+\renewcommand{\1}{\relax\ifmmode\bb{1}\else\expandafter\@onenonmath\fi} % indicator function and enumerate/itemize shorthand
+\newcommand{\@onenonmath}{\@ifstar\@onestarred\@onenonstarred}
+\newcommand{\@onestarred}{\begin{itemize}\item} % itemize shorthand
+\newcommand{\@onenonstarred}[1][]{\ifx\\#1\\\begin{enumerate}\item\else\begin{enumerate}[#1]\item\fi} % enumerate with possible iteration choice
+\providecommand{\2}{} % xymatrix workaround
+\renewcommand{\2}{\@ifstar\item\item} % enumerate/itemize shorthand
+\newcommand{\3}{\@ifstar\item\item} % enumerate/itemize shorthand
+\newcommand{\4}{\@ifstar\item\item} % enumerate/itemize shorthand
+\newcommand{\5}{\@ifstar\item\item} % enumerate/itemize shorthand
+\newcommand{\6}{\@ifstar\item\item} % enumerate/itemize shorthand
+\newcommand{\7}{\@ifstar\item\item} % enumerate/itemize shorthand
+\newcommand{\8}{\@ifstar\item\item} % enumerate/itemize shorthand
+\newcommand{\9}{\@ifstar\item\item} % enumerate/itemize shorthand
+\newcommand{\0}{\@ifstar\@zerostarred\@zerononstarred} % close enumerate/itemize
+\newcommand{\@zerostarred}{\end{itemize}} % close itemize
+\newcommand{\@zerononstarred}{\end{enumerate}} % close enumerate
+
+\fi
+
+
+
+
+
+% citation macros
+\ifAVT@citations
+
+% select citation style
+\ifAVT@citations@authoryear
+\PassOptionsToPackage{bibstyle=trad-abbrv, citestyle=authoryear}{biblatex}
+\else
+\PassOptionsToPackage{bibstyle=trad-abbrv, citestyle=numeric-comp}{biblatex}
+\fi
+
+% load BibLaTeX
+\RequirePackage[backref=true, useprefix, uniquename=false, maxcitenames=2]{biblatex}
+
+% never decapitalize paper titles
+\DeclareFieldFormat{titlecase}{#1}
+
+% print backreferences without parentheses
+\renewbibmacro*{pageref}{%
+  \iflistundef{pageref}
+    {}
+    {\addperiod\addspace\printtext{%
+      \ifnumgreater{\value{pageref}}{1}
+        {\bibstring{backrefpages}\ppspace}
+        {\bibstring{backrefpage}\ppspace}%
+      \printlist[pageref][-\value{listtotal}]{pageref}}}}
+
+% change authoryear format
+\ifAVT@citations@authoryear
+\renewcommand{\nameyeardelim}{\addcomma\space}
+\renewcommand{\multicitedelim}{\addsemicolon\space}
+\DeclareCiteCommand{\cite}[\mkbibparens]{\usebibmacro{prenote}}{\usebibmacro{citeindex}\usebibmacro{cite}}{\multicitedelim}{\usebibmacro{postnote}}
+\defbibenvironment{bibliography}
+  {\list
+    {}
+    {\setlength{\leftmargin}{\bibhang}%
+      \setlength{\itemindent}{-\leftmargin}%
+      \setlength{\itemsep}{\bibitemsep}%
+      \setlength{\parsep}{\bibparsep}}}
+  {\endlist}
+  {\item}
+ \setlength{\bibparsep}{0.5\baselineskip}
+\fi
+
+\fi
+
+
+
+
+
+% environment macros
+\ifAVT@environments
+
+% automaticly decide between equation, align, and gather (no TikZ-CD support)
+\ifAVT@environments@nonumber
+\def\[#1\]{\in@{&}{#1}\ifin@\begin{align*}#1\end{align*}\else\in@{\\}{#1}\ifin@\begin{gather*}#1\end{gather*}\else\begin{equation*}#1\end{equation*}\fi\fi}
+\else
+\def\[#1\]{\in@{&}{#1}\ifin@\begin{align}#1\end{align}\else\in@{\\}{#1}\ifin@\begin{gather}#1\end{gather}\else\begin{equation}#1\end{equation}\fi\fi}
+\fi
+
+\fi
+
+
+
+
+
+% design macros
+\ifAVT@notes
+
+% margins
+\newlength{\@AVT@margin@inner}
+\ifAVT@notes@afourpaper
+\PassOptionsToPackage{a4paper,top=5.3cm,bottom=5.3cm,marginparsep=0.3cm}{geometry}
+\ifnum\@ptsize=2
+\setlength{\@AVT@margin@inner}{1.3cm}
+\PassOptionsToPackage{outer=6cm,inner=1.3cm,marginparwidth=4.4cm}{geometry}
+\else\ifnum\@ptsize=1
+\setlength{\@AVT@margin@inner}{2cm}
+\PassOptionsToPackage{outer=6.3cm,inner=2cm,marginparwidth=4.0cm}{geometry}
+\else
+\setlength{\@AVT@margin@inner}{2.3cm}
+\PassOptionsToPackage{outer=6.6cm,inner=2.3cm,marginparwidth=4.0cm}{geometry}
+\fi\fi
+\else
+\PassOptionsToPackage{letterpaper,top=1.75in,bottom=1.75in,marginparsep=0.125in}{geometry}
+\ifnum\@ptsize=2
+\setlength{\@AVT@margin@inner}{0.625in}
+\PassOptionsToPackage{outer=2.5in,inner=0.625in,marginparwidth=1.75in}{geometry}
+\else\ifnum\@ptsize=1
+\setlength{\@AVT@margin@inner}{0.75in}
+\PassOptionsToPackage{outer=2.75in,inner=0.75in,marginparwidth=1.875in}{geometry}
+\else
+\setlength{\@AVT@margin@inner}{0.875in}
+\PassOptionsToPackage{outer=2.875in,inner=0.875in,marginparwidth=1.875in}{geometry}
+\fi\fi
+\fi
+\RequirePackage[inner=\@AVT@margin@inner]{geometry}
+
+% fonts
+\ifAVT@notes@nofonts\else
+\RequirePackage{lmodern}
+\IfFileExists{mlmodern.sty}{\newcommand{\@AVTsemibold}{\fontfamily{mlmr}\fontencoding{T1}\selectfont}}{\ifdef\XeTeXrevision{\RequirePackage{fontspec}\newfontfamily{\@AVTsemibold}{mlmr10.otf}[SmallCapsFont=mlmcsc10.otf]
+\DeclareMicrotypeAlias{mlmr10.otf}{cmr10}\DeclareMicrotypeAlias{mlmcsc10.otf}{cmcsc10}}{\pdfmapfile{+mlm.map}\newcommand{\@AVTsemibold}{\fontfamily{mlmr}\fontencoding{T1}\selectfont}}}
+\fi
+
+
+% URLs
+\let\UrlFont\scshape
+
+% indentation
+\RequirePackage{parskip}
+
+% title format
+\RequirePackage{titling}
+\pretitle{\begin{center}\huge}
+\posttitle{\par\end{center}\vskip 0.5em}
+\renewcommand{\maketitlehooka}{\list{}{\rightmargin\dimexpr-\marginparwidth-\marginparsep\relax\leftmargin0pt}\item[]\scshape\@AVTsemibold}
+\renewcommand{\maketitlehookc}{\ifx\thedate\empty\predate{\@gobble}\postdate{}\fi}
+\renewcommand{\maketitlehookd}{\endlist}
+\date{}
+
+% abstract format
+\@ifclassloaded{article}{
+\RequirePackage[runin]{abstract}
+\renewcommand{\abstractnamefont}{\scshape\@AVTsemibold}
+\renewcommand{\abstracttextfont}{\noindent}
+\abslabeldelim{.}
+\setlength{\absparindent}{0pt}
+\setlength{\abstitleskip}{-\parindent}
+\setlength{\absleftindent}{1.5\@AVT@margin@inner}
+\setlength{\absrightindent}{\dimexpr1.5\@AVT@margin@inner-\marginparwidth-\marginparsep\relax}
+\newcommand{\keywords}[1]{\par{\scshape Keywords:} #1.}
+}{}
+
+% section title format
+\RequirePackage[explicit,noindentafter]{titlesec}
+\titleformat{\part}[display]{\@AVTsemibold\scshape\Huge}{\list{}{\rightmargin-0.75in\leftmargin1in}\item[]\centering\thepart\endlist}{1em}{\list{}{\rightmargin-0.75in\leftmargin1in}\item[]\centering#1}[\endlist]
+\titleformat{\chapter}[display]{\@AVTsemibold\scshape\Huge}{Chapter \thechapter}{1em}{\raggedright#1}
+\@ifclassloaded{book}{
+\titleformat{\section}{\@AVTsemibold\scshape\LARGE}{\thesection.}{1em}{\raggedright#1}
+}{
+\titleformat{\section}{\@AVTsemibold\scshape\LARGE}{\thesection}{1em}{\raggedright#1}
+}
+\titleformat{\subsection}[runin]{\bfseries}{\thesubsection.}{1ex}{#1.}
+\titlespacing{\section}{0pt}{*3.5}{*2}
+\titlespacing{\subsection}{0pt}{*3.5}{*1}
+
+% heading style for book class
+\RequirePackage{titleps}
+\@ifclassloaded{book}{
+\renewpagestyle{headings}{
+\sethead
+[\thepage][\chaptertitle][\ifnum\c@chapter=0\else{Chapter \thechapter}\fi]
+{\ifnum\c@section=0\else{Section \thesection}\fi}{\sectiontitle}{\thepage}
+}
+\renewpagestyle{plain}{
+\sethead[\thepage][][]
+{}{}{\thepage}
+}
+\pagestyle{headings}
+\widenhead*{0in}{\dimexpr\marginparwidth+\marginparsep\relax}
+}{
+\renewpagestyle{plain}{\setfoot{}{}{\rlap{\hspace*{\dimexpr\marginparwidth+\marginparsep\relax}\llap{\thepage}}}}
+\pagestyle{plain}
+}
+
+% table of contents
+\RequirePackage{titletoc}
+\@ifclassloaded{book}{
+\titlecontents{part}[1.5em]{\addvspace{5pc}\Large}{\contentslabel{1.5pc}}{\hspace*{-1.5pc}}{\normalsize\titlerule*[1pc]{.}\Large\contentspage}
+\titlecontents{chapter}[1.5em]{\addvspace{1pc}\large}{\contentslabel{1.5pc}}{\hspace*{-1.5pc}}{\normalsize\titlerule*[1pc]{.}\large\contentspage}
+\dottedcontents{section}[3.8em]{}{2.3em}{1pc}
+\dottedcontents{subsection}[7em]{}{3.2em}{1pc}
+}{
+\titlecontents{section}[1.5em]{\addvspace{1em}\large}{\contentslabel{1.5pc}}{\hspace*{-1.5pc}}{\normalsize\titlerule*[1pc]{.}\large\contentspage}
+\dottedcontents{subsection}[3.8em]{}{2.3em}{1pc}
+}
+\@ifpackageloaded{hyperref}{\hypersetup{linktoc=all}}{}
+\renewcommand{\contentsname}{Table of Contents}
+
+% caption format
+\RequirePackage[format=plain,labelsep=period,font=sl]{caption}
+
+% theorem styles
+\RequirePackage{amsthm}
+\RequirePackage{thmtools}
+\RequirePackage{marginnote}
+\declaretheoremstyle[spaceabove=\baselineskip,spacebelow=\baselineskip,bodyfont=\slshape\renewcommand{\eminnershape}{\scshape},headfont=\@AVTsemibold,headpunct=.,headformat=\NAME\thmt@space\NUMBER]{theorem}
+\addtotheorempostheadhook{\marginnote[\normalfont\thmt@optarg]{\normalfont\thmt@optarg}}
+\renewcommand{\raggedrightmarginnote}{\raggedleft}
+\renewcommand{\raggedleftmarginnote}{\raggedright}
+\renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
+
+% center figures and load theorem names
+\AVT@centerfigurestrue
+\AVT@theoremstrue
+
+\fi
+
+
+
+
+
+
+% center tables and figures
+\ifAVT@centerfigures
+
+\g@addto@macro\@floatboxreset{\centering}
+
+\fi
+
+
+
+
+
+% theorem styles
+\ifAVT@theorems
+
+\RequirePackage{amsthm}
+\RequirePackage{thmtools}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi]{theorem}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{algorithm}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{assumption}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{axiom}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{conjecture}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{corollary}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{counterexample}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{definition}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{example}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{exercise}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{lemma}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{proposition}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{remark}
+\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{result}
+
+\fi
+
+
+
+
+
+% poster styles
+\ifAVT@poster
+
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{parskip}
+
+\newlength\margin
+\setlength\margin{0.8cm}
+
+\usepackage[a3paper,landscape,margin=\margin]{geometry}
+\pagestyle{empty}
+
+\usepackage[poster]{tcolorbox}
+
+\definecolor{postercolor}{rgb}{0,0,0}
+
+\usepackage{setspace}
+
+\tcbposterset{no coverage}
+\tcbposterset{fontsize=12pt}
+\tcbposterset{boxes = {
+	left=1ex,
+	right=1ex,
+	arc=1mm,
+	boxrule=1mm,
+	drop fuzzy shadow,
+	center title,
+	fonttitle=\color{postercolor}\bfseries\sffamily\LARGE,
+	detach title,
+	before upper={\begin{center}\setstretch{1.5}\tcbtitle\end{center}\vspace*{1.5ex}},
+}}
+
+\renewcommand{\title}[1]{\newcommand{\thetitle}{#1}}
+\renewcommand{\author}[1]{\newcommand{\theauthor}{#1}}
+\newcommand{\subtitle}[1]{\newcommand{\thesubtitle}{#1}}
+\newcommand{\lefttitlegraphic}[1]{\newcommand{\thelefttitlegraphic}{#1}}
+\newcommand{\righttitlegraphic}[1]{\newcommand{\therighttitlegraphic}{#1}}
+\def\thetitlerowspan {1}
+\newcommand{\titlerowspan}[1]{\def\thetitlerowspan {#1}}
+\def\maketitle {\posterbox[title={\huge\thetitle\@ifundefined{thesubtitle}{}{\\\Large\thesubtitle}}, halign=center, valign=center, underlay={\@ifundefined{thelefttitlegraphic}{}{\node[right, outer sep=2\margin] at (frame.west) {\thelefttitlegraphic};}\@ifundefined{therighttitlegraphic}{}{\node[left, outer sep=2\margin] at (frame.east) {\therighttitlegraphic};}}]{name=title,column=1,below=top,span=\tcbpostercolumns,rowspan=\thetitlerowspan}{\large\theauthor}}
+
+\fi
