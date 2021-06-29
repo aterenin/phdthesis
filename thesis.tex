@@ -104,25 +104,80 @@ Data-efficiency is a key concern in practical settings, where data-collection ta
 If computational costs are often the limiting factor of Bayesian decision systems, then data-efficiency is what is generally gained by paying those costs.
 This makes Bayesian decision systems attractive settings where their strengths---including data-efficiency, solid technical foundations, and amenability to analysis---can shine, while computational costs are kept under control.
 
-In my view, \emph{Gaussian processes} are one such setting: they are powerful enough to be the model wide classes of unknown quantities of interest, yet their computational costs are generally polynomial.
+In my view, \emph{Gaussian processes} are one such setting: they are powerful enough to model wide classes of unknown quantities of interest, yet their computational costs are generally polynomial.
 Better yet, Gaussian-processes-based decision systems have been demonstrated to exhibit excellent performance---sometimes, even provably so---in a number of practical settings, including ones deployed in real-world commercial applications.
 Studying Gaussian processes is therefore a promising avenue towards improved understanding of Bayesian learning and Bayesian decision-making in pursuit of artificial intelligence.
 
-The goal of this dissertation is twofold: (i) to make Gaussian processes easier to work with through improved numerical methods, particularly in cases where the Gaussian process is used within a larger decision system, and (ii) to expand the set of settings where Gaussian processes can be practically employed in, enabling construction of new decision systems, including for applications not previously considered.
+The goals of this dissertation are twofold: (i) to make Gaussian processes easier to work with through improved numerical methods, particularly in cases where the Gaussian process is used within a larger decision system, and (ii) to expand the set of settings where Gaussian processes can be practically employed in, enabling construction of new decision systems, including for applications not previously considered.
 Contributions toward (i) include path-wise conditioning techniques, which are studied in Chapter \ref{ch:pathwise}, and contributions toward (ii) include non-Euclidean Gaussian processes constructed using spectral methods, which are studied in Chapter \ref{ch:noneuclidean}.
 Following these, Chapter \ref{ch:conclusion} concludes.
 
-We now proceed to precisely define the notions needed to study Bayesian decision systems in the Gaussian process setting.
-Mirroring the ideas presented above, we first define Gaussian process models, and then define decision-theoretic notions atop these models for the specific tasks at hand.
-The goal is to define the key notions and describe how one should think about them in the given setting---we begin with the former.
+To pursue these goals, it is critically important that all of the ideas described in the preceding paragraphs be made into rigorous mathematics, so that the ideas described in the sequel ultimately reduce to definitions and implications, and not metaphor or opinion.
+I will therefore begin by defining the appropriate mathematical notions need subsequently, starting from an assumed background knowledge of measure-theoretic probability and functional analysis for Chapter \ref{ch:pathwise}, and, in addition, differential geometry for Chapter \ref{ch:noneuclidean}.
+My presentation will mirror the structure presented previously, and begin with models, before moving to decision-theoretic notions defined atop said models for the specific tasks at hand.
+I will strive to both define the key notions, and describe how one should think about them in the given setting, beginning with the so far omitted description of what a Gaussian process is.
 
 \section{Gaussian processes}
 
-Here we describe the GP formalism from scratch, starting from the simplest and ending with the most general and abstract setting
+A Gaussian process can be thought of as a collection of random variables which, no matter what angle one views them from, yield Gaussian marginal distributions.
+In the following, I will describe a formalism for making this description precise, starting from the simplest setting possible before moving to increasing levels of abstraction and generality.
+Our goal will be to develop the notion of a Gaussian process $f : \Omega \-> V$ where $(\Omega,\c{F},\P)$ is a probability space and $V$ is a real topological vector space, almost always equipped with additional structure.
+Gaussian process are fundamentally \emph{linear} objects which reflect the structure of the topological vector spaces over which they are defined.
+The simplest settings arise when $V$ is smallest.
+
+\1  Choosing $V = \{0\}$ to be the trivial vector space, there is exactly one $V$-valued random variable, whose distribution is the Dirac measure centered at $0$, which can trivially be called Gaussian.
+This random variable is not very interesting, so we do not consider it further.
+\2 Choosing $V = \R$ to coincide with the underlying scalar field yields the setting of \emph{Gaussian random variables}.
+This is the next-simplest setting and the first one we explore in detail.
+\3 Choosing $V = \R^d$ yields the setting of \emph{Gaussian random vectors}, whose components are multivariate Gaussian---or, equivalently, whose \emph{dot products} are scalar-valued Gaussian---an alternative view which will become important later.
+\4 Choosing $V$ to be a suitable vector space of functions $f : X \-> \R$ yields the setting of Gaussian processes, whose finite-dimensional marginals are multivariate Gaussian.
+This setting is well-studied when $X$ is itself a Euclidean space: in Chapter \ref{ch:noneuclidean}, we will examine cases where $X$ instead possesses geometric structure inherited by the Gaussian process.
+\5 Finally, choosing $V$ can be chosen to be a possibly infinite-dimensional vector space, such as a Banach of Hilbert space---this yields the most general setting we examine.
+This level of generality will be important for two reasons: (i) to develop a coordinate-free notion of Gaussian random vectors that will be useful in the differential-geometric setting, and (ii) to develop a formalism rich enough to define white noise processes, which will be needed in Chapter \ref{ch:noneuclidean}.
+\0 
+
+We proceed to examine the scalar case.
 
 \subsection{Gaussian random variables}
 
-Gaussian density
+A Gaussian random variable is a map which takes in a random number, and returns a real scalar.
+To begin formalizing this notion, let $(\Omega,\c{F},\P)$ be a probability space, and here and henceforth, equip all topological vector spaces with their respective Borel $\sigma$-algebras. 
+The basic object from which other Gaussians will be constructed is the standard scalar Gaussian, defined as follows.
+
+\begin{definition}[Standard Gaussian random variable]
+A random variable $z : \Omega\->\R$ is called \emph{standard Gaussian} if it admits the Lebesgue density
+\[
+f(z) = \frac{1}{\sqrt{2\pi}} \exp\del{-\frac{z^2}{2}}
+.
+\]
+\end{definition}
+
+From this, we define general scalar Gaussians.
+
+\begin{definition}[Gaussian random variable]
+A random variable $y : \Omega\->\R$ is called \emph{Gaussian} if there are scalars $\mu\in\R$ and $\sigma\in\R^+_0$, and a standard Gaussian $z$, such that
+\[
+y = \sigma z + \mu
+.
+\]
+\end{definition}
+
+Obviously, every Gaussian random variable is determined uniquely in distribution by the pair $(\mu,\sigma^2)$, which we call its \emph{mean} and \emph{variance}, respectively, and write $y \~[N](\mu,\sigma^2)$.
+Note that we view Dirac random variables as Gaussian random variables with zero variance.
+True to these parameter names, we have
+\[
+\E(y) &= \mu
+&
+\E\del{(y - \mu)^2} &= \sigma^2
+.
+\]
+The density of a Gaussian random variable takes on a form analogous to that of a standard Gaussian, namely
+\[
+f(y) = \frac{1}{\sqrt{2\pi}\sigma} \exp\del{-\frac{(y-\mu))^2}{2\sigma^2}}
+.
+\]
+which shows that the densities of Gaussian random variables respect the additive and multiplicative structures of the reals---this compatibility with linear structure will be true at all levels of generality we consider.
+We are now ready to lift this definition to construct multivariate analogs.
 
 \subsection{Gaussian random vectors}
 
