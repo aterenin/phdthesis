@@ -76,30 +76,37 @@ Not more than 300 words
 
 \chapter{Introduction}
 
-\lettrine{T}{he ability to learn} from experience and change behavior is one of the defining characteristics that differentiates biological systems from other kinds of systems found in the world.
-Replicating the processes biological systems use to learn and adapt is likewise a fundamental goal of science and technology.
-Realizing this goal would enable humanity to build automated systems to perform a significant quantity of the work currently done manually by ordinary people---in turn, enabling the average person to, in principle, spend significantly more time on their loved ones, and give greater freedom to pursue personal interests.
+\lettrine{L}{earning} from experience in order to change behavior is one of the defining abilities of biological systems, which differentiates them from other kinds of systems found in the world.
+Replicating the processes biological systems use to learn and adapt is a fundamental goal of science and technology.
+Realizing this goal would enable humanity to build automated systems to perform a significant quantity of the work currently done manually by ordinary people.
+This could enable the average person to, in principle, spend significantly more time with their loved ones, or on pursuing personal interests.
+The consequences of such developments are uncertain: what is much more clear, at present, is that humanity has a ways to go before our understanding of machine learning and artificial intelligence reachs a sufficient degree of command that visions such as the one presented here to become anything more than hypothetical.
 
-The consequences of such developments are uncertain: what is much more clear, at present, is that humanity has a ways to go before machine learning and artificial intelligence reach a sufficient degree of command for visions such as the one presented here to become anything more than hypothetical.
 The development of mathematical formalisms that are rich enough to capture many forms of \emph{learning} is one of the crowning achievements of machine learning, statistics, and artificial intelligence.
-
-One such formalism is the \emph{Bayesian} view of learning, which \emph{defines} learning as the computation of conditional probabilities.
-Within the Bayesian framework, if one wants to reason about a quantity of interest on the basis of data, one only needs to introduce a probability distribution, known as the \emph{prior}, which describes the information known about the quantity of interest external to the data, and a conditional probability distribution, known as the \emph{likelihood}, which describes the relationship between the quantity of interest and the data.
-Provided an appropriate setting to ensure these notions make rigorous sense is chosen, once the prior and likelihood are defined, and the data is observed, the information learned from the data is defined as the conditional probability distribution of the quantity of interest given the data, which is known as the \emph{posterior} distribution.
+One such formalism is the \emph{Bayesian} view of learning, which defines learning as the computation of conditional probabilities.
+Within the Bayesian framework, if one wants to reason about a quantity of interest on the basis of data, one needs only to introduce a probability distribution, known as the \emph{prior}, which describes the information known about the quantity of interest external to the data, and a conditional probability distribution, known as the \emph{likelihood}, which describes the relationship between the quantity of interest and the data.
+Provided an appropriate setting to ensure these notions make rigorous sense is available, once the prior and likelihood are specified, and the data is observed, by Bayes' Rule, the information learned from the data is given as the conditional probability distribution of the quantity of interest given the data, which is known as the \emph{posterior} distribution.
 In this formalism, to \emph{learn} is to compute posterior distributions.
 
 The Bayesian view of learning is very powerful---in a sense, even too powerful for many problems, where it leads to computational problems that are intractable---sometimes, provably so.
 A posterior distribution generally contains more information about the quantity of interest than one may actually want to know.
-
 Specifically, if an abstract agent is interested in making decisions in pursuit of a goal, they may not need to know the expectation of all posterior expectations within a suitably-large function class in order to make the decision: a small finite set of expectations may suffice.
 Making such statements precise leads one to consider a Bayesian theory of \emph{decision} built atop the introduced notion of learning.
 Indeed, the ability to use Bayesian learning to construct a rigorous notion of decision-making in pursuit of a goal is one of the key properties that gives Bayesian theory its richness.
 
-Following this line of thought, improved understanding of Bayesian learning and Bayesian decision-making is a fundamental goal in pursuit of artificial intelligence.
-In pursuit of this goal, it makes practical sense to restrict to settings where the strengths of Bayesian theory---in particular, solid technical foundations where the key notions are clearly defined and amenable to analysis---can shine, while computational challenges that render the approach non-viable in other settings are kept under control.
+The performance of a decision system can be evaluated by examining how quickly its decisions improve and become optimal.
+More precisely, a decision system's \emph{regret} is the reduction in its quality of decisions by virtue of not knowing the quantity of interest in advance.
+In most non-trivial settings, one can show that some regret is inevitable: a decision-making system must make some degree of mistakes in order to learn.
+A decision system is considered \emph{optimal} if its regret is within a constant factor of the best possible regret.
 
-In my view, \emph{Gaussian processes} fulfill these criteria well: they are powerful enough to be the model of choice for a number of non-trivial decision-making systems, yet their computational costs are generally polynomial rather than exponential.
-Better yet, Gaussian-processes-based decision systems often exhibit excellent performance---sometimes, even provably so---in practical settings including ones deployed in real-world commercial applications.
+Decisions systems with optimal or close-to-optimal regret require less data in order to solve their respective tasks, and are called \emph{data-efficient}.
+Data-efficiency is a key concern in practical settings, where data-collection takes time and can be expensive.
+If computational costs are often the limiting factor of Bayesian decision systems, then data-efficiency is what is generally gained by paying those costs.
+This makes Bayesian decision systems attractive settings where their strengths---including data-efficiency, solid technical foundations, and amenability to analysis---can shine, while computational costs are kept under control.
+
+In my view, \emph{Gaussian processes} are one such setting: they are powerful enough to be the model wide classes of unknown quantities of interest, yet their computational costs are generally polynomial.
+Better yet, Gaussian-processes-based decision systems have been demonstrated to exhibit excellent performance---sometimes, even provably so---in a number of practical settings, including ones deployed in real-world commercial applications.
+Studying Gaussian processes is therefore a promising avenue towards improved understanding of Bayesian learning and Bayesian decision-making in pursuit of artificial intelligence.
 
 The goal of this dissertation is twofold: (i) to make Gaussian processes easier to work with through improved numerical methods, particularly in cases where the Gaussian process is used within a larger decision system, and (ii) to expand the set of settings where Gaussian processes can be practically employed in, enabling construction of new decision systems, including for applications not previously considered.
 Contributions toward (i) include path-wise conditioning techniques, which are studied in Chapter \ref{ch:pathwise}, and contributions toward (ii) include non-Euclidean Gaussian processes constructed using spectral methods, which are studied in Chapter \ref{ch:noneuclidean}.
