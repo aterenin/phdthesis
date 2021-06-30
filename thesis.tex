@@ -80,7 +80,7 @@ Not more than 300 words
 Replicating the processes biological systems use to learn and adapt is a fundamental goal of science and technology.
 Realizing this goal would enable humanity to build automated systems to perform a significant quantity of the work currently done manually by ordinary people.
 This could enable the average person to, in principle, spend significantly more time with their loved ones, or on pursuing personal interests.
-The consequences of such developments are uncertain: what is much more clear, at present, is that humanity has a ways to go before our understanding of machine learning and artificial intelligence reachs a sufficient degree of command that visions such as the one presented here to become anything more than hypothetical.
+Though the precise consequences of such developments are uncertain, at present, it is clear that humanity has a ways to go before our understanding of machine learning and artificial intelligence reaches a sufficient degree of command that visions such as the one presented here to become anything more than hypothetical.
 
 The development of mathematical formalisms that are rich enough to capture many forms of \emph{learning} is one of the crowning achievements of machine learning, statistics, and artificial intelligence.
 One such formalism is the \emph{Bayesian} view of learning, which defines learning as the computation of conditional probabilities.
@@ -132,7 +132,7 @@ This is the next-simplest setting and the first one we explore in detail.
 \3 Choosing $V = \R^d$ yields the setting of \emph{Gaussian random vectors}, whose components are multivariate Gaussian---or, equivalently, whose \emph{dot products} are scalar-valued Gaussian---an alternative view which will become important later.
 \4 Choosing $V$ to be a suitable vector space of functions $f : X \-> \R$ yields the setting of Gaussian processes, whose finite-dimensional marginals are multivariate Gaussian.
 This setting is well-studied when $X$ is itself a Euclidean space: in Chapter \ref{ch:noneuclidean}, we will examine cases where $X$ instead possesses geometric structure inherited by the Gaussian process.
-\5 Finally, choosing $V$ can be chosen to be a possibly infinite-dimensional vector space, such as a Banach of Hilbert space---this yields the most general setting we examine.
+\5 Finally, choosing $V$ to be a possibly infinite-dimensional vector space, such as a Banach of Hilbert space---this yields the most general setting we examine.
 This level of generality will be important for two reasons: (i) to develop a coordinate-free notion of Gaussian random vectors that will be useful in the differential-geometric setting, and (ii) to develop a formalism rich enough to define white noise processes, which will be needed in Chapter \ref{ch:noneuclidean}.
 \0 
 
@@ -140,7 +140,7 @@ We proceed to examine the scalar case.
 
 \subsection{Gaussian random variables}
 
-A Gaussian random variable is a map which takes in a random number, and returns a real scalar.
+A Gaussian random variable is a map which takes in an abstract random number, and returns a real scalar.
 To begin formalizing this notion, let $(\Omega,\c{F},\P)$ be a probability space, and here and henceforth, equip all topological vector spaces with their respective Borel $\sigma$-algebras. 
 The basic object from which other Gaussians will be constructed is the standard scalar Gaussian, defined as follows.
 
@@ -155,15 +155,16 @@ f(z) = \frac{1}{\sqrt{2\pi}} \exp\del{-\frac{z^2}{2}}
 From this, we define general scalar Gaussians.
 
 \begin{definition}[Gaussian random variable]
-A random variable $y : \Omega\->\R$ is called \emph{Gaussian} if there are scalars $\mu\in\R$ and $\sigma\in\R^+_0$, and a standard Gaussian $z$, such that
+A random variable $y : \Omega\->\R$ is called \emph{Gaussian} if there are scalars $\mu, \sigma\in\R$, and a standard Gaussian $z$, such that
 \[
 y = \sigma z + \mu
 .
 \]
 \end{definition}
 
-Obviously, every Gaussian random variable is determined uniquely in distribution by the pair $(\mu,\sigma^2)$, which we call its \emph{mean} and \emph{variance}, respectively, and write $y \~[N](\mu,\sigma^2)$.
-Note that we view Dirac random variables as Gaussian random variables with zero variance.
+Note that we do \emph{not} require $\sigma \geq 0$: hence, every Gaussian random variable is determined uniquely in 
+distribution by the pair $(\mu,\sigma^2)$, which we call its \emph{mean} and \emph{variance}, respectively. 
+We write $y \~[N](\mu,\sigma^2)$.
 True to these parameter names, we have
 \[
 \E(y) &= \mu
@@ -171,17 +172,59 @@ True to these parameter names, we have
 \E\del{(y - \mu)^2} &= \sigma^2
 .
 \]
-The density of a Gaussian random variable takes on a form analogous to that of a standard Gaussian, namely
+A Gaussian random variable is called \emph{centered} if $\mu = 0$.
+For a given variance $\sigma^2$ and standard Gaussian $z$, the expressions $\sigma z$ and $-\sigma z$ define two \emph{different} centered Gaussians with the same distribution.
+At this stage, pointing these distinctions may appear needlessly pedantic: they will become more pronounced and important once we consider more general objects.
+The density of a Gaussian random variable, if it exists, takes on a form analogous to that of a standard Gaussian, namely
 \[
-f(y) = \frac{1}{\sqrt{2\pi}\sigma} \exp\del{-\frac{(y-\mu))^2}{2\sigma^2}}
+f(y) = \frac{1}{\sqrt{2\pi}\sigma} \exp\del{-\frac{(y-\mu)^2}{2\sigma^2}}
 .
 \]
 which shows that the densities of Gaussian random variables respect the additive and multiplicative structures of the reals---this compatibility with linear structure will be true at all levels of generality we consider.
+Note that the density will not exist if $\sigma^2 = 0$: the distributions of such Gaussians are Dirac measures centered at $\mu$.
 We are now ready to lift this definition to construct multivariate analogs.
 
 \subsection{Gaussian random vectors}
 
-Matrix square root
+A multivariate Gaussian random vector is a random variable taking values in $\R^d$.
+We will distinguish $\R^d$ from a generic $d$-dimensional vector space: the former comes with a product structure $\R^d = \R \x .. \x \R$ which includes projection maps onto each coordinate, which in turn induce a \emph{canonical} choice of inner product given by the Euclidean dot product.
+A generic finite-dimensional vector space lacks this structure: it admits many different inner products, and provides for no canonical choice---this difference will become important in the sequel.
+We write vectors defined in $\R^d$ in bold italics to emphasize this distinction, and similarly distinguish matrices from linear maps by writing the former in bold upface letters.
+As before, we begin by defining a standard Gaussian, which we note is an inner-product-dependent notion.
+
+\begin{definition}[Standard multivariate Gaussian random variable]
+A random variable $\v{z} : \Omega\->\R^d$ is called \emph{standard multivariate Gaussian} if if its distribution is the product measure of the distributions of $d$ standard Gaussians.
+\end{definition}
+
+One can easily see that this definition works in $\R^d$, but fails in a generic finite-dimensional vector space $V$ unless it is equipped with an inner product.
+If $V$ does admit an inner product, a standard Gaussian can be defined by choosing an orthonormal basis with respect to the given inner product, adapting the above definition, and showing that it is well-defined by virtue of not depending on the choice of basis.
+This is easy to see, since linear maps associated with changes of orthonormal bases are represented by orthogonal matrices.
+As before, we will again define multivariate Gaussians as transformations of standard Gaussians.
+
+\begin{definition}[Multivariate Gaussian random variable]
+A random variable $\v{y} : \Omega\->\R^d$ is called \emph{multivariate Gaussian} if there is a vector $\v\mu\in\R^d$, matrix $\m{L}\in\R^{d\x d}$, and standard multivariate Gaussian $\v{z}$, such that
+\[
+\v{y} = \m{L}\v{z} + \v\mu
+.
+\]
+\end{definition}
+
+Every multivariate Gaussian is determined by its \emph{mean vector} $\v\mu$ and positive semi-definite \emph{covariance matrix} $\m\Sigma = \m{L}\m{L}^T$, and, as before, is called \emph{centered} if $\v\mu = \v{0}$.
+We write $\v{y}\~[N](\v\mu,\m\Sigma)$ can obtain a centered multivariate Gaussian with a given distribution by calculating a \emph{matrix square root} of $\m\Sigma$, multiplying it with a standard Gaussian.
+Just as before, we have
+\[
+\E(\v{y}) &= \v\mu    
+&
+\Cov(\v{y}) &= \E\del{(\v{y}-\v\mu)(\v{y}-\v\mu)^T} = \m\Sigma
+\]
+and, if the determinant $|\m\Sigma|$ is non-zero,
+\[
+f(\v{y}) = \frac{1}{\sqrt{(2\pi)^d|\m\Sigma|}} \exp\del{-\frac{1}{2}(\v{y}-\v\mu)^T\m\Sigma^{-1}(\v{y}-\v\mu)}
+\]
+which now might not exist even if the distribution of $\v{y}$ is not Dirac.
+In such cases, one can see that at least some of the eigenvalues of $\m\Sigma$ must be zero, and so Gaussians which do not admit densities must, when viewed in an appropriate basis, be products of Dirac measures with Gaussians which do admit densities.
+Already in the multivariate case, then, we see the technical power of densities weakening: this behavior will become even more pronounced as we consider more general settings, which we now proceed to study.
+
 
 \subsection{Gaussian random functions}
 
