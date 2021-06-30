@@ -228,7 +228,68 @@ Already in the multivariate case, then, we see the technical power of densities 
 
 \subsection{Gaussian random functions}
 
+We now consider Gaussian random functions, which are the first notion of a Gaussian random variable that is generally called a \emph{Gaussian process}.
+Initially, we will adopt a \emph{bottom-up} view which, from a technical perspecrtive, departs considerably from the notions introduced so far.
+A more general and much more natural function-analytic view will be introduced in the sequel.
+For now, recall that for a set $X$, an $\R$-valued \emph{random process} is defined as a map $f : \Omega \x X \-> \R$ such that, for every $x$, the map $f(\.,x) : \Omega \-> \R$ is a random variable.
+If we have a set of points $x_1,..,x_n \in X$, we can plug them into $f$ to obtain a map $(f(x_1),..,f(x_n)) : \Omega \-> \R^n$, which, by virtue of being a product of measurable maps, is a random variable---we call it a \emph{finite-dimensional marginal random variable}.
+A Gaussian process, then, is simply a random process whose finite-dimensional marginals are multivariate Gaussian.
+
+\begin{definition}[Gaussian process in the random process sense]
 Let $X$ be a set. 
+A random process $f: \Omega \x X \-> \R$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.,x_1),..,f(\.,x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
+\end{definition}
+
+Immediately upon writing this definition, one is left to wonder: does it actually make sense?
+In particular, do Gaussian processes in the sense given here exist?
+Under general conditions on the finite-dimensional marginals, Kolmogorov's Consistency Theorem states that there exists a unique probability measure on the cylindrical $\sigma$-algebra whose finite-dimensional projections coincide with the distributions of the random variables written above.
+Since \emph{every} probability measure trivially admits random variables whose distribution is said measure, Gaussian processes in the sense given here exist so long as a family of multivariate Gaussians satisfying the conditions of Kolmogorov's Consistency Theorem can be found.
+The same results also allow us to reinterpret Gaussian processes as \emph{function-valued random variables}, which, in many ways, are a much more natural point of view to take.
+Define $\R^X = \{f : X \-> \R\}$ equip it with the cylindrical $\sigma$-algebra to make it into a measurable space.
+
+\begin{definition}[Gaussian process in the random variable sense]
+Let $X$ be a set. 
+A random variable $f: \Omega \-> \R^X$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.)(x_1),..,f(\.)(x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
+\end{definition}
+
+It is clear that every Gaussian process in the random process sense induces a Gaussian process in the random variable sense, and vice versa.
+Thus, these two notions are simply two different ways of viewing the same object.
+
+We can then ask, what properties of multivariate Gaussians are still true in this setting?
+Since a Gaussian process is uniquely determined by its finite-dimensional marginals, we need to find functions that generate a family of mean vectors and covariance matrices which are positive semi-definite.
+The former is straightforward: every function $\mu : X \-> \R$ can be evaluated at a finite set of points $x_1,..,x_n$ to obtain a mean vector $\v\mu = \mu(x_1,..,x_n)$.
+The latter requires only slightly more thinking.
+
+\begin{definition}[Positive semi-definite kernel]
+A symmetric function $k : X \x X \-> \R$ is called a \emph{positive semi-definite kernel} if, for any finite set of points $x_1,..,x_n\in X$, the kernel matrix
+\[
+\begin{bmatrix}
+k(x_1,x_1) & \dots &k(x_1,x_n)
+\\
+\vdots & \ddots & \vdots 
+\\
+k(x_nx_1) & \dots & k(x_n,x_n)
+\end{bmatrix}
+\]
+is positive semi-definite.
+\end{definition}
+
+It is then clear that the pair $(\mu,k)$ uniquely define a Gaussian process, and so we write $f\~[GP](\mu,k)$.
+Defining a Gaussian process then amounts to defining a positive semi-definite kernel. 
+In the Euclidean case, this can be done straightforwardly by noting that (i) the linear kernel $k(x,x') = \innerprod{x}{x'}$ is positive semi-definite by non-degeneracy of the inner product, (ii) that sums, powers, and limits of positive semi-definite kernels as positive semi-definite.
+By this technique, we see that the widely-used exponential and squared exponential kernels are positive semi-definite.
+It is also clear that, as before, affine maps preserve Gaussianity.
+
+The other properties previously considered, however, do not survive into this setting.
+In particular, it is clear that, as an infinite-dimensional object, $f$ does not admit a probability density analogous to the ones considered previously, because an infinite-dimensional Lebesgue measure, in the sense of a locally finite translation invariant measure, does not exist.
+We will therefore give up on and completely abandon this point of view, except where its finite-dimensional version suffices.
+It is also not clear what a \emph{standard} Gaussian process might be, nor how to view general Gaussian processes as transformations of standard Gaussian processes, nor what the analog of a matrix square root of a positive semi-definite kernel might be.
+
+The loss of these technical tools has consequences on what can be said about Gaussian processes.
+In Chapter \ref{ch:noneuclidean}, we will study Gaussian processes whose set $X$ is a Riemannian manifold, or a weighted directed graph.
+In those settings, one cannot begin by proving positive semi-definiteness of linear kernels, because there is simply no useful analog of this concept.
+Indeed, proving proving positive semi-definiteness can end up highly non-trivial, and most positive semi-definite functions will not admit simple expressions, like they do in the Euclidean case.
+We therefore proceed to adopt a function-analytic perspective which is more technical, but significantly powerful, and will allow us to recover the previous set of tools in a much more pure and abstract form.
 
 \subsection{Gaussian processes in general vector spaces}
 
