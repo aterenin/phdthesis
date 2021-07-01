@@ -117,6 +117,30 @@ I will therefore begin by defining the appropriate mathematical notions need sub
 My presentation will mirror the structure presented previously, and begin with models, before moving to decision-theoretic notions defined atop said models for the specific tasks at hand.
 I will strive to both define the key notions, and describe how one should think about them in the given setting, beginning with the so far omitted description of what a Gaussian process is.
 
+
+
+\section{Bayesian learning}
+
+Posterior
+
+Variational inference
+
+\section{Statistical decision-making}
+
+Decision
+
+\subsection{Multi-armed bandits}
+
+Setup
+
+Basic regret analysis
+
+\subsection{Bayesian optimization}
+
+Setup
+
+Regret analysis
+
 \section{Gaussian processes}
 
 A Gaussian process can be thought of as a collection of random variables which, no matter what angle one views them from, yield Gaussian marginal distributions.
@@ -244,6 +268,7 @@ Immediately upon writing this definition, one is left to wonder: does it actuall
 In particular, do Gaussian processes in the sense given here exist?
 Under general conditions on the finite-dimensional marginals, Kolmogorov's Consistency Theorem states that there exists a unique probability measure on the cylindrical $\sigma$-algebra whose finite-dimensional projections coincide with the distributions of the random variables written above.
 Since \emph{every} probability measure trivially admits random variables whose distribution is said measure, Gaussian processes in the sense given here exist so long as a family of multivariate Gaussians satisfying the conditions of Kolmogorov's Consistency Theorem can be found.
+
 The same results also allow us to reinterpret Gaussian processes as \emph{function-valued random variables}, which, in many ways, are a much more natural point of view to take.
 Define $\R^X = \{f : X \-> \R\}$ equip it with the cylindrical $\sigma$-algebra to make it into a measurable space.
 
@@ -274,6 +299,11 @@ k(x_nx_1) & \dots & k(x_n,x_n)
 is positive semi-definite.
 \end{definition}
 
+The \emph{covariance kernel} of a Gaussian process then is defined by
+\[
+k(x,x') = \Cov(f(x),f(x'))    
+.
+\]
 It is then clear that the pair $(\mu,k)$ uniquely define a Gaussian process, and so we write $f\~[GP](\mu,k)$.
 Defining a Gaussian process then amounts to defining a positive semi-definite kernel. 
 In the Euclidean case, this can be done straightforwardly by noting that (i) the linear kernel $k(x,x') = \innerprod{x}{x'}$ is positive semi-definite by non-degeneracy of the inner product, (ii) that sums, powers, and limits of positive semi-definite kernels as positive semi-definite.
@@ -299,27 +329,7 @@ Covariance form
 
 Covariance operator
 
-\section{Bayesian learning}
-
-Posterior
-
-Variational inference
-
-\section{Statistical decision-making}
-
-Decision
-
-\subsection{Multi-armed bandits}
-
-Setup
-
-Basic regret analysis
-
-\subsection{Bayesian optimization}
-
-Setup
-
-Regret analysis
+\section{Discussion}
 
 \section{Contributions}
 
