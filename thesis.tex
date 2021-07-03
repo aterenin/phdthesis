@@ -115,13 +115,80 @@ Following these, Chapter \ref{ch:conclusion} concludes.
 To pursue these goals, it is critically important that all of the ideas described in the preceding paragraphs be made into rigorous mathematics, so that the ideas described in the sequel ultimately reduce to definitions and implications, and not metaphor or opinion.
 I will therefore begin by defining the appropriate mathematical notions need subsequently, starting from an assumed background knowledge of measure-theoretic probability and functional analysis for Chapter \ref{ch:pathwise}, and, in addition, differential geometry for Chapter \ref{ch:noneuclidean}.
 My presentation will mirror the structure presented previously, and begin with models, before moving to decision-theoretic notions defined atop said models for the specific tasks at hand.
-I will strive to both define the key notions, and describe how one should think about them in the given setting, beginning with the so far omitted description of what a Gaussian process is.
-
-
+Together, we will both define the key notions, and examine how one should think about them in the given setting, beginning with the learning framework within which we will work.
 
 \section{Bayesian learning}
 
-Posterior
+The key idea behind Bayesian learning is to define \emph{learning} using \emph{conditional probability}.
+Building a model therefore entails quantifying the relationship between the \emph{quantity of interest} $\theta$, and the \emph{data} $y$.
+This is done as follows.
+
+\begin{definition}[Bayesian model]
+Let $Y$ and $\Theta$ be sets.
+A \emph{Bayesian model} is a probability measure defined on $\Theta \x Y$.
+\end{definition}
+
+A model can be constructed in a number of different ways.
+The most common technique is to specify two components: (i) a probability distribution describing what is known about the quantity of interest external to the data, and (ii) how the data relates to the quantity of interest.
+These are called the \emph{prior distribution} and \emph{likelihood}, respectively.
+
+To simplify notation, we introduce the following bookkeeping device.
+Define a \emph{conditional random variable} to be a map $y\given\theta : \Omega \x \Theta \-> Y$ which is a measurable in both arguments: formally speaking, this is precisely a \emph{stochastic process} with an additional measurability requirement, but we will eschew this terminology to avoid suggestive yet misleading analogies.
+
+Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, where the pushforward is taken in the first argument---by expressing it as an expectation of an indicator, this is seen to be a regular conditional probability measure.
+TODO: this works for full preimages, check for partial preimages.
+
+
+\begin{proposition}
+A Bayesian model can be constructed in the following ways.
+\1 Using measures: integrate the following two components.
+\1 \emph{Prior}: a probability measure $\pi_\theta$.
+\2 \emph{Likelihood}: a regular conditional probability measure $\pi_{y\given\theta}$.
+\0 
+\2 Using random variables: compose the following two components.
+\1 \emph{Prior}: a random variable $\theta:\Omega\->\Theta$.
+\2 \emph{Likelihood}: a conditional random variable $y\given\theta: \Omega\x\Theta\->Y$.
+\0 
+\0 
+Moreover, if $y\given\theta$ additionally satisfies the \emph{non-duplicate dependence} condition---namely, that for every $\theta'\in\Theta$, the random variable $(y\given\theta)(\.,\theta') : \Omega \-> Y$ is independent of $\theta$---then the constructions coincide.
+\end{proposition}
+
+\begin{proof}
+For the former, define 
+\[
+\pi_{\theta,y}(A_\theta\x A_y) = \int_{A_\theta} \pi_{y\given\theta}(A_y\given\theta) \d\pi_\theta(\theta)
+\]
+which extends it to the full product $\sigma$-algebra by a $\pi$-$\lambda$ argument, giving the desired probability measure.
+For the latter, define the random variable
+\[
+\gamma : \Omega &\-> \Theta \x Y
+&
+\gamma : \omega &\|> (\theta(\omega), (y\given\theta)(\omega,\theta(\omega)))
+\]
+and take $\pi_{\theta,y} = \gamma_* \P$. 
+Proof they coincide: TODO.
+\end{proof}
+
+These two components should be interpreted as follows: $\theta$ describes what is known about the quantity of interest external to the data, and $y\given\theta$ describes how the data $y$ relates to the quantity of interest.
+More specifically, the likelihood describes how $y$ would be distributed if $\theta$ was known and equal to the conditioned value.
+
+Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution.
+This is given as follows.
+
+\begin{proposition}[Bayes' Rule]
+Assume the spaces $\Theta$ and $Y$ are sufficiently regular that the Disintegration Theorem holds, and let $\pi_y = \pi_{\theta,y}(\Theta\x\.)$.
+Then for every Bayesian model $\pi_{\theta,y}$ there is a $\pi_y\ae[-]$ unique regular conditional probability measure $\pi_{\theta\given y}$, which we call the \emph{posterior distribution}.
+\end{proposition}
+
+\begin{proof}
+Apply the Disintegration Theorem to $\pi_{\theta,y}$.
+\end{proof}
+
+This result shows that given a Bayesian model, the posterior distribution \emph{exists}.
+In its full abstract formulation, however, Bayes' Rule is \emph{non-constructive}, and it is not at all clear how to calculate any kind of useful formula for the posterior distribution.
+Fortunately, in many settings this is possible by virtue of additional structure.
+
+Densities
 
 Variational inference
 
