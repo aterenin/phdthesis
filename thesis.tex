@@ -166,31 +166,101 @@ For the latter, define the random variable
 \gamma : \omega &\|> (\theta(\omega), (y\given\theta)(\omega,\theta(\omega)))
 \]
 and take $\pi_{\theta,y} = \gamma_* \P$. 
-Proof they coincide: TODO.
+We now prove these expressions coincide---TODO.
 \end{proof}
 
 These two components should be interpreted as follows: $\theta$ describes what is known about the quantity of interest external to the data, and $y\given\theta$ describes how the data $y$ relates to the quantity of interest.
 More specifically, the likelihood describes how $y$ would be distributed if $\theta$ was known and equal to the conditioned value.
 
-Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution.
-This is given as follows.
+Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution---note that this is in a \emph{distributional} sense, not a random-variable-based sense.
+The formulation is given as follows.
 
-\begin{proposition}[Bayes' Rule]
+\begin{corollary}[Bayes' Rule]
 Assume the spaces $\Theta$ and $Y$ are sufficiently regular that the Disintegration Theorem holds, and let $\pi_y = \pi_{\theta,y}(\Theta\x\.)$.
 Then for every Bayesian model $\pi_{\theta,y}$ there is a $\pi_y\ae[-]$ unique regular conditional probability measure $\pi_{\theta\given y}$, which we call the \emph{posterior distribution}.
-\end{proposition}
+\end{corollary}
 
 \begin{proof}
 Apply the Disintegration Theorem to $\pi_{\theta,y}$.
 \end{proof}
 
 This result shows that given a Bayesian model, the posterior distribution \emph{exists}.
-In its full abstract formulation, however, Bayes' Rule is \emph{non-constructive}, and it is not at all clear how to calculate any kind of useful formula for the posterior distribution.
+In its full abstract formulation, however, Bayes' Rule is \emph{non-constructive}, and it is not at all clear how to calculate any kind of useful formula from it.
 Fortunately, in many settings this is possible by virtue of additional structure.
 
-Densities
+The simplest such structure occurs when $\pi_{\theta,y}$ admits a density with respect to a reference measure $\lambda$.
+In this case, it follows (TODO: CHECK) that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
+Define a \emph{conditional density} as the ratio of joint and marginal densities, and let $\propto$ denote equality up to a proportionality constant.
+Then we have the following.
 
-Variational inference
+\begin{proposition}[Bayes' Rule for densities]
+Suppose that $\pi_{\theta,y}$ admits the density $f_{\theta,y}$ with respect to $\lambda_{\theta,y}$.
+Then we have
+\[
+f_{\theta\given y}(\vartheta\given\gamma) \propto f_{\gamma\given\vartheta}(\gamma\given\vartheta)f_\theta(\vartheta)
+.
+\]
+\end{proposition}
+
+\begin{proof}
+We have
+\[
+f_{\theta,y}(\vartheta,\gamma) = \frac{f_{\theta,y}(\vartheta,\gamma)}{f_\theta(\vartheta)} f_\theta(\vartheta) = f_{y\given\theta}(\gamma\given\vartheta)f_\theta(\vartheta) 
+\]
+but also have
+\[
+f_{\theta,y}(\vartheta,\gamma) = \frac{f_{\theta,y}(\vartheta,\gamma)}{f_y(\gamma)} f_y(\gamma) = f_{\theta\given y}(\vartheta\given \gamma)f_y(\gamma) 
+\]
+which, when combined, give the result.
+\end{proof}
+
+Sometimes, the knowledge of $f(\theta\given y)$ up to proportionality is enough to fully deduce its form.
+For example, if the likelihood is Gaussian with unknown mean and known variance, and the prior is also Gaussian, then the posterior is Gaussian.
+In such cases, the pair $(\pi_{y\given\theta}, \pi_\theta)$ are called \emph{conjugate}.
+
+Bayes' Rule for densities is remarkable in its generality yet restrictiveness.
+On one hand, we require no direct assumptions about the spaces $\Theta$ and $Y$, and in particular allow real spaces, discrete spaces, and Riemannian manifolds.
+On the other hand, other than in the aforementioned settings, where we can employ the Lebesgue, counting, and Riemannian volume measures, respectively, finding a suitable reference measure can be difficult.
+
+We will work with posterior distributions in infinite-dimensional vector spaces in the sequel---there, densities are either not available or not convenient.
+In those cases, it is enough to calculate the posterior on arbitrary finite-dimensional marginal projections to uniquely determine its value on the full infinite-dimensional space.
+
+\begin{proposition}[Conditioning and marginalization]
+Conditioning and marginalization commute.
+\end{proposition}
+
+\begin{proof}
+TODO.
+\end{proof}
+
+This result makes densities into a substantially more powerful tool than they would be otherwise, since it enables us to use them for calculating posterior distributions even where they are not directly available.
+In particular, we can map an infinite-dimensional function space into finite-dimensional vector spaces induced by pointwise function evaluations at arbitrary points, enabling us to calculate posterior distributions in such settings, in spite of no suitable densities existing directly in the space of interest.
+
+We will need one more technical tool: the \emph{variational formulation} of Bayes' Rule, which expresses our posterior as the solution to an infinite-dimensional optimization problem.
+
+\begin{proposition}[Bayes' Rule in variational form]
+Assume TODO.
+Then for every $\gamma\in Y$, the posterior distribution satisfies 
+\[
+\pi_{\theta\given y}(\.\given \gamma) = \argmin_{\bb{q}_\theta \in \c{M}_1(\Theta)} D_{\f{KL}}(\bb{q}_\theta \from \pi_\theta) - \operatorname*{\E}_{\vartheta\~\bb{q}_\theta} \ln f_{y\given\theta}(\gamma\given\vartheta)
+\]
+where the minima does not depend on the choice of reference measure used in defining the likelihood density.
+\end{proposition}
+
+\begin{proof}
+We prove the result twice, using two different techniques---by computations that involve Kullback--Leibler divergences, and by employing ideas from the calculus of variations.
+
+TODO.
+\end{proof}
+
+For any given dataset, this result shows that  Bayes' Rule can be viewed in \emph{information-theoretic} manner: among all probability measures, the posterior maximizes predictive power, while retaining as many bits as possible from the prior, in the sense given by the Kullback--Leibler divergence.
+
+The result also suggests a way to approximately compute posterior distributions: solve the optimization problem on a suitably chosen subspace of the space of all probability measures $\c{M}_1(\Theta)$.
+This strategy will be particularly fruitful in the later-described setting of Gaussian processes, where techniques for constructing such approximations with well-understood and favorable accuracy will be considered.
+
+Once a posterior is calculated, the next step is to extract the relevant quantities from it.
+Traditionally, this is often done by displaying summary statistics to be evaluated and interpreted by a person with statistical training, often with a focus on assessing uncertainty.
+We will instead focus on settings where the posterior is given as input to an upstream decision-making algorithm: we explore these now.
 
 \section{Statistical decision-making}
 
