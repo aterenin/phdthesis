@@ -80,7 +80,9 @@ Not more than 300 words
 Replicating the processes biological systems use to learn and adapt is a fundamental goal of science and technology.
 Realizing this goal would enable humanity to build automated systems to perform a significant quantity of the work currently done manually by ordinary people.
 This could enable the average person to, in principle, spend significantly more time with their loved ones, or on pursuing personal interests.
-Though the precise consequences of such developments are uncertain, at present, it is clear that humanity has a ways to go before our understanding of machine learning and artificial intelligence reaches a sufficient degree of command that visions such as the one presented here to become anything more than hypothetical.
+The precise consequences of such developments are uncertain, and will also likely include negative impacts.
+At present, however, it is clear that visions such as the one presented here are purely hypothetical.
+Humanity has a ways to go before our understanding of machine learning and artificial intelligence reaches a sufficient degree of command to build such systems.
 
 The development of mathematical formalisms that are rich enough to capture many forms of \emph{learning} is one of the crowning achievements of machine learning, statistics, and artificial intelligence.
 One such formalism is the \emph{Bayesian} view of learning, which defines learning as the computation of conditional probabilities.
@@ -133,10 +135,9 @@ The most common technique is to specify two components: (i) a probability distri
 These are called the \emph{prior distribution} and \emph{likelihood}, respectively.
 
 To simplify notation, we introduce the following bookkeeping device.
-Define a \emph{conditional random variable} to be a map $y\given\theta : \Omega \x \Theta \-> Y$ which is a measurable in both arguments: formally speaking, this is precisely a \emph{stochastic process} with an additional measurability requirement, but we will eschew this terminology to avoid suggestive yet misleading analogies.
+Define a \emph{regular conditional random variable} to be a map $y\given\theta : \Omega \x \Theta \-> Y$ which is a measurable in both arguments: formally speaking, this is precisely a \emph{stochastic process} with an additional measurability requirement, but we will eschew this terminology to emphasize the Bayesian nature of our formalism.
 
-Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, where the pushforward is taken in the first argument---by expressing it as an expectation of an indicator, this is seen to be a regular conditional probability measure.
-TODO: this works for full preimages, check for partial preimages.
+Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, where the pushforward is taken in the first argument---by Lemma \ref{lem:rcrv-rvm-equiv}, this is seen to be a regular conditional probability measure.
 
 
 \begin{proposition}
@@ -147,10 +148,10 @@ A Bayesian model can be constructed in the following ways.
 \0 
 \2 Using random variables: compose the following two components.
 \1 \emph{Prior}: a random variable $\theta:\Omega\->\Theta$.
-\2 \emph{Likelihood}: a conditional random variable $y\given\theta: \Omega\x\Theta\->Y$.
+\2 \emph{Likelihood}: a regular conditional random variable $y\given\theta: \Omega\x\Theta\->Y$.
 \0 
 \0 
-Moreover, if $y\given\theta$ additionally satisfies the \emph{non-duplicate dependence} condition---namely, that for every $\theta'\in\Theta$, the random variable $(y\given\theta)(\.,\theta') : \Omega \-> Y$ is independent of $\theta$---then the constructions coincide.
+Moreover, if $y\given\theta$ additionally satisfies the \emph{non-duplicate dependence} condition---namely, that for almost every $\theta'\in\Theta$, the random variable $(y\given\theta)(\.,\theta') : \Omega \-> Y$ is independent of $\theta$---then the constructions coincide.
 \end{proposition}
 
 \begin{proof}
@@ -158,7 +159,7 @@ For the former, define
 \[
 \pi_{\theta,y}(A_\theta\x A_y) = \int_{A_\theta} \pi_{y\given\theta}(A_y\given\theta) \d\pi_\theta(\theta)
 \]
-which extends it to the full product $\sigma$-algebra by a $\pi$-$\lambda$ argument, giving the desired probability measure.
+which extends to the full product $\sigma$-algebra by Lemma \ref{lem:cyl-prod}, giving the desired probability measure.
 For the latter, define the random variable
 \[
 \gamma : \Omega &\-> \Theta \x Y
@@ -166,7 +167,22 @@ For the latter, define the random variable
 \gamma : \omega &\|> (\theta(\omega), (y\given\theta)(\omega,\theta(\omega)))
 \]
 and take $\pi_{\theta,y} = \gamma_* \P$. 
-We now prove these expressions coincide---TODO.
+We now prove these expressions coincide.
+Write 
+\[
+\pi_{\theta,y}(A_\theta\x A_y) &= \int_{A_\theta} \pi_{y\given\theta}(A_y\given\theta) \d\pi_\theta(\theta)
+\\
+&= \int_\Omega\1_{\theta(\omega)\in A_\theta} \pi_{y\given\theta}(A_y\given\theta(\omega)) \d\bb{P}(\omega)
+\\
+&= \int_\Omega\1_{\theta(\omega)\in A_\theta} \int_\Omega \1_{(y\given\theta)(\omega',\theta(\omega)) \in A_y} \d\bb{P}(\omega') \d\bb{P}(\omega)
+\\
+&= \int_{\Omega\x\Omega} \1_{(\theta(\omega),(y\given\theta)(\omega',\theta(\omega))) \in A_\theta \x A_y} \d\bb{P}^2(\omega,\omega')
+\\
+&= \int_\Omega \1_{(\theta(\omega),(y\given\theta)(\omega,\theta(\omega))) \in A_\theta \x A_y}\d\bb{P}(\omega)
+\\
+&= \P((\theta,(y\given\theta)(\.,\theta)) \in A_\theta \x A_y)
+\]
+which follows using Tonelli's Theorem, Lemma \ref{lem:cyl-prod}, and Lemma \ref{lem:non-dupl-dep} via the non-duplicate dependence condition.
 \end{proof}
 
 These two components should be interpreted as follows: $\theta$ describes what is known about the quantity of interest external to the data, and $y\given\theta$ describes how the data $y$ relates to the quantity of interest.
@@ -189,7 +205,7 @@ In its full abstract formulation, however, Bayes' Rule is \emph{non-constructive
 Fortunately, in many settings this is possible by virtue of additional structure.
 
 The simplest such structure occurs when $\pi_{\theta,y}$ admits a density with respect to a reference measure $\lambda$.
-In this case, it follows (TODO: CHECK) that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
+In this case, it follows Lemma \ref{lem:prod-density} that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
 Define a \emph{conditional density} as the ratio of joint and marginal densities, and let $\propto$ denote equality up to a proportionality constant.
 Then we have the following.
 
@@ -197,7 +213,7 @@ Then we have the following.
 Suppose that $\pi_{\theta,y}$ admits the density $f_{\theta,y}$ with respect to $\lambda_{\theta,y}$.
 Then we have
 \[
-f_{\theta\given y}(\vartheta\given\gamma) \propto f_{\gamma\given\vartheta}(\gamma\given\vartheta)f_\theta(\vartheta)
+f_{\theta\given y} \propto f_{y\given\theta}f_\theta
 .
 \]
 \end{proposition}
@@ -205,18 +221,16 @@ f_{\theta\given y}(\vartheta\given\gamma) \propto f_{\gamma\given\vartheta}(\gam
 \begin{proof}
 We have
 \[
-f_{\theta,y}(\vartheta,\gamma) = \frac{f_{\theta,y}(\vartheta,\gamma)}{f_\theta(\vartheta)} f_\theta(\vartheta) = f_{y\given\theta}(\gamma\given\vartheta)f_\theta(\vartheta) 
-\]
-but also have
-\[
-f_{\theta,y}(\vartheta,\gamma) = \frac{f_{\theta,y}(\vartheta,\gamma)}{f_y(\gamma)} f_y(\gamma) = f_{\theta\given y}(\vartheta\given \gamma)f_y(\gamma) 
+f_{\theta,y} &= \frac{f_{\theta,y}}{f_\theta} f_\theta = f_{y\given\theta}f_\theta
+&
+f_{\theta,y} &= \frac{f_{\theta,y}}{f_y} f_y = f_{\theta\given y}f_y
 \]
 which, when combined, give the result.
 \end{proof}
 
 Sometimes, the knowledge of $f(\theta\given y)$ up to proportionality is enough to fully deduce its form.
 For example, if the likelihood is Gaussian with unknown mean and known variance, and the prior is also Gaussian, then the posterior is Gaussian.
-In such cases, the pair $(\pi_{y\given\theta}, \pi_\theta)$ are called \emph{conjugate}.
+In cases such as this, the pair $(\pi_{y\given\theta}, \pi_\theta)$ are called \emph{conjugate}.
 
 Bayes' Rule for densities is remarkable in its generality yet restrictiveness.
 On one hand, we require no direct assumptions about the spaces $\Theta$ and $Y$, and in particular allow real spaces, discrete spaces, and Riemannian manifolds.
@@ -236,7 +250,7 @@ TODO.
 This result makes densities into a substantially more powerful tool than they would be otherwise, since it enables us to use them for calculating posterior distributions even where they are not directly available.
 In particular, we can map an infinite-dimensional function space into finite-dimensional vector spaces induced by pointwise function evaluations at arbitrary points, enabling us to calculate posterior distributions in such settings, in spite of no suitable densities existing directly in the space of interest.
 
-We will need one more technical tool: the \emph{variational formulation} of Bayes' Rule, which expresses our posterior as the solution to an infinite-dimensional optimization problem.
+We now introduce the \emph{variational formulation} of Bayes' Rule, which expresses the posterior as the solution to an infinite-dimensional optimization problem.
 
 \begin{proposition}[Bayes' Rule in variational form]
 Assume TODO.
@@ -249,8 +263,12 @@ where the minima does not depend on the choice of reference measure used in defi
 
 \begin{proof}
 We prove the result twice, using two different techniques---by computations that involve Kullback--Leibler divergences, and by employing ideas from the calculus of variations.
-
-TODO.
+We start with the former. 
+Since the topology generated by the Kullback--Leibler divergence on the space of probability measures is Hausdorff, we have
+\[
+\pi_{\theta\given y}(\.\given \gamma) &= \argmin_{\bb{q}_\theta \in \c{M}_1(\Theta)} D_{\f{KL}}(\bb{q}_\theta \from \pi_{\theta\given y}(\.\given \gamma))
+\]
+TODO
 \end{proof}
 
 For any given dataset, this result shows that  Bayes' Rule can be viewed in \emph{information-theoretic} manner: among all probability measures, the posterior maximizes predictive power, while retaining as many bits as possible from the prior, in the sense given by the Kullback--Leibler divergence.
@@ -258,9 +276,63 @@ For any given dataset, this result shows that  Bayes' Rule can be viewed in \emp
 The result also suggests a way to approximately compute posterior distributions: solve the optimization problem on a suitably chosen subspace of the space of all probability measures $\c{M}_1(\Theta)$.
 This strategy will be particularly fruitful in the later-described setting of Gaussian processes, where techniques for constructing such approximations with well-understood and favorable accuracy will be considered.
 
+We will \emph{always} view variational approximations as minimization of Kullback--Leibler divergences, as this is mathematically sound.
+We will eschew standard presentations involving \emph{evidence lower bounds}: the only mathematical explanations for why maximizing these bounds should improve model performance, that I am aware of, appeal to Kullback--Leibler divergences---so, then, why talk about evidence lower bounds in the first place?
+
 Once a posterior is calculated, the next step is to extract the relevant quantities from it.
 Traditionally, this is often done by displaying summary statistics to be evaluated and interpreted by a person with statistical training, often with a focus on assessing uncertainty.
-We will instead focus on settings where the posterior is given as input to an upstream decision-making algorithm: we explore these now.
+We will instead focus on settings where the posterior is given as input to an upstream decision-making algorithm: we explore these next.
+
+\subsection{Technical lemmas}
+
+We now prove a number of technical lemmas used in the preceding text, which for completeness are presented here in order to avoid disrupting the reader's flow.
+
+\begin{lemma}
+\label{lem:rcrv-rvm-equiv}
+Let $a : \Omega\->A$ be a random variable and let $b:\Omega\x A\->B$ be a stochastic process which is measurable in its second argument.
+Then the map $b_*\P : \c{B} \x A \-> [0,1]$ is a regular conditional probability measure.
+\end{lemma}
+
+\begin{proof}
+Is this actually true? How do we show it's $a$-measurable?
+\end{proof}
+
+\begin{lemma}
+\label{lem:cyl-prod}
+Let $\pi : \c{A} \x \c{B} \-> [0,1]$ be a function satisfying the measure axioms.
+Then $\pi$ extends uniquely to a measure on the product sigma-algebra.
+\end{lemma}
+
+\begin{proof}
+Apply a $\pi$-$\lambda$ argument.
+TODO.
+\end{proof}
+
+\begin{lemma}
+\label{lem:non-dupl-dep}
+Let $a : \Omega \-> A$ be a random variable and $b : \Omega \x A \-> B$ be a stochastic process which is measurable in its second argument.
+Suppose that for almost all $a'\in A$, the random variable $b(\.,a') : \Omega \-> B$ is independent of $a$.
+Then for all bounded measurable functions $f$ we have
+\[
+\int_\Omega f(a(\omega),b(\omega,a(\omega))) \d\bb{P}(\omega) = \int_{\Omega\x\Omega}f(a(\omega),b(\omega',a(\omega))) \d\bb{P}^2(\omega,\omega')
+.
+\]
+\end{lemma}
+
+\begin{proof}
+TODO.
+\end{proof}
+
+\begin{lemma}
+\label{lem:prod-density}
+Let $\pi_{a,b}$ be a measure which admits a density with respect to $\lambda$.
+Then $\pi_{a,b}(\.\x B)$ admits a density with respect to $\lambda(\.\x B)$, and similarly in the other argument.
+\end{lemma}
+
+\begin{proof}
+Apply a Fubini-type argument.
+TODO.
+\end{proof}
 
 \section{Statistical decision-making}
 
