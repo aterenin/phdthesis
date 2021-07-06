@@ -188,7 +188,7 @@ which follows using Tonelli's Theorem, Lemma \ref{lem:cyl-prod}, and Lemma \ref{
 These two components should be interpreted as follows: $\theta$ describes what is known about the quantity of interest external to the data, and $y\given\theta$ describes how the data $y$ relates to the quantity of interest.
 More specifically, the likelihood describes how $y$ would be distributed if $\theta$ was known and equal to the conditioned value.
 
-Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution---note that this is in a \emph{distributional} sense, not a random-variable-based sense.
+Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution---note that this is meant in a \emph{distributional} sense, not a random-variable-based sense.
 The formulation is given as follows.
 
 \begin{corollary}[Bayes' Rule]
@@ -290,11 +290,18 @@ We now prove a number of technical lemmas used in the preceding text, which for 
 \begin{lemma}
 \label{lem:rcrv-rvm-equiv}
 Let $a : \Omega\->A$ be a random variable and let $b:\Omega\x A\->B$ be a stochastic process which is measurable in its second argument.
-Then the map $b_*\P : \c{B} \x A \-> [0,1]$ is a regular conditional probability measure.
+Then the map $b_*\P : \c{B} \x A \-> [0,1]$, where the pushforward is taken in the first argument, is a regular conditional probability measure.
 \end{lemma}
 
 \begin{proof}
-Is this actually true? How do we show it's $a$-measurable?
+It is clear that $b_* \P$ is a probability measure for almost all $a'\in A$, so we only need to prove that the map $a \|> (b(\.,a)_*\P)(A_b)$ is measurable for all $A_b\in\c{B}$.
+First, write
+\[
+(b_*\P)(A_b) = \P(b(\.,a)^{-1}(A_b)) = \int_\Omega \1_{b(\omega,a)\in A_b} \d\bb{P}(\omega)
+.
+\]
+Now, note that the map $\Omega\x A\->\R$ given by $(\omega,a) \|> \1_{b(\omega,a)\in A_b}$ is bounded measurable, since $b$ is measurable in both arguments, and indicators of measurable functions on measurable sets are bounded measurable.
+Finally, since for any bounded measurable $f : \Omega \x A \-> \R$, the map $a \|> \int_\Omega f(\omega,a) \d\bb{P}(\omega)$ is measurable by Fubini's Theorem, the claim follows.
 \end{proof}
 
 \begin{lemma}
