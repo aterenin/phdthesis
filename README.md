@@ -16,6 +16,8 @@
 
 This repository contains the LaTeX source for the PhD thesis currently being written by [Alexander Terenin](https://avt.im/).
 
+You can view a compiled version of the thesis by clicking the Overleaf link below.
+
 # Overleaf
 
 https://www.overleaf.com/read/cvccnfnrtfhx
