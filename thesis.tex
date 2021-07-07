@@ -336,7 +336,113 @@ TODO.
 
 \section{Statistical decision-making}
 
-Decision
+We now use the Bayesian formalism to construct a probabilistic theory of decision-making.
+To begin, we formalize the very general concept of an abstract agent making decisions in an environment in pursuit of some goal.
+
+\begin{definition}[Discrete-time Markov decision process]
+A \emph{discrete-time Markov decision process} is a $4$-tuple consisting of the following.
+\1 State space: a measurable space $S$.
+\2 Action space: a measurable space $A$.
+\3 Reward: a regular conditional probability measure $r : \c{B}(\R) \x X \x A \-> \R$. 
+\4 Transition kernel: a regular conditional probability measure $p : \c{S} \x S \x A \-> \R$.
+\0 
+\end{definition}
+
+This is a very broad notion---however, a number of variations are also possible.
+For instance, one can consider continuous-time, purely deterministic, and partially observed analogs---each of these involve their own subtleties and deserve study in their own right, but we do not pursue them here.
+
+The idea behind this definition is that, at every point in time, the agent observes the current state, chooses an action $a \in A$, and obtains another state $s' \~ p(s,a)$.
+Note that \emph{time} can, and often will, be part of the state $s$.
+The agent's goal is to choose each action so as to control the entire trajectory of states in order to obtain maximum rewards.
+The choice of actions in every state is called a \emph{policy}, and is formalized as follows.
+
+\begin{definition}[Policy]
+Define the following.
+\1 A measurable function $\pi : S \-> A$ is called a \emph{deterministic policy}.
+\2 A regular conditional probability measure $\pi : \c{A} \x S \-> \R$ is called a \emph{Markov policy}.
+\0 
+\end{definition}
+
+Markov policies include deterministic policies as a special case, by taking the conditional distributions to be Dirac and re-interpreting the given expressions appropriately.
+As with Markov decision processes, here one can also consider even more general policies, but we do not do so here.
+
+Different policies yield different state trajectories, and therefore different rewards.
+Of these, some obtain more rewards than others: 
+
+\begin{definition}[Optimal policy]
+Let $T \in \N$ be the \emph{time horizon}.
+A policy is called \emph{optimal} if it maximizes the \emph{value function} 
+\[
+V^{(\pi)}(x_0) = \E \sum_{t=0}^T r_t
+\]
+where $s_{t+1} \~ p(s_t, a_t)$, $a_t \~ \pi(s_t)$, and $r_t \~ r(s_t,a_t)$.
+\end{definition}
+
+Finding an optimal policy therefore amounts to selecting the best possible actions to maximize rewards up to the given time horizon.
+It is therefore of key interest to find an optimal policy, if one exists.
+This problem has different names, depending on the setting one considers---some particularly important settings are given as follows.
+
+\1 If $p$ and $r$ are known, it is known as an \emph{optimal control} problem.
+\2 Otherwise, it is known as a \emph{decision} problem.
+\0 
+
+These problem classes differ fundamentally from one another. 
+Optimal control problems can be viewed as a class of structured optimization problems, where the goal is to compute $\pi$ by evaluating $r$ and $p$ as necessary.
+Here, one generally proceeds by describing equations that $V^{(\pi)}$ and $\pi$ satisfy, and developing schemes for solving them.
+
+
+Due to the rewards being \emph{unknown}, they cannot simply be maximized and their expectation must be \emph{learned}.
+This forces one to consider whether to take advantage of actions known to be good, or to try others in case they might be better---this is known as the \emph{explore-exploit tradeoff}.
+
+Explore-exploit tradeoffs caused by lack of knowledge of state transitions, or of rewards, fundamentally differentiate optimal control problems from all others in the list.
+In particular, they make it impossible to simply \emph{solve} the respective problem by maximizing $V^{(\pi)}$, and one must develop other solution concepts.
+To do so, we define the following.
+
+\begin{definition}[Regret]
+The \emph{regret} of a policy $\pi$ is defined as 
+\[
+R^{(\pi)}(x_0) = V^*(x_0) - V^{(\pi)}(x_0)
+\]
+where $V^*$ is the optimal value function, which is assumed to exist.
+\end{definition}
+
+Minimizing regret is equivalent to maximizing value, but when $p$ and $r$ are unknown doing so directly is impossible.
+Instead, the goal is to find a way of updating the policy based on observed data so as to limit growth of regret.
+
+In most settings, one can prove that every algorithm which does not know $p$ and $r$ necessarily incurs some level of regret.
+This is done by exhibiting a randomized set of problems and rewards over which regret is lower-bounded in expectation for any algorithm.
+In such a class, actions that perform well on one problem will necessarily perform badly on another problem.
+Such arguments show that some degree of regret is inevitable.
+
+On the other hand, some algorithms incur more regret than others.
+The obviously-bad algorithm which chooses the exact same action over and over again incurs at most linear regret.
+An algorithm is said to \emph{solve} a decision problem if its asymptotic regret rate with respect to $T$ matches the respective regret lower bound in the given problem class.
+Finding such algorithms is of key interest.
+
+One way to construct algorithms for solving decision problems is to employ a \emph{model-based} approach, which loosely speaking works as follows.
+
+\1 Learn the unknown transitions and/or rewards from observed data using a supervised learning approach.
+\2 Use the learned model(s) to find policy satisfying some criteria.
+\0 
+
+The details of such approaches depends on the setting.
+We will distinguish between two key kinds of decision problems.
+
+\1 If $|S| = 1$, it is known as a \emph{multi-armed bandit} problem.
+\2 Otherwise, it is known as a \emph{reinforcement learning} problem.
+\0 
+
+Multi-armed bandits possess no variable state, and thus only require one to determine which actions are optimal.
+Reinforcement learning allows actions to influence transitions between states, and requires long-term planning, making it much more general, difficult, and important.
+I believe that as a mathematical theory, reinforcement learning is powerful enough to describe many aspects of human and animal intelligence, making it a fundamentally interesting theory to study and develop.
+
+We now restrict ourselves to the bandit setting, which is substantially easier to study and so can be understood much more deeply.
+Here, even when $A$ is a finite set and the rewards are Gaussian, the model-based approach consisting of (i) estimating rewards using empirical risk minimization and (ii) choosing the policy which maximizes rewards is known to be non-optimal.
+This approach fails to explore, and can get stuck chasing sub-optimal rewards.
+
+One way to fix this problem is to replace empirical risk minimization with Bayesian learning, and adopt an appropriate decision rule for selecting actions.
+Doing this yields an approach called \emph{Thompson sampling}, which can be shown optimal in many settings.
+We therefore proceed to study multi-armed bandits in more detail.
 
 \subsection{Multi-armed bandits}
 
@@ -502,7 +608,7 @@ k(x_1,x_1) & \dots &k(x_1,x_n)
 \\
 \vdots & \ddots & \vdots 
 \\
-k(x_nx_1) & \dots & k(x_n,x_n)
+k(x_n,x_1) & \dots & k(x_n,x_n)
 \end{bmatrix}
 \]
 is positive semi-definite.
@@ -613,7 +719,7 @@ Construct a finite-dimensional feature map by discretizing the white noise integ
 
 Closely related to stationarity in embedded spaces
 
-\subsection{Karhunen--Loéve expansions}
+\subsection{Karhunen--Loève expansions}
 
 Alternatively: work with a different kind of spectral theory directly in the space
 

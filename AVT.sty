@@ -347,7 +347,7 @@
 \RequirePackage[inner=\@AVT@margin@inner]{geometry}
 
 % fonts
-\ifAVT@notes@nofonts\else
+\ifAVT@notes@nofonts\let\@AVTsemibold\bfseries\else
 \RequirePackage{lmodern}
 \IfFileExists{mlmodern.sty}{\newcommand{\@AVTsemibold}{\fontfamily{mlmr}\fontencoding{T1}\selectfont}}{\ifdef\XeTeXrevision{\RequirePackage{fontspec}\newfontfamily{\@AVTsemibold}{mlmr10.otf}[SmallCapsFont=mlmcsc10.otf]
 \DeclareMicrotypeAlias{mlmr10.otf}{cmr10}\DeclareMicrotypeAlias{mlmcsc10.otf}{cmcsc10}}{\pdfmapfile{+mlm.map}\newcommand{\@AVTsemibold}{\fontfamily{mlmr}\fontencoding{T1}\selectfont}}}
@@ -364,7 +364,7 @@
 \RequirePackage{titling}
 \pretitle{\begin{center}\huge}
 \posttitle{\par\end{center}\vskip 0.5em}
-\renewcommand{\maketitlehooka}{\list{}{\rightmargin\dimexpr-\marginparwidth-\marginparsep\relax\leftmargin0pt}\item[]\scshape\@AVTsemibold}
+\renewcommand{\maketitlehooka}{\list{}{\rightmargin\dimexpr-\marginparwidth-\marginparsep\relax\leftmargin0pt}\item[]\@AVTsemibold\scshape}
 \renewcommand{\maketitlehookc}{\ifx\thedate\empty\predate{\@gobble}\postdate{}\fi}
 \renewcommand{\maketitlehookd}{\endlist}
 \date{}
