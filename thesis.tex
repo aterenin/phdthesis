@@ -375,28 +375,26 @@ A policy is called \emph{optimal} if it maximizes the \emph{value function}
 \[
 V^{(\pi)}(x_0) = \E \sum_{t=0}^T r_t
 \]
-where $s_{t+1} \~ p(s_t, a_t)$, $a_t \~ \pi(s_t)$, and $r_t \~ r(s_t,a_t)$.
+where $r_t \given s_t,a_t \~ r(s_t,a_t)$, $a_t \given s_t \~ \pi(s_t)$, and $s_{t+1} \given s_t,a_t \~ p(s_t, a_t)$.
 \end{definition}
 
-Finding an optimal policy therefore amounts to selecting the best possible actions to maximize rewards up to the given time horizon.
+Finding an optimal policy therefore amounts to selecting the best possible actions to maximize total rewards.
 It is therefore of key interest to find an optimal policy, if one exists.
-This problem has different names, depending on the setting one considers---some particularly important settings are given as follows.
+Note that closely-related alternative notions of optimality, such as minimizing infinite discounted sums, or limits of averages, are also possible.
+The most important distinction between different problems for finding optimal policies is given by what is assumed known.
 
-\1 If $p$ and $r$ are known, it is known as an \emph{optimal control} problem.
-\2 Otherwise, it is known as a \emph{decision} problem.
+\1 If $p$ and $r$ are known, we say we have an \emph{optimal control} problem.
+\2 Otherwise, we say we have an \emph{decision} problem.
 \0 
 
-These problem classes differ fundamentally from one another. 
+These classes differ fundamentally from one another. 
 Optimal control problems can be viewed as a class of structured optimization problems, where the goal is to compute $\pi$ by evaluating $r$ and $p$ as necessary.
-Here, one generally proceeds by describing equations that $V^{(\pi)}$ and $\pi$ satisfy, and developing schemes for solving them.
+Here, one generally proceeds by proving that $V^{(\pi)}$ and $\pi$ satisfy certain recursive equations, and developing schemes for solving them.
 
-
-Due to the rewards being \emph{unknown}, they cannot simply be maximized and their expectation must be \emph{learned}.
+Decision problems are different.
+Due to the rewards or dynamics being \emph{unknown}, they cannot simply be maximized and their expectation must be \emph{learned}.
 This forces one to consider whether to take advantage of actions known to be good, or to try others in case they might be better---this is known as the \emph{explore-exploit tradeoff}.
-
-Explore-exploit tradeoffs caused by lack of knowledge of state transitions, or of rewards, fundamentally differentiate optimal control problems from all others in the list.
-In particular, they make it impossible to simply \emph{solve} the respective problem by maximizing $V^{(\pi)}$, and one must develop other solution concepts.
-To do so, we define the following.
+For such settings, we need an appropriate solution concept---to obtain one, define the following.
 
 \begin{definition}[Regret]
 The \emph{regret} of a policy $\pi$ is defined as 
@@ -407,7 +405,7 @@ where $V^*$ is the optimal value function, which is assumed to exist.
 \end{definition}
 
 Minimizing regret is equivalent to maximizing value, but when $p$ and $r$ are unknown doing so directly is impossible.
-Instead, the goal is to find a way of updating the policy based on observed data so as to limit growth of regret.
+Instead, the goal is to find an \emph{algorithm}---that is, a way of updating the policy based on observed data---so as to limit growth of regret.
 
 In most settings, one can prove that every algorithm which does not know $p$ and $r$ necessarily incurs some level of regret.
 This is done by exhibiting a randomized set of problems and rewards over which regret is lower-bounded in expectation for any algorithm.
@@ -415,7 +413,7 @@ In such a class, actions that perform well on one problem will necessarily perfo
 Such arguments show that some degree of regret is inevitable.
 
 On the other hand, some algorithms incur more regret than others.
-The obviously-bad algorithm which chooses the exact same action over and over again incurs at most linear regret.
+The obviously-bad algorithm which learns nothing and chooses the exact same action over and over again incurs at most linear regret.
 An algorithm is said to \emph{solve} a decision problem if its asymptotic regret rate with respect to $T$ matches the respective regret lower bound in the given problem class.
 Finding such algorithms is of key interest.
 
@@ -426,13 +424,13 @@ One way to construct algorithms for solving decision problems is to employ a \em
 \0 
 
 The details of such approaches depends on the setting.
-We will distinguish between two key kinds of decision problems.
+We distinguish between two key kinds of decision problems.
 
 \1 If $|S| = 1$, it is known as a \emph{multi-armed bandit} problem.
 \2 Otherwise, it is known as a \emph{reinforcement learning} problem.
 \0 
 
-Multi-armed bandits possess no variable state, and thus only require one to determine which actions are optimal.
+Multi-armed bandits possess no variable state, and thus only require one to learn the rewards and determine which actions are optimal.
 Reinforcement learning allows actions to influence transitions between states, and requires long-term planning, making it much more general, difficult, and important.
 I believe that as a mathematical theory, reinforcement learning is powerful enough to describe many aspects of human and animal intelligence, making it a fundamentally interesting theory to study and develop.
 
@@ -441,14 +439,120 @@ Here, even when $A$ is a finite set and the rewards are Gaussian, the model-base
 This approach fails to explore, and can get stuck chasing sub-optimal rewards.
 
 One way to fix this problem is to replace empirical risk minimization with Bayesian learning, and adopt an appropriate decision rule for selecting actions.
-Doing this yields an approach called \emph{Thompson sampling}, which can be shown optimal in many settings.
+Doing this yields approaches which can be shown optimal in many settings.
 We therefore proceed to study multi-armed bandits in more detail.
 
 \subsection{Multi-armed bandits}
 
-Setup
+The multi-armed bandit problem takes its name from a casino analogy.
+In the 1950s, slot machines often had levers one could pull instead of buttons one could press, and were called \emph{one-armed bandits} for their ability to empty gamblers' wallets.
+A \emph{multi-armed bandit} is a slot machine which for a fixed cost, allows one to pull an arm $x \in X$, and receive a random reward whose distribution depends on $x$.
+The goal is to minimize  expected loss, or, equivalently, maximize total expected rewards.
 
-Basic regret analysis
+Multi-armed bandits can be viewed as discrete-time Markov decision processes with a one-element state space, but this is not necessarily the most fruitful way to think about them.
+We thus begin by introducing formalism and notation better suited to the given setting, which can be viewed as special cases of the notions considered previously.
+
+\begin{definition}[Multi-armed bandit]
+Let $f : X \-> \R$ be bounded above function, let $\eps : \Omega \x X \-> \R$ be a stochastic process such that $\E(\eps(x)) = 0$, and let $y(\omega,x) = f(x) + \eps(\omega,x)$.
+Define the following.
+\1 We say that the Markov decision process $(\{1\},X,y_*\P,\delta_{1})$, where $\delta_1$ is a \emph{multi-armed bandit}.
+\2 We say that a regular conditional probability measure  $\pi : \c{X} \x \bigoplus_{n=1}^\infty (X \x [0,1])^n \-> \R$ is a \emph{multi-armed bandit algorithm}.
+\0
+Here, $\delta_1$ is the Dirac measure centered at $1$ for all actions $x\in X$, which is the only possible conditional probability distribution over a one-element set, and $\bigoplus$ denotes the disjoint union of measurable spaces.
+\end{definition}
+
+An algorithm, then, assigns every dataset of arbitrary size to a probability measure describing what arms should be picked with what probability.
+Each dataset consists of $(x, y)$ pairs where $x$ are the locations chosen by the algorithm, and $y$ are the noisy observed values---recall $\omega$ is the randomness used by the noise.
+Some algorithms maximize $f$ faster than others---we consider this next.
+
+\begin{definition}[Regret]
+For a given multi-armed bandit, let $f(x^*)$ be the global maxima of $f$. 
+Define the \emph{regret} of an algorithm $\pi$ at time $T$ to be
+\[
+R(T) = \sum_{t=1}^T f(x^*) - f(x_t)
+\]
+where $x_t \~ \pi(y_0,..,y_{t-1})$, $y_t = f(x_t) + \eps_t$, and $\eps_t \~ \eps(x)$.
+\end{definition}
+
+Regret behavior in multi-armed bandit problems is strongly dependent on properties of the underlying function $f$, and in particular its domain $X$.
+It is clear by considering for instance $X = \R$ that if $X$ is too large or too unstructured, no algorithm achieves better than linear regret.
+We therefore begin studying the simplest non-trivial domain class.
+
+\begin{definition}[$K$-armed bandit]
+We say that a multi-armed bandit defined over a finite set with cardinality $K=|X|$ is a \emph{$K$-armed bandit}.
+Moreover, if $y(\.,x)$ is a Bernoulli random variable for all $x$, we say it is a \emph{Bernoulli bandit}.
+\end{definition}
+
+What kind of performance is possible on such a problem?
+One can ask and answer this question as follows.
+
+\begin{theorem}
+For any algorithm defined over a class of $K$-armed bandits there is an $f$ such that
+\[
+R(T) \geq \Omega(\sqrt{KT})
+.
+\]
+\end{theorem}
+
+\begin{proof}
+We prove there is a class of random functions $f$ over which every algorithm achieves high regret in expectation, and hence a high-regret $f$ must exist.
+TODO.
+\end{proof}
+
+This tells us that regret is necessarily incurred as consequence of not knowing the expected rewards of each arm given by $f$.
+The next step, then, is to ask: is there an algorithm which achieves this rate?
+We first consider simply evaluating each arm once, and then making choices according to the empirical averages.
+
+\begin{proposition}
+For a Bernoulli bandit, the algorithm which chooses actions by first trying each arm out once, and then selecting arms according to the maximum empirical average
+\[
+x_{t+1} &= \argmax_{x\in X} \mu_t(x)
+&
+\mu_t(x) &= \frac{\sum_{t=1}^T \1_{y_t = 1} \1_{x_t = x}}{\sum_{t=1}^T \1_{x_t = x}}
+\]
+does not achieve optimal regret.
+\end{proposition}
+
+\begin{proof}
+TODO.
+\end{proof}
+
+This algorithm therefore fails to resolve the explore-exploit tradeoff, and gets stuck with suboptimal choices.
+As an alternative, consider a conjugate model together with a simple uncertainty-based decision rule for selecting arms.
+
+\begin{definition}[Beta--Bernoulli--UCB algorithm]
+Define a Bayesian model via the likelihood $\gamma(x) \~[Ber](\mu(x))$ and prior $\mu(x) \~[Beta](a,b)$.
+Define the \emph{beta--Bernoulli upper confidence bound} algorithm which selects actions by maximizing the function
+\[
+x_{t+1} &= \argmax_{x\in X} f^+_t(x) 
+&
+f^+_t(x) &= \mu_t(x) + \sigma_t(x)
+\]
+where $(\mu_t, \sigma_t)$ are the mean and standard deviation of the posterior distribution $\mu\given\gamma(x_1) = y_1, .., \gamma(x_t) = y_t$.
+\end{definition}
+
+We now consider this algorithm's regret.
+It turns out that this simple modification is enough to result in different regret behavior.
+
+\begin{theorem}
+Beta--Bernoulli--UCB achieves a regret of
+\[
+R(T) \leq \tl{\c{O}}(\sqrt{KT})
+\]
+uniformly for all $f$ where $\tl{\c{O}}$ denotes asymptotics up to logarithmic factors.
+\end{theorem}
+
+\begin{proof}
+TODO.
+\end{proof}
+
+This means that our proposed algorithm, which uncertainty built via the posterior distribution, suffices to balance exploration and exploitation in this setting.
+This behavior is not unique to the given model, nor to the upper confidence bound rule.
+More generally, a function $\alpha : X \-> \R$ constructed using a posterior distribution is called an \emph{acquition function}.
+Many different acquisition functions for the given setting have been proposed.
+
+We now proceed to explore a more general setting which will enable us to employ the ideas developed so far to develop efficient black-box optimization algorithms.
+This will enable us to use Bayesian methods to solve a broad class of decision problems of practical interest.
 
 \subsection{Bayesian optimization}
 
