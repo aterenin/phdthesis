@@ -842,26 +842,74 @@ Covariance operator
 
 \section{Discussion}
 
+The preceding sections paint a rich and detailed picture of what a mathematical theory of decision-making under uncertainty looks like.
+We now recap the steps taken so far, and reflect on them, before proceeding to describe contributions to be presented.
+
+We began with the concept of probability, built and defined using the language of measure theory. 
+We used this language to formalize the concept of learning using the notion of conditional probability, thereby obtaining the theory of \emph{Bayesian learning}.
+By working in an abstract measure-theoretic setting, we obtained a formalism suitable for learning about very general unknown quantities of interest.
+
+We then took a step back, examining how to formalize the notion of an agent selecting actions in an unknown environment on basis of interactions, obtaining the key concept of a \emph{Markov decision process}.
+We then immediately restricted to the simpler setting of \emph{multi-armed bandits}.
+We saw that model-based algorithms built atop Bayesian learning yielded decision systems that perform provably well.
+Using these notions, we described how to efficiently solve global optimization problems using \emph{Bayesian optimization}.
+
+To transform the preceding ideas into a workable class of methods, we proceeded to study \emph{Gaussian process} models in depth.
+We developed them in sequence, starting from the simplest settings, and ending with the highest generality.
+These preliminary developments provide us with the key tools in order to use Gaussian processes for the purpose of interest: namely, to build Bayesian models, and high-performance decision systems atop those models.
+
+It is worth pausing to reflect on the relative merits of the choices made thus far.
+In choosing to work with Bayesian learning, we opted to represent uncertainty using probability---a powerful but computationally limiting choice.
+This choice was counterbalanced by working with simple models in bandit-like settings, and is most effective when the decisions of interest must be made in a data-efficient manner that only algorithms with near-asymptotically-optimal regret can achieve.
+
+Not all settings fit these criteria well.
+In many reinforcement learning problems of interest in robotics, the complexity of the dynamics---which, for multi-armed bandits, are totally absent from the problem---is a key difficulty.
+Gaussian processes are largely not expressive enough to represent multi-object collision dynamics and related phenomena.
+We have also not addressed partial observations---another key difficulty in that setting.
+
+On the other hand, no other currently known theoretical framework comes close to understanding decision to the degree of command we have obtained.
+In the absence of a probabilistic framework, it is highly non-trivial how to assess, represent, and propagate uncertainty in a manner that resolves explore-exploit tradeoffs to achieve optimal regret in non-trivial settings.
+Thus, in settings where probabilistic methods can be used, they absolutely should be.
+
+As a step towards building decision systems that progress towards general artificial intelligence, it seems fruitful to expand probabilistic approaches built via Bayesian learning to more general settings.
+Improved understanding of these phenomena may yield lessons of broad interest to understanding of decision.
+Contributions presented here include development of \emph{pathwise conditioning} methods for making Gaussian process models easier to work with, and a variety of \emph{non-Euclidean Gaussian processes}, which are described next.
+
 \section{Contributions}
 
-This work is either published or under review: \textcite{wilson20,borovitskiy20,borovitskiy21,wilson21,hutchinson21}.
+The work presented in this thesis is published as part of a series of papers.
+For both sets of papers, my contributions to the individual works are primarily on the theoretical and methodological side, and are described below.
 
+In Chapter \ref{ch:pathwise}, we present pathwise conditioning techniques: this work is published as \textcite{wilson20,wilson21}, with equal contribution shared among the first four authors.
+In this work, my contributions include development of the random-function-based formalism for describing pathwise conditioning of Gaussian processes, error analysis of basis-function-approximation-based pathwise sampling, re-interpretation of inducing point methods, and review of prior sampling methods.
+All of these were developed jointly with the other authors.
+Chapter \ref{ch:pathwise} also contributes additional Bayesian optimization experiments not included in the published work, performed solely by me.
+
+In Chapter \ref{ch:noneuclidean}, we present Matérn Gaussian processes in a number of non-Euclidean settings, as published in \textcite{borovitskiy20,borovitskiy21} and under review in \textcite{hutchinson21}.
+Here, my contributions include development of the stochastic-partial-differential-equation-based formalism for defining scalar-valued Gaussian processes on Riemannian manifolds and graphs, as well as computational techniques for working with them in practice.
+My contributions also include the differential-geometric formalism on how to rigorously define such processes in the Riemannian vector field setting.
+Both of these contributions were developed jointly with the other authors.
 
 
 \chapter{Pathwise Conditioning}
 \label{ch:pathwise}
 
-\section{Introduction}
+We now study Bayesian learning with Gaussian processes.
+We begin with a review of conjugacy results, which describe how to calculate posterior distributions of Gaussian models.
+This is the standard view which has been used in machine learning, and it mirrors the behavior of the general measure-theoretic setup common to all Bayesian models.
 
-The standard view of GP conditioning is to think about distributions
+In the early 1970s, an alternative view emerged within the geostatistics community.
+Miraculously, in the Gaussian setting it is also possible to develop conditioning in a manner not only based on \emph{distributions}, but on \emph{random variables} directly.
+This view turns out to lift from the multivariate to the Gaussian process setting, yielding \emph{pathwise} representations of posterior Gaussian processes, which has been overlooked in machine learning until now.
 
-In the early 1970s, an alternative view emerged: work with RVs directly
+The pathwise perspective turns out to be a powerful point of view with wide-ranging consequences.
+We will show how to use it to resolve a long-standing difficulty in Bayesian optimization: constructing a posterior approximation whose computational cost is linear both at training time and at test time, with excellent approximation properties and error control.
 
-This view, for whatever reason, never made it into the ML literature
-
-This chapter of the thesis will explore its consequences and use it to solve what has been an open issue in Bayesian optimization for quite some time
-
-The ideas in this chapter are published at ICML and JMLR
+One of the key ingredients used within the construction will be basis function expansions of \emph{prior} Gaussian processes.
+We will thus examine a number of methods for constructing such expansions for different classes of priors.
+We will also reinterpret sparse approximations in a function-based manner simpler than the typical viewpoint.
+We conclude by benchmarking Bayesian optimization using pathwise sampling.
+We proceed to these developments.
 
 \section{Conditioning multivariate Gaussians}
 
@@ -947,9 +995,7 @@ This results in unnecessarily large approximation error and variance starvation
 
 Theorems
 
-\section{Applications}
-
-\subsection{Bayesian optimization}
+\section{Bayesian optimization}
 
 Experiment
 
