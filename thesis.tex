@@ -117,21 +117,26 @@ We will work within the language of measure-theoretic probability, which we now 
 To ease presentation, we state the definitions together with useful ways of thinking about them.
 
 We say that \emph{measurable space} a pair $(Y,\c{Y})$ consisting of a set $Y$ and a $\sigma$-algebra $\c{Y}$ over $Y$.
-A $\sigma$-algebra is a set of subsets of $Y$ closed under unions, intersections, complements, and set-theoretic monotone limits.
+A $\sigma$-algebra is a set of subsets of $Y$ containing the space itself and closed under unions, intersections, complements, and set-theoretic monotone limits.
 These can be reinterpreted as Boolean logical operations, so $\c{Y}$ can be thought of as the set of all true-false questions one can ask about elements of the set $Y$. 
 These questions, then, are closed under \emph{and/or/not} operations and limits thereof.
 
+A map $f : X \-> Y$ between measurable spaces $(X,\c{X})$ and $(Y,\c{Y})$ is said to be \emph{measurable} if its preimage defines a map $f^{-1} : \c{Y} \-> \c{X}$ between the respective $\sigma$-algebras.
+This means that true-false questions for the space $Y$ can be asked and answered relative to true-false questions for the space $X$.
+
 A \emph{probability measure} is a countably additive map $\pi_y : \c{Y} \-> [0,1]$ satisfying $\pi_Y(Y) = 1$. 
-This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is, according to the measure.
+This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is according to the measure---in this view, probability measures describe uncertainty.
 A \emph{probability space} is a measurable space equipped with a probability measure.
-The set $\Omega$ should be viewed as a space of random numbers, with a random number generator described by the measure $\P$.
+The set $\Omega$ can be viewed as a space of abstract random numbers, with a random number generator described by the measure $\P$.
 
 Let $(\Omega,\c{F},\P)$ be a probability space, and let $Y$ be a measurable space.
 We say that a \emph{random variable} is measurable map $y : \Omega \-> Y$.
-A random variable, then, maps random numbers $\omega\in\Omega$ into some space of interest $Y$.
-The \emph{distribution} of a random variable is defined as the \emph{pushforward measure} $\pi_y(A_y) = (y_* \P)(A_y) = \P(y^{-1}(A_y))$ for $A_y\in\c{Y}$.
-The probability an event $A_y$, then, is determined by measuring the probability of random numbers under which they occur---measurability guarantees this is always possible.
+A random variable, then, maps random numbers $\omega\in\Omega$ into the space $Y$.
+The \emph{distribution} of a random variable is defined as the \emph{pushforward measure} $\pi_y(A_y) = (y_* \P)(A_y) = \P(y^{-1}(A_y))$ for all $A_y\in\c{Y}$.
+The probability of an event $A_y$, then, is determined by measuring the probability of random numbers under which $A_y$ occurs---measurability guarantees this is possible.
 
+In this work, we will \emph{not} adopt the standard convention of suppressing $\omega$-arguments of random variables from our notation, and will write such arguments explicitly.
+Though this makes expressions slightly denser, it also avoids ambiguity and presents the mathematics more precisely.
 
 We will be interested in probability measures extended to allow them to be parameterized by other quantities.
 A \emph{probability kernel} is defined to be a map $\pi_{y\given\theta} : \c{Y} \x \Theta \-> [0,1]$ satisfying two conditions: (i) the map $\pi_{y\given\theta}(\.,\vartheta) : \c{Y} \-> [0,1]$ is a probability measure for almost all $\vartheta\in\Theta$, and (ii) the map $\pi_{y\given\theta}(A_y,\.) : \Theta \-> [0,1]$ is measurable for all $A_y\in\c{Y}$.
@@ -208,13 +213,13 @@ More specifically, the likelihood describes how $y$ would be distributed if $\th
 Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution---note that this is meant in a \emph{distributional} sense, not a random-variable-based sense.
 The formulation is given as follows.
 
-\begin{corollary}[Bayes' Rule]
-Assume the spaces $\Theta$ and $Y$ are sufficiently regular that the Disintegration Theorem holds, and let $\pi_y = \pi_{\theta,y}(\Theta\x\.)$.
+\begin{result}[Bayes' Rule]
+Suppose that $\Theta$ and $Y$ are second-countable topological spaces, and let $\pi_y = \pi_{\theta,y}(\Theta\x\.)$.
 Then for every Bayesian model $\pi_{\theta,y}$ there is a $\pi_y\ae[-]$ unique probability kernel $\pi_{\theta\given y}$, which we call the \emph{posterior distribution}.
-\end{corollary}
+\end{result}
 
 \begin{proof}
-Apply the Disintegration Theorem to $\pi_{\theta,y}$.
+Apply the Disintegration Theorem.
 \end{proof}
 
 This result shows that given a Bayesian model, the posterior distribution \emph{exists}.
@@ -415,7 +420,7 @@ These classes differ fundamentally from one another.
 Optimal control problems can be viewed as a class of structured optimization problems, where the goal is to compute $\pi$ by evaluating $r$ and $p$ as necessary.
 Here, one generally proceeds by proving that $V^{(\pi)}$ and $\pi$ satisfy certain recursive equations, and developing schemes for solving them.
 
-Decision problems are different.
+Decision problems do not behave in this manner.
 Due to the rewards or dynamics being \emph{unknown}, they cannot simply be maximized and their expectation must be \emph{learned}.
 This forces one to consider whether to take advantage of actions known to be good, or to try others in case they might be better---this is known as the \emph{explore-exploit tradeoff}.
 For such settings, we need an appropriate solution concept---to obtain one, define the following.
@@ -479,7 +484,7 @@ We thus begin by introducing formalism and notation better suited to the given s
 \begin{definition}[Multi-armed bandit]
 Let $f : X \-> \R$ be bounded above function, let $\eps : \Omega \x X \-> \R$ be a stochastic process such that $\E(\eps(x)) = 0$, and let $y(\omega,x) = f(x) + \eps(\omega,x)$.
 Define the following.
-\1 We say that the Markov decision process $(\{1\},X,y_*\P,\delta_{1})$, where $\delta_1$ is a \emph{multi-armed bandit}.
+\1 We say that the Markov decision process $(\{1\},X,y_*\P,\delta_{1})$, with $\delta_1$ defined below, is a \emph{multi-armed bandit}.
 \2 We say that a probability kernel  $\pi : \c{X} \x \bigoplus_{n=1}^\infty (X \x [0,1])^n \-> \R$ is a \emph{multi-armed bandit algorithm}.
 \0
 Here, $\delta_1$ is the Dirac measure centered at $1$ for all actions $x\in X$, which is the only possible conditional probability distribution over a one-element set, and $\bigoplus$ denotes the disjoint union of measurable spaces.
@@ -513,7 +518,7 @@ One can ask and answer this question as follows.
 \begin{theorem}
 For any algorithm defined over a class of $K$-armed bandits there is an $f$ such that
 \[
-R(T) \geq \Omega(\sqrt{KT})
+\E(R(T)) \geq \Omega(\sqrt{KT})
 .
 \]
 \end{theorem}
@@ -559,9 +564,9 @@ We now consider this algorithm's regret.
 It turns out this simple modification is enough to result in different regret behavior.
 
 \begin{theorem}
-Beta--Bernoulli--UCB achieves a regret of
+Beta--Bernoulli--UCB achieves an expected regret of
 \[
-R(T) \leq \tl{\c{O}}(\sqrt{KT})
+\E(R(T)) \leq \tl{\c{O}}(\sqrt{KT})
 \]
 uniformly for all $f$ where $\tl{\c{O}}$ denotes asymptotics up to logarithmic factors.
 \end{theorem}
@@ -595,18 +600,19 @@ Define
 R(T) = \sum_{t=1}^T f(x_t) - f(x^*)    
 \]
 where we have used the opposite sign convention compared to bandits and reinforcement learning, because our goal is to minimize $f$ rather than maximizing rewards.
+Note that unlike before, for a deterministic algorithm this is now a purely deterministic quantity, and not a random variable.
 
 As before, we can approach this problem by building a Bayesian model.
-For an arbitrary sequence of points $x_1,..,x_n$, define the likelihood
+For an arbitrary sequence of points $x_1,..,x_t$, define the likelihood
 \[
 y_t(\omega) &= f(x_t) + \eps_t(\omega)
 &
 \eps_t &\~[N](0,\sigma^2)
 .
 \]
-Here, the data is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which is now defined on an infinite-dimensional vector space, say, for instance, the space of continuous functions $C^0(X;\R)$.
+Here, the data is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which we view as an element of an infinite-dimensional vector space, say, for instance, the space of continuous functions $C^0(X;\R)$.
 
-It is now clear why we bothered with setting up a dense, abstract formalism for Bayesian learning in general measure spaces: this formalism is rich and powerful enough to enable us to properly define priors $\pi_f$ on spaces like this---we explore these in the sequel.
+It is now clear why we bothered with setting up a dense, abstract formalism for Bayesian learning in general measure spaces: this formalism is rich and powerful enough to enable us to properly define priors on spaces like this---we explore these in the sequel.
 Suppose for the moment that this is possible.
 Then, we can calculate the posterior distribution
 \[
@@ -638,9 +644,9 @@ Regret analysis for all of these choices is possible, and will in general depend
 In particular, regularity and smoothness properties may play a role, as well as structure present in the domain $X$.
 In settings where the function $f$ is unknown, it's also possible to analyze the expression 
 \[
-BR(T) = \E_f R(T) = \E \sum_{t=1}^T f(\omega,x_t) - f(\omega,x^*)    
+BR(T) = \E \sum_{t=1}^T f(\omega,x_t) - f(\omega,x^*(\omega))    
 \]
-where regret is now considered in expectation with respect to the prior---this is called the \emph{Bayesian regret}.
+where minima and regret are now considered in expectation with respect to the prior---this is called the \emph{Bayesian regret}.
 Some acquisition functions, such as Thompson sampling, admit particularly simple analyses in this setting.
 
 This concludes our development and showcasing of decision-making algorithms.
