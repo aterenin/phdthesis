@@ -556,9 +556,71 @@ This will enable us to use Bayesian methods to solve a broad class of decision p
 
 \subsection{Bayesian optimization}
 
-Setup
+We now describe a formalism for using ideas built on Bayesian learning and multi-armed bandits for designing global optimization algorithms.
+Our goal now is to minimize a black-box function
+\[
+f : X \-> \R    
+\]
+which is assumed continuous, and defined on a closed compact set $X \subseteq \R^d$.
+Such a function is automatically bounded.
+Our goal is to minimize $f$ with as few evaluations as possible.
 
-Regret analysis
+To measure performance, we will again introduce a notion of regret.
+Define
+\[
+R(T) = \sum_{t=1}^T f(x_t) - f(x^*)    
+\]
+where we have used the opposite sign convention compared to bandits and reinforcement learning, because our goal is to minimize $f$ rather than maximizing rewards.
+
+As before, we can approach this problem by building a Bayesian model.
+For an arbitrary sequence of points $x_1,..,x_n$, define the likelihood
+\[
+y_t(\omega) &= f(x_t) + \eps_t(\omega)
+&
+\eps_t &\~[N](0,\sigma^2)
+.
+\]
+Here, the data is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which is now defined on an infinite-dimensional vector space, say, for instance, the space of continuous functions $C^0(X;\R)$.
+
+It is now clear why we bothered with setting up a dense, abstract formalism for Bayesian learning in general measure spaces: this formalism is rich and powerful enough to enable us to properly define priors $\pi_f$ on spaces like this---we explore these in the sequel.
+Suppose for the moment that this is possible.
+Then, we can calculate the posterior distribution
+\[
+f \given y_1,..,y_t
+\]
+which is now a probability measure supported on $C^0(X;\R)$.
+To determine the next point to query, we introduce and maximize an acquisition function.
+Typical acquisition functions include the \emph{upper confidence bound} acquisition function considered previously, as well as \emph{Thompson sampling}
+\[
+x_{t+1}(\omega) &= \argmax_{x\in X} \phi_t(\omega,x)
+&
+\phi_t&\~ f \given y_1,..,y_t
+\]
+which is a \emph{random} acquisition function, and \emph{expected improvement}
+\[
+x_{t+1} = \argmax_{x\in X} \E \max(0,f_t(\omega,x) - f(x^*_t))
+\]
+where $f_t = f \given y_1,..,y_t$ is the posterior, and $x^*_t = \argmin_{t \in \{1,..,t\}} f(x_t)$ is the smallest value observed so far.
+A more recent and particularly promising approach is \emph{information-directed sampling}, which is given by
+\[
+x_{t+1}(\omega) &= \argmax_{x\in X} \psi_t(\omega,x)
+&
+\psi_t &\~ \frac{\Delta^2_t}{I_t}
+\]
+where, again letting $f_t = f \given y_1,..,y_t$, we have $\Delta_t(\omega,x) = f_t(\omega,x) - f^*_t(\omega)$ is the a posteriori regret, $f^*_t(\omega) = \min_{x\in X} f_t(\omega,x)$ is the random minima under the current posterior, and $I_t(x) = I(f^*_t; f_t(\.,x))$ is the mutual information between a given value, and the a posteriori optimal value.\footnote{TODO: check me.}
+Variations of this algorithm have been shown optimal in a number of settings.
+
+Regret analysis for all of these choices is possible, and will in general depend on the detailed properties on the model, acquisition function, and the unknown function $f$.
+In particular, regularity and smoothness properties may play a role, as well as structure present in the domain $X$.
+In settings where the function $f$ is unknown, it's also possible to analyze the expression 
+\[
+BR(T) = \E_f R(T) = \E \sum_{t=1}^T f(\omega,x_t) - f(\omega,x^*)    
+\]
+where regret is now considered in expectation with respect to the prior---this is called the \emph{Bayesian regret}.
+Some acquisition functions, such as Thompson sampling, admit particularly simple analyses in this setting.
+
+This concludes our development and showcasing of decision-making algorithms.
+We now proceed to develop the final piece of the puzzle not yet studied in detail: how to place priors on function spaces, in order to build Bayesian models for settings such as Bayesian optimization.
 
 \section{Gaussian processes}
 
