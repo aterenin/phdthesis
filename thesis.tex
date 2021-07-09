@@ -112,6 +112,36 @@ Following these, Chapter \ref{ch:conclusion} concludes.
 To pursue these goals, it is critically important that all of the ideas described in the preceding paragraphs be made into rigorous mathematics, so that the ideas described in the sequel ultimately reduce to definitions and implications, and not metaphor or opinion.
 Together, we will therefore begin by defining the key mathematical notions needed, beginning with the learning framework within which we will work.
 
+\subsection*{Mathematical preliminaries}
+We will work within the language of measure-theoretic probability, which we now recall.
+To ease presentation, we state the definitions together with useful ways of thinking about them.
+
+We say that \emph{measurable space} a pair $(Y,\c{Y})$ consisting of a set $Y$ and a $\sigma$-algebra $\c{Y}$ over $Y$.
+A $\sigma$-algebra is a set of subsets of $Y$ closed under unions, intersections, complements, and set-theoretic monotone limits.
+These can be reinterpreted as Boolean logical operations, so $\c{Y}$ can be thought of as the set of all true-false questions one can ask about elements of the set $Y$. 
+These questions, then, are closed under \emph{and/or/not} operations and limits thereof.
+
+A \emph{probability measure} is a countably additive map $\pi_y : \c{Y} \-> [0,1]$ satisfying $\pi_Y(Y) = 1$. 
+This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is, according to the measure.
+A \emph{probability space} is a measurable space equipped with a probability measure.
+The set $\Omega$ should be viewed as a space of random numbers, with a random number generator described by the measure $\P$.
+
+Let $(\Omega,\c{F},\P)$ be a probability space, and let $Y$ be a measurable space.
+We say that a \emph{random variable} is measurable map $y : \Omega \-> Y$.
+A random variable, then, maps random numbers $\omega\in\Omega$ into some space of interest $Y$.
+The \emph{distribution} of a random variable is defined as the \emph{pushforward measure} $\pi_y(A_y) = (y_* \P)(A_y) = \P(y^{-1}(A_y))$ for $A_y\in\c{Y}$.
+The probability an event $A_y$, then, is determined by measuring the probability of random numbers under which they occur---measurability guarantees this is always possible.
+
+
+We will be interested in probability measures extended to allow them to be parameterized by other quantities.
+A \emph{probability kernel} is defined to be a map $\pi_{y\given\theta} : \c{Y} \x \Theta \-> [0,1]$ satisfying two conditions: (i) the map $\pi_{y\given\theta}(\.,\vartheta) : \c{Y} \-> [0,1]$ is a probability measure for almost all $\vartheta\in\Theta$, and (ii) the map $\pi_{y\given\theta}(A_y,\.) : \Theta \-> [0,1]$ is measurable for all $A_y\in\c{Y}$.
+
+Random variables can also be extended to parameterize them by other quantities.
+We say that a jointly measurable map $y\given\theta : \Omega \x \Theta \-> Y$ is a \emph{jointly measurable stochastic process}, though we mostly eschew this terminology to emphasize the Bayesian nature of our formalism.
+Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, where the pushforward is taken in the first argument---by Lemma \ref{lem:rcrv-rvm-equiv}, this is seen to be a probability kernel.
+
+
+
 \section{Bayesian learning}
 
 The key idea behind Bayesian learning is to define \emph{learning} using \emph{conditional probability}.
@@ -127,21 +157,15 @@ A model can be constructed in a number of different ways.
 The most common technique is to specify two components: (i) a probability distribution describing what is known about the quantity of interest external to the data, and (ii) how the data relates to the quantity of interest.
 These are called the \emph{prior distribution} and \emph{likelihood}, respectively.
 
-To simplify notation, we introduce the following bookkeeping device.
-Define a \emph{regular conditional random variable} to be a map $y\given\theta : \Omega \x \Theta \-> Y$ which is a measurable in both arguments: formally speaking, this is precisely a \emph{stochastic process} with an additional measurability requirement, but we will eschew this terminology to emphasize the Bayesian nature of our formalism.
-
-Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, where the pushforward is taken in the first argument---by Lemma \ref{lem:rcrv-rvm-equiv}, this is seen to be a regular conditional probability measure.
-
-
 \begin{proposition}
 A Bayesian model can be constructed in the following ways.
 \1 Using measures: integrate the following two components.
 \1 \emph{Prior}: a probability measure $\pi_\theta$.
-\2 \emph{Likelihood}: a regular conditional probability measure $\pi_{y\given\theta}$.
+\2 \emph{Likelihood}: a probability kernel $\pi_{y\given\theta}$.
 \0 
 \2 Using random variables: compose the following two components.
 \1 \emph{Prior}: a random variable $\theta:\Omega\->\Theta$.
-\2 \emph{Likelihood}: a regular conditional random variable $y\given\theta: \Omega\x\Theta\->Y$.
+\2 \emph{Likelihood}: a jointly measurable stochastic process $y\given\theta: \Omega\x\Theta\->Y$.
 \0 
 \0 
 Moreover, if $y\given\theta$ additionally satisfies the \emph{non-duplicate dependence} condition---namely, that for almost every $\theta'\in\Theta$, the random variable $(y\given\theta)(\.,\theta') : \Omega \-> Y$ is independent of $\theta$---then the constructions coincide.
@@ -186,7 +210,7 @@ The formulation is given as follows.
 
 \begin{corollary}[Bayes' Rule]
 Assume the spaces $\Theta$ and $Y$ are sufficiently regular that the Disintegration Theorem holds, and let $\pi_y = \pi_{\theta,y}(\Theta\x\.)$.
-Then for every Bayesian model $\pi_{\theta,y}$ there is a $\pi_y\ae[-]$ unique regular conditional probability measure $\pi_{\theta\given y}$, which we call the \emph{posterior distribution}.
+Then for every Bayesian model $\pi_{\theta,y}$ there is a $\pi_y\ae[-]$ unique probability kernel $\pi_{\theta\given y}$, which we call the \emph{posterior distribution}.
 \end{corollary}
 
 \begin{proof}
@@ -282,12 +306,12 @@ We now prove a number of technical lemmas used in the preceding text, which for 
 
 \begin{lemma}
 \label{lem:rcrv-rvm-equiv}
-Let $a : \Omega\->A$ be a random variable and let $b:\Omega\x A\->B$ be a stochastic process which is measurable in its second argument.
-Then the map $b_*\P : \c{B} \x A \-> [0,1]$, where the pushforward is taken in the first argument, is a regular conditional probability measure.
+Let $b:\Omega\x A\->B$ be a jointly measurable stochastic process.
+Then the map $b_*\P : \c{B} \x A \-> [0,1]$, where the pushforward is taken in the first argument, is a probability kernel.
 \end{lemma}
 
 \begin{proof}
-It is clear that $b_* \P$ is a probability measure for almost all $a'\in A$, so we only need to prove that the map $a \|> (b(\.,a)_*\P)(A_b)$ is measurable for all $A_b\in\c{B}$.
+It is clear that $b_* \P$ is a probability measure for all $a'\in A$, so we only need to prove that the map $a \|> (b(\.,a)_*\P)(A_b)$ is measurable for all $A_b\in\c{B}$.
 First, write
 \[
 (b_*\P)(A_b) = \P(b(\.,a)^{-1}(A_b)) = \int_\Omega \1_{b(\omega,a)\in A_b} \d\bb{P}(\omega)
@@ -310,7 +334,7 @@ TODO.
 
 \begin{lemma}
 \label{lem:non-dupl-dep}
-Let $a : \Omega \-> A$ be a random variable and $b : \Omega \x A \-> B$ be a stochastic process which is measurable in its second argument.
+Let $a : \Omega \-> A$ be a random variable and $b : \Omega \x A \-> B$ be a jointly measurable stochastic process.
 Suppose that for almost all $a'\in A$, the random variable $b(\.,a') : \Omega \-> B$ is independent of $a$.
 Then for all bounded measurable functions $f$ we have
 \[
@@ -343,8 +367,8 @@ To begin, we formalize the very general concept of an abstract agent making deci
 A \emph{discrete-time Markov decision process} is a $4$-tuple consisting of the following.
 \1 State space: a measurable space $S$.
 \2 Action space: a measurable space $A$.
-\3 Reward: a regular conditional probability measure $r : \c{B}(\R) \x X \x A \-> \R$. 
-\4 Transition kernel: a regular conditional probability measure $p : \c{S} \x S \x A \-> \R$.
+\3 Reward: a probability kernel $r : \c{B}(\R) \x X \x A \-> \R$. 
+\4 Transition kernel: a probability kernel $p : \c{S} \x S \x A \-> \R$.
 \0 
 \end{definition}
 
@@ -359,7 +383,7 @@ The choice of actions in every state is called a \emph{policy}, and is formalize
 \begin{definition}[Policy]
 Define the following.
 \1 A measurable function $\pi : S \-> A$ is called a \emph{deterministic policy}.
-\2 A regular conditional probability measure $\pi : \c{A} \x S \-> \R$ is called a \emph{Markov policy}.
+\2 A probability kernel $\pi : \c{A} \x S \-> \R$ is called a \emph{Markov policy}.
 \0 
 \end{definition}
 
@@ -456,7 +480,7 @@ We thus begin by introducing formalism and notation better suited to the given s
 Let $f : X \-> \R$ be bounded above function, let $\eps : \Omega \x X \-> \R$ be a stochastic process such that $\E(\eps(x)) = 0$, and let $y(\omega,x) = f(x) + \eps(\omega,x)$.
 Define the following.
 \1 We say that the Markov decision process $(\{1\},X,y_*\P,\delta_{1})$, where $\delta_1$ is a \emph{multi-armed bandit}.
-\2 We say that a regular conditional probability measure  $\pi : \c{X} \x \bigoplus_{n=1}^\infty (X \x [0,1])^n \-> \R$ is a \emph{multi-armed bandit algorithm}.
+\2 We say that a probability kernel  $\pi : \c{X} \x \bigoplus_{n=1}^\infty (X \x [0,1])^n \-> \R$ is a \emph{multi-armed bandit algorithm}.
 \0
 Here, $\delta_1$ is the Dirac measure centered at $1$ for all actions $x\in X$, which is the only possible conditional probability distribution over a one-element set, and $\bigoplus$ denotes the disjoint union of measurable spaces.
 \end{definition}
@@ -518,7 +542,7 @@ TODO.
 \end{proof}
 
 This algorithm therefore fails to resolve the explore-exploit tradeoff, and gets stuck with suboptimal choices.
-As an alternative, consider a conjugate model together with a simple uncertainty-based decision rule for selecting arms.
+As an alternative, consider a conjugate model with a simple uncertainty-based decision rule for selecting arms.
 
 \begin{definition}[Beta--Bernoulli--UCB algorithm]
 Define a Bayesian model via the likelihood $\gamma(x) \~[Ber](\mu(x))$ and prior $\mu(x) \~[Beta](a,b)$.
@@ -532,7 +556,7 @@ where $(\mu_t, \sigma_t)$ are the mean and standard deviation of the posterior d
 \end{definition}
 
 We now consider this algorithm's regret.
-It turns out that this simple modification is enough to result in different regret behavior.
+It turns out this simple modification is enough to result in different regret behavior.
 
 \begin{theorem}
 Beta--Bernoulli--UCB achieves a regret of
