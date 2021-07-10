@@ -232,6 +232,13 @@ More specifically, the likelihood describes how $y$ would be distributed if $\th
 Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution---note that this is meant in a \emph{distributional} sense, not a random-variable-based sense.
 The formulation is given as follows.
 
+\begin{figure*}[t]
+\vspace*{10ex}
+[Bayes' Rule Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
+
 \begin{result}[Bayes' Rule]
 Suppose that $\Theta$ and $Y$ are second-countable topological spaces, and let $\pi_y = \pi_{\theta,y}(\Theta\x\.)$.
 Then for every Bayesian model $\pi_{\theta,y}$ there is a $\pi_y\ae[-]$ unique probability kernel $\pi_{\theta\given y}$, which we call the \emph{posterior distribution}.
@@ -399,6 +406,13 @@ A \emph{discrete-time Markov decision process} is a $4$-tuple consisting of the 
 This is a very broad notion---however, a number of variations are also possible.
 For instance, one can consider continuous-time, purely deterministic, and partially observed analogs---each of these involve their own subtleties and deserve study in their own right, but we do not pursue them here.
 
+\begin{figure*}[t]
+\vspace*{10ex}
+[Markov Decision Process Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
+
 The idea behind this definition is that, at every point in time, the agent observes the current state, chooses an action $a \in A$, and obtains another state $s' \~ p(s,a)$.
 Note that \emph{time} can, and often will, be part of the state $s$.
 The agent's goal is to choose each action so as to control the entire trajectory of states in order to obtain maximum rewards.
@@ -500,6 +514,13 @@ The goal is to minimize  expected loss, or, equivalently, maximize total expecte
 Multi-armed bandits can be viewed as discrete-time Markov decision processes with a one-element state space, but this is not necessarily the most fruitful way to think about them.
 We thus begin by introducing formalism and notation better suited to the given setting, which can be viewed as special cases of the notions considered previously.
 
+\begin{figure*}[t]
+\vspace*{10ex}
+[Multi-armed Bandit Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
+
 \begin{definition}[Multi-armed bandit]
 Let $f : X \-> \R$ be bounded above function, let $\eps : \Omega \x X \-> \R$ be a stochastic process such that $\E(\eps(x)) = 0$, and let $y(\omega,x) = f(x) + \eps(\omega,x)$.
 Define the following.
@@ -512,6 +533,13 @@ Here, $\delta_1$ is the Dirac measure centered at $1$ for all actions $x\in X$, 
 An algorithm, then, assigns every dataset of arbitrary size to a probability measure describing what arms should be picked with what probability.
 Each dataset consists of $(x, y)$ pairs where $x$ are the locations chosen by the algorithm, and $y$ are the noisy observed values---recall $\omega$ is the randomness used by the noise.
 Some algorithms maximize $f$ faster than others---we consider this next.
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[Regret Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
 
 \begin{definition}[Regret]
 For a given multi-armed bandit, let $f(x^*)$ be the global maxima of $f$. 
@@ -599,6 +627,14 @@ This behavior is not unique to the given model, nor to the upper confidence boun
 More generally, a function $\alpha : X \-> \R$ constructed using a posterior distribution is called an \emph{acquition function}.
 Many different acquisition functions for the given setting have been proposed.
 
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[UCB Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
+
 We now proceed to explore a more general setting which will enable us to employ the ideas developed so far to develop efficient black-box optimization algorithms.
 This will enable us to use Bayesian methods to solve a broad class of decision problems of practical interest.
 
@@ -630,6 +666,15 @@ y_t(\omega) &= f(x_t) + \eps_t(\omega)
 .
 \]
 Here, the data is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which we view as an element of an infinite-dimensional vector space, say, for instance, the space of continuous functions $C^0(X;\R)$.
+
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[Bayesian Optimization Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
+
 
 It is now clear why we bothered with setting up a dense, abstract formalism for Bayesian learning in general measure spaces: this formalism is rich and powerful enough to enable us to properly define priors on spaces like this---we explore these in the sequel.
 Suppose for the moment that this is possible.
@@ -697,6 +742,8 @@ This setting is well-studied when $X$ is itself a Euclidean space: in Chapter \r
 This level of generality will be important for two reasons: (i) to develop a coordinate-free notion of Gaussian random vectors that will be useful in the differential-geometric setting, and (ii) to develop a formalism rich enough to define white noise processes, which will be needed to work with stochastic partial differential equations.
 \0 
 
+In what follows, our goal will be to lay the groundwork for subsequent development.
+Thus, we will not discuss Bayesian learning with Gaussian processes, which will instead be presented in Chapter \ref{ch:pathwise}.
 We proceed to examine the scalar case.
 
 \subsection{Gaussian random variables}
@@ -721,6 +768,14 @@ y = \sigma z + \mu
 .
 \]
 \end{definition}
+
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[Gaussian Density Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
 
 Note that we do \emph{not} require $\sigma \geq 0$: hence, every Gaussian random variable is determined uniquely in 
 distribution by the pair $(\mu,\sigma^2)$, which we call its \emph{mean} and \emph{variance}, respectively. 
@@ -778,6 +833,14 @@ A random variable $\v{y} : \Omega\->\R^d$ is called \emph{multivariate Gaussian}
 .
 \]
 \end{definition}
+
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[Multivariate Gaussian Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
 
 Every multivariate Gaussian is determined by its \emph{mean vector} $\v\mu$ and positive semi-definite \emph{covariance matrix} $\m\Sigma = \m{L}\m{L}^T$, and, as before, is called \emph{centered} if $\v\mu = \v{0}$.
 We write $\v{y}\~[N](\v\mu,\m\Sigma)$ can obtain a centered multivariate Gaussian with a given distribution by calculating a \emph{matrix square root} of $\m\Sigma$, multiplying it with a standard Gaussian.
@@ -868,6 +931,13 @@ Using this notion, we define Gaussian processes.
 Let $X$ be a set. 
 A random process $f: \Omega \x X \-> \R$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.,x_1),..,f(\.,x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
 \end{definition}
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[Gaussian Process Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
 
 Immediately upon writing this definition, one is left to wonder: does it actually make sense?
 In particular, do Gaussian processes in the sense given here exist?

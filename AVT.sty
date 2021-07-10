@@ -364,7 +364,7 @@
 \RequirePackage{titling}
 \pretitle{\begin{center}\huge}
 \posttitle{\par\end{center}\vskip 0.5em}
-\renewcommand{\maketitlehooka}{\list{}{\rightmargin\dimexpr-\marginparwidth-\marginparsep\relax\leftmargin0pt}\item[]\@AVTsemibold\scshape}
+\renewcommand{\maketitlehooka}{\list{}{\rightmargin\dimexpr-\marginparwidth-\marginparsep\relax\leftmargin\z@}\item[]\@AVTsemibold\scshape}
 \renewcommand{\maketitlehookc}{\ifx\thedate\empty\predate{\@gobble}\postdate{}\fi}
 \renewcommand{\maketitlehookd}{\endlist}
 \date{}
@@ -375,7 +375,7 @@
 \renewcommand{\abstractnamefont}{\scshape\@AVTsemibold}
 \renewcommand{\abstracttextfont}{\noindent}
 \abslabeldelim{.}
-\setlength{\absparindent}{0pt}
+\setlength{\absparindent}{\z@}
 \setlength{\abstitleskip}{-\parindent}
 \setlength{\absleftindent}{1.5\@AVT@margin@inner}
 \setlength{\absrightindent}{\dimexpr1.5\@AVT@margin@inner-\marginparwidth-\marginparsep\relax}
@@ -392,8 +392,8 @@
 \titleformat{\section}{\@AVTsemibold\scshape\LARGE}{\thesection}{1em}{\raggedright#1}
 }
 \titleformat{\subsection}[runin]{\bfseries}{\thesubsection.}{1ex}{#1.}
-\titlespacing{\section}{0pt}{*3.5}{*2}
-\titlespacing{\subsection}{0pt}{*3.5}{*1}
+\titlespacing{\section}{\z@}{*3.5}{*2}
+\titlespacing{\subsection}{\z@}{*3.5}{*1}
 
 % heading style for book class
 \RequirePackage{titleps}
@@ -408,7 +408,7 @@
 {}{}{\thepage}
 }
 \pagestyle{headings}
-\widenhead*{0in}{\dimexpr\marginparwidth+\marginparsep\relax}
+\widenhead*{\z@}{\dimexpr\marginparwidth+\marginparsep\relax}
 }{
 \renewpagestyle{plain}{\setfoot{}{}{\rlap{\hspace*{\dimexpr\marginparwidth+\marginparsep\relax}\llap{\thepage}}}}
 \pagestyle{plain}
@@ -438,10 +438,15 @@
 \declaretheoremstyle[spaceabove=\baselineskip,spacebelow=\baselineskip,bodyfont=\slshape\renewcommand{\eminnershape}{\scshape},headfont=\@AVTsemibold,headpunct=.,headformat=\NAME\thmt@space\NUMBER]{marginnotethm}
 \addtotheorempostheadhook{\marginnote{\normalfont\thmt@optarg}}
 \newcommand{\emphmarginnote}[1]{\emph{#1}\marginnote{\MakeUppercase#1}}
-\newcommand{\parmarginnote}[1]{\hspace{0pt}\marginnote{#1}\ignorespaces}
+\newcommand{\parmarginnote}[1]{\hspace{\z@}\marginnote{#1}\ignorespaces}
 \renewcommand{\raggedrightmarginnote}{\raggedleft}
 \renewcommand{\raggedleftmarginnote}{\raggedright}
 \renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
+
+% full width starred figures and tables
+\RequirePackage{ifoddpage}
+\renewenvironment{figure*}[1][]{\@float{figure}[#1]\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
+\renewenvironment{table*}[1][]{\@float{table}[#1]\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
 
 % center figures and load theorem names
 \AVT@centerfigurestrue
