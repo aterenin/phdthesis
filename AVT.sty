@@ -320,28 +320,28 @@
 % margins
 \newlength{\@AVT@margin@inner}
 \ifAVT@notes@afourpaper
-\PassOptionsToPackage{a4paper,top=5.3cm,bottom=5.3cm,marginparsep=0.3cm}{geometry}
+\PassOptionsToPackage{a4paper,top=5.3cm,bottom=5.3cm,marginparsep=0.5cm}{geometry}
 \ifnum\@ptsize=2
 \setlength{\@AVT@margin@inner}{1.3cm}
-\PassOptionsToPackage{outer=6cm,inner=1.3cm,marginparwidth=4.4cm}{geometry}
+\PassOptionsToPackage{outer=6cm,inner=1.3cm,marginparwidth=4.2cm}{geometry}
 \else\ifnum\@ptsize=1
 \setlength{\@AVT@margin@inner}{2cm}
-\PassOptionsToPackage{outer=6.3cm,inner=2cm,marginparwidth=4.0cm}{geometry}
+\PassOptionsToPackage{outer=6.3cm,inner=2cm,marginparwidth=3.8cm}{geometry}
 \else
 \setlength{\@AVT@margin@inner}{2.3cm}
-\PassOptionsToPackage{outer=6.6cm,inner=2.3cm,marginparwidth=4.0cm}{geometry}
+\PassOptionsToPackage{outer=6.6cm,inner=2.3cm,marginparwidth=3.8cm}{geometry}
 \fi\fi
 \else
-\PassOptionsToPackage{letterpaper,top=1.75in,bottom=1.75in,marginparsep=0.125in}{geometry}
+\PassOptionsToPackage{letterpaper,top=1.75in,bottom=1.75in,marginparsep=0.25in}{geometry}
 \ifnum\@ptsize=2
 \setlength{\@AVT@margin@inner}{0.625in}
-\PassOptionsToPackage{outer=2.5in,inner=0.625in,marginparwidth=1.75in}{geometry}
+\PassOptionsToPackage{outer=2.5in,inner=0.625in,marginparwidth=1.625in}{geometry}
 \else\ifnum\@ptsize=1
 \setlength{\@AVT@margin@inner}{0.75in}
-\PassOptionsToPackage{outer=2.75in,inner=0.75in,marginparwidth=1.875in}{geometry}
+\PassOptionsToPackage{outer=2.75in,inner=0.75in,marginparwidth=1.75in}{geometry}
 \else
 \setlength{\@AVT@margin@inner}{0.875in}
-\PassOptionsToPackage{outer=2.875in,inner=0.875in,marginparwidth=1.875in}{geometry}
+\PassOptionsToPackage{outer=2.875in,inner=0.875in,marginparwidth=1.75in}{geometry}
 \fi\fi
 \fi
 \RequirePackage[inner=\@AVT@margin@inner]{geometry}
@@ -431,12 +431,14 @@
 % caption format
 \RequirePackage[format=plain,labelsep=period,font=sl]{caption}
 
-% theorem styles
+% theorem styles and margin notes
 \RequirePackage{amsthm}
 \RequirePackage{thmtools}
 \RequirePackage{marginnote}
-\declaretheoremstyle[spaceabove=\baselineskip,spacebelow=\baselineskip,bodyfont=\slshape\renewcommand{\eminnershape}{\scshape},headfont=\@AVTsemibold,headpunct=.,headformat=\NAME\thmt@space\NUMBER]{theorem}
-\addtotheorempostheadhook{\marginnote[\normalfont\thmt@optarg]{\normalfont\thmt@optarg}}
+\declaretheoremstyle[spaceabove=\baselineskip,spacebelow=\baselineskip,bodyfont=\slshape\renewcommand{\eminnershape}{\scshape},headfont=\@AVTsemibold,headpunct=.,headformat=\NAME\thmt@space\NUMBER]{marginnotethm}
+\addtotheorempostheadhook{\marginnote{\normalfont\thmt@optarg}}
+\newcommand{\emphmarginnote}[1]{\emph{#1}\marginnote{\MakeUppercase#1}}
+\newcommand{\parmarginnote}[1]{\hspace{0pt}\marginnote{#1}\ignorespaces}
 \renewcommand{\raggedrightmarginnote}{\raggedleft}
 \renewcommand{\raggedleftmarginnote}{\raggedright}
 \renewcommand{\qedsymbol}{\ensuremath{\blacksquare}}
@@ -468,20 +470,20 @@
 
 \RequirePackage{amsthm}
 \RequirePackage{thmtools}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi]{theorem}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{algorithm}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{assumption}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{axiom}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{conjecture}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{corollary}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{counterexample}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{definition}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{example}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{exercise}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{lemma}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{proposition}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{remark}
-\declaretheorem[style=\ifAVT@notes theorem\else plain\fi,numberlike=theorem]{result}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi]{theorem}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{algorithm}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{assumption}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{axiom}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{conjecture}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{corollary}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{counterexample}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{definition}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{example}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{exercise}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{lemma}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{proposition}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{remark}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{result}
 
 \fi
 

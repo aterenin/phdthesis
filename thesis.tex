@@ -78,7 +78,7 @@ Not more than 300 words
 
 \lettrine{L}{earning} from experience in order to change behavior is one of the defining abilities of biological systems, which differentiates them from other kinds of systems found in the world.
 Replicating the processes biological systems use to learn and adapt is a fundamental goal of science and technology.
-The development of mathematical formalisms rich enough to capture the notion of learning is one of the crowning achievements of statistics, machine learning, and artificial intelligence.
+To this end, the development of mathematical formalisms rich enough to capture the notion of learning is one of the crowning achievements of statistics, machine learning, and artificial intelligence.
 
 One such formalism is the \emph{Bayesian} view of learning.
 In this framework, one starts with (i) a probability distribution describing the information known about the quantity of interest external to the data, and (ii) a conditional probability distribution describing how the quantity of interest relates to the data.
@@ -110,40 +110,59 @@ Contributions toward (i) include path-wise conditioning techniques studied in Ch
 Following these, Chapter \ref{ch:conclusion} concludes.
 
 To pursue these goals, it is critically important that all of the ideas described in the preceding paragraphs be made into rigorous mathematics, so that the ideas described in the sequel ultimately reduce to definitions and implications, and not metaphor or opinion.
-Together, we will therefore begin by defining the key mathematical notions needed, beginning with the learning framework within which we will work.
+Together, we therefore begin by defining the key mathematical notions needed.
 
-\subsection*{Mathematical preliminaries}
-We will work within the language of measure-theoretic probability, which we now recall.
+\subsection*{Review of probability theory}
+We adopt the language of measure-theoretic probability, which we now recall.
 To ease presentation, we state the definitions together with useful ways of thinking about them.
 
-We say that \emph{measurable space} a pair $(Y,\c{Y})$ consisting of a set $Y$ and a $\sigma$-algebra $\c{Y}$ over $Y$.
-A $\sigma$-algebra is a set of subsets of $Y$ containing the space itself and closed under unions, intersections, complements, and set-theoretic monotone limits.
+
+We say that \emphmarginnote{measurable space} is a pair $(Y,\c{Y})$ consisting of a set $Y$ and a $\sigma$-algebra $\c{Y}$ over $Y$.
+A \emph{$\sigma$-algebra} is a set of subsets of $Y$ containing the space itself which is closed under unions, intersections, complements, and set-theoretic monotone limits.
 These can be reinterpreted as Boolean logical operations, so $\c{Y}$ can be thought of as the set of all true-false questions one can ask about elements of the set $Y$. 
 These questions, then, are closed under \emph{and/or/not} operations and limits thereof.
 
-A map $f : X \-> Y$ between measurable spaces $(X,\c{X})$ and $(Y,\c{Y})$ is said to be \emph{measurable} if its preimage defines a map $f^{-1} : \c{Y} \-> \c{X}$ between the respective $\sigma$-algebras.
-This means that true-false questions for the space $Y$ can be asked and answered relative to true-false questions for the space $X$.
+\parmarginnote{Product of measurable spaces}
+Given two measurable spaces $(Y,\c{Y})$ and $(\Theta,\mathit\Theta)$, if we form the Cartesian product $Y \x \Theta$, then we can define the \emph{product $\sigma$-algebra} $\c{Y}\ox\mathit\Theta$ as the smallest $\sigma$-algebra containing all sets of the form $A_y \x A_\theta$ with $A_y \in\c{Y}$ and $A_\theta\in\mathit\Theta$.
+\marginnote{Subset of a measurable space}
+For a subset $Y' \subseteq Y$, we can define $\c{Y}' = \{A_y \^ Y' : A_y \in\c{Y}\}$, which is also a $\sigma'$-algebra, thereby making $(Y',\c{Y}')$ into a measurable space. 
+We call $\c{Y}'$ the \emph{subset $\sigma$-algebra}.
 
-A \emph{probability measure} is a countably additive map $\pi_y : \c{Y} \-> [0,1]$ satisfying $\pi_Y(Y) = 1$. 
+\parmarginnote{Measurable function}
+A map $f : Y \-> Y'$ between measurable spaces $(Y,\c{Y})$ and $(Y',\c{Y}')$ is said to be \emph{measurable} if its preimage defines a map $f^{-1} : \c{Y}' \-> \c{Y}$ between the respective $\sigma$-algebras.
+This means that true-false questions for the space $Y'$ can be asked and answered relative to true-false questions for the space $Y$.
+On product spaces, map $f : Y \-> \Theta \x \Theta'$ is measurable if its components are measurable, but a map $f : Y \x Y' \-> \Theta$ \emph{need not} automatically be measurable if $f(\.,y') : Y \-> \Theta$ and $f(y,\.) : Y' \-> \Theta$ are measurable for all $y,y'$.
+
+% existence of RVs with a given measure
+
+A \emphmarginnote{probability measure} is a countably additive map $\pi_y : \c{Y} \-> [0,1]$ satisfying $\pi_Y(Y) = 1$. 
 This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is according to the measure---in this view, probability measures describe uncertainty.
-A \emph{probability space} is a measurable space equipped with a probability measure.
-The set $\Omega$ can be viewed as a space of abstract random numbers, with a random number generator described by the measure $\P$.
+A \emph{probability space} is a measurable space $(\Omega,\c{F})$ equipped with a probability measure $\P$.
+The set $\Omega$ can be viewed as a space of abstract random numbers, with a random number generator described by $\P$.
 
-Let $(\Omega,\c{F},\P)$ be a probability space, and let $Y$ be a measurable space.
-We say that a \emph{random variable} is measurable map $y : \Omega \-> Y$.
+Given a probability space, we say that a \emphmarginnote{random variable} is measurable map $y : \Omega \-> Y$.
 A random variable, then, maps random numbers $\omega\in\Omega$ into the space $Y$.
-The \emph{distribution} of a random variable is defined as the \emph{pushforward measure} $\pi_y(A_y) = (y_* \P)(A_y) = \P(y^{-1}(A_y))$ for all $A_y\in\c{Y}$.
+The \emph{distribution}\marginnote{Distribution} of a random variable is defined as the \emph{pushforward measure} $\pi_y(A_y) = (y_* \P)(A_y) = \P(y^{-1}(A_y))$ for all $A_y\in\c{Y}$.
 The probability of an event $A_y$, then, is determined by measuring the probability of random numbers under which $A_y$ occurs---measurability guarantees this is possible.
 
-In this work, we will \emph{not} adopt the standard convention of suppressing $\omega$-arguments of random variables from our notation, and will write such arguments explicitly.
+\parmarginnote{Notation for random variables}
+In this work, we will generally \emph{not} adopt the standard convention of suppressing $\omega$-arguments of random variables from our notation, and will write such arguments explicitly.
 Though this makes expressions slightly denser, it also avoids ambiguity and presents the mathematics more precisely.
 
+\parmarginnote{Existence of a random variable with given distribution}
+For a given probability space $(\Omega,\c{F},\P)$, a random variable $y : \Omega \-> Y$ with distribution $\pi_y$ need not exist.
+However, if it does not, there always exists another probability space $(\Omega',\c{F}',\P')$ and a measurable map $i : \Omega' \-> \Omega$ such that $\P = i_* \P'$, and for which a $\pi_y$-distributed random variable $y : \Omega' \-> Y$ \emph{does} exist.
+We will thus implicitly assume all probability spaces are large enough to ensure all random variables with prescribed distributions exist.
+
+\parmarginnote{Probability kernel}
 We will be interested in probability measures extended to allow them to be parameterized by other quantities.
 A \emph{probability kernel} is defined to be a map $\pi_{y\given\theta} : \c{Y} \x \Theta \-> [0,1]$ satisfying two conditions: (i) the map $\pi_{y\given\theta}(\.,\vartheta) : \c{Y} \-> [0,1]$ is a probability measure for almost all $\vartheta\in\Theta$, and (ii) the map $\pi_{y\given\theta}(A_y,\.) : \Theta \-> [0,1]$ is measurable for all $A_y\in\c{Y}$.
 
+\parmarginnote{Conditional distribution}
 Random variables can also be extended to parameterize them by other quantities.
-We say that a jointly measurable map $y\given\theta : \Omega \x \Theta \-> Y$ is a \emph{jointly measurable stochastic process}, though we mostly eschew this terminology to emphasize the Bayesian nature of our formalism.
-Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, where the pushforward is taken in the first argument---by Lemma \ref{lem:rcrv-rvm-equiv}, this is seen to be a probability kernel.
+A $\c{F}\ox \mathit\Theta$-measurable map $y\given\theta : \Omega \x \Theta \-> Y$ is called a \emph{jointly measurable stochastic process}---we largely eschew this terminology to emphasize the Bayesian nature of our formalism.
+In particular, unlike most presentations of stochastic processes, we \emph{never} think of $\Theta$ as representing time.
+Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, with the pushforward taken in the first argument---by Lemma \ref{lem:rcrv-rvm-equiv}, this is a probability kernel.
 
 
 
@@ -654,10 +673,17 @@ We now proceed to develop the final piece of the puzzle not yet studied in detai
 
 \section{Gaussian processes}
 
-A Gaussian process can be thought of as a collection of random variables which, no matter what angle one views them from, yield Gaussian marginal distributions.
-In the following, I will describe a formalism for making this description precise, starting from the simplest setting possible before moving to increasing levels of abstraction and generality.
-Our goal will be to develop the notion of a Gaussian process $f : \Omega \-> V$ where $(\Omega,\c{F},\P)$ is a probability space and $V$ is a real topological vector space, almost always equipped with additional structure.
-Gaussian process are fundamentally \emph{linear} objects which reflect the structure of the topological vector spaces over which they are defined.
+In the preceding section, considerations arising from Bayesian decision-making algorithms motivated us to find a way to place priors on spaces of functions $f : X \-> \R$.
+Gaussian processes are a broad class of random functions capable of this: to develop them, however, we will need to start with simpler notions and gradually work towards increasing levels of generality.
+Such processes are defined by the key property that no matter what angle one views them from, they yield Gaussian marginal distributions.
+
+The notion of a Gaussian process as a random function will turn out to be too restrictive for our settings of interest: it is not possible to view certain random variables, which do deserve to be called Gaussian processes, in this way.
+The obstructions can be geometric or analytic in nature.
+For example, a vector field on a manifold is not a vector-valued continuous function, it is a section of a vector bundle: what, then, should the term \emph{Gaussian} actually mean?
+Difficulties also occur when considering white noise processes.
+
+To handle these issues, we will develop the notion of a Gaussian process $f : \Omega \-> V$ where $V$ is a real topological vector space equipped with additional structure arising from the setting at hand.
+Gaussian process are fundamentally \emph{linear} objects which reflect this structure.
 The simplest settings arise when $V$ is smallest.
 
 \1  Choosing $V = \{0\}$ to be the trivial vector space, there is exactly one $V$-valued random variable, whose distribution is the Dirac measure centered at $0$, which can trivially be called Gaussian.
@@ -668,7 +694,7 @@ This is the next-simplest setting and the first one we explore in detail.
 \4 Choosing $V$ to be a suitable vector space of functions $f : X \-> \R$ yields the setting of Gaussian processes, whose finite-dimensional marginals are multivariate Gaussian.
 This setting is well-studied when $X$ is itself a Euclidean space: in Chapter \ref{ch:noneuclidean}, we will examine cases where $X$ instead possesses geometric structure inherited by the Gaussian process.
 \5 Finally, choosing $V$ to be a possibly infinite-dimensional vector space, such as a Banach of Hilbert space---this yields the most general setting we examine.
-This level of generality will be important for two reasons: (i) to develop a coordinate-free notion of Gaussian random vectors that will be useful in the differential-geometric setting, and (ii) to develop a formalism rich enough to define white noise processes, which will be needed in Chapter \ref{ch:noneuclidean}.
+This level of generality will be important for two reasons: (i) to develop a coordinate-free notion of Gaussian random vectors that will be useful in the differential-geometric setting, and (ii) to develop a formalism rich enough to define white noise processes, which will be needed to work with stochastic partial differential equations.
 \0 
 
 We proceed to examine the scalar case.
@@ -676,7 +702,6 @@ We proceed to examine the scalar case.
 \subsection{Gaussian random variables}
 
 A Gaussian random variable is a map which takes in an abstract random number, and returns a real scalar.
-To begin formalizing this notion, let $(\Omega,\c{F},\P)$ be a probability space, and here and henceforth, equip all topological vector spaces with their respective Borel $\sigma$-algebras. 
 The basic object from which other Gaussians will be constructed is the standard scalar Gaussian, defined as follows.
 
 \begin{definition}[Standard Gaussian random variable]
@@ -715,28 +740,38 @@ The density of a Gaussian random variable, if it exists, takes on a form analogo
 f(y) = \frac{1}{\sqrt{2\pi}\sigma} \exp\del{-\frac{(y-\mu)^2}{2\sigma^2}}
 .
 \]
-which shows that the densities of Gaussian random variables respect the additive and multiplicative structures of the reals---this compatibility with linear structure will be true at all levels of generality we consider.
 Note that the density will not exist if $\sigma^2 = 0$: the distributions of such Gaussians are Dirac measures centered at $\mu$.
-We are now ready to lift this definition to construct multivariate analogs.
+By examining this density, of Gaussian random variables respect the additive and multiplicative structures of the reals---due to this importance, we state it explicitly.
+
+\begin{proposition}[Affine maps between Gaussians]
+Let $y \~[N](\mu,\sigma^2)$.
+Then for $a,b \in \R$ we have that
+\[
+a y + b \~[N](a\mu+b, a^2\sigma^2)
+.
+\]
+\end{proposition}
+
+\begin{proof}
+Immediate by definition.
+\end{proof}
+
+This compatibility with linear structure will be true at all levels of generality we consider.
+We we lift this definition to construct multivariate analogs.
 
 \subsection{Gaussian random vectors}
 
 A multivariate Gaussian random vector is a random variable taking values in $\R^d$.
-We will distinguish $\R^d$ from a generic $d$-dimensional vector space: the former comes with a product structure $\R^d = \R \x .. \x \R$ which includes projection maps onto each coordinate, which in turn induce a \emph{canonical} choice of inner product given by the Euclidean dot product.
-A generic finite-dimensional vector space lacks this structure: it admits many different inner products, and provides for no canonical choice---this difference will become important in the sequel.
 We write vectors defined in $\R^d$ in bold italics to emphasize this distinction, and similarly distinguish matrices from linear maps by writing the former in bold upface letters.
-As before, we begin by defining a standard Gaussian, which we note is an inner-product-dependent notion.
+As before, we begin by defining a standard Gaussian.
 
-\begin{definition}[Standard multivariate Gaussian random variable]
+\begin{definition}[Standard multivariate Gaussian]
 A random variable $\v{z} : \Omega\->\R^d$ is called \emph{standard multivariate Gaussian} if if its distribution is the product measure of the distributions of $d$ standard Gaussians.
 \end{definition}
 
-One can easily see that this definition works in $\R^d$, but fails in a generic finite-dimensional vector space $V$ unless it is equipped with an inner product.
-If $V$ does admit an inner product, a standard Gaussian can be defined by choosing an orthonormal basis with respect to the given inner product, adapting the above definition, and showing that it is well-defined by virtue of not depending on the choice of basis.
-This is easy to see, since linear maps associated with changes of orthonormal bases are represented by orthogonal matrices.
-As before, we will again define multivariate Gaussians as transformations of standard Gaussians.
+Once the notion of a standard Gaussian is available, we can again define multivariate Gaussians as transformations of standard Gaussians.
 
-\begin{definition}[Multivariate Gaussian random variable]
+\begin{definition}[Multivariate Gaussian]
 A random variable $\v{y} : \Omega\->\R^d$ is called \emph{multivariate Gaussian} if there is a vector $\v\mu\in\R^d$, matrix $\m{L}\in\R^{d\x d}$, and standard multivariate Gaussian $\v{z}$, such that
 \[
 \v{y} = \m{L}\v{z} + \v\mu
@@ -758,34 +793,95 @@ f(\v{y}) = \frac{1}{\sqrt{(2\pi)^d|\m\Sigma|}} \exp\del{-\frac{1}{2}(\v{y}-\v\mu
 \]
 which now might not exist even if the distribution of $\v{y}$ is not Dirac.
 In such cases, one can see that at least some of the eigenvalues of $\m\Sigma$ must be zero, and so Gaussians which do not admit densities must, when viewed in an appropriate basis, be products of Dirac measures with Gaussians which do admit densities.
-Already in the multivariate case, then, we see the technical power of densities weakening: this behavior will become even more pronounced as we consider more general settings, which we now proceed to study.
+Already in the multivariate case, then, we see the technical power of densities weakening: this behavior will become even more pronounced as we consider more general settings.
+Affine maps, however, behave as before.
+
+\begin{proposition}[Affine maps between multivariate~Gaussians]
+Let $\v{y}\~[N](\v\mu,\m\Sigma)$. Then for $\m{A}\in\R^{d\x d}$ and $\v{b}\in\R^d$ we have 
+\[
+\m{A} \v{y} + \v{b} \~[N](\m{A}\v\mu + \v{b}, \m{A}\m\Sigma\m{A}^T)
+.
+\]
+\end{proposition}
+
+\begin{proof}
+Immediate by definition.
+\end{proof}
+
+We now pause and reflect.
+First, we distinguish $\R^d$ from a generic $d$-dimensional vector space: the former comes with a product structure $\R^d = \R \x .. \x \R$, including projection maps onto each coordinate, which in turn induce a \emph{canonical} choice of inner product given by the Euclidean dot product.
+A generic finite-dimensional vector space lacks this structure: it admits many different inner products, and provides for no canonical choice.
+
+With this in mind, we observe that we have not actually used the product structure of $\R^d$: take a finite-dimensional Hilbert space $V$ and define
+\[
+y &= \sum_{i=1}^d z_i e_i
+&
+z_i \~[N](0,1)
+\]
+where $e_i$ is any orthonormal basis.
+By noting that the choice of basis $e_i$ induces a Borel isomorphism $V \isom \R^d$, it is easy to see that this definition is basis-independent, since linear maps associated with changes of orthonormal bases are represented by orthogonal matrices.
+This expression therefore defines a standard Gaussian on a generic finite-dimensional Hilbert space.
+
+
+Subtle difference such as the ones considered will become important in the sequel.
+Therefore, we introduce an alternative definition to help build intuition for later.
+
+\begin{definition}[Multivariate Gaussian in the sense of duality]
+A random variable $\v{y} : \Omega \-> \R^d$ is called \emph{multivariate Gaussian} if, for any vector $\v\phi \in \R^d$, the dot product 
+\[
+\v{y}\.\v\phi : \Omega \-> \R 
+\]
+is univariate Gaussian.
+\end{definition}
+
+This definition turns out to be equivalent to the original one.
+
+\begin{proposition}
+The notions of multivariate Gaussians in the sense of transformations and in the sense of duality coincide.
+\end{proposition}
+
+\begin{proof}
+Since the dot product is a linear map, it is clear that multivariate Gaussians in the sense of transformations are also Gaussian in the sense of duality.
+To see the other direction, consider unit vectors $\v\phi$ where all coordinates except one are zero. 
+By using dot products with such vectors to reassemble the mean vector and covariance matrix, one sees that the claim follows from eigenvalue factorization of positive semi-definite matrices.
+\end{proof}
+
+This definition allows one to begin imagining what a substantially more general notion of Gaussianity might look like: dot products become linear functionals, and covariance matrices become bilinear forms.
+The preceding proof even suggests that existence of such random vectors can be deduced using spectral theory.
+Of course, in infinite-dimensional settings, topological and analytic considerations come into play, making theory more difficult.
+We develop these ideas in the sequel, but first consider a simpler setting.
+
+
 
 
 \subsection{Gaussian random functions}
 
 We now consider Gaussian random functions, which are the first notion of a Gaussian random variable that is generally called a \emph{Gaussian process}.
-Initially, we will adopt a \emph{bottom-up} view which, from a technical perspecrtive, departs considerably from the notions introduced so far.
-A more general and much more natural function-analytic view will be introduced in the sequel.
-For now, recall that for a set $X$, an $\R$-valued \emph{random process} is defined as a map $f : \Omega \x X \-> \R$ such that, for every $x$, the map $f(\.,x) : \Omega \-> \R$ is a random variable.
-If we have a set of points $x_1,..,x_n \in X$, we can plug them into $f$ to obtain a map $(f(x_1),..,f(x_n)) : \Omega \-> \R^n$, which, by virtue of being a product of measurable maps, is a random variable---we call it a \emph{finite-dimensional marginal random variable}.
-A Gaussian process, then, is simply a random process whose finite-dimensional marginals are multivariate Gaussian.
+Here, we will adopt a \emph{bottom-up} view which, from a technical perspecrtive, departs somewhat from the notions introduced so far.
 
-\begin{definition}[Gaussian process in the random process sense]
+Recall that for a set $X$, an $\R$-valued \emph{stochastic process} is a map $f : \Omega \x X \-> \R$ measurable in its first argument.
+If we have a set of points $x_1,..,x_n \in X$, we can plug them into $f$ to obtain a map $(f(\.,x_1),..,f(\.,x_n)) : \Omega \-> \R^n$, which, by virtue of being a product of measurable maps, is a random variable.
+We call its distribution a \emph{finite-dimensional marginal distribution}.
+Using this notion, we define Gaussian processes.
+
+\begin{definition}[Gaussian process (stochastic process)]
 Let $X$ be a set. 
 A random process $f: \Omega \x X \-> \R$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.,x_1),..,f(\.,x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
 \end{definition}
 
 Immediately upon writing this definition, one is left to wonder: does it actually make sense?
 In particular, do Gaussian processes in the sense given here exist?
+
 Under general conditions on the finite-dimensional marginals, Kolmogorov's Consistency Theorem states that there exists a unique probability measure on the cylindrical $\sigma$-algebra whose finite-dimensional projections coincide with the distributions of the random variables written above.
-Since \emph{every} probability measure trivially admits random variables whose distribution is said measure, Gaussian processes in the sense given here exist so long as a family of multivariate Gaussians satisfying the conditions of Kolmogorov's Consistency Theorem can be found.
+Thus, Gaussian processes exist so long as a family of multivariate Gaussians satisfying the conditions of Kolmogorov's Consistency Theorem can be found.
 
 The same results also allow us to reinterpret Gaussian processes as \emph{function-valued random variables}, which, in many ways, are a much more natural point of view to take.
-Define $\R^X = \{f : X \-> \R\}$ equip it with the cylindrical $\sigma$-algebra to make it into a measurable space.
+Define $\R^X = \{f : X \-> \R\}$ equip it with the cylindrical $\sigma$-algebra to make it into a measurable space. 
+Let $V \subseteq \R^X$, and let $\c{V}$ be the subset $\sigma$-algebra.
 
-\begin{definition}[Gaussian process in the random variable sense]
+\begin{definition}[Gaussian process (random function)]
 Let $X$ be a set. 
-A random variable $f: \Omega \-> \R^X$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.)(x_1),..,f(\.)(x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
+A random variable $f: \Omega \-> V \subseteq \R^X$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.)(x_1),..,f(\.)(x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
 \end{definition}
 
 It is clear that every Gaussian process in the random process sense induces a Gaussian process in the random variable sense, and vice versa.
@@ -817,20 +913,36 @@ k(x,x') = \Cov(f(x),f(x'))
 \]
 It is then clear that the pair $(\mu,k)$ uniquely define a Gaussian process, and so we write $f\~[GP](\mu,k)$.
 Defining a Gaussian process then amounts to defining a positive semi-definite kernel. 
+
 In the Euclidean case, this can be done straightforwardly by noting that (i) the linear kernel $k(x,x') = \innerprod{x}{x'}$ is positive semi-definite by non-degeneracy of the inner product, (ii) that sums, powers, and limits of positive semi-definite kernels as positive semi-definite.
 By this technique, we see that the widely-used exponential and squared exponential kernels are positive semi-definite.
-It is also clear that, as before, affine maps preserve Gaussianity.
 
-The other properties previously considered, however, do not survive into this setting.
+Since $V \subseteq \R^X$ is a space of functions, we can define addition and scalar multiplication, thereby making $V$ into a vector space.
+If we do so, then, as before, affine maps preserve Gaussianity.
+
+\begin{proposition}[Affine maps between Gaussian processes]
+Let $f\~[GP](\mu, k)$, and let $W \subseteq \R^X$ be a vector space.
+If $\c{A} : V \-> W$ is a measurable linear map, and $b \in W$, then $\c{A} f + b$ is a Gaussian process with mean $\c{A}\mu + b$.
+\end{proposition}
+
+\begin{proof}
+The corresponding statement holds for all finite-dimensional marginals, where linear maps become matrices. Hence, the claim follows.
+\end{proof}
+
+This is a substantially weaker assertion than previously: though we can conclude that affine maps of Gaussian processes are Gaussian, for a generic affine map we cannot immediately determine the form of the resulting kernel.
+Moreover, the condition $W \subseteq \R^X$ is unnatural: by supposing it, we have more-or-less \emph{assumed} the resulting kernel to exist.
+The problem here is that the notion of a \emph{kernel} is too rigid to permit a broad statement---an analogous property will hold if this is replaced with a different notion of covariance.
+
+The situation for the other properties considered previously is even worse.
 In particular, it is clear that, as an infinite-dimensional object, $f$ does not admit a probability density analogous to the ones considered previously, because an infinite-dimensional Lebesgue measure, in the sense of a locally finite translation invariant measure, does not exist.
-We will therefore give up on and completely abandon this point of view, except where its finite-dimensional version suffices.
-It is also not clear what a \emph{standard} Gaussian process might be, nor how to view general Gaussian processes as transformations of standard Gaussian processes, nor what the analog of a matrix square root of a positive semi-definite kernel might be.
+It is also not clear what a \emph{standard} Gaussian process, nor what the analog of a matrix square root of a positive semi-definite kernel, might be.
 
 The loss of these technical tools has consequences on what can be said about Gaussian processes.
-In Chapter \ref{ch:noneuclidean}, we will study Gaussian processes whose set $X$ is a Riemannian manifold, or a weighted directed graph.
-In those settings, one cannot begin by proving positive semi-definiteness of linear kernels, because there is simply no useful analog of this concept.
-Indeed, proving proving positive semi-definiteness can end up highly non-trivial, and most positive semi-definite functions will not admit simple expressions, like they do in the Euclidean case.
-We therefore proceed to adopt a function-analytic perspective which is more technical, but significantly powerful, and will allow us to recover the previous set of tools in a much more pure and abstract form.
+In Chapter \ref{ch:noneuclidean}, we will study Gaussian processes whose set $X$ is a Riemannian manifold.
+In that setting, one cannot begin by proving positive semi-definiteness of linear kernels, because there is simply no useful analog of this concept.
+Defining positive semi-definite kernels there turns out to be non-trivial, and the kernels we study do not admit simple expressions like they do in the Euclidean case.
+
+We therefore proceed to adopt a function-analytic perspective which is more technical, but significantly more powerful, and will allow us to recover the previous set of tools in a much more pure and abstract form.
 
 \subsection{Gaussian processes in general vector spaces}
 
@@ -985,7 +1097,7 @@ What about reinterpreting training-time costs from this viewpoint?
 
 Reinterpret classical constructions
 
-\subsection{Approximations which change the model}
+\subsection{Approximate priors}
 
 RFF GP can be reinterpreted as replacing the prior with a finite-dim version
 
