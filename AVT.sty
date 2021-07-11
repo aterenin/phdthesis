@@ -475,7 +475,8 @@
 
 \RequirePackage{amsthm}
 \RequirePackage{thmtools}
-\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi]{theorem}
+\RequirePackage{cleveref}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberwithin=\ifAVT@notes chapter\else\relax\fi]{theorem}
 \declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{algorithm}
 \declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{assumption}
 \declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{axiom}

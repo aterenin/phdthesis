@@ -106,8 +106,8 @@ Better yet, Gaussian-process-based decision systems have been demonstrated to ex
 Studying Gaussian processes is therefore a promising avenue towards improved understanding of Bayesian learning and Bayesian decision-making in pursuit of artificial intelligence.
 
 The goals of this dissertation are twofold: (i) to make Gaussian processes easier to work with through improved numerical methods, particularly in cases where they are used within larger decision systems, and (ii) to expand the set of settings where Gaussian processes can be practically employed in, enabling construction of decision systems for applications not previously considered.
-Contributions toward (i) include path-wise conditioning techniques studied in Chapter \ref{ch:pathwise}, and contributions toward (ii) include non-Euclidean Gaussian processes studied in Chapter \ref{ch:noneuclidean}.
-Following these, Chapter \ref{ch:conclusion} concludes.
+Contributions toward (i) include path-wise conditioning techniques studied in \Cref{ch:pathwise}, and contributions toward (ii) include non-Euclidean Gaussian processes studied in \Cref{ch:noneuclidean}.
+Following these, \Cref{ch:conclusion} concludes.
 
 To pursue these goals, it is critically important that all of the ideas described in the preceding paragraphs be made into rigorous mathematics, so that the ideas described in the sequel ultimately reduce to definitions and implications, and not metaphor or opinion.
 Together, we therefore begin by defining the key mathematical notions needed.
@@ -162,7 +162,7 @@ A \emph{probability kernel} is defined to be a map $\pi_{y\given\theta} : \c{Y} 
 Random variables can also be extended to parameterize them by other quantities.
 A $\c{F}\ox \mathit\Theta$-measurable map $y\given\theta : \Omega \x \Theta \-> Y$ is called a \emph{jointly measurable stochastic process}---we largely eschew this terminology to emphasize the Bayesian nature of our formalism.
 In particular, unlike most presentations of stochastic processes, we \emph{never} think of $\Theta$ as representing time.
-Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, with the pushforward taken in the first argument---by Lemma \ref{lem:rcrv-rvm-equiv}, this is a probability kernel.
+Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, with the pushforward taken in the first argument---by \Cref{lem:rcrv-rvm-equiv}, this is a probability kernel.
 
 
 
@@ -200,7 +200,7 @@ For the former, define
 \[
 \pi_{\theta,y}(A_\theta\x A_y) = \int_{A_\theta} \pi_{y\given\theta}(A_y\given\theta) \d\pi_\theta(\theta)
 \]
-which extends to the full product $\sigma$-algebra by Lemma \ref{lem:cyl-prod}, giving the desired probability measure.
+which extends to the full product $\sigma$-algebra by \Cref{lem:cyl-prod}, giving the desired probability measure.
 For the latter, define the random variable
 \[
 \gamma : \Omega &\-> \Theta \x Y
@@ -223,7 +223,7 @@ Write
 \\
 &= \P((\theta,(y\given\theta)(\.,\theta)) \in A_\theta \x A_y)
 \]
-which follows using Tonelli's Theorem, Lemma \ref{lem:cyl-prod}, and Lemma \ref{lem:non-dupl-dep} via the non-duplicate dependence condition.
+which follows using Tonelli's Theorem, \Cref{lem:cyl-prod}, and \Cref{lem:non-dupl-dep} via the non-duplicate dependence condition.
 \end{proof}
 
 These two components should be interpreted as follows: $\theta$ describes what is known about the quantity of interest external to the data, and $y\given\theta$ describes how the data $y$ relates to the quantity of interest.
@@ -253,7 +253,7 @@ In its full abstract formulation, however, Bayes' Rule is \emph{non-constructive
 Fortunately, in many settings this is possible by virtue of additional structure.
 
 The simplest such structure occurs when $\pi_{\theta,y}$ admits a density with respect to a reference measure $\lambda$.
-In this case, it follows Lemma \ref{lem:prod-density} that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
+In this case, it follows \Cref{lem:prod-density} that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
 Define a \emph{conditional density} as the ratio of joint and marginal densities, and let $\propto$ denote equality up to a proportionality constant.
 Then we have the following.
 
@@ -737,13 +737,13 @@ This random variable is not very interesting, so we do not consider it further.
 This is the next-simplest setting and the first one we explore in detail.
 \3 Choosing $V = \R^d$ yields the setting of \emph{Gaussian random vectors}, whose components are multivariate Gaussian---or, equivalently, whose \emph{dot products} are scalar-valued Gaussian---an alternative view which will become important later.
 \4 Choosing $V$ to be a suitable vector space of functions $f : X \-> \R$ yields the setting of Gaussian processes, whose finite-dimensional marginals are multivariate Gaussian.
-This setting is well-studied when $X$ is itself a Euclidean space: in Chapter \ref{ch:noneuclidean}, we will examine cases where $X$ instead possesses geometric structure inherited by the Gaussian process.
+This setting is well-studied when $X$ is itself a Euclidean space: in \Cref{ch:noneuclidean}, we will examine cases where $X$ instead possesses geometric structure inherited by the Gaussian process.
 \5 Finally, choosing $V$ to be a possibly infinite-dimensional vector space, such as a Banach of Hilbert space---this yields the most general setting we examine.
 This level of generality will be important for two reasons: (i) to develop a coordinate-free notion of Gaussian random vectors that will be useful in the differential-geometric setting, and (ii) to develop a formalism rich enough to define white noise processes, which will be needed to work with stochastic partial differential equations.
 \0 
 
 In what follows, our goal will be to lay the groundwork for subsequent development.
-Thus, we will not discuss Bayesian learning with Gaussian processes, which will instead be presented in Chapter \ref{ch:pathwise}.
+Thus, we will not discuss Bayesian learning with Gaussian processes, which will instead be presented in \Cref{ch:pathwise}.
 We proceed to examine the scalar case.
 
 \subsection{Gaussian random variables}
@@ -1008,7 +1008,7 @@ In particular, it is clear that, as an infinite-dimensional object, $f$ does not
 It is also not clear what a \emph{standard} Gaussian process, nor what the analog of a matrix square root of a positive semi-definite kernel, might be.
 
 The loss of these technical tools has consequences on what can be said about Gaussian processes.
-In Chapter \ref{ch:noneuclidean}, we will study Gaussian processes whose set $X$ is a Riemannian manifold.
+In \Cref{ch:noneuclidean}, we will study Gaussian processes whose set $X$ is a Riemannian manifold.
 In that setting, one cannot begin by proving positive semi-definiteness of linear kernels, because there is simply no useful analog of this concept.
 Defining positive semi-definite kernels there turns out to be non-trivial, and the kernels we study do not admit simple expressions like they do in the Euclidean case.
 
@@ -1062,12 +1062,12 @@ Contributions presented here include development of \emph{pathwise conditioning}
 The work presented in this thesis is published as part of a series of papers.
 For both sets of papers, my contributions to the individual works are primarily on the theoretical and methodological side, and are described below.
 
-In Chapter \ref{ch:pathwise}, we present pathwise conditioning techniques: this work is published as \textcite{wilson20,wilson21}, with equal contribution shared among the first four authors.
+In \Cref{ch:pathwise}, we present pathwise conditioning techniques: this work is published as \textcite{wilson20,wilson21}, with equal contribution shared among the first four authors.
 In this work, my contributions include development of the random-function-based formalism for describing pathwise conditioning of Gaussian processes, error analysis of basis-function-approximation-based pathwise sampling, re-interpretation of inducing point methods, and review of prior sampling methods.
-All of these were developed jointly with the other authors.
-Chapter \ref{ch:pathwise} also contributes additional Bayesian optimization experiments not included in the published work, performed solely by me.
+All of these were developed jointly with the other authors. 
+\Cref{ch:pathwise} also contributes additional Bayesian optimization experiments not included in the published work, performed solely by me.
 
-In Chapter \ref{ch:noneuclidean}, we present Matérn Gaussian processes in a number of non-Euclidean settings, as published in \textcite{borovitskiy20,borovitskiy21} and under review in \textcite{hutchinson21}.
+In \Cref{ch:noneuclidean}, we present Matérn Gaussian processes in a number of non-Euclidean settings, as published in \textcite{borovitskiy20,borovitskiy21} and under review in \textcite{hutchinson21}.
 Here, my contributions include development of the stochastic-partial-differential-equation-based formalism for defining scalar-valued Gaussian processes on Riemannian manifolds and graphs, as well as computational techniques for working with them in practice.
 My contributions also include the differential-geometric formalism on how to rigorously define such processes in the Riemannian vector field setting.
 Both of these contributions were developed jointly with the other authors.
@@ -1095,23 +1095,119 @@ We proceed to these developments.
 
 \section{Conditioning multivariate Gaussians}
 
-Defn of MVN
+We now describe conditioning of multivariate Gaussians.
+Recall that using Bayes' Rule, a prior and likelihood combine into a joint distribution, which factorizes into the marginal distribution of the data and the posterior.
+The posterior is the conditional distribution of the parameters given the data, which is unique almost everywhere with respect to the marginal distribution.
+We now study how to represent this distribution for the case of interest.
 
 \subsection{Distributional conditioning}
 
-Formulas
+The most obvious way to represent a Gaussian conditional distribution is to simply calculate it as a closed-form analytic expression.
+This is given below.
 
-Discussion
+\begin{proposition}[Multivariate Gaussian conditionals]
+\label{prop:mvn-cond}
+Let
+\[
+\begin{bmatrix}
+\v\theta
+\\
+\v{y}
+\end{bmatrix} 
+\~[N]\del{
+\begin{bmatrix}
+\v\mu_{\v\theta}
+\\
+\v\mu_{\v{y}}
+\end{bmatrix}
+,
+\begin{bmatrix}
+\m\Sigma_{\v\theta\v\theta} & \m\Sigma_{\v\theta\v{y}}
+\\
+\m\Sigma_{\v{y}\v\theta} & \m\Sigma_{\v{y}\v{y}}
+\end{bmatrix} 
+}
+\]
+be non-singular.
+Then we have that
+\[
+(\v\theta\given\v{y}=\v\gamma) \~[N]\del{\v\mu_{\v\theta} + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v\gamma-\v\mu_{\v{y}}), \m\Sigma_{\v\theta\v\theta} - \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}\m\Sigma_{\v{y}\v\theta}}
+.
+\]
+\end{proposition}
+
+\begin{proof}
+By non-singularity, $(\v\theta,\v{y})$ admits a Lebesgue density, and the claim follows by direct calculation via applying Bayes' Rule for densities.
+\end{proof}
+
+The non-singularity requirement is more-or-less necessary: otherwise, the marginal distribution of $\v{y}$ may admit too many null sets, rendering the desired conditional distribution non-unique, except in regions where one can apply a linear map to recover a suitable Lebesgue density and apply the above argument on the obtained subspace.
+
+Of one wants to work with this expression numerically, then it's possible to calculate the desired conditional mean and covariance. 
+In particular, one can generate conditional sample via the expression
+\[
+(\v\theta\given\v{y}=\v\gamma) &= \m{L}\v{z} + \v\mu_{\v\theta\given\v{y}}
+&
+\v{z} &\~[N](\v{0},\m{I})
+\]
+where $\v\mu_{\v\theta\given\v{y}}$ is the conditional mean, and $\m{L}$ is a Cholesky factor of the conditional covariance.
+This enables one to calculate any quantity of interest depending on the conditional distribution numerically via the Monte Carlo method.
+The computational costs will be cubic in the dimension of both $\v\theta$ and $\v{y}$, owing to the need to compute $\m{L}$ and invert $\m\Sigma_{\v{y}\v{y}}$, respectively.
+
 
 \subsection{Pathwise conditioning}
 
-Formulas
+The preceding considerations gave us closed-form analytic expressions for Gaussian conditionals in terms of matrix-vector expressions that can be computed numerically.
+From this, one might be tempted to conclude that there is nothing more to say conditioning multivariate Gaussians---this, however, would be a significant mistake.
+Miraculously, Gaussian conditional distributions---in general, a purely \emph{distributional} notion---can also be described in a \emph{pathwise} manner using \emph{random variables}.
 
-Proof
+\begin{theorem}[Matheron's update rule]
+\label{thm:mvn-pw}
+For $\v\theta,\v{y}$ defined in \Cref{prop:mvn-cond}, we have that
+\[
+(\v\theta\given\v{y}=\v\gamma) = \v\theta + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v\gamma - \v{y})
+.    
+\]
+\end{theorem}
 
-Discussion
+\begin{proof}
+Write 
+\[
+TODO
+.
+\]
+\end{proof}
 
-Second proof
+From this, we therefore obtain a second method for sampling multivariate Gaussians: (i) sample $\v\theta,\v{y}$ jointly, and (ii) transform $\v\theta,\v{y}$ into $\v\theta\given\v{y}=\v\gamma$ by employing the given expression.
+
+Remarkably, this result is missing from every machine learning textbook on Gaussian processes that I am aware of, and appears almost entirely unknown within the field.
+It's possible this is because the expression's computational costs are cubic in the combined dimension, which is more expensive than the previous costs.
+While this holds for general Gaussians, we will show it can be avoided for many cases of practical interest in the sequel.
+
+\Cref{thm:mvn-pw}, on the other hand, is certainly known in other communities.
+In a tribute to Georges Matheron, who pioneered the expression's use in geostatistics, \textcite{chiles05} say that:
+
+\begin{quotation}
+[Matheron's update rule] is nowhere to be found in Matheron's entire published works, as he merely regarded it as an immediate consequence of the orthogonality of the [conditional expectation] and the [residual process].
+\end{quotation}
+
+More recently, \textcite{doucet10} describes the algorithm in a technical report which begins with the remark: 
+
+\begin{quotation}
+This note contains no original material and will never be submitted anywhere for publication. However, it might be of interest to people working with [Gaussian processes] so I am making it publicly available.
+\end{quotation}
+
+The present state of affairs therefore seems to be that a small set of technical experts are aware of \Cref{thm:mvn-pw} but believe it to be too trivial to write about, while practitioners working in areas such as Bayesian optimization do not know that it exists.
+While for multivariate Gaussians the result certainly is trivial, we will subsequently show that using it in the right manner yields significant progress towards resolving certain long-standing issues in decision-making settings.
+
+First, however, we will prove \Cref{thm:mvn-pw} in a different way in order to illustrate how one can derive it from scratch without being aware of its precise form.
+For this, we first prove a general lemma about conditioning.
+
+\begin{lemma}
+\label{lem:cond-repr}
+\end{lemma}
+
+\begin{proof}
+\end{proof}
 
 Discussion
 
