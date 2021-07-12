@@ -1472,17 +1472,97 @@ We proceed to explore a number of techniques for doing so.
 
 \section{Sampling from prior Gaussian processes}
 
-The previous formula suggests an interesting class of approximations: discretize the prior
+In the preceding section, we explored a class of approximate posterior Gaussian processes constructed by plugging a finite-basis-function-based approximate prior into the pathwise update.
+Such approximate priors can be constructed in many ways, including by expressing the true prior within a basis of an appropriate space of functions, and truncating the resulting infinite sum.
+Within this class, different bases will have different properties.
+This will affect applicability, ease of use, and approximation error.
+We now explore a number of possible choices.
 
-Finite basis expansion
-
-This section: explore different expansions
 
 \subsection{Random feature methods}
 
-Construct a finite-dimensional feature map by discretizing the white noise integral
+For stationary kernels on Euclidean spaces, random feature methods can be used to construct approximate priors whose properties make them one of the most attractive choices possible.
+We examine these now.
 
-Closely related to stationarity in embedded spaces
+To construct a basis function expansion, our strategy will be to find a \emph{feature map} $\varphi : \c{X} \-> \c{H}_k$ that maps states into vectors in the \emph{reproducing kernel Hilbert space} induced by $k$.
+This is defined as follows.
+
+\begin{definition}[Reproducing kernel Hilbert space]
+Let $X$ be a set, and let $\c{H} \subseteq \R^X$ be a Hilbert space of functions. 
+We say that $\c{H}$ is a \emph{reproducing kernel Hilbert space} if, for any $x\in X$, we have $\f{ev}_x \in \c{H}^*$ where $\f{ev}_x : \c{H} \-> \R$ is called the \emph{evaluation map} and is defined by $\f{ev}_x f = f(x)$.
+\end{definition}
+
+Ostensibly, this definition has nothing to do with kernels, and it is unclear what a reproducing kernel Hilbert space \emph{induced by} $k$ actually means.
+A consequence of the above definition is that given a reproducing kernel Hilbert space $\c{H}$, we can define the function $k_{\c{H}}(x,x') = \innerprod[1]{\Phi_{\c{H}}^{-1}\f{ev}_x}{\Phi^{-1}_{\c{H}}\f{ev}_{x'}}$, called the \emphmarginnote{reproducing kernel}, where $\Phi_{\c{H}} : \c{H} \-> \c{H}^*$ is the bijective linear isometry given by the Riesz Representation Theorem.
+It is easy to see that $k_{\c{H}}$ is positive semi-definite.\footnote{TODO: check if it's PD or PSD.}
+It turns out a converse statement also holds.
+
+\begin{result}[Moore-Aronszajn Theorem]
+Let $k : X \x X \-> \R$ be a symmetric positive semi-definite kernel.
+Then there is a unique Hilbert space $\c{H}_k \subseteq \R^X$ for which $k$ is the reproducing kernel.
+\end{result}
+
+\begin{proof}
+TODO: cite.
+\end{proof}
+
+This gives another point of view from which one can study and understand kernels.
+We will need one final notion.
+We say that a function $\varphi : X \-> \c{H}_k$ is a \emphmarginnote{feature map} if $k(x,x') = \innerprod{\phi(x)}{\phi(x')}$.
+Now, we introduce the key idea for constructing our approximate Gaussian prior: suppose we have a \emph{finite-dimensional} approximation for such a feature map, namely a vector-valued function $\v\phi : X \-> \R^\ell$ such that $\v\phi(x)^T \v\phi(x') = \innerprod{\phi(x)}{\phi(x')}$.
+Then
+\[
+\tilde{f}(\.) &= \sum_{i=1}^\ell w_i(\omega) \phi_i(\.)
+&
+w_i &\~[N](0,1)
+\]
+by direct calculation has covariance approximately equal to that of $f$.
+Therefore, to construct an approximate prior, it suffices to find a finite-dimensional approximate feature map.
+
+For stationary kernels, techniques for constructing approximate feature maps are well-studied, originally motivated by questions arising in kernel support vector machines.
+We now introduce the \emph{random Fourier feature} method for constructing such maps, beginning with a description of the stationary setting.
+
+\parmarginnote{Stationary kernel}
+Let $X = \R^d$.
+We say that a kernel $k(\v{x},\v{x}')$ is called \emph{stationary} if $k(\v{x},\v{x}') = k(\v{x} - \v{x})$ for a function $k : \R^d \-> \R$.
+A stationary kernel, then, is a two-argument positive definite function which factorizes through a one-argument function depending only on the difference between two points.
+Note that such a kernel is invariant under translation and can be characterized as such.
+We will need a result known as \emph{Bochner's Theorem}.
+
+\begin{result}[Bochner's Theorem]
+For every stationary continuous positive definite kernel with $k(\v{x},\v{x}) = 1$ there is a symmetric probability measure $\rho$ on $\R^d$ which we call the \emph{spectral measure} of $k$.
+Moreover, $k$ admits the representation
+\[
+k(\v{x} - \v{x}') = \int_{\R^d} e^{2\pi i \v\varpi^T (\v{x} - \v{x}')} \d\rho(\v\varpi)
+.
+\]
+Conversely, every probability measure on $\R^d$ gives rise to such a kernel via its inverse Fourier transform.
+\end{result}
+
+\begin{proof}
+TODO: cite.
+\end{proof}
+
+Here, \emph{symmetry} of $\rho$ refers to invariance under reflection about the origin.
+This result is true more generally if $X$ is replaced by a locally compact Abelian group, for which the corresponding spectral measure will be supported on the Pontryagin dual group---we omit this level of generality because we will not need it.
+We do briefly note, however, that this means that spectral measures of kernels on compact spaces are \emph{discrete}---this behavior will reappear under a different guise in \Cref{ch:noneuclidean}.
+
+From here, it is clear that the feature map we seek can be constructed by Monte Carlo sampling the integral representation given by Bochner's Theorem.
+To maintain order, we introduce a \emph{second} probability space $(\Xi,\c{G},\bb{Q})$ to distinguish the stochasticity associated with the random feature expansion from stochasticity associated with the Gaussian process.
+Letting $\Re$ denote the real part of a complex number, our approximate prior is\footnote{TODO: check if this is really the one we want.}
+\[
+\tilde{f}(\.) &= \frac{1}{\sqrt{\ell}} \Re \del{\sum_{i=1}^\ell w_i(\omega) e^{2\pi i \v\varpi(\xi)^T(\.)}}
+&
+w_i &\~[N](0,1)
+&
+\v\varpi &\~ \rho
+\]
+
+What is remarkable about random feature methods is that, owing to the Monte Carlo nature of the approximation, the decay rate of appropriately defined approximation error is \emph{dimension-free}.
+This limits the effect of the curse of dimensionality to constant factors.
+Better yet, random feature methods are well-understood owing to their widespread use in other areas, and error bounds are available.
+For this reason, they are often the technique of choice for stationary Euclidean kernels.
+We now consider other cases.
 
 \subsection{Karhunen--Loève expansions}
 
