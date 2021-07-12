@@ -639,6 +639,7 @@ We now proceed to explore a more general setting which will enable us to employ 
 This will enable us to use Bayesian methods to solve a broad class of decision problems of practical interest.
 
 \subsection{Bayesian optimization}
+\label{sec:bayesian-optimization}
 
 We now describe a formalism for using ideas built on Bayesian learning and multi-armed bandits for designing global optimization algorithms.
 Our goal now is to minimize a black-box function
@@ -686,7 +687,7 @@ which is now a probability measure supported on $C^0(X;\R)$.
 To determine the next point to query, we introduce and maximize an acquisition function.
 Typical acquisition functions include the \emph{upper confidence bound} acquisition function considered previously, as well as \emph{Thompson sampling}
 \[
-x_{t+1}(\omega) &= \argmax_{x\in X} \phi_t(\omega,x)
+x_{t+1}(\omega) &= \argmin_{x\in X} \phi_t(\omega,x)
 &
 \phi_t&\~ f \given y_1,..,y_t
 \]
@@ -697,7 +698,7 @@ x_{t+1} = \argmax_{x\in X} \E \max(0,f_t(\omega,x) - f(x^*_t))
 where $f_t = f \given y_1,..,y_t$ is the posterior, and $x^*_t = \argmin_{t \in \{1,..,t\}} f(x_t)$ is the smallest value observed so far.
 A more recent and particularly promising approach is \emph{information-directed sampling}, which is given by
 \[
-x_{t+1}(\omega) &= \argmax_{x\in X} \psi_t(\omega,x)
+x_{t+1}(\omega) &= \argmin_{x\in X} \psi_t(\omega,x)
 &
 \psi_t &\~ \frac{\Delta^2_t}{I_t}
 \]
@@ -1258,8 +1259,9 @@ The claim follows.
 \label{fig:pw-cond-mvn}
 \end{figure*}
 
-From \Cref{thm:mvn-pw}, we obtain a second method for sampling multivariate Gaussians: (i) sample $\v\theta,\v{y}$ jointly, and (ii) transform $\v\theta,\v{y}$ into $\v\theta\given\v{y}=\v\gamma$ by employing the given expression.
-This procedure is illustrated in \Cref{fig:pw-cond-mvn}
+From \Cref{thm:mvn-pw}, we obtain a second way of representing multivariate Gaussian conditionals.
+This entails two steps: (i) sample $\v\theta,\v{y}$ jointly, and (ii) transform $\v\theta,\v{y}$ into $\v\theta\given\v{y}=\v\gamma$ by employing the given expression.
+This procedure is illustrated in \Cref{fig:pw-cond-mvn}.
 
 Remarkably, this result is missing from every machine learning textbook on Gaussian processes that I am aware of, and appears almost entirely unknown within the field.
 It's possible this is because the expression's computational costs are cubic in the combined dimension, which is more expensive than the previous costs.
@@ -1284,13 +1286,64 @@ To do so, we now consider Gaussian processes.
 
 \section{Conditioning Gaussian processes}
 
-Brief recollection of GPs 
+We now study conditioning in Gaussian processes.
+Specifically, we will develop and showcase the two points of view introduced above---distributional and pathwise---in the Gaussian process setting.
+We begin with the former.
 
 \subsection{Distributional conditioning}
 
-Formula
+The standard way of representing Gaussian process conditionals is to use the finiteness of the data to pick a sufficiently large grid of points, and work with finite-dimensional marginals.
+Conditioning the Gaussian process then reduces to conditioning multivariate Gaussians.
+We now describe this.
 
-Discussion
+\begin{proposition}[Posterior Gaussian process~(finite-dimen\-sional~marginals)]
+The Bayesian model
+\[
+\v{y} \given f &\~[N](\v{f}, \m\Sigma)
+&
+f &\~[GP](0,k)
+\]
+where $\v{f} = (f(x_1),..,f(x_n))$, admits a Gaussian process as its posterior. 
+Denoting $f\given y_1 = \gamma_1,..,y_n = \gamma_n$ by $f\given \v{y}$ for brevity, this process satisfies
+\[
+f\given\v{y}\~[N](\m{K}_{(\.)x} \m{K}_{xx}^{-1}\v\gamma, \m{K}_{(\.,\.m)} - \m{K}_{(\.)x} (\m{K}_{xx} + \m\Sigma)^{-1} \m{K}_{x(\.)})
+.
+\]
+\end{proposition}
+
+\begin{proof}
+Apply \Cref{prop:mvn-cond} to a set of finite-dimensional marginals.
+\end{proof}
+
+This result gives us a way of carrying out Bayesian learning using Gaussian processes, given a finite set of data.
+Note the \emph{bottom-up} nature of this perspective: we describe the posterior Gaussian process---which is an actual \emph{process} defined everywhere---using its posterior finite-dimensional marginals.
+
+We now consider computational costs of the above formula.
+Calculating posterior moments clearly entails cubic costs with respect to the data size $n$, owing the need to invert $n\x n$ matrices.
+Now, suppose we are are interested in computing quantities involving the posterior distribution.
+Consider for instance computing the Thompson sampling acquisition function considered in \Cref{sec:bayesian-optimization}, which we recall is 
+\[
+x_{t+1}(\omega) &= \argmax_{x\in X} \phi_t(\omega,x)
+&
+\phi_t&\~ f \given \v{y}
+.
+\]
+Given the minimization involved in this objective, there is no chance in finding an analytic expression for $x_{t+1}$, and we must resort to numerical methods.
+Just about any numerical procedure one can imagine---for instance, gradient descent---will involve drawing random samples from $f\given\v{y}$ at different locations, and performing the necessary algorithmic operations on them.
+Summarizing, the computational costs of this expression are as follows.
+
+\1 Data: $\c{O}(n^3)$ where $n$ is the size of the training set.
+\2 Predictions: $\c{O}(n_*^3)$ where $n_*$ is the number of locations the posterior needs to be jointly evaluated at.
+\0
+
+The situation is even worse if one considers that the evaluation locations may not be known in advance, and might be determined using previous points.
+Due to the need to factorize matrices at every intermediate computation step, roundoff errors will accumulate as computations proceed.
+Thus, even if we are willing to pay cubic costs, we must then face the secondary issue of numerical instability.
+
+Without additional considerations, these costs are disastrous, and illustrate the difficulties in making methods such as Bayesian optimization perform effectively in practice.
+Fortunately, a wide variety of techniques to deal with them are available: in particular, \emph{inducing point} methods provide a broad set of approximations for reducing the $\c{O}(n^3)$ costs.
+We will complement these ideas by introducing techniques to tackle the $\c{O}(n_*^3)$ costs in the sequel.
+For this, we proceed to develop a pathwise view of conditioning.
 
 \subsection{Pathwise conditioning}
 
