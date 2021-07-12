@@ -1160,30 +1160,112 @@ The preceding considerations gave us closed-form analytic expressions for Gaussi
 From this, one might be tempted to conclude that there is nothing more to say conditioning multivariate Gaussians---this, however, would be a significant mistake.
 Miraculously, Gaussian conditional distributions---in general, a purely \emph{distributional} notion---can also be described in a \emph{pathwise} manner using \emph{random variables}.
 
-\begin{theorem}[Matheron's update rule]
+\begin{restatable}[Matheron's update rule]{theorem}{thmmvnpw}
 \label{thm:mvn-pw}
 For $\v\theta,\v{y}$ defined in \Cref{prop:mvn-cond}, we have that
 \[
 (\v\theta\given\v{y}=\v\gamma) = \v\theta + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v\gamma - \v{y})
 .    
 \]
-\end{theorem}
+\end{restatable}
+
+\begin{proof}
+By direct calculation,
+\[
+\E(\v\theta + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v\gamma - \v{y})) = \v\mu_{\v\theta} + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v\gamma - \v\mu_{\v{y}}) = \E(\v\theta\given\v{y}=\v\gamma)
+\]
+and 
+\[
+\Cov(\v\theta + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v\gamma - \v{y})) &= \m\Sigma_{\v\theta\v\theta} + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}  \m\Sigma_{\v{y}\v\theta} - 2\m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1} \m\Sigma_{\v{y}\v\theta}
+\\
+&= \m\Sigma_{\v\theta\v\theta} - \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}  \m\Sigma_{\v{y}\v\theta} = \Cov(\v\theta\given\v{y}=\v\gamma)
+\]
+where we have cancelled a factor of $\m\Sigma_{\v{y}\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}$ in the middle term.
+\end{proof}
+
+This affirms the claim, but gives few hints on where this expression originates or how to obtain it from first principles.
+To better understand this, we now prove \Cref{thm:mvn-pw} in a different way.
+To do so, we first prove a general result about conditioning.
+
+\begin{lemma}
+\label{lem:cond-repr}
+Consider three random vectors $\v{a} : \Omega \-> \R^m$, $\v{b} : \Omega \-> \R^n$, and $\v{c} : \Omega \-> \R^m$ such that 
+\[
+\v{a} = f(\v{b}) + \v{c}    
+\]
+where $f : \R^n \-> \R^m$ is a measurable function, and where the random variables $\v{b}$ and $\v{c}$ are independent. 
+Then we have 
+\[
+(\v{a} \given \v{b} = \v\beta) = f(\v\beta) + \v{c}    
+.
+\]
+\end{lemma}
+
+\begin{proof}
+This follows by direct calculation by writing
+\[
+\int_{A_{\v{b}}} \pi_{\v{a}\given\v{b}}(A_{\v{a}}\given\v\beta) \d\pi_{\v{b}}(\v\beta) &= \P(\v{a} \in A_{\v{a}}, \v{b} \in A_{\v{b}}) 
+\\
+&= \P(f(\v{b}) + \v{c} \in A_{\v{a}}, \v{b} \in A_{\v{b}})
+\\
+&= \int_{\R^m\x\R^n} \1_{f(\v\beta) + \v\varsigma \in A_{\v{b}}, \v\beta\in A_{\v{b}}} \d(\pi_{\v{c}}\ox\pi_{\v{b}})(\v\varsigma,\v\beta)
+\\
+&= \int_{A_{\v{b}}} \int_{\R^m} \1_{f(\v\beta) + \v\varsigma \in A_{\v{b}}} \d\pi_{\v{c}}(\v\varsigma) \d\pi_{\v{b}}(\v\beta)
+\\
+&= \int_{A_{\v{b}}} \P(f(\v\beta) + \v{c} \in A_a) \d\pi_{\v{b}}(\v\beta)
+\]
+where we have used independence to represent the probability as an integral over a product measure, followed by Tonelli's Theorem.
+By the Disintegration Theorem, $\pi_{\v{a}\given\v{b}}$ is $\pi_{\v{b}}\ae[-]$ unique, implying that the conditional distributions of interest are equal, and the claim follows.
+\end{proof}
+
+The key idea behind our argument will be to choose the \emph{conditional expectation} for our function $f$, or more precisely, the map $\v{y} \|> \E(\v\theta\given\v{y})$.
+We now recall this notion and some of its key properties.
+
+Conditional expectation is defined as the orthogonal projection from the Lebesgue space $L^2(\Omega,\c{F},\P;\R^n)$ onto the subspace $L^2(\Omega,\sigma(\v{y}),\P;\R^n)$ where $\sigma(\v{y})$ is the smallest $\sigma$-algebra containing all preimages $\v{y}^{-1}(A_{\v{y}})$ where $A_{\v{y}}\in\c{B}(\R^n)$. 
+Recall that the preimage is a map $\v{y}^{-1} : \c{B}(\R^n) \-> \c{F}$ between $\sigma$-algebras.
+This definition might seem daunting, but is reasonably intuitive: we can think of this as projecting onto the subspace induced by all collections of random numbers in $\Omega$ which play a role in determining what $\v{y}$ does.
+
+Recall that $L^2(\Omega,\c{F},\P;\R^n)$ is a Hilbert space of equivalence classes of random variables with inner product given by $\innerprod{\v{a}}{\v{b}} = \E(\v{a}\cdot\v{b})$.
+Using this, it follows from the Projection Theorem for Hilbert spaces that the terms\footnote{TODO: check.} $\E(\v\theta\given\v{y})$ and $(\v\theta - \E(\v\theta\given\v{y}))$ are uncorrelated---and, in the Gaussian case, that they are independent.
+This gives us the candidate random variables to use for $\v{b}$ and $\v{c}$, if we choose conditional expectation for $f$.
+
+Finally, recall that for multivariate Gaussians, we have $\E(\v\theta\given\v{y}) = \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}\v{y}$, where we note in our setting that the inverse always exists by non-singularity of $\v{y}$.
+With these preparations, we are ready to revisit \Cref{thm:mvn-pw}.
+
+\thmmvnpw*
 
 \begin{proof}
 Write 
 \[
-TODO
-.
+\v\theta = \E(\v\theta\given\v{y}) + (\v\theta - \E(\v\theta\given\v{y}))
 \]
+and note that since $\E(\v\theta\given\v{y})$ and $(\v\theta - \E(\v\theta\given\v{y}))$ are uncorrelated and jointly Gaussian, they are independent.
+Applying \Cref{lem:cond-repr} yields
+\[
+(\v\theta\given\v{y}=\v\gamma) &= \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}} \v\gamma + (\v\theta - \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}} \v{y})
+\\
+&= \v\theta + \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}}(\v\gamma - \v{y})
+\]
+where we have substituted $\E(\v\theta\given\v{y}) = \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}} \v{y}$. 
+The claim follows.
 \end{proof}
 
-From this, we therefore obtain a second method for sampling multivariate Gaussians: (i) sample $\v\theta,\v{y}$ jointly, and (ii) transform $\v\theta,\v{y}$ into $\v\theta\given\v{y}=\v\gamma$ by employing the given expression.
+\begin{figure*}[t]
+\vspace*{10ex}
+[MVN Pathwise Conditioning Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\label{fig:pw-cond-mvn}
+\end{figure*}
+
+From \Cref{thm:mvn-pw}, we obtain a second method for sampling multivariate Gaussians: (i) sample $\v\theta,\v{y}$ jointly, and (ii) transform $\v\theta,\v{y}$ into $\v\theta\given\v{y}=\v\gamma$ by employing the given expression.
+This procedure is illustrated in \Cref{fig:pw-cond-mvn}
 
 Remarkably, this result is missing from every machine learning textbook on Gaussian processes that I am aware of, and appears almost entirely unknown within the field.
 It's possible this is because the expression's computational costs are cubic in the combined dimension, which is more expensive than the previous costs.
 While this holds for general Gaussians, we will show it can be avoided for many cases of practical interest in the sequel.
 
-\Cref{thm:mvn-pw}, on the other hand, is certainly known in other communities.
+On the other hand, \Cref{thm:mvn-pw} is certainly known in other communities.
 In a tribute to Georges Matheron, who pioneered the expression's use in geostatistics, \textcite{chiles05} say that:
 
 \begin{quotation}
@@ -1198,18 +1280,7 @@ This note contains no original material and will never be submitted anywhere for
 
 The present state of affairs therefore seems to be that a small set of technical experts are aware of \Cref{thm:mvn-pw} but believe it to be too trivial to write about, while practitioners working in areas such as Bayesian optimization do not know that it exists.
 While for multivariate Gaussians the result certainly is trivial, we will subsequently show that using it in the right manner yields significant progress towards resolving certain long-standing issues in decision-making settings.
-
-First, however, we will prove \Cref{thm:mvn-pw} in a different way in order to illustrate how one can derive it from scratch without being aware of its precise form.
-For this, we first prove a general lemma about conditioning.
-
-\begin{lemma}
-\label{lem:cond-repr}
-\end{lemma}
-
-\begin{proof}
-\end{proof}
-
-Discussion
+To do so, we now consider Gaussian processes.
 
 \section{Conditioning Gaussian processes}
 
