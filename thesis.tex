@@ -133,8 +133,6 @@ A map $f : Y \-> Y'$ between measurable spaces $(Y,\c{Y})$ and $(Y',\c{Y}')$ is 
 This means that true-false questions for the space $Y'$ can be asked and answered relative to true-false questions for the space $Y$.
 On product spaces, map $f : Y \-> \Theta \x \Theta'$ is measurable if its components are measurable, but a map $f : Y \x Y' \-> \Theta$ \emph{need not} automatically be measurable if $f(\.,y') : Y \-> \Theta$ and $f(y,\.) : Y' \-> \Theta$ are measurable for all $y,y'$.
 
-% existence of RVs with a given measure
-
 A \emphmarginnote{probability measure} is a countably additive map $\pi_y : \c{Y} \-> [0,1]$ satisfying $\pi_Y(Y) = 1$. 
 This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is according to the measure---in this view, probability measures describe uncertainty.
 A \emph{probability space} is a measurable space $(\Omega,\c{F})$ equipped with a probability measure $\P$.
@@ -148,6 +146,13 @@ The probability of an event $A_y$, then, is determined by measuring the probabil
 \parmarginnote{Notation for random variables}
 In this work, we will generally \emph{not} adopt the standard convention of suppressing $\omega$-arguments of random variables from our notation, and will write such arguments explicitly.
 Though this makes expressions slightly denser, it also avoids ambiguity and presents the mathematics more precisely.
+
+\parmarginnote{Equality of random variables}
+There are multiple senses in which we can say random variables are equal.
+We say that $y = y'$ \emph{surely} if they are equal as mathematical functions.
+This notion is essentially never used, because it is exceedingly strong.
+We say that $y = y'$ \emph{almost surely} if $\P(y \neq y') = 0$, in which case $y$ and $y'$ are equal as functions, except possibly on a set of measure zero.
+We say that $y = y'$ \emph{in distribution} if $y_* \P = y'_* \P$, meaning their distributions are equal.
 
 \parmarginnote{Existence of a random variable with given distribution}
 For a given probability space $(\Omega,\c{F},\P)$, a random variable $y : \Omega \-> Y$ with distribution $\pi_y$ need not exist.
@@ -878,7 +883,7 @@ A generic finite-dimensional vector space lacks this structure: it admits many d
 
 With this in mind, we observe that we have not actually used the product structure of $\R^d$: take a finite-dimensional Hilbert space $V$ and define
 \[
-y &= \sum_{i=1}^d z_i e_i
+y(\omega)  &= \sum_{i=1}^d z_i(\omega)  e_i
 &
 z_i \~[N](0,1)
 \]
@@ -893,7 +898,7 @@ Therefore, we introduce an alternative definition to help build intuition for la
 \begin{definition}[Multivariate Gaussian in the sense of duality]
 A random variable $\v{y} : \Omega \-> \R^d$ is called \emph{multivariate Gaussian} if, for any vector $\v\phi \in \R^d$, the dot product 
 \[
-\v{y}\.\v\phi : \Omega \-> \R 
+\v{y}(\.)\.\v\phi : \Omega \-> \R 
 \]
 is univariate Gaussian.
 \end{definition}
@@ -979,7 +984,7 @@ is positive semi-definite.
 
 The \emph{covariance kernel} of a Gaussian process then is defined by
 \[
-k(x,x') = \Cov(f(x),f(x'))    
+k(x,x') = \Cov(f\.,x),f(\.,x'))    
 .
 \]
 It is then clear that the pair $(\mu,k)$ uniquely define a Gaussian process, and so we write $f\~[GP](\mu,k)$.
@@ -1132,7 +1137,7 @@ Let
 be non-singular.
 Then we have that
 \[
-(\v\theta\given\v{y}=\v\gamma) \~[N]\del{\v\mu_{\v\theta} + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v\gamma-\v\mu_{\v{y}}), \m\Sigma_{\v\theta\v\theta} - \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}\m\Sigma_{\v{y}\v\theta}}
+(\v\theta\given\v{y})(\.,\v\gamma) \~[N]\del{\v\mu_{\v\theta} + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v\gamma-\v\mu_{\v{y}}), \m\Sigma_{\v\theta\v\theta} - \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}\m\Sigma_{\v{y}\v\theta}}
 .
 \]
 \end{proposition}
@@ -1141,18 +1146,26 @@ Then we have that
 By non-singularity, $(\v\theta,\v{y})$ admits a Lebesgue density, and the claim follows by direct calculation via applying Bayes' Rule for densities.
 \end{proof}
 
+\begin{figure*}[t]
+\vspace*{10ex}
+[MVN Distributional Conditioning Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\label{fig:dist-cond-mvn}
+\end{figure*}
+
 The non-singularity requirement is more-or-less necessary: otherwise, the marginal distribution of $\v{y}$ may admit too many null sets, rendering the desired conditional distribution non-unique, except in regions where one can apply a linear map to recover a suitable Lebesgue density and apply the above argument on the obtained subspace.
 
 Of one wants to work with this expression numerically, then it's possible to calculate the desired conditional mean and covariance. 
 In particular, one can generate conditional sample via the expression
 \[
-(\v\theta\given\v{y}=\v\gamma) &= \m{L}\v{z} + \v\mu_{\v\theta\given\v{y}}
+(\v\theta\given\v{y})(\omega,\v\gamma) &= \m{L}_{\v\theta\given\v{y}}\v{z}(\omega) + \v\mu_{\v\theta\given\v{y}}
 &
 \v{z} &\~[N](\v{0},\m{I})
 \]
-where $\v\mu_{\v\theta\given\v{y}}$ is the conditional mean, and $\m{L}$ is a Cholesky factor of the conditional covariance.
+where $\v\mu_{\v\theta\given\v{y}}$ is the conditional mean, and $\m{L}_{\v\theta\given\v{y}}$ is a Cholesky factor of the conditional covariance.
 This enables one to calculate any quantity of interest depending on the conditional distribution numerically via the Monte Carlo method.
-The computational costs will be cubic in the dimension of both $\v\theta$ and $\v{y}$, owing to the need to compute $\m{L}$ and invert $\m\Sigma_{\v{y}\v{y}}$, respectively.
+The computational costs will be cubic in the dimension of both $\v\theta$ and $\v{y}$, owing to the need to compute $\m{L}_{\v\theta\given\v{y}}$ and invert $\m\Sigma_{\v{y}\v{y}}$, respectively.
 
 
 \subsection{Pathwise conditioning}
@@ -1165,7 +1178,7 @@ Miraculously, Gaussian conditional distributions---in general, a purely \emph{di
 \label{thm:mvn-pw}
 For $\v\theta,\v{y}$ defined in \Cref{prop:mvn-cond}, we have that
 \[
-(\v\theta\given\v{y}=\v\gamma) = \v\theta + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v\gamma - \v{y})
+(\v\theta\given\v{y})(\omega,\v\gamma) = \v\theta(\omega) + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v\gamma - \v{y}(\omega))
 .    
 \]
 \end{restatable}
@@ -1294,19 +1307,20 @@ We begin with the former.
 
 The standard way of representing Gaussian process conditionals is to use the finiteness of the data to pick a sufficiently large grid of points, and work with finite-dimensional marginals.
 Conditioning the Gaussian process then reduces to conditioning multivariate Gaussians.
-We now describe this.
+We now describe this, setting the prior mean to zero to ease notation.
 
 \begin{proposition}[Posterior Gaussian process~(finite-dimen\-sional~marginals)]
+\label{prop:gp-cond}
 The Bayesian model
 \[
 \v{y} \given f &\~[N](\v{f}, \m\Sigma)
 &
 f &\~[GP](0,k)
 \]
-where $\v{f} = (f(x_1),..,f(x_n))$, admits a Gaussian process as its posterior. 
+where $\v{f} = (f(x_1),..,f(x_n))$ admits a Gaussian process as its posterior. 
 Denoting $f\given y_1 = \gamma_1,..,y_n = \gamma_n$ by $f\given \v{y}$ for brevity, this process satisfies
 \[
-f\given\v{y}\~[N](\m{K}_{(\.)x} \m{K}_{xx}^{-1}\v\gamma, \m{K}_{(\.,\.m)} - \m{K}_{(\.)x} (\m{K}_{xx} + \m\Sigma)^{-1} \m{K}_{x(\.)})
+f\given\v{y}\~[N](\m{K}_{(\.)x} \m{K}_{xx}^{-1}\v\gamma, \m{K}_{(\.,\.)} - \m{K}_{(\.)x} (\m{K}_{xx} + \m\Sigma)^{-1} \m{K}_{x(\.)})
 .
 \]
 \end{proposition}
@@ -1314,6 +1328,14 @@ f\given\v{y}\~[N](\m{K}_{(\.)x} \m{K}_{xx}^{-1}\v\gamma, \m{K}_{(\.,\.m)} - \m{K
 \begin{proof}
 Apply \Cref{prop:mvn-cond} to a set of finite-dimensional marginals.
 \end{proof}
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[GP Distributional Conditioning Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\label{fig:dist-cond-gp}
+\end{figure*}
 
 This result gives us a way of carrying out Bayesian learning using Gaussian processes, given a finite set of data.
 Note the \emph{bottom-up} nature of this perspective: we describe the posterior Gaussian process---which is an actual \emph{process} defined everywhere---using its posterior finite-dimensional marginals.
@@ -1336,9 +1358,10 @@ Summarizing, the computational costs of this expression are as follows.
 \2 Predictions: $\c{O}(n_*^3)$ where $n_*$ is the number of locations the posterior needs to be jointly evaluated at.
 \0
 
-The situation is even worse if one considers that the evaluation locations may not be known in advance, and might be determined using previous points.
+This becomes more difficult if one considers that the evaluation locations may not be known in advance, and might be determined using previous points.
 Due to the need to factorize matrices at every intermediate computation step, roundoff errors will accumulate as computations proceed.
 Thus, even if we are willing to pay cubic costs, we must then face the secondary issue of numerical instability.
+The situation if one needs to differentiate through objectives such as $\phi_t$ is even worse.
 
 Without additional considerations, these costs are disastrous, and illustrate the difficulties in making methods such as Bayesian optimization perform effectively in practice.
 Fortunately, a wide variety of techniques to deal with them are available: in particular, \emph{inducing point} methods provide a broad set of approximations for reducing the $\c{O}(n^3)$ costs.
@@ -1347,9 +1370,105 @@ For this, we proceed to develop a pathwise view of conditioning.
 
 \subsection{Pathwise conditioning}
 
-Formula
+Given the pathwise view of conditioning multivariate Gaussians given by Matheron's Update Rule, one can ask: is there an analogous statement for Gaussian processes?
+Does the purely notion of a Gaussian conditional distribution have an analogous description in terms of random functions?
+We answer this affirmatively below.
 
-Discussion
+\begin{corollary}[Posterior Gaussian process (pathwise)]
+\label{cor:gp-pw}
+For $\v{y}\given f$, $f$, and $\v{f}$ defined in \Cref{prop:gp-cond}, we have
+\[
+(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{f}(\omega) - \v\eps(\omega))
+\]
+where $\v\eps \~[N](\v{0},\m\Sigma)$.
+\end{corollary}
+
+\begin{proof}
+Apply \Cref{thm:mvn-pw} to a set of finite-dimensional marginals.
+\end{proof}
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[GP Pathwise Conditioning Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\label{fig:pw-cond-gp}
+\end{figure*}
+
+Note that in this expression, the prior is evaluated jointly at all locations---the random variables $f(\omega,\.)$ and $\v{f}(\omega)$ are \emph{dependent}.
+Similarly, equality can clearly only hold in distribution because the random variable $(f\given\v{y})(\.,\v\gamma)$ is only defined in distribution to begin with.
+
+\Cref{cor:gp-pw} gives an alternative way of representing posterior Gaussian processes: (i) sample the prior and all auxillary random variables, and (ii) transform the sampled function to form the posterior as a random function.
+This is illustrated in Figure \ref{fig:pw-cond-gp}.
+
+This strategy can be carried out if we know the locations we wish to evaluate the posterior at.
+In this case, we sample the prior at the data and evaluation locations jointly, and transform the resulting samples into posterior samples.
+Examining the computational costs, we see these are $\c{O}(n^3)$ with respect to data size, and $\c{O}(n_*^3)$ with respect to the number of evaluation locations.
+At this stage, then, we have seemingly only gained numerical stability.
+
+\Cref{cor:gp-pw}, however, is not merely a computational result: it gives us a \emph{different way of thinking} about posterior Gaussian processes. 
+In particular, we can use the point of view it offers to construct posterior approximations.
+Observe that the cubic costs $\c{O}(n_*^3)$ occur entirely due to the need to jointly sample the prior at all evaluation locations.
+Suppose, then, that we can approximately express the prior as 
+\[
+f(\omega,\.) &\approx \tilde{f}(\omega,\.) = \sum_{i=1}^\ell w_i(\omega)\phi_i(\.)
+&
+w_j &\~[N](0,1)
+.
+\]
+We can substitute this approximation into \Cref{cor:gp-pw} to obtain
+\[
+(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} \tilde{f}(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))
+\]
+where $\tilde{f}_n = \tilde{f}(\.,x_n)$.
+We illustrate this idea in Figure \ref{fig:pw-cond-gp-rff}.
+Once the random weights $\v{w}$ are sampled, the posterior becomes a deterministic function, which can be evaluated at $\c{O}(n_*)$ costs.
+Thus, under this approximations, our cubic costs with respect to the number of evaluation locations become \emph{linear}.
+We show in the sequel that for appropriate choices of $\tilde{f}$, such approximations can achieve excellent error control, ensuring they perform effectively in practice.
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[RFF GP Pathwise Conditioning Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\label{fig:pw-cond-gp-rff}
+\end{figure*}
+
+We now examine a different aspect of the pathwise representation of posterior Gaussian processes: the role of the data.
+By re-expressing the matrix-vector product of the kernel matrix term $\m{K}_{(\.)\v{x}}$ as a sum, we obtain
+\[
+(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \sum_{j=1}^n v_j(\omega) k(x_j,\.)
+\]
+where $\v{v} = (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))$.
+This \ref{cor:gp-pw} identifies the effect of the data in a posterior Gaussian process as the addition of \emph{canonical basis functions} $k(x_i,\.)$ to the prior.
+We explore this interpretation further in the sequel.
+From this viewpoint, our approximate posterior is
+\[
+(f \given\v{y})(\omega,\v\gamma) \overset{\d}{\approx} \sum_{i=1}^\ell w_i(\omega)\phi_i(\.) + \sum_{j=1}^n v_j(\omega) k(x_j,\.)
+\]
+which shows that our proposed approximation involves writing the posterior Gaussian process of interest as a sum of \emph{two} finite sets of basis functions---one for the prior, another for the data.
+The basis coefficients $w_i$ and $v_j$ here are dependent random variables.
+Summarizing, pathwise representations of posterior Gaussian processes provide a useful framework for constructing posterior approximations.
+
+In Bayesian optimization, the preceding techniques offer a promising avenue to avoid the computational difficulties described previously.
+If we again consider Thompson sampling, computing quantities such as
+\[
+x_{t+1}(\omega) &= \argmax_{x\in X} \phi_t(\omega,x)
+&
+\phi_t&\~ f \given \v{y}
+\]
+can be done using a simple Monte Carlo approach as follows.
+
+\1 Sample the random weights $(\v{w}, \v{v})$ to form the approximate posterior.
+\2 Maximize the approximate posterior using any numerical procedure.
+\0
+
+The key advantage of this approach is that once the random weights are sampled, the posterior---a random function---effectively becomes deterministic.
+This allows us to not only evaluate it in linear time, but also to differentiate through posterior samples using automatic differentiation---here, enabling us to maximize them using gradient descent without computing gradient processes or employing special considerations of any kind.
+
+In total, we obtain a substantially more accurate and efficient way to compute acquisition functions such as Thompson sampling.
+To obtain a complete algorithm, all that remains is to find finite basis approximations to Gaussian process priors: this will require additional structure present in specific classes of kernels.
+We proceed to explore a number of techniques for doing so.
 
 \section{Sampling from prior Gaussian processes}
 
