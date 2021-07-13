@@ -1566,9 +1566,46 @@ We now consider other cases.
 
 \subsection{Karhunen--Loève expansions}
 
-Alternatively: work with a different kind of spectral theory directly in the space
+Among all techniques for constructing approximate priors, different techniques will generally yield different amounts of error for the same number of basis functions.
+One can then ask: is there an optimal choice?
+Of course, the answer to this question will depend on what one actually means by the word \emph{optimal}.
 
-Obtain the KL expansion
+If we take $X \subset \R^d$ to be closed and compact, and we use expected mean squared error---which we recall is equivalent to the $L^1(\Omega;L^2(X;\R))$ norm---as our notion of optimality, one can affirmatively answer the above question.
+Recall that a continuous kernel $k : X \x X \-> \R$ induces a covariance operator
+\[
+\c{K} : L^2(X;\R) &\-> L^2(X;\R)
+&
+\c{K} : \phi &\|> \int_X \phi(x) k(x,\.) \d x
+\]
+where by writing $\norm{\c{K} \phi}_{L^1(X;\R)} \leq \vol(X) \norm{k}_{C^0(X\x X;\R)} \norm{\phi}_{L^2(X;\R)}$ using compactness and boundedness of $k$ we affirm correctness of the operator's domain and range.
+By compactness, $\c{K}$ will admit a countable set of eigenvalues and eigenfunctions.
+It turns out, that, by the Karhunen--Loève Theorem, the Gaussian process itself can be written in terms of the same eigenvalues and eigenfunctions as well.
+
+\begin{result}[Karhunen--Loève Theorem]
+Let $X \subseteq \R^d$ be closed and compact, and let $f$ be a Gaussian process with continuous covariance function.
+Then we have
+\[
+f(\omega,\.) &= \sum_{i=1}^\infty w_i(\omega) \phi_i(\.)
+&
+w_i &\~[N](0,1)
+\]
+where convergence holds almost surely, and $\phi_i$ are an orthogonal basis on $L^2(X;\R)$ given by the eigenfunctions of the covariance operator.
+Moreover, for every $\ell\in \N$, truncating this series yields an $L^1(\Omega;L^2(X;\R))$-optimal approximation among all $\ell$-term sums of $L^2(X;\R)$-orthogonal functions.
+\end{result}
+
+\begin{proof}
+TODO: cite.
+\end{proof}
+
+More generally, an analogous result, albeit with a weaker form of convergence, also holds for general \emph{square-integrable} stochastic processes which may be non-Gaussian.
+Since we will not consider such processes, we do not pursue this direction here.
+
+For a general kernel, finding the eigenfunctions of the covariance operator may be difficult.
+For certain classes of Gaussian processes constructed to satisfy appropriate boundary constraints, however, the eigenfunctions of the covariance operator will coincide with the eigenfunctions of a boundary-constrained Laplacian.
+These can be obtained numerically, giving a suitable way for sampling from priors in the boundary-constrained setting.
+
+Kernels induced by eigenvalues and eigenfunctions of appropriately-defined Laplace operators are also a common tool in non-Euclidean settings, and we will explore them further in \Cref{ch:noneuclidean}.
+For the moment, however, we consider a third class of approximations.
 
 \subsection{Finite element methods}
 
