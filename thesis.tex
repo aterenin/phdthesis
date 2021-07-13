@@ -75,6 +75,7 @@ Not more than 300 words
 
 
 \chapter{Introduction}
+\label{ch:intro}
 
 \lettrine{L}{earning} from experience in order to change behavior is one of the defining abilities of biological systems, which differentiates them from other kinds of systems found in the world.
 Replicating the processes biological systems use to learn and adapt is a fundamental goal of science and technology.
@@ -306,6 +307,7 @@ In particular, we can map an infinite-dimensional function space into finite-dim
 We now introduce the \emph{variational formulation} of Bayes' Rule, which expresses the posterior as the solution to an infinite-dimensional optimization problem.
 
 \begin{proposition}[Bayes' Rule in variational form]
+\label{prop:variational-bayes}
 Assume TODO.
 Then for every $\gamma\in Y$, the posterior distribution satisfies 
 \[
@@ -1021,6 +1023,7 @@ Defining positive semi-definite kernels there turns out to be non-trivial, and t
 We therefore proceed to adopt a function-analytic perspective which is more technical, but significantly more powerful, and will allow us to recover the previous set of tools in a much more pure and abstract form.
 
 \subsection{Gaussian processes in general vector spaces}
+\label{sec:abstract-gp}
 
 Duality
 
@@ -1609,19 +1612,79 @@ For the moment, however, we consider a third class of approximations.
 
 \subsection{Finite element methods}
 
-Completely different idea: represent GP as SPDE and solve the SPDE
+We now introduce the third class of approximations we will consider: those constructed via \emph{finite element approximations} of solutions of stochastic partial differential equations.
+Many Gaussian process priors, including the widely-used Matérn class, can be expressed in such a manner.
+Gaussian processes which satisfy stochastic partial differential equations are also of direct interest in non-Euclidean settings considered in \Cref{ch:noneuclidean}.
 
-Derivation
+Suppose our Gausian process $f$ satisfies the equation $\c{L}f = \c{W}$ where $\c{L} : U \-> L^2(X)$ is a linear differential operator acting on a suitably-chosen vector space $U$, and $\c{W}$ is a Gaussian white noise process, as defined in \Cref{sec:abstract-gp}.
+
+TODO: write once SPDE part is done.
 
 \section{Approximating pathwise data-dependent terms}
 
-Previous part as about approximating the prior, which gets us to linear test-time costs
-
-What about reinterpreting training-time costs from this viewpoint?
+In the preceding section, we discussed techniques for approximating the prior using a finite set of basis functions with random coefficients.
+Such approximations enabled us to construct approximate pathwise representations of posterior Gaussian processes with $\c{O}(n_*)$ computational complexity, where we recall again that $n_*$ is the number of points where we wish to evaluate the posterior at.
+We now consider the other computational costs in the formula: $\c{O}(n^3)$, where $n$ is the size of the training data.
+These arise because computing
+\[
+(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{f}(\omega) - \v\eps(\omega))
+\]
+requires us to invert an $n\x n$ matrix.
+We now ask: from a pathwise perspective, what techniques are available for reducing these costs?
 
 \subsection{Inducing points}
 
-Reinterpret classical constructions
+Consider a simple approach to reducing the above cubic costs: instead of conditioning the Gaussian process on the full set of values $(x_1,y_1),..,(x_n,y_n)$, find a different data set $(z_1,\mu_1),..,(z_m,\mu_m)$, for which $m \ll  n$ and yet the posterior is approximately the same.
+To ensure this approximation is expressive enough, we can either (i) make $\v\mu$ random with a learnable mean and covariance, or (ii) introduce a learned noise covariance $\m\Lambda$, rather than reusing the one from the original model.
+The latter gives
+\[
+(f \given\v{u})(\omega,\v\mu) = f(\omega,\.) + \m{K}_{(\.)\v{z}} (\m{K}_{\v{z}\v{z}} + \m\Lambda)^{-1}(\v\mu - \v{f}(\omega) - \v\epsilon(\omega))
+\]
+where $f\given\v{u}$ is the posterior under the modified likelihood employing the noise covariance $\m\Lambda$.
+This approximation has a particularly simple interpretation: we can re-write it as
+\[
+(f \given\v{u})(\omega,\v\mu) = f(\omega,\.) + \sum_{j=1}^m v_j(\omega) k(z_j,\.)
+\]
+where $\v{v}(\omega) = (\m{K}_{\v{z}\v{z}} + \m\Lambda)^{-1}(\v\mu - \v{f}(\omega) - \v\epsilon(\omega))$.
+Thus, we see that all we have done is replaced a large sum of data-dependent functions $k(x_j,\.)$ with $j=1,..,n$ induced by the kernel with a much smaller sum involving a sparsified set of functions $k(z_j,\.)$ with $j=1,..,m$ and $m \ll n$.
+
+Given such an approximate posterior, how should we select the introduced hyperparameters $\v{z},\v\mu,\m\Lambda$ to ensure quality?
+At minimum, we should attempt to guarantee consistency of the approximation, in the sense that if $m = n$ then one can choose $\v{z} = \v{x}$, $\v\mu = \v\gamma$, and $\m\Lambda = \m\Sigma$ to recover the desired posterior.
+We therefore seek to minimize some notion of \emph{distance} on the space of probability measures.
+
+The most natural choice one can consider is arguably the one that emerged from the analysis of Bayes' Rule presented in \Cref{ch:intro}: namely, the \emph{Kullback--Leibler divergence}.
+Minimizing this amounts to replacing the measure space in the variational formulation of Bayes' Rule of \Cref{prop:variational-bayes} with the parameterized subspace of measures induced by the set of approximate posteriors with different parameter values, which we the \emph{variational family}.
+This yields the optimization problem 
+\[
+\argmin_{\bb{q}_f\in\bb{Q}} D_{\f{KL}}(\bb{q}_f \from \pi_f) + \frac{1}{2}\operatorname*{\E}_{f\~\bb{q}_f} (\v\gamma - f(\v{x}))^T \m\Sigma^{-1} (\v\gamma - f(\v{x}))
+\]
+where $\bb{Q}$ is the set of all measures equal to the distribution of $f\given\v{u}$ for some choice of variational parameter values $\v{z},\v\mu,\m\Lambda$, and $\bb{q}_f$ is the distribution of $f\given\v{u}$ for a specific set of such values.
+Note that we have dropped constant terms from the likelihood density because they do not affect the optima.
+Our \emph{variational approximation} is obtained by solving this optimization problem, which it turns out is necessarily well-posed.
+
+\begin{proposition}[Variational objective for inducing point approximations]
+For all $\v{x},\v{y},\m\Sigma$, and all $\v{z},\v\mu,\m\Lambda$, the Kullback--Leibler divergence $D_{\f{KL}}(\bb{q}_f \from \pi_{f \given\v{y}})$ is finite and equal to the above objective up to an additive constant.
+Moreover, the prior Kullback--Leibler divergence $D_{\f{KL}}(\bb{q}_f \from \pi_f) = D_{\f{KL}}(\bb{q}_{f(\v{z})} \from \pi_{f(\v{z})})$ reduces to the Kullback--Leibler divergence between the respective finite-dimensional marginal distributions at the inducing locations $\v{z}$.
+\end{proposition}
+
+\begin{proof}
+We consider the two terms in the objective and the additive constant.
+\1 Finiteness of the first term, along with the second claim, follows by the chain rule for Kullback--Leibler divergences, since $\bb{q}_f$ is by construction a conditional distribution of a Gaussian process with the same covariance kernel as $k$.
+\2 Finiteness of the second term follows immediately, because it is the expectation of a quadratic with respect to a multivariate Gaussian.
+\3 Finiteness of the additive constant also follows, because it is by definition the log-density of a multivariate Gaussian.
+\0 
+The claim follows. 
+\end{proof}
+
+We have therefore proven that the \emph{inducing point} approximation of \textcite{opper09}, when re-interpreted using the variational inference framework of \textcite{titsias09}, coincides with the pathwise variational approximation constructed here.
+The same is true for other classes of inducing points, including the family where $\v{u}$ is randomized, as originally proposed by \textcite{titsias09}.
+
+Better yet, the constructions above are straightforward, principled, and mathematically sound.
+In particular, we do not rely on heuristic arguments involving \emph{evidence lower bounds} which effectively require us to \emph{posit} that optimizing certain quantities will result in improved posterior approximation.
+Instead, by virtue of the Kullback--Leibler divergence generating a Hausdorff topology on the space of probability measures, this is proven.
+
+This concludes our study of inducing point methods from the pathwise perspective, which are identified with sparsified pathwise approximations where instead of a sum of $n$ kernel terms, we have a smaller sum of $m \ll n$ kernel terms.
+We now consider another class of approximations that one can consider using in practice.
 
 \subsection{Approximate priors}
 
