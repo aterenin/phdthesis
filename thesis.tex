@@ -1421,7 +1421,7 @@ w_j &\~[N](0,1)
 \]
 We can substitute this approximation into \Cref{cor:gp-pw} to obtain
 \[
-(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} \tilde{f}(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))
+(f \given\v{y})(\omega,\v\gamma) \overset{\d}{\approx} \tilde{f}(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))
 \]
 where $\tilde{f}_n = \tilde{f}(\.,x_n)$.
 We illustrate this idea in Figure \ref{fig:pw-cond-gp-rff}.
@@ -1496,7 +1496,7 @@ We say that $\c{H}$ is a \emph{reproducing kernel Hilbert space} if, for any $x\
 \end{definition}
 
 Ostensibly, this definition has nothing to do with kernels, and it is unclear what a reproducing kernel Hilbert space \emph{induced by} $k$ actually means.
-A consequence of the above definition is that given a reproducing kernel Hilbert space $\c{H}$, we can define the function $k_{\c{H}}(x,x') = \innerprod[1]{\Phi_{\c{H}}^{-1}\f{ev}_x}{\Phi^{-1}_{\c{H}}\f{ev}_{x'}}$, called the \emphmarginnote{reproducing kernel}, where $\Phi_{\c{H}} : \c{H} \-> \c{H}^*$ is the bijective linear isometry given by the Riesz Representation Theorem.
+A consequence of the above definition is that given a reproducing kernel Hilbert space $\c{H}$, we can define the function $k_{\c{H}}(x,x') = \innerprod[1]{\Psi_{\c{H}}^{-1}\f{ev}_x}{\Psi^{-1}_{\c{H}}\f{ev}_{x'}}$, called the \emphmarginnote{reproducing kernel}, where $\Psi_{\c{H}} : \c{H} \-> \c{H}^*$ is the bijective linear isometry given by the Riesz Representation Theorem.
 It is easy to see that $k_{\c{H}}$ is positive semi-definite.\footnote{TODO: check if it's PD or PSD.}
 It turns out a converse statement also holds.
 
@@ -1687,10 +1687,45 @@ This concludes our study of inducing point methods from the pathwise perspective
 We now consider another class of approximations that one can consider using in practice.
 
 \subsection{Approximate priors}
+In the preceding sections, we presented a number of posterior approximations which were built by approximating individual terms within the pathwise formalism.
+We considered approximations where the prior term is replaced with a finite basis function approximation, and where the data term is replaced with a sparser analog.
+An obvious question one can ask is, instead of approximating the prior term, why not just change the model by using a finite basis function prior to begin with?
 
-RFF GP can be reinterpreted as replacing the prior with a finite-dim version
+The answer to this question is that the resulting model becomes fundamentally finite-dimensional, and loses expressive capacity, resulting in reduced performance.
+This can be seen precisely by comparing its pathwise update 
+\[
+\tilde{f}(\omega,\.) + \ubr{\v\phi(\.)^T\v\phi(\v{x})}_{\t{replaces}\,\m{K}_{(\.)\v{x}}} (\ubr{\v\phi(\v{x})^T\v\phi(\v{x})}_{\t{replaces}\,\m{K}_{\v{x}\v{x}} } + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))
+\]
+to the pathwise update
+\[
+f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))
+\]
+under the original, infinite-dimensional prior.
+Observe that all that has changed is that the kernel matrices $\m{K}_{(\.)\v{x}}$ and $\m{K}_{\v{x}\v{x}}$ have been replaced with the approximations $\v\phi(\.)^T\v\phi(\v{x})$ and $\v\phi(\v{x})^T\v\phi(\v{x})$.
+Observe further that since $\tilde{f}(\omega,\.) = \v\phi(\.)^T\v{w}(\omega)$ where $w_i\~[N](0,1)$, we can write
+\[
+(f\given\v{y}) \approx \v\phi(\.)^T(\v{w}(\omega) + \v{\tilde{v}}(\omega))
+\]
+where $\v{\tilde{v}}(\omega) = \v{w}(\omega) + \v\phi(\v{x}) (\v\phi(\v{x})^T\v\phi(\v{x}) + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))$ are random weights.
+Therefore, if change the model, then the posterior becomes a sum of the specified finite basis functions, irrespective of the data, and in particular does not grow as data size increases.
 
-This results in unnecessarily large approximation error and variance starvation
+This therefore means its representational capacity---in the sense of the dimension of the vector space spanned by all basis functions used---also does not grow as data size increases.
+This is to be contrasted with the approximate pathwise update, for which this dimensionality grows due to the presence of $n$ kernel functions $k(x_j,\.)$ in the sum.
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[Variance Starvation Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\label{fig:variance-starvation}
+\end{figure*}
+
+The result is that if the data size is large enough, performance degrades disastrously---this is seen in \Cref{fig:variance-starvation}
+This phenomenon has been called \emph{variance starvation} in the literature, due to its ability to produce error bars that are too narrow as a result of lack of representational capacity---we note this name is misleading because it is also capable of producing error bars which are far too large.
+
+By not approximating terms that do not need to be approximated, pathwise approximations avoid limiting representational capacity and thus retain performance.
+Variance starvation has been a key performance issue in Bayesian optimization algorithms for some time---in our view, pathwise approximations of the kind described here largely resolve the issue.
+
 
 \section{Error analysis}
 
