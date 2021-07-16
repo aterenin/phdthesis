@@ -1729,19 +1729,102 @@ Variance starvation has been a key performance issue in Bayesian optimization al
 
 \section{Error analysis}
 
-Theorems
+Pathwise posterior approximations are, ultimately, approximations.
+Therefore, a key question one can ask is: how accurate are they?
+To quantify this, we need an appropriate notion of \emph{distance} to quantify how far away the two random variables of interest are.
+This notion should possess a number of key properties.
+
+\1  It should be \emph{distributional} in nature to reflect the fact that it is the information contained in the posterior that is of interest to us, rather than the precise way in which the random variables is generated.
+\2 The distance between the true posterior and pathwise approximations should be finite, in order to facilitate meaningful comparisons.
+\0 
+
+The \emphmarginnote{Wasserstein distance} on the space of probability measures is defined as 
+\[
+W_{k,d}(\pi,\pi')^k = \inf_{\gamma\in\Gamma(\pi,\pi')} \int_{A\x A} d(a,a')^k \d\gamma(a,a')
+\]
+where $d$ is a metric on $A$, and $\Gamma(\pi,\pi')$ is this set of all \emph{couplings} of $\pi$ with $\pi'$, namely probability measured $\gamma$ supported on $A\x A$ whose marginals equal $\pi$ and $\pi'$.
+We adopt this expression as our notion of distance.
+
+The Wasserstein distance can be understood as the expected distance between two random variables $a$ and $a'$, with distributions $\pi$ and $\pi'$, where the random numbers used to generate $a$ and $a'$ are linked in order to make the expectation as small as possible.
+The smallest possible expected distance is zero, which only occurs if the random variables can be made identical to one another---or, in other words, if their distributions coincide.
+
+This definition satisfies both requirements. 
+By virtue of varying random numbers---or, more precisely, optimizing over couplings---it compares distributions.
+Moreover, unlike alternatives such as the Kullback--Leibler divergence or total variation distance, Wasserstein distances metrize the topology of weak convergence, do not impose restrictive absolute continuity requirements, and are finite in the cases of interest.
+
+We will also analyze error in a second way: using the supremum norm between kernels.
+Observe that pathwise approximations under mean-zero priors possess the exact same mean as the true posterior.
+Therefore, when restricted to pathwise approximations under mean-zero priors, this notion lifts to a \emph{metric} rather than a pseudometric between probability distributions in the given class.
+We now state our main result.
+
+\begin{proposition}[Pathwise posterior Wasserstein error bound]
+Assume $X \subseteq \R^d$ is compact and that $f \~[GP](\mu,k)$ is almost surely continuous.
+Then we have 
+\[
+TODO
+.
+\]
+\end{proposition}
+
+\begin{proof}
+TODO: clean up argument.
+\end{proof}
+
+\begin{proposition}[Pathwise posterior kernel error bound]
+Assume $X \subseteq \R^d$ is compact and that $f \~[GP](\mu,k)$ is almost surely continuous.
+Then we have 
+\[
+TODO
+.
+\]
+\end{proposition}
+
+\begin{proof}
+TODO: clean up argument.
+\end{proof}
+
+The above arguments shows that, for a given dataset size, posterior approximation error is controlled by prior approximation error.
+Thus, if we increase approximation accuracy in the prior, we are guaranteed to also increase approximation accuracy in the posterior, both in the limit and outside it..
+
+The key idea in the above arguments was to analyze the pathwise approximation by applying standard function-analytic inequalities to the pathwise representation itself.
+By varying the resulting norms, a wide set of similar inequalities follow: we make no attempt to optimize bounds, and instead focus on presenting the technique in the simplest manner.
+
+\parmarginnote{Approximation error and asymptotic posterior contraction}
+The bounds presented are not tight, particularly in large-data settings where the inverse matrix norm in the constant becomes large.
+This may tempt one to conclude that approximation error will grow, but this is often false---instead, the bound becomes loose.
+One way to see this is by considering posterior contraction: in large-data settings, the posterior will be concentrated, and since our approximations are exact with respect to the mean, there is little room left for error, in the absolute sense, to accumulate.
+
+Different prior approximations possess different error behavior.
+The random Fourier feature approach is particularly attractive because its Monte Carlo nature makes it decay at a dimension-free rate of $\sqrt{\ell}$---\textcite{sutherland15} provide bounds on this term.
+Note also that the terms in our kernel bounds depend on the dimension only through the kernel matrix, which itself depends on the dimension of the data and not the ambient space.
+In this sense, our bounds are very well-behaved with respect to dimension.
+
+This concludes our theoretical presentation and analysis.
+We now move to evaluating these ideas in practical settings, and discussing the broad picture painted by the ideas presented here and in the preceding sections.
 
 \section{Bayesian optimization}
 
-Experiment
+We now study empirically how pathwise approximations affect Bayesian optimization, using a simple experiment to showcase the key behavior.
+
+TODO: new experiment
 
 \section{Discussion}
 
-Very useful technique for optimizing GP trajectories
+Pathwise conditioning gives a powerful way to think about posterior Gaussian processes.
+In the preceding sections, we used it to construct finite-dimensional approximations which yield actual random functions.
+These functions are sums of finite basis functions and random coefficients---these coefficients can be sampled in advance, after which the functions can be evaluated at arbitrary points, as well as differentiated using standard techniques.
 
-Lets you do lots of awesome stuff
+The resulting method is particularly useful in decision-making settings such as Bayesian optimization, where acquisition functions constructed from Gaussian process sample paths need to be optimized.
+Using the presented technique, this can be done in linear time and without incurring large approximation error that degrades performance.
+This is particularly useful in higher-dimensional settings.
 
-This work lets us understand it a lot better
+The performance of pathwise approximate posterior Gaussian processes depends on the approximation accuracy of the prior term.
+We presented a number of methods for doing so, each suited to their respective settings.
+For stationary kernels, random Fourier feature methods are particularly attractive due to their good behavior with respect to dimension, but are by no means the only choice.
+We hope these developments prompt further study of other possible choices.
+
+TODO: talk about Bayesian optimization showcase
+
 
 
 
