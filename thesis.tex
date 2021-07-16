@@ -1833,7 +1833,27 @@ TODO: talk about Bayesian optimization showcase
 \chapter{Non-Euclidean Matérn Gaussian Processes}
 \label{ch:noneuclidean}
 
+At present, the most widely-used Gaussian process models employ stationary kernels defined on Euclidean spaces.
+These kernels are attractive because they work effectively and it is generally easy to understand the kind of prior information they introduce into a problem.
+This makes them a valuable tool for practitioners to use in the manner required for the task at hand.
+
+Our goal throughout has been to expand the settings in which Gaussian process models and decision systems built atop them can be used.
+We have so far focused on doing so by making existing models easier to work with, but now pursue a different approach: namely, we focus on expanding the scope of models one can consider to begin with.
+We will again emphasize on constructiveness and making abstract ideas accessible to the practitioner.
+
+We focus on the setting of Riemannian geometry, which describes a widely-occurring class of geometric shapes and spaces.
+We thus study Gaussian processes whose domains are manifolds, rather than Euclidean spaces.
+Working with manifolds often involves thinking carefully about discretization: we therefore also study purely discrete settings involving meshes and weighted undirected graphs, which are of inherent interest in their own right.
+
+Our guiding theme will be: how can we make Gaussian processes on Riemannian manifolds be just as effective a model class as their Euclidean counterparts?
+We now proceed to introduce, develop, and explore this topic.
+
+
 \section{Riemannian Matérn Gaussian Processes}
+
+We begin with a key question: how should one generalize the most widely-used class of Gaussian process models to the Riemannian manifold setting?
+There are multiple potential definitions one can introduce, some of which will turn out to be much better-behaved mathematically than others.
+In order to pursue these questions, we begin by introducing and reviewing the settong of Riemannian geometry.
 
 \subsection{Review of Riemannian geometry}
 \subsection{The Laplace--Beltrami operator}
