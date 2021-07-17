@@ -1853,10 +1853,11 @@ We now proceed to introduce, develop, and explore this topic.
 
 We begin with a key question: how should one generalize the most widely-used class of Gaussian process models to the Riemannian manifold setting?
 There are multiple potential definitions one can introduce, some of which will turn out to be much better-behaved mathematically than others.
-In order to pursue these questions, we begin by introducing and reviewing the settong of Riemannian geometry.
+In order to pursue these questions, we begin by introducing and reviewing the setting of differential geometry.
 
-\subsection{Review of Riemannian geometry}
-We now briefly review the notions needed to define and understand Riemannian manifolds.
+\subsection{Review of differential geometry}
+We now briefly review the notions needed to define and understand manifolds.\footnote{The Russian word for \emph{manifold} is \emph{mnogoobrazie} (mnəg\rotatebox[origin=c]{180}{aa}br{\textquotesingle}az\textsuperscript{j}\textsc{i}jə). The word \emph{mnogo} means \emph{many}, and the word \emph{obraz} roughly means \emph{form}, \emph{view}, or \emph{image}. 
+Thus, a \emph{manifold} is a \emph{space with many views into it}, which I find to be well-chosen and evocative.}
 These are sets equipped with additional structure encoding their geometric shape.
 
 A \emphmarginnote{topological space} is a set $X$ together with a \emph{topology}, which is a collection of subsets $\c{O}_X \subseteq 2^X$ called the \emph{open sets}, which contain the emptyset, the space itself, and are closed under pairwise intersections and arbitrary unions.
@@ -1871,7 +1872,8 @@ An atlas is \emph{maximal} if it is the largest possible such set, in which case
 A \emphmarginnote{smooth differentiable manifold} is a triple  $(X,\c{O}_X,\c{A}_X)$ where $X$ is a topological manifold, and $\c{A}_X$ is a $C^\infty$-atlas.
 A $C^\infty$-atlas is a maximal subset of the maximal atlas, in which, for any charts $x,y \in \c{A}_X$ with overlapping domain, the \emph{chart transition map} $y\after x^{-1}$ is an infinitely differentiable function.
 Homeomorphisms compatible with such charts are called \emph{diffeomorphisms}.
-A smooth manifold is called \emph{oriented} if the Jacobian determinant of all chart transition maps is positive.
+A smooth manifold is called \emph{oriented} if the Jacobian determinant of all chart transition maps in its atlas is positive.
+Such atlases admit maximal analogs.
 
 Every smooth manifold $X$ gives rise to its \emphmarginnote{tangent bundle} $(TX,\proj_X,X)$, which contains a smooth manifold $TX$ and a surjective projection map $\proj_X : TX \-> X$.
 The former is defined as $TX = \U_{x\in X} (x,T_x X)$, where $T_x X$ is the tangent space, defined as a vector space of equivalence classes of directional derivatives of smooth curves through $x$.
@@ -1890,9 +1892,14 @@ We say that a totally antisymmetric $(0,k)$-tensor field is a $k$-form, and that
 The \emphmarginnote{differential} map, denoted by $\d$, maps $k$-forms into $(k+1)$-forms.
 Interior products preserve antisymmetry.
 
+\parmarginnote{Volume}
+Differential forms are often used to formalize and encode geometric structure in a way that is amenable to analysis.
+For example, a nowhere-vanishing $d$-form is called a \emph{volume form}---such a form induces a notion of integration, and in turn, by the Riesz--Markov--Kakutani representation theorem, a Radon measure on the manifold which we call the \emph{volume measure}.
+On a general smooth manifold, the choice of a volume form is heavily non-unique.
+
 A \emphmarginnote{Riemannian manifold} is a quadruple $(X,\c{O}_X,\c{A}_X,g)$, usually written $(X,g)$, where $X$ is a smooth manifold and $g$ is the \emph{metric tensor}, which is a smooth non-degenerate symmetric positive definite $(0,2)$-tensor field.
-The metric tensor can be thought of as an algebraic object encoding the manifold's quantitative shape, and give rise to notions such as \emph{geodesics}, \emphmarginnote{volume}, \emph{integration}.
-Volume is a $d$-form, which we recall is a $(0,d)$-tensor field, and induces a measure on the manifold---we denote both by $\vol_g$.
+The metric tensor can be thought of as an algebraic object encoding the manifold's quantitative shape, and \emph{canonically} give rise to notions such as \emph{geodesics}, \emph{volume}, \emph{integration}.
+In particular, we denote both the volume form and volume measure induced by the metric tensor as $\vol_g$.
 
 \parmarginnote{Nash Embedding}
 Riemannian manifolds are, by definition, topological spaces with additional structure.
@@ -1907,7 +1914,7 @@ Riemannian manifolds admit many different objects, such as connection one-forms 
 These objects are generally built using the metric along with derivatives and other algebraic operations.
 The \emph{Laplace--Beltrami operator} is one such object, and forms a basic building block for defining differentual equations on manifolds.
 
-\begin{definition}[Laplce--Beltrami operator]
+\begin{definition}[Laplace--Beltrami operator]
 Let $(X,g)$ be an oriented Riemannian manifold.
 Define the \emph{divergence} of a vector field to be the unique map 
 \[
@@ -1940,23 +1947,103 @@ There are multiple equivalent ways of defining the Laplace--Beltrami operator: a
 The latter expression illustrates that a Laplace--Beltrami operator maps functions into their locally averaged analogs, in a sense.
 For us, the relatively rich spectral properties possessed by this operator will be of key interest.
 
+\begin{result}
+Let $(X,g)$ be a compact Riemannian manifold without boundary.
+Then the operator $-\lap_g : C^\infty(X) \-> C^\infty(X)$ extends uniquely to a self-adjoint unbounded positive operator $-\lap_g: D(\lap_g) \-> L^2(X)$, where $D(\lap_g) \subseteq L^2(X)$.
+\end{result}
+
+\begin{proof}
+Note first that by compactness and lack of boundary, we have an injection $C^\infty(X) = C^\infty_c(X) \embeds L^2(X)$, enabling us to reinterpret the classical Laplace--Beltrami operator as a map $-\lap_g : C^\infty(X) \-> L^2(X)$.
+The remaining claim follows from \textcite[Theorem 2.4]{strichartz83}.
+\end{proof}
+
+Viewed in this way, the range of the Laplace--Beltrami operator is a Hilbert space, enabling us to use ideas from spectral theory to better understand its behavior.
+In particular, one can show that, owing to compactness, the spectrum of $-\lap_g$ is discrete---this gives a particularly simple view of $-\lap_g$ thorugh its eigenvalues and eigenfunctions.
+
 \begin{result}[Sturm--Liouville decomposition]
 Let $(X,g)$ be a compact Riemannian manifold without boundary.
 Then there exists an orthonormal basis $f_n$, $n\in\Z_+$, of $L^2(X)$ such that $-\lap_g f_n = \lambda_n f_n$ with $0 = \lambda_0 < \lambda_1 \leq .. \leq \lambda_n$ and $\lambda_n\-> \infty$ as $n\->\infty$.
 Moreover, $-\lap_g$ admits the representation
 \[
--\lap_g f = \sum_{n=0}^\infty \lambda_n \innerprod{f}{f_n} f_n,
+-\lap_g f = \sum_{n=0}^\infty \lambda_n \innerprod{f}{f_n} f_n
 \]
 which converges unconditionally in $L^2(X)$ for all $f \in D(\lap_g)$.
 \end{result}
 
 \begin{proof}
-See \textcite[page 139]{chavel84} or \textcite[Theorem 44]{canzani13}.
+See \textcite[page 139]{chavel84} or \textcite[Theorem 44]{canzani13}.\footnote{TODO: fix this awful in-text citation format}.
 \end{proof}
 
+This is a powerful result for many reasons, as the eigenfunctions $f_n$ can be viewed as analogs of the Fourier basis  on $\R^d$ adapted to the manifold's geometry.
+By expanding a function within the basis of eigenfunctions, we obtain an infinite sequence of basis coefficients---just like representing a function $L^2([-\pi,\pi];\R)$ by an infinite sum of complex exponentials.
+One reason of particular interest for our purposes is that the Sturm--Liouvile decomposition gives rise to a notion of \emph{functional calculus}, which we now introduce.
+
+\begin{definition}[Functional calculus]
+Let $\Phi : [0,\infty) \-> \R$. 
+Define the (possibly unbounded) operator $\Phi(-\lap_g) : D(\Phi(-\lap_g)) \-> L^2(X)$ by
+\[
+\Phi(-\lap_g) f = \sum_{n=0}^\infty \Phi(\lambda_n) \innerprod{f}{f_n} f_n
+\]
+where $D(\Phi(-\lap_g)) = \{f \in L^2(X) : \sum_{n=0}^\infty \abs{\Phi(\lambda_n)}^2 \abs{\innerprod{f}{f_n}}^2 f_n < \infty\}$.
+\end{definition}
+
+Functional calculus lets us extend the idea of applying functions from numbers to operators.
+This is done by applying the function of interest to the eigenvalues of the operator.
+We will use this to construct Gaussian processes as solutions of stochastic partial differential equations.
+First, however, we take a step back and examine why one would want to take this rather roundabout approach in the first place as opposed to a more direct alternative.
 
 \subsection{A no-go theorem for kernels on manifolds}
+
+Here, we begin exploring the idea of defining Gaussian processes whose domains are Riemannian manifolds.
+Recall that to define such a Gaussian process, we need to define its kernel, which is a positive semi-definite function $k : X \x X \-> \R$.
+
+Before attempting to do so in generality, consider first how to extend the Euclidean squared exponential kernel.
+The simplest idea one can consider is to replace the Euclidean distance $\norm{x-x'}$ with the Riemannian geodesic distance $d_g(x,x')$.
+This gives 
+\[
+\sigma^2 \exp\del{-\frac{d_g(x,x')^2}{2\kappa^2}}
+\]
+as a candidate kernel.
+We must then ask: is this expression necessarily well-defined? 
+In particular, is it positive semi-definite for all $\kappa$?
+
+In the Euclidean setting, we can prove positive-semi-definiteness by first proving it for linear kernels, then showing sums, products, and limits of kernels are positive semi-definite, thereby constructing the kernel piece-by-piece.
+The argument clearly cannot extend to the manifold setting, where there are no linear kernels.
+It turns out that no argument can, because in the manifold setting the corresponding claim isn't true.
+
+\begin{result}
+Let $(X,g)$ be a complete Riemannian manifold without boundary.
+If the geodesic squared exponential kernel is positive semi-definite for all $\kappa > 0$, then $X$ is isometric to a Euclidean space.
+\end{result}
+
+\begin{proof}
+\textcite[Theorem 2]{feragen15}.
+\end{proof}
+
+It turns out that even more can be said.
+In a metric space $(X,d)$, the \emph{length} of a path  $\gamma : [0,L] \-> X$ is defined as the least upper bound on the total distance between finite sets of successive points along the curve.
+A path is called \emph{geodesic} between $x$ and $x'$ if $\gamma(0) = x$, $\gamma(L) = x'$, and $d(\gamma(t),\gamma(t')) = |t - t'|$ for all $t,t'\in[0,L]$.
+A metric space is called a \emph{geodesic space} if every pair of points is connected by a geodesic.
+
+\begin{result}
+Let $(X,g)$ be a geodesic space.
+If the geodesic squared exponential kernel is positive semi-definite for all $\kappa > 0$, then $X$ is flat in the sense of Alexandrov.
+\end{result}
+
+\begin{proof}
+\textcite[Theorem 2]{feragen15}.
+\end{proof}
+
+See \textcite[Chapter 26]{villani08} for a definition of flatness in the above sense, and a discussion on its interpretation and relationship to various notions of curvature.
+Complete Riemannian manifolds are geodesic spaces, but the former result is sharper than the latter: in particular, the torus equipped with the product metric is flat, but is not isometric to a Euclidean space.
+
+These results are an absolute disaster for the geodesic squared exponential kernel, and give good reason to completely abandon this approach.
+The fundamental issue is that there are few useful tools for proving positive-definiteness of geodesic kernels, and, in light of the above results, it isn't obvious which functions are going to be positive semi-definite in the first place and which are not.
+We therefore explore the alternative, differential-equation-based approach briefly mentioned in the preceding section.
+
 \subsection{Stochastic partial differential equations}
+
+
 \subsection{The Riemannian Matérn kernel}
 \subsection{Illustrated examples}
 
