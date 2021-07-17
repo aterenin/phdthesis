@@ -1856,7 +1856,105 @@ There are multiple potential definitions one can introduce, some of which will t
 In order to pursue these questions, we begin by introducing and reviewing the settong of Riemannian geometry.
 
 \subsection{Review of Riemannian geometry}
+We now briefly review the notions needed to define and understand Riemannian manifolds.
+These are sets equipped with additional structure encoding their geometric shape.
+
+A \emphmarginnote{topological space} is a set $X$ together with a \emph{topology}, which is a collection of subsets $\c{O}_X \subseteq 2^X$ called the \emph{open sets}, which contain the emptyset, the space itself, and are closed under pairwise intersections and arbitrary unions.
+A given set generally admits many topologies.
+Topological spaces admit notions of \emph{locality}, \emph{convergence}, \emph{continuity}, \emph{compactness}, and many others.
+
+\parmarginnote{Topological manifold}
+A paracompact Hausdorff topological space $(X,\c{O}_X)$ is called a $d$-dimensional \emph{topological manifold} if it is locally homeomorphic to $\R^d$ equipped with the standard topology.
+For such a manifold, there is a set $\c{A}_X$ called the \emph{atlas} whose elements are these local homeomorphisms, called \emph{charts}.
+An atlas is \emph{maximal} if it is the largest possible such set, in which case it is unique.
+
+A \emphmarginnote{smooth differentiable manifold} is a triple  $(X,\c{O}_X,\c{A}_X)$ where $X$ is a topological manifold, and $\c{A}_X$ is a $C^\infty$-atlas.
+A $C^\infty$-atlas is a maximal subset of the maximal atlas, in which, for any charts $x,y \in \c{A}_X$ with overlapping domain, the \emph{chart transition map} $y\after x^{-1}$ is an infinitely differentiable function.
+Homeomorphisms compatible with such charts are called \emph{diffeomorphisms}.
+A smooth manifold is called \emph{oriented} if the Jacobian determinant of all chart transition maps is positive.
+
+Every smooth manifold $X$ gives rise to its \emphmarginnote{tangent bundle} $(TX,\proj_X,X)$, which contains a smooth manifold $TX$ and a surjective projection map $\proj_X : TX \-> X$.
+The former is defined as $TX = \U_{x\in X} (x,T_x X)$, where $T_x X$ is the tangent space, defined as a vector space of equivalence classes of directional derivatives of smooth curves through $x$.
+This set can canonically be equipped with the structure of a smooth manifold.
+
+A map $f : X \-> TX$ satisfying $\proj_X \after f = \id_X$ is called a \emphmarginnote{vector field}.
+Note that this is \emph{not the same} as a map $X \-> \R^d$ and often cannot usefully be expressed in this way: we expand on this in the sequel.
+If $f$ is smooth, we write $f \in \Gamma(TX)$.
+In cases where $TX$ is replaced by a general bundle, we say that $f$ is a \emph{cross-section}, or simply a \emphmarginnote{section}, of that bundle---this gives rise to the notion of a \emph{tensor field} and other generalizations.
+Functions can multiply against tensor fields by scaling them pointwise.
+
+\parmarginnote{Interior product}
+Vector fields can be inserted into covector fields by pairing vectors with covectors in each tangent space.
+This defines the \emph{interior product} $\mathbin{\lrcorner}$, and extends to tensor fields as long as the pairing being considered makes logical sense.
+We say that a totally antisymmetric $(0,k)$-tensor field is a $k$-form, and that a smooth function is a $0$-form.
+The \emphmarginnote{differential} map, denoted by $\d$, maps $k$-forms into $(k+1)$-forms.
+Interior products preserve antisymmetry.
+
+A \emphmarginnote{Riemannian manifold} is a quadruple $(X,\c{O}_X,\c{A}_X,g)$, usually written $(X,g)$, where $X$ is a smooth manifold and $g$ is the \emph{metric tensor}, which is a smooth non-degenerate symmetric positive definite $(0,2)$-tensor field.
+The metric tensor can be thought of as an algebraic object encoding the manifold's quantitative shape, and give rise to notions such as \emph{geodesics}, \emphmarginnote{volume}, \emph{integration}.
+Volume is a $d$-form, which we recall is a $(0,d)$-tensor field, and induces a measure on the manifold---we denote both by $\vol_g$.
+
+\parmarginnote{Nash Embedding}
+Riemannian manifolds are, by definition, topological spaces with additional structure.
+By Nash's Embedding Theorem, every Riemannian manifold can be isometrically embedded within a $2d+1$-dimensional Euclidean space.
+This identifies Riemannian manifolds as geometric shapes located within Euclidean spaces.
+This perspective is often avoided for both technical and conceptual reasons: if the spacetime of the universe is a manifold, can an ambient space actually have physical meaning?
+
+
 \subsection{The Laplace--Beltrami operator}
+
+Riemannian manifolds admit many different objects, such as connection one-forms and Ricci tensors, which encode and mathematically describe their geometric properties.
+These objects are generally built using the metric along with derivatives and other algebraic operations.
+The \emph{Laplace--Beltrami operator} is one such object, and forms a basic building block for defining differentual equations on manifolds.
+
+\begin{definition}[Laplce--Beltrami operator]
+Let $(X,g)$ be an oriented Riemannian manifold.
+Define the \emph{divergence} of a vector field to be the unique map 
+\[
+\f{div}_g : \Gamma(TX) &\-> C^\infty(X)
+&
+\d(v \mathbin{\lrcorner} \vol_g)  &=  \f{div}_g v\.\vol_g
+\quad
+\forall v \in \Gamma(TX)
+\]
+where $\.$ is pointwise multiplication of $k$-forms by smooth functions, and the \emph{gradient} of a scalar function to be the unique map 
+\[
+\f{grad}_g : C^\infty(X) &\-> \Gamma(TX)
+&
+g(\f{grad}_g f,v) &= (\d f) \mathbin{\lrcorner} v
+\quad
+\forall v \in \Gamma(TX)
+.
+\]
+Define the \emph{Laplace--Beltrami operator} to be 
+\[
+\lap_g : C^\infty(X) &\-> C^\infty(X)
+&
+\lap_g f &= \f{div}_g \f{grad}_g f
+.
+\]
+\end{definition}
+
+The Laplace--Beltrami operator, then, maps functions into the divergence of their gradient at every point.
+There are multiple equivalent ways of defining the Laplace--Beltrami operator: an alternative is to define is as the trace of the Riemannian Hessian, and another is to define it in coordinates.
+The latter expression illustrates that a Laplace--Beltrami operator maps functions into their locally averaged analogs, in a sense.
+For us, the relatively rich spectral properties possessed by this operator will be of key interest.
+
+\begin{result}[Sturm--Liouville decomposition]
+Let $(X,g)$ be a compact Riemannian manifold without boundary.
+Then there exists an orthonormal basis $f_n$, $n\in\Z_+$, of $L^2(X)$ such that $-\lap_g f_n = \lambda_n f_n$ with $0 = \lambda_0 < \lambda_1 \leq .. \leq \lambda_n$ and $\lambda_n\-> \infty$ as $n\->\infty$.
+Moreover, $-\lap_g$ admits the representation
+\[
+-\lap_g f = \sum_{n=0}^\infty \lambda_n \innerprod{f}{f_n} f_n,
+\]
+which converges unconditionally in $L^2(X)$ for all $f \in D(\lap_g)$.
+\end{result}
+
+\begin{proof}
+See \textcite[page 139]{chavel84} or \textcite[Theorem 44]{canzani13}.
+\end{proof}
+
+
 \subsection{A no-go theorem for kernels on manifolds}
 \subsection{Stochastic partial differential equations}
 \subsection{The Riemannian Matérn kernel}
