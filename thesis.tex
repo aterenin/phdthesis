@@ -2062,10 +2062,41 @@ for all $g,g' \in H$.
 \end{definition}
 
 We will take the right-hand-sides of our stochastic partial differential equations to be such stochastic processes. 
+Before continuing, we prove that in the case that $H$ is a reproducing kernel Hilbert space, then generalized Gaussian fields can be reinterpreted as Gaussian processes in the classical sense.
+
+\begin{proposition}
+Let $f : \Omega \x H \-> \R$ be a centered generalized Gaussian field defined over a reproducing kernel Hilbert space $H$.
+Then letting $\f{ev}_x \in H^*$ be a pointwise evaluation functional, the stochastic process $f : \Omega \x X \-> \R$ defined by $f(\omega, x) = f(\omega,\f{ev}_x)$ is a Gaussian process whose covariance is given by the reproducing kernel of $H$.
+\end{proposition}
+
+\begin{proof}
+It is clear that the resulting map is a centered Gaussian process, so it suffices to compute its covariance.
+Let $\f{ev}_x \in H^*$ and $\f{ev}_{x'} \in H^*$ be pointwise evaluation functionals.
+Then
+\[
+\Cov(f(\.,x),f(\.,x')) &= \Cov(f(\.,\f{ev}_x),f(\.,\f{ev}_{x'})) 
+\\
+&= \innerprod{\f{ev}_x}{\f{ev}_{x'}}_H 
+\\
+&= k(x,x')
+\]
+using the reproducing property, and the claim follows.
+\end{proof}
+
+Note that the resulting Gaussian process in general will \emph{not} have sample paths in $H$ almost surely, not even up to a choice of version.
+Sample paths will instead generally lie in a less regular function space---this subtlety provides much of the motivation behind introducing generalized Gaussian fields in the first place, rather than working purely in terms of sample paths.
+In the other direction, if $k$ is a kernel, define the \emph{covariance operator} by 
+\[
+\c{K} : \phi \|> \int_X \phi(x)k(x,\.) \d x
+.
+\]
+One can see that a centered Gaussian process $f : \Omega \x X \-> \R$ induces a centered generalized Gaussian field $f : \Omega \x H \-> \R$ with covariance operator $\c{K}$, provided that $H$ is chosen appropriately.
+For instance, if $f$ is regular enough that its samples lie in $L^2(X)$ almost surely, one can take $H = L^2(X)$ and $\c{K}$ as above.
+This clarifies how this general notion relates to Gaussian processes in the standard sense.
 To continue, we introduce the notion of a \emph{solution} of a stochastic partial differential equation.
 
-\begin{definition}[Solution of a Gaussian stochastic partial differential equation]
-Let $H$ be a Hilbert space, let $\c{L} : H \-> G$ be a bounded linear operator, and let $\c{W}$ be a generalized Gaussian field on $G$.
+\begin{definition}[Solution of SPDE]
+Let $H$ be a Hilbert space, let $\c{L} : H \-> G$ be a bounded linear operator, and let $\c{W}$ be a centered generalized Gaussian field on $G$.
 Then the zero-mean generalized Gaussian field $f$ over $H$ is a solution of the abstract stochastic partial differential equation 
 \[
 \c{L} f = \c{W}    
@@ -2081,7 +2112,7 @@ The idea behind this definition is to take advantage of Gaussianity and use it t
 Instead, the operator $\c{L}$ is thought of as a map between the associated Hilbert spaces: if said Hilbert spaces are function spaces admitting reproducing kernels, the generalized Gaussian fields defined over them yield Gaussian processes in the classical sense.
 In the given setting, this solution concept ends up being useful, thanks to the following general result.
 
-\begin{result}[Solution criteria for Gaussian stochastic partial differential equations]
+\begin{result}[SPDE solution criteria]
 If $\c{L}$ is invertible, then
 \[
 f(\omega,g) = \c{W}(\omega, \c{L}^{-*} g)
@@ -2097,23 +2128,42 @@ It is rather remarkable that such a minimalist solution theory, which relies ver
 Indeed, this result will tell us nothing about what function space $f$ lies in as a random variable, and in particular nothing about its regularity properties such as continuity---however, for Bayesian learning, we don't actually need these.
 
 For this construction to yield a Gaussian process in the classical sense, we need $H$ to be a Hilbert space of functions. 
-This can be achieved by choosing it to be a reproducing kernel Hilbert space and building the classical Gaussian process from pointwise evaluation functionals.
+This can be achieved by choosing it to be a reproducing kernel Hilbert space and building the classical Gaussian processes of interest from pointwise evaluation functionals as described previously.
 The main challenge, then, is finding appropriate spaces and operators in order to apply the above results.
 
 \subsection{The Riemannian Matérn kernel}
 
 We now use the above results to define Riemannian Gaussian processes directly, and, following this, calculate their kernels in order to obtain workable numerical expressions.
 To proceed, we need to make concrete choices for which Hilbert spaces for $H$, and which operators to use for $\c{L}$.
-Here, we adapt ideas of \textcite{whittle63} and \textcite{lindgren11} to the function-space setting.
-To start, we define the right-hand-side.
+To do so, we study the class of equations considered by \textcite{whittle63} and \textcite{lindgren11}, which we now review.
 
-\begin{definition}[White noise]
-Define the \emph{white noise process} $\c{W} : \Omega \x L^2(X) \-> \R$ to be a centered generalized Gaussian field with covariance operator $I : L^2(X) \-> L^2(X)$.
+Suppose temporarily that $X = \R^d$ is Euclidean.
+In that setting, \textcite{whittle63} has shown that, if we suppose that $f$ is, in a purely formal sense, a solution to the stochastic partial differential equation
+\[
+\del{\frac{2\nu}{\kappa^2} - \lap}^{\frac{\nu}{2} + \frac{d}{4}} f = \c{W}
+\]
+then its covariance kernel must be the \emphmarginnote{Matérn kernel}
+\[
+k_{\nu}(x,x') = \sigma^2 \frac{2^{1-\nu}}{\Gamma(\nu)} \del{\sqrt{2\nu} \frac{\norm{x-x'}}{\kappa}}^\nu K_\nu \del{\sqrt{2\nu} \frac{\norm{x-x'}}{\kappa}}
+\]
+where $\Gamma$ is the gamma function and $K_\nu$ is the modified Bessel function of the second kind \cite{gradshteyn14}.
+This kernel is very well-studied and among the most widely-used Euclidean kernels in practice.
+Building on this idea, \textcite{lindgren11} proposed a formalism based on Galerkin finite element analysis for giving precise meaning to such calculations, including treatment of boundary conditions and other considerations.
+
+In particular, \textcite{lindgren11} define the \emphmarginnote{Riemannian Matérn kernel} to be the covariance kernel of the solutions of analogs of the above stochastic partial differential equation, where $\R^d$ is replaced with a Riemannian manifold $X$, and the Euclidean Laplacian $\lap$ is replaced by the Laplace--Beltrami operator $\lap_g$.
+This kernel is well-defined, but its definition is implicit: \textcite{lindgren11} provide techniques for training the resulting Gaussian processes via solving the stochastic partial differential equation numerically.
+
+We develop an alternative, more constructive formalism.
+This is done by improving on the above prior results in two ways: (1) we bypass finite element analysis by instead working with the previously-introduced theory of Gaussian stochastic partial differential equations of \textcite{lototsky17}, and (2) we deduce numerical expressions for calculating the kernels of the resulting processes, enabling them to be trained using standard methods.
+To start, we define the right-hand-side of our equations.
+
+\begin{definition}[Riemannian white noise]
+Define the \emph{white noise process} $\c{W}_g : \Omega \x L^2(X) \-> \R$ to be a centered generalized Gaussian field with covariance operator $\id : L^2(X) \-> L^2(X)$, where we recall that the inner product on $L^2(X)$ is defined by integration against the Riemannian volume measure.
 By applying Kolmogorov's Extension Theorem to a family of finite-dimensioanl marginals indexed by $L^2(X)$, we conclude such a process exists and is well-defined.
 \end{definition}
 
-This stochastic process should \emph{not} be confused with a random variable.
-Though Kolmogorov's Extension Theorem also implies there is a random variable $\c{W} : \Omega \-> \R^{L^2(X)}$ whose finite-dimensional marginals coincide with $\c{W} : \Omega \x L^2(X) \-> \R$, this is next-to-useless because $\R^{L^2(X)}$ is highly irregular and we can say little about which subspace $\c{W}$ concentrates on without additional considersations that we rather conveniently avoid.
+This stochastic process \emph{cannot} be viewed as a scalar-valued random function.
+Though Kolmogorov's Extension Theorem does imply there is a random variable $\c{W} : \Omega \-> \R^{L^2(X)}$ whose finite-dimensional marginals coincide with $\c{W} : \Omega \x L^2(X) \-> \R$, this is next-to-useless because $\R^{L^2(X)}$ is highly irregular and we can say little about which subspace $\c{W}$ concentrates on without additional considersations that we may conveniently avoid.
 
 Next, we define the left-hand-side of the stochastic partial differential equations under study, including the Hilbert spaces and operators $\c{L}$ of interest using functional calculus.
 For this, a recent result on Riemannian reproducing kernel Hilbert spaces will be of key interest.
@@ -2121,7 +2171,7 @@ For this, a recent result on Riemannian reproducing kernel Hilbert spaces will b
 \begin{result}[Riemannian Sobolev and diffusion spaces]
 Define the Riemannian Sobolev space $H^k(X)$ by
 \[
-H^k(X) = \cbr{f \in D'(X) : f = (\id + \lap_g)^{-k/2} g : g \in L^2(X)}
+H^k(X) = \cbr{f \in D'(X) : f = (1 + \lap_g)^{-k/2} g : g \in L^2(X)}
 \]
 and the Riemannian diffusion space $\c{H}^k(X)$ by
 \[
@@ -2137,13 +2187,65 @@ Then $H^k(X)$ and $\c{H}^k(X)$ are reproducing kernel Hilbert spaces.\footnote{T
 
 This result is the key technical pillar upon which our calculations rest.
 It both provides appropriate Hilbert spaces to use within the solution theory, and, by virtue of admitting reproducing kernels, guarantees that they are spaces of \emph{actual functions} $f : X \-> \R$ on the Riemannian manifold.
-This enables us to plug pointwise evaluation functionals into the obtained generalized Gaussian field, obtaining Riemannian Gaussian processes in the classical sense---the objects we sought to construct in the first place.
+This enables us to plug pointwise evaluation functionals into the obtained generalized Gaussian field, yielding Riemannian Gaussian processes in the classical sense---the objects we sought to construct in the first place.
 
-To carry this program out, we must prove a set of auxillary technical lemmas to ensure all of the considered ideas glue together with one another in a well-defined manner.
+\parmarginnote{Riemannian squared exponential kernel}
+Note that the operators $e^{-\frac{k}{2}\lap_g}$ can be viewed as limits of appropriately rescaled versions of the operators $(1 + \lap_g)^{-k/2}$. 
+Given that the Euclidean Matérn kernel converges to the Euclidean squared exponential kernel as $\nu\->\infty$, we therefore view stochastic partial differential equations induced by $e^{-\frac{k}{2}\lap_g}$ as giving rise to the \emph{Riemannian squared exponential kernel}---we make this perspective precise shortly.
 
+To carry the necessary calculations out and compute the kernels of the Gaussian processes defined by our stochastic partial differential equations, we need to relate the Sobolev and diffusion spaces of \textcite{devito20} with the equations studied by \textcite{whittle63} and \textcite{lindgren11}.
+To do so, we state and prove the main result.
 
+\begin{theorem}[Riemannian Matérn and squared exponential kernels]
+For $\nu > 0$ and $\kappa > 0$, define the stochastic partial differential equations 
+\[
+\del{\frac{2\nu}{\kappa^2} - \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} f = \c{W}_g
+\\
+e^{-\frac{\kappa^2}{4}\lap_g} f = \c{W}_g
+\]
+where, respectively, we have
+\[
+\del{\frac{2\nu}{\kappa^2} - \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} : H^{\nu + \frac{d}{2}}(X) \-> L^2(X)
+\\
+e^{-\frac{\kappa^2}{4}\lap_g} : \c{H}^{\frac{\kappa^2}{2}}(X) \-> L^2(X)
+.
+\]
+Then, letting $(\lambda_n,f_n)$ be the eigenvalues and eigenfunctions of the Laplace--Beltrami operator, in both cases the unique solutions $f$ are Gaussian processes with respective covariance kernels
+\[
+k(x, x') = \sum_{n=0}^\infty \del{\frac{2\nu}{\kappa^2} + \lambda_n}^{-\nu-\frac{d}{2}} f_n(x)f_n(x')
+\\
+k(x, x') = \sum_{n=0}^\infty e^{-\frac{\kappa^2}{2} \lambda_n} f_n(x)f_n(x')
+\]
+which we call the \emph{Riemannian Matérn} and \emph{Riemannian squared exponential} kernels.
+\end{theorem}
+
+\begin{proof}
+Note first that the operators corresponding to the Matérn kernel coincide with those used by \textcite{devito20} in defining the Sobolev spaces of interest if we have a fixed length scale given by $\kappa = \sqrt{2\nu}$.
+Similarly, the operators corresponding to the squared exponential kernel always coincide.
+In this setting, the reproducing kernels are given by \textcite[Proposition 2]{devito20} as
+\[
+k(x, x') = \sum_{n=0}^\infty \del{\frac{2\nu}{\kappa^2} + \lambda_n}^{-\nu-\frac{d}{2}} f_n(x)f_n(x')
+\\
+k(x, x') = \sum_{n=0}^\infty e^{-\frac{\kappa^2}{2} \lambda_n} f_n(x)f_n(x')
+\]
+which proves the claim for the squared exponential case.
+However, we are interested in general length scales $\kappa > 0$, so this does not suffice for the Matérn case.
+To extend this, the idea will be to let $\tilde{g} = \frac{2\nu}{\kappa}g$ be a rescaled metric tensor on $X$, and define 
+\[
+\del{\frac{2\nu}{\kappa^2} - \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} f &= \c{W}_g
+&
+\del{1 - \lap_{\tilde{g}}}^{\frac{\nu}{2} + \frac{d}{4}} \tilde{f} &= \c{W}_{\tilde{g}}
+\]
+for which we would like to show that $f = \del{\frac{\kappa^2}{2\nu}}^{\frac{\nu}{2} + \frac{d}{2}} \tilde{f}$.
+To begin, we first prove these operators are well-defined.
+
+TODO: copy large calculation from paper.
+\end{proof}
 
 \subsection{Illustrated examples}
+
+From the preceding section, we have defined the Riemannian Gaussian processes of interest as solutions of stochastic partial differential equations, and derived expressions for their kernels which are explicit enough to be amenable to approximation. 
+Here, we explore what these processes look like, as well as their use as priors in Bayesian learning.
 
 \section{Graph Matérn Gaussian Processes}
 
