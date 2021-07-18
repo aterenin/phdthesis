@@ -2043,8 +2043,106 @@ We therefore explore the alternative, differential-equation-based approach brief
 
 \subsection{Stochastic partial differential equations}
 
+We now develop an appropriate formalism for defining Gaussian processes on Riemannian manifolds.
+Rather than building such processes by defining kernels, loosely speaking, we construct them directly as affine maps of white noise measures, which we think of as infinite-dimensional standard Gaussians.
+This yields positive semi-definite kernels implicitly defined as covariances of said processes.
+
+We begin by recalling key notions of abstract Gaussian processes defined on general vector spaces.
+Specifically, we work with Gaussian processes in the sense of duality whose space of test functionals is given by a Hilbert space.
+
+\begin{definition}[Generalized Gaussian field]
+A centered generalized Gaussian field $f$ over a Hilbert space $H$ is a stochastic process $f : \Omega \x H \-> \R$ satisfying two key properties.
+\1 $\E(f(\.,g)) = 0$ for all $g \in H$.
+\2 There exists a bounded linear self-adjoint non-negative operator $\c{K}$ on $H$, called the \emph{covariance operator}, such that 
+\[
+\E(f(\.,g)f(\.,g')) = \innerprod{\c{K}g}{g')}    
+\]
+for all $g,g' \in H$.
+\0 
+\end{definition}
+
+We will take the right-hand-sides of our stochastic partial differential equations to be such stochastic processes. 
+To continue, we introduce the notion of a \emph{solution} of a stochastic partial differential equation.
+
+\begin{definition}[Solution of a Gaussian stochastic partial differential equation]
+Let $H$ be a Hilbert space, let $\c{L} : H \-> G$ be a bounded linear operator, and let $\c{W}$ be a generalized Gaussian field on $G$.
+Then the zero-mean generalized Gaussian field $f$ over $H$ is a solution of the abstract stochastic partial differential equation 
+\[
+\c{L} f = \c{W}    
+\]
+if for every $g\in G$ we have that 
+\[
+f(\omega,\c{L}^* g) = \c{W}(\omega,g)
+\]
+holds almost surely.
+\end{definition}
+
+The idea behind this definition is to take advantage of Gaussianity and use it to avoid even attempting to construct a pathwise solution theory on random variables.
+Instead, the operator $\c{L}$ is thought of as a map between the associated Hilbert spaces: if said Hilbert spaces are function spaces admitting reproducing kernels, the generalized Gaussian fields defined over them yield Gaussian processes in the classical sense.
+In the given setting, this solution concept ends up being useful, thanks to the following general result.
+
+\begin{result}[Solution criteria for Gaussian stochastic partial differential equations]
+If $\c{L}$ is invertible, then
+\[
+f(\omega,g) = \c{W}(\omega, \c{L}^{-*} g)
+\]
+is the unique solution to $\c{L}f = \c{W}$.
+\end{result}
+
+\begin{proof}
+\textcite[Theorem 4.2.2.]{lototsky17}.
+\end{proof}
+
+It is rather remarkable that such a minimalist solution theory, which relies very fundamentally on the fact that Gaussian processes are uniquely determined by their associated reproducing kernel Hilbert spaces or generalization thereof, gives a description concrete enough for our purposes.
+Indeed, this result will tell us nothing about what function space $f$ lies in as a random variable, and in particular nothing about its regularity properties such as continuity---however, for Bayesian learning, we don't actually need these.
+
+For this construction to yield a Gaussian process in the classical sense, we need $H$ to be a Hilbert space of functions. 
+This can be achieved by choosing it to be a reproducing kernel Hilbert space and building the classical Gaussian process from pointwise evaluation functionals.
+The main challenge, then, is finding appropriate spaces and operators in order to apply the above results.
 
 \subsection{The Riemannian Matérn kernel}
+
+We now use the above results to define Riemannian Gaussian processes directly, and, following this, calculate their kernels in order to obtain workable numerical expressions.
+To proceed, we need to make concrete choices for which Hilbert spaces for $H$, and which operators to use for $\c{L}$.
+Here, we adapt ideas of \textcite{whittle63} and \textcite{lindgren11} to the function-space setting.
+To start, we define the right-hand-side.
+
+\begin{definition}[White noise]
+Define the \emph{white noise process} $\c{W} : \Omega \x L^2(X) \-> \R$ to be a centered generalized Gaussian field with covariance operator $I : L^2(X) \-> L^2(X)$.
+By applying Kolmogorov's Extension Theorem to a family of finite-dimensioanl marginals indexed by $L^2(X)$, we conclude such a process exists and is well-defined.
+\end{definition}
+
+This stochastic process should \emph{not} be confused with a random variable.
+Though Kolmogorov's Extension Theorem also implies there is a random variable $\c{W} : \Omega \-> \R^{L^2(X)}$ whose finite-dimensional marginals coincide with $\c{W} : \Omega \x L^2(X) \-> \R$, this is next-to-useless because $\R^{L^2(X)}$ is highly irregular and we can say little about which subspace $\c{W}$ concentrates on without additional considersations that we rather conveniently avoid.
+
+Next, we define the left-hand-side of the stochastic partial differential equations under study, including the Hilbert spaces and operators $\c{L}$ of interest using functional calculus.
+For this, a recent result on Riemannian reproducing kernel Hilbert spaces will be of key interest.
+
+\begin{result}[Riemannian Sobolev and diffusion spaces]
+Define the Riemannian Sobolev space $H^k(X)$ by
+\[
+H^k(X) = \cbr{f \in D'(X) : f = (\id + \lap_g)^{-k/2} g : g \in L^2(X)}
+\]
+and the Riemannian diffusion space $\c{H}^k(X)$ by
+\[
+\c{H}^k(X) = \cbr{f \in D'(X) : f = e^{-\frac{k}{2}\lap_g} g : g \in L^2(X)}
+.
+\]
+Then $H^k(X)$ and $\c{H}^k(X)$ are reproducing kernel Hilbert spaces.\footnote{TODO: don't use $g$ for both test functions and the metric tensor.}
+\end{result}
+
+\begin{proof}
+\textcite[Theorem 3 and Theorem 6]{devito20}.
+\end{proof}
+
+This result is the key technical pillar upon which our calculations rest.
+It both provides appropriate Hilbert spaces to use within the solution theory, and, by virtue of admitting reproducing kernels, guarantees that they are spaces of \emph{actual functions} $f : X \-> \R$ on the Riemannian manifold.
+This enables us to plug pointwise evaluation functionals into the obtained generalized Gaussian field, obtaining Riemannian Gaussian processes in the classical sense---the objects we sought to construct in the first place.
+
+To carry this program out, we must prove a set of auxillary technical lemmas to ensure all of the considered ideas glue together with one another in a well-defined manner.
+
+
+
 \subsection{Illustrated examples}
 
 \section{Graph Matérn Gaussian Processes}
