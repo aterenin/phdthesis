@@ -437,7 +437,7 @@
 \RequirePackage{marginnote}
 \declaretheoremstyle[spaceabove=\baselineskip,spacebelow=\baselineskip,bodyfont=\slshape\renewcommand{\eminnershape}{\scshape},headfont=\@AVTsemibold,headpunct=.,headformat=\NAME\thmt@space\NUMBER]{marginnotethm}
 \addtotheorempostheadhook{\marginnote{\normalfont\thmt@optarg}}
-\newcommand{\emphmarginnote}[1]{\emph{#1}\marginnote{\MakeUppercase#1}}
+\newcommand{\emphmarginnote}[1]{\marginnote{\MakeUppercase#1}\emph{#1}}
 \newcommand{\parmarginnote}[1]{\hspace{\z@}\marginnote{#1}\ignorespaces}
 \renewcommand{\raggedrightmarginnote}{\raggedleft}
 \renewcommand{\raggedleftmarginnote}{\raggedright}

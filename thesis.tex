@@ -2311,7 +2311,7 @@ A weighted undirected graph consist of a finite set of \emph{nodes}, each of whi
 Graphs with unit weights can be visualized by drawing a set of points on a two-dimensional plane or in three-dimensional space, representing the nodes, and drawing lines between the points, representing the edges.
 
 \parmarginnote{Graphs and matrices}
-A broad theme in graph theory is that geometric properties of graphs can be encoded as matrices by picking an arbitrary ordering of nodes, and associate numerical properties with rows and columns of a matrix.
+A broad theme in graph theory is that geometric properties of graphs can be encoded as finite-dimensional vectors and matrices by picking an arbitrary ordering of nodes, and associate numerical properties to, say, with rows and columns of a matrix.
 Define the \emph{weighted }\emphmarginnote{adjacency matrix} $\m{W}$ by letting the matrix entry corresponding to two nodes be their respective edge weight.
 Similarly, define the diagonal \emphmarginnote{degree matrix} $\m{D}$ by $D_{ii} = \sum_j W_{ij}$---for graphs with unit weights, this counts how many neighbors each node has.
 
@@ -2328,10 +2328,130 @@ Such sequences give rise to vector spaces of functions converging monotonically 
 
 \subsection{The graph Laplacian}
 
+In the Riemannian setting, our strategy for building Gaussian process models essentially amounted to using functional calculus defined using spectral properties of the Laplace--Beltrami operator to construct the Gaussian processes of interest as solutions of stochastic partial differential equations.
+This strategy depended on the manifold only through the Laplace--Beltrami operator, and the white noise process, which suggests that it may also work for other classes of spaces.
+
+Weighted directed graphs in particular admit the notion of a \emphmarginnote{graph Laplacian}, which is a symmetric positive semi-definite matrix defined as 
+\[
+\m\lap = \m{D} - \m{W}
+\]
+where $\m{D}$ is the degree matrix and $\m{W}$ is the weighted adjacency matrix.
+The graph Laplacian can be interpreted as a linear operator acting the space of all functions $f : G \-> \R$ where $G$ is the set of nodes.
+Each such function can be represented as a $|G|$-dimensional vector $\v{f}$ by assigning an ordering to the nodes, as described previously.
+From this viewpoint, the graph Laplacian is
+\[
+(\m\lap\v{f})(x) = \sum_{x'\~x} f(x) - f(x')
+\]
+where $x$ is a node, and sum is taken over all neighboring nodes $x'$ of $x$.
+This expression now resembles its Euclidean and Riemannian analogs in a much more direct manner, and justifies why one would call $\m\lap$ a Laplacian in the first place.
+First, though, we clarify the choice of sign in this expression.
+
+\begin{remark}[Sign convention]
+Following standard practice in graph theory, we adopt a \emph{different sign convention} for the graph Laplacian compared to its Euclidean and Riemannian analogs.
+One should thus view the operators 
+\[
+&\ubr{\phantom{-}\m\lap}_{\t{no minus sign}}
+&
+&\ubr{-\lap}_{\t{minus sign}}
+\]
+as analogues of one-another---in particular, both are positive semi-definite.
+\emph{Note the different minus signs!}
+This corresponds to adopting the analyst's rather than geometer's convention for studying $\lap$.
+\end{remark}
+
+In the graph case, we can also develop a notion of \emphmarginnote{functional calculus} just as we developed previously.
+This time, however, doing so is mathematically more-or-less trivial: for a function $\Phi : \R \-> \R$ and a diagonal matrix $\m\Lambda$, let $\Phi(\m\Lambda)$ be the matrix obtained by applying $\Phi$ to the diagonal.
+Then, letting $\m\lap = \m{U}\m\Lambda\m{U}^T$ be the eigenvalue decompositin of $\m\lap$, which by positive semi-definiteness always exists, define
+\[
+\Phi(\m\lap) = \m{U}\Phi(\m\Lambda)\m{U}^T
+.
+\]
+This gives a notion of functional calculus analogous to the one considered previously in the Riemannian case, only without the need to introduce any mathematical theory beyond elementary eigenvalue factorizations.
+In particular, since all matrices are finite, we do not need to consider any kind of convergence.
+We now examine Gaussian processes from this perspective.
 
 \subsection{The graph Matérn kernel}
-\subsection{Illustrated examples}
 
+Our goal now is to construct Gaussian processes $f : G \-> \R$ where $G$ is the set of nodes of a weighted undirected graph.
+We'd like to define processes whose covariance reflects the structure of the graph.
+To do this, we adapt the notions of Matérn and squared exponential Gaussian processes studied previously to the graph setting.
+
+Recall that in the Euclidean and Riemannian cases, these processes were defined as solutions of stochastic partial differential equations with left-hand-sides defined using functional calculus, and right-hand-sides consisting of white noise processes.
+Adapting this definition by replacing $-\lap$ with $\m\lap$ and dropping dimension-dependent terms from exponents gives 
+\[
+\del{\frac{2 \nu}{\kappa^2} + \m\Delta}^\frac{\nu}{2} \v{f}(\omega) &= \bc{W}(\omega)
+&
+e^{\frac{\kappa^2}{4} \m\Delta} \v{f}(\omega) &= \bc{W}(\omega)
+\]
+where $\bc{W} \~[N](\v{0},\m{I})$ are standard Gaussians, and $\v{f} : \Omega \-> \R^{|G|}$ are the random vectors defining the stochastic processes $f : \Omega \x G \-> \R$ defined on the graph's nodes.
+Note that the numbers $\frac{2 \nu}{\kappa^2}$ are \emph{not} added element-wise to the graph Laplacian---instead, following the established conventions, they are added to its \emph{eigenvalues}.
+By elementary algebra, the \emphmarginnote{graph Matérn Gaussian processes} and \emph{graph squared exponential Gaussian processes} are given by
+\[
+\v{f} &\~[N]\del{\v{0}, \del{{\textstyle\frac{2 \nu}{\kappa^2}} + \m\Delta}^{-\nu}}
+&
+\v{f} &\~[N]\del{\v{0}, e^{-\frac{\kappa^2}{2} \m\Delta}}
+\]
+This defines the graph Matérn and squared Gaussian processes of interest.
+We now explore some of their properties.
+
+
+By virtue of its definition, $\m\lap$ inherits \emphmarginnote{sparsity} properties from graphs.
+Thus, for sufficiently small integers $\nu$ and many graphs, the matrices $(\frac{2 \nu}{\kappa^2} + \m\Delta)^{\frac{\nu}{2}}$ will be sparse.
+If the precise sparsity pattern is sufficiently well-behaved---for instance in certain planar graphs---these matrices' Cholesky factors will also be sparse, potentially reducing computational costs from cubic to linear or close to it.
+Alternatively, Krylov subspace methods for sparse linear systems can be applied, giving another way to leverage sparsity to improve scalability.
+
+Graph Matérn and graph squared exponential kernels possess \emphmarginnote{non-uniform variance}, whose precise form will vary with the graph.
+In particular, each node's variance is not simply a function of its degree, and instead depends on the precise geometry in a complex manner.
+Similar phenomena occur in random walk kernels studied by \textcite{urry13}---in that setting, variance is determined by the return time of a certain random walk defined on the graph.
+
+It's also possible to use the \emphmarginnote{Symmetric normalized graph Laplacian}, which is defined as $\m{D}^{-1/2}\m\lap\m{D}^{-1/2}$, to define analogous to the ones above, by using this matrix in place of the graph Laplacian.
+This yields the \emph{symmetric normalized graph Matérn} and \emph{symmetric normalized graph sqaured exponential} Gaussian processes.
+These can be preferrable in domains where symmetric normalized Laplacians are customarily used.
+
+\parmarginnote{Connection with random walks}
+The graph squared exponential kernel can be connected with \emph{random walks} in a number of ways.
+Firstly, it is the Green's function of the graph diffusion equation.
+More precisely, if $\v\phi : [0,\infty) \x G \-> \R$ solves the equation 
+\[
+\v{\dot\phi}_t + \m\lap\v\phi_t &= 0
+&
+\v\phi_0 &= \v{v}
+\]
+then $\v\phi(\tau,\.) = e^{-\tau\m\lap}\v{v}$, where our notation again uses the equivalence between vectors and real-valued functions on $G$.
+This equation has a strong physical interpretation: it describes heat transfer along the graph---this gives a way to understand what kind of prior information graph squred exponential kernel introduces.
+Similarly, if $\m\lap$ is replaced with the symmetric normalized graph Laplacian, then $\v\phi(\tau,\.)$ can be interpreted as the unnormalized probability density of a continuous-time random walk moving along the graph.
+
+Another way to understand the prior information contained in the given kernels is through limits.
+Mirroring all other settings considered, graph Matérn kernels converge to graph squared exponential kernels as $\nu\->\infty$.
+This is essentially immediate, since their eigenvectors coincide, and eigenvalues converge.
+Graph squared exponential kernels also arise as a limit of the \emph{random walk kernel} of \textcite{smola03}, which is defined as
+\[
+(\m{I} - (1-\alpha)\m{D}^{-1/2}\m\lap\m{D}^{-1/2})^k
+.
+\]
+This kernel arises from symmetrizing the $k$-step transition matrix of a certain lazy random walk on a graph.
+Though it looks similar to the graph Matérn kernel, its structure is very different: $k > 0$ is positive rather than negative, $\alpha\in[0,1)$ is interpreted as the laziness parameter of the underlying random walk, and the Laplacian is subtracted rather than added.
+Still, this kernel converges to the graph squared exponential kernel: if we set $\alpha = 1 - \frac{\kappa^2}{2k}$ with $\kappa$ a fixed constant, we have 
+\[
+\lim_{k\->\infty} (\m{I} - (1-\alpha)\m{D}^{-1/2}\m\lap\m{D}^{-1/2})^k = e^{-\frac{\kappa^2}{2} \m{D}^{-1/2}\m\lap\m{D}^{-1/2}}
+.
+\]
+This provides another view of the connection between the graph squared exponential kernel and random walk models.
+
+Finally, the introduced graph kernels also converge to \emphmarginnote{Riemannian limits}, provided these are understood appropriately.
+One way to formalize this is to embed the graph within a Euclidean space, and study vector spaces of piecewise-linear functions between neighboring nodes.
+Sequences of such graphs arise as \emph{finite element} discretizations of function spaces, which were considered previously in \Cref{ch:pathwise}.
+Here, \textcite{lindgren11} show that certain graph Matérn Gaussian processes converge to their Riemannian limits.
+
+For graph Matérn kernels that do not arise in this manner, a number of other formulations are available.
+One can show that for appropriately defined and sufficiently regular sequences of graphs, the eigenvalues and eigenvectors of the graph Laplacian converge to the eigenvalues and eigenfunctions of the Laplace--Beltrami operator \cite{belkin07,burago14}.
+Using this, \textcite{sanzalonso20} provide a framework for studying limits of graph Matérn kernels.
+
+In total, these results illustrate that graph Matérn and graph squared exponential kernels are closely-connected with their Riemannian analogs, which justifies both the names they are given, and the choice of defining them using the graph Laplacian in the first place.
+In spite of their similarity, however, these models can be used in settings which are very different from the manifold setting that inspired them.
+We now illustrate a few possibilities.
+
+\subsection{Illustrated examples}
 \section{Gaussian Vector Fields on Riemannian Manifolds}
 
 \subsection{Review of vector fields on manifolds}
