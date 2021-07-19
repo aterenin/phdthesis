@@ -1616,9 +1616,61 @@ We now introduce the third class of approximations we will consider: those const
 Many Gaussian process priors, including the widely-used Matérn class, can be expressed in such a manner.
 Gaussian processes which satisfy stochastic partial differential equations are also of direct interest in non-Euclidean settings considered in \Cref{ch:noneuclidean}.
 
-Suppose our Gausian process $f$ satisfies the equation $\c{L}f = \c{W}$ where $\c{L} : U \-> L^2(X)$ is a linear differential operator acting on a suitably-chosen vector space $U$, and $\c{W}$ is a Gaussian white noise process, as defined in \Cref{sec:abstract-gp}.
+Let $X$ be a sufficiently well-behaved subset of a Euclidean space, or a Riemannian manifold.
+Suppose our Gaussian process $f$, when reinterpreted as a generalized Gaussian field, satisfies the equation 
+\[
+\c{L}f = \c{W} 
+\]
+where $\c{L} : H \-> L^2(X)$ is a bounded linear operator acting on a reproducing kernel Hilbert space, and $\c{W}$ is a white noise process over $L^2(X)$.
+More precisely, this equation is meant in the sense of an almost sure equality
+\[
+f(\omega,\c{L}^* h) = \c{W}(\omega, h)
+\]
+between generalized Gaussian fields---a formal treatment is given in \Cref{ch:noneuclidean}.
+Assume that the generalized Gaussian field $f : \Omega \x H \-> \R$ can be written as the integral of a Gaussian process $f : \Omega \x X \-> \R$ as
+\[
+f(\omega, h) = \int_X f(\omega, x) h(x) \d x
+\]
+which holds provided that $f$ is measurable.
+This, in turn, depends on regularity properties of the kernel, but will hold in essentially all practical cases of interest, and in particular on closed compact domains $X$ follows from sample-continuity.
+If we define the bilinear form 
+\[
+a(\phi,\psi) = \int_X \phi(x) (\c{L}^*\psi)(x) \d x    
+\]
+then our stochastic partial differential equation becomes
+\[
+a(f(\omega,\.), h) = \c{W}(\omega, h)
+\]
+which is an equation between a Gaussian process, bilinear form, and random linear functional.
+Now, we introduce approximations: suppose that $f(\omega,x) \approx \tilde{f}(\omega,x) = \sum_{i=1}^\ell w_i(\omega) \phi_i(x)$ and that $h(x) \approx \sum_{j=1}^\ell v_j \psi_j(x)$.
+Plugging this in and differentiating to remove the coefficients $v_j$ yields 
+\[
+\sum_{i=1}^\ell w_i(\omega) a(\phi_i,\psi_j) = \c{W}(\omega, \psi_j)
+\]
+which by defining $A_{ij} = a(\phi_i,\psi_j)$ and $b_j(\omega) = \c{W}(\omega, \psi_j)$ can be recognized as a random linear system, more compactly written
+\[
+\m{A} \v{w} = \v{b}
+.
+\]
+If we let $\m{M} = \Cov(\v{b})$ where $\Cov(b_i,b_j) = \innerprod{\psi_i}{\psi_j}$---where we note that since $\c{W}$ is a white noise process, the matrix $\m{M}$ coincides with the finite-element mass matrix---we obtain the distribution for the basis coefficients. 
+Our approximate prior can therefore be written
+\[
+\tilde{f}(\omega,x) &= \sum_{i=1}^\ell w_i(\omega) \phi_i(x)
+&
+\v{w} &\~[N](\v{0},\m{A}^{-1}\m{M}\m{A}^{-T})\
+.
+\]
+What is particularly powerful about this technique is that it gives us a significant degree of freedom for what kinds of finite sets of basis functions we can choose for $\phi$ and $\psi$.
+A fruitful choice, provided the operator $\c{L}$ is a differential operator of sufficiently low order that this makes sense, is to take them to be compactly supported piecewise linear functions, since this will cause the matrices $\m{A}$ and $\m{M}$ to be sparse.
+This can enable one to use a much larger set of basis functions compared to alternative methods.
 
-TODO: write once SPDE part is done.
+The main difficulty with finite element methods is that they typically demand more from practitioners compared to alternatives.
+In particular, one usually needs to understand the stochastic partial differential equations governing the Gaussian process of interest with a reasonable degree of detail to know how to choose basis functions well.
+Additionally, sparse linear algebra in a parallel environment with automatic differentiation can be cumbersome.
+
+This concludes our presentation of techniques for constructing approximate priors.
+In general, the best choice for a particular application will depend on the detailed requirements of the situation.
+We now proceed to study other aspects of the pathwise viewpoint.
 
 \section{Approximating pathwise data-dependent terms}
 
@@ -2026,7 +2078,7 @@ A path is called \emph{geodesic} between $x$ and $x'$ if $\gamma(0) = x$, $\gamm
 A metric space is called a \emph{geodesic space} if every pair of points is connected by a geodesic.
 
 \begin{result}
-Let $(X,g)$ be a geodesic space.
+Let $(X,d)$ be a geodesic space.
 If the geodesic squared exponential kernel is positive semi-definite for all $\kappa > 0$, then $X$ is flat in the sense of Alexandrov.
 \end{result}
 
@@ -2050,7 +2102,7 @@ This yields positive semi-definite kernels implicitly defined as covariances of 
 We begin by recalling key notions of abstract Gaussian processes defined on general vector spaces.
 Specifically, we work with Gaussian processes in the sense of duality whose space of test functionals is given by a Hilbert space.
 
-\begin{definition}[Generalized Gaussian field]
+\begin{definition}[Generalized Gaussian~field]
 A centered generalized Gaussian field $f$ over a Hilbert space $H$ is a stochastic process $f : \Omega \x H \-> \R$ satisfying two key properties.
 \1 $\E(f(\.,g)) = 0$ for all $g \in H$.
 \2 There exists a bounded linear self-adjoint non-negative operator $\c{K}$ on $H$, called the \emph{covariance operator}, such that 
@@ -2095,7 +2147,7 @@ For instance, if $f$ is regular enough that its samples lie in $L^2(X)$ almost s
 This clarifies how this general notion relates to Gaussian processes in the standard sense.
 To continue, we introduce the notion of a \emph{solution} of a stochastic partial differential equation.
 
-\begin{definition}[Solution of SPDE]
+\begin{definition}[Solution of an SPDE]
 Let $H$ be a Hilbert space, let $\c{L} : H \-> G$ be a bounded linear operator, and let $\c{W}$ be a centered generalized Gaussian field on $G$.
 Then the zero-mean generalized Gaussian field $f$ over $H$ is a solution of the abstract stochastic partial differential equation 
 \[
@@ -2127,8 +2179,7 @@ is the unique solution to $\c{L}f = \c{W}$.
 It is rather remarkable that such a minimalist solution theory, which relies very fundamentally on the fact that Gaussian processes are uniquely determined by their associated reproducing kernel Hilbert spaces or generalization thereof, gives a description concrete enough for our purposes.
 Indeed, this result will tell us nothing about what function space $f$ lies in as a random variable, and in particular nothing about its regularity properties such as continuity---however, for Bayesian learning, we don't actually need these.
 
-For this construction to yield a Gaussian process in the classical sense, we need $H$ to be a Hilbert space of functions. 
-This can be achieved by choosing it to be a reproducing kernel Hilbert space and building the classical Gaussian processes of interest from pointwise evaluation functionals as described previously.
+For this construction to yield a Gaussian process in the classical sense, we should choose $H$ to be a reproducing kernel Hilbert space, since this lets us build the Gaussian processes of interest from pointwise evaluation functionals as described previously.
 The main challenge, then, is finding appropriate spaces and operators in order to apply the above results.
 
 \subsection{The Riemannian Matérn kernel}
@@ -2199,9 +2250,9 @@ To do so, we state and prove the main result.
 \begin{theorem}[Riemannian Matérn and squared exponential kernels]
 For $\nu > 0$ and $\kappa > 0$, define the stochastic partial differential equations 
 \[
-\del{\frac{2\nu}{\kappa^2} - \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} f = \c{W}_g
-\\
-e^{-\frac{\kappa^2}{4}\lap_g} f = \c{W}_g
+\del{\frac{2\nu}{\kappa^2} - \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} f &= \c{W}_g
+&
+e^{-\frac{\kappa^2}{4}\lap_g} f &= \c{W}_g
 \]
 where, respectively, we have
 \[
@@ -2212,9 +2263,9 @@ e^{-\frac{\kappa^2}{4}\lap_g} : \c{H}^{\frac{\kappa^2}{2}}(X) \-> L^2(X)
 \]
 Then, letting $(\lambda_n,f_n)$ be the eigenvalues and eigenfunctions of the Laplace--Beltrami operator, in both cases the unique solutions $f$ are Gaussian processes with respective covariance kernels
 \[
-k(x, x') = \sum_{n=0}^\infty \del{\frac{2\nu}{\kappa^2} + \lambda_n}^{-\nu-\frac{d}{2}} f_n(x)f_n(x')
+k(x, x') &= \sum_{n=0}^\infty \del{\frac{2\nu}{\kappa^2} + \lambda_n}^{-\nu-\frac{d}{2}} f_n(x)f_n(x')
 \\
-k(x, x') = \sum_{n=0}^\infty e^{-\frac{\kappa^2}{2} \lambda_n} f_n(x)f_n(x')
+k(x, x') &= \sum_{n=0}^\infty e^{-\frac{\kappa^2}{2} \lambda_n} f_n(x)f_n(x')
 \]
 which we call the \emph{Riemannian Matérn} and \emph{Riemannian squared exponential} kernels.
 \end{theorem}
@@ -2224,9 +2275,9 @@ Note first that the operators corresponding to the Matérn kernel coincide with 
 Similarly, the operators corresponding to the squared exponential kernel always coincide.
 In this setting, the reproducing kernels are given by \textcite[Proposition 2]{devito20} as
 \[
-k(x, x') = \sum_{n=0}^\infty \del{\frac{2\nu}{\kappa^2} + \lambda_n}^{-\nu-\frac{d}{2}} f_n(x)f_n(x')
+k(x, x') &= \sum_{n=0}^\infty \del{\frac{2\nu}{\kappa^2} + \lambda_n}^{-\nu-\frac{d}{2}} f_n(x)f_n(x')
 \\
-k(x, x') = \sum_{n=0}^\infty e^{-\frac{\kappa^2}{2} \lambda_n} f_n(x)f_n(x')
+k(x, x') &= \sum_{n=0}^\infty e^{-\frac{\kappa^2}{2} \lambda_n} f_n(x)f_n(x')
 \]
 which proves the claim for the squared exponential case.
 However, we are interested in general length scales $\kappa > 0$, so this does not suffice for the Matérn case.
@@ -2249,8 +2300,35 @@ Here, we explore what these processes look like, as well as their use as priors 
 
 \section{Graph Matérn Gaussian Processes}
 
+A general maxim of geometry is that anything one can do with a manifold, one can do with a graph, given a bit of thinking---but, the details and behavior might be slightly different.
+In the preceding section, we built Gaussian processes using spectral properties of the Riemannian Laplace--Beltrami operator.
+We now ask: can we repeat these constructions on graphs, obtaining Gaussian processes that can be used in very different settings?
+
 \subsection{Review of graph theory}
+
+\parmarginnote{Nodes, weights, edges}
+A weighted undirected graph consist of a finite set of \emph{nodes}, each of which is assigned a positive real number called the \emph{weight}, and \emph{edges} between nodes.
+Graphs with unit weights can be visualized by drawing a set of points on a two-dimensional plane or in three-dimensional space, representing the nodes, and drawing lines between the points, representing the edges.
+
+\parmarginnote{Graphs and matrices}
+A broad theme in graph theory is that geometric properties of graphs can be encoded as matrices by picking an arbitrary ordering of nodes, and associate numerical properties with rows and columns of a matrix.
+Define the \emph{weighted }\emphmarginnote{adjacency matrix} $\m{W}$ by letting the matrix entry corresponding to two nodes be their respective edge weight.
+Similarly, define the diagonal \emphmarginnote{degree matrix} $\m{D}$ by $D_{ii} = \sum_j W_{ij}$---for graphs with unit weights, this counts how many neighbors each node has.
+
+We can construct \emphmarginnote{functions on graphs}, which map each node into some space of interest, in a number of ways.
+For defining functions which depend only on neighboring nodes, working with matrices induced by the graph is often useful.\marginnote{Permutation invariance and equivariance}
+When doing so, we must take care that the functions constructed do not depend on the arbitrary choice of ordering used to associate nodes with matrix rows and columns. Algebraically, this is encoded through \emph{permutation invariance}, \emph{permutation equivariance}, and other similar requirements.
+
+
+\parmarginnote{Discretizations of manifolds}
+Graphs often arise as discretizations of manifolds: there are many ways of making this idea precise.
+For example, one can consider an infinite sequence of nested finite subsets of the manifold converging monotonically to a countable dense subset thereof.
+This defines a sequence of graphs by taking nodes to be the elements of each sets, and connecting neighboring edges.
+Such sequences give rise to vector spaces of functions converging monotonically to an appropriate function space on the manifold.
+
 \subsection{The graph Laplacian}
+
+
 \subsection{The graph Matérn kernel}
 \subsection{Illustrated examples}
 
