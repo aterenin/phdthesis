@@ -103,17 +103,21 @@ Conditional distributions generally contain more information than actually neede
 Probabilistic decision systems are thus most attractive settings where their strengths---including data-efficiency, solid technical foundations, and amenability to analysis---can shine, while computational costs are kept under control.
 
 In my view, \emph{Gaussian processes} are one such setting: they are powerful enough to model wide classes of unknown quantities of interest, yet their computational costs are generally polynomial.
-Better yet, Gaussian-process-based decision systems have been demonstrated to exhibit excellent performance in a number of practical settings, including ones deployed in real-world commercial applications.
+Better yet, Gaussian-process-based decision systems have been demonstrated to exhibit excellent performance in a number of practical settings, including ones deployed in real-world scientific applications.
 Studying Gaussian processes is therefore a promising avenue towards improved understanding of Bayesian learning and Bayesian decision-making in pursuit of artificial intelligence.
 
 The goals of this dissertation are twofold: (i) to make Gaussian processes easier to work with through improved numerical methods, particularly in cases where they are used within larger decision systems, and (ii) to expand the set of settings where Gaussian processes can be practically employed in, enabling construction of decision systems for applications not previously considered.
 Contributions toward (i) include path-wise conditioning techniques studied in \Cref{ch:pathwise}, and contributions toward (ii) include non-Euclidean Gaussian processes studied in \Cref{ch:noneuclidean}.
 Following these, \Cref{ch:conclusion} concludes.
 
-To pursue these goals, it is critically important that all of the ideas described in the preceding paragraphs be made into rigorous mathematics, so that the ideas described in the sequel ultimately reduce to definitions and implications, and not metaphor or opinion.
+To pursue these goals, it is critically important that all of the concepts described in the preceding paragraphs be made into rigorous mathematics, so that the ideas described in the sequel ultimately reduce to definitions and implications, and not metaphor or opinion.
 Together, we therefore begin by defining the key mathematical notions needed.
 
-\subsection*{Review of probability theory}
+\section{Bayesian learning}
+
+TODO
+
+\subsection{Review of probability theory}
 We adopt the language of measure-theoretic probability, which we now recall.
 To ease presentation, we state the definitions together with useful ways of thinking about them.
 
@@ -121,18 +125,18 @@ To ease presentation, we state the definitions together with useful ways of thin
 We say that \emphmarginnote{measurable space} is a pair $(Y,\c{Y})$ consisting of a set $Y$ and a $\sigma$-algebra $\c{Y}$ over $Y$.
 A \emph{$\sigma$-algebra} is a set of subsets of $Y$ containing the space itself which is closed under unions, intersections, complements, and set-theoretic monotone limits.
 These can be reinterpreted as Boolean logical operations, so $\c{Y}$ can be thought of as the set of all true-false questions one can ask about elements of the set $Y$. 
-These questions, then, are closed under \emph{and/or/not} operations and limits thereof.
+These questions, then, are closed under \emph{and/or/not} operations and monotone limits thereof.
 
 \parmarginnote{Product of measurable spaces}
 Given two measurable spaces $(Y,\c{Y})$ and $(\Theta,\mathit\Theta)$, if we form the Cartesian product $Y \x \Theta$, then we can define the \emph{product $\sigma$-algebra} $\c{Y}\ox\mathit\Theta$ as the smallest $\sigma$-algebra containing all sets of the form $A_y \x A_\theta$ with $A_y \in\c{Y}$ and $A_\theta\in\mathit\Theta$.
 \marginnote{Subset of a measurable space}
-For a subset $Y' \subseteq Y$, we can define $\c{Y}' = \{A_y \^ Y' : A_y \in\c{Y}\}$, which is also a $\sigma'$-algebra, thereby making $(Y',\c{Y}')$ into a measurable space. 
+For a measurable subset $Y' \subseteq Y$, we can define $\c{Y}' = \{A_y \^ Y' : A_y \in\c{Y}\}$, which is also a $\sigma'$-algebra, thereby making $(Y',\c{Y}')$ into a measurable space. 
 We call $\c{Y}'$ the \emph{subset $\sigma$-algebra}.
 
 \parmarginnote{Measurable function}
 A map $f : Y \-> Y'$ between measurable spaces $(Y,\c{Y})$ and $(Y',\c{Y}')$ is said to be \emph{measurable} if its preimage defines a map $f^{-1} : \c{Y}' \-> \c{Y}$ between the respective $\sigma$-algebras.
 This means that true-false questions for the space $Y'$ can be asked and answered relative to true-false questions for the space $Y$.
-On product spaces, map $f : Y \-> \Theta \x \Theta'$ is measurable if its components are measurable, but a map $f : Y \x Y' \-> \Theta$ \emph{need not} automatically be measurable if $f(\.,y') : Y \-> \Theta$ and $f(y,\.) : Y' \-> \Theta$ are measurable for all $y,y'$.
+On product spaces, a map $f : Y \-> \Theta \x \Theta'$ is measurable if its components are measurable, but a map $f : Y \x Y' \-> \Theta$ \emph{need not} automatically be measurable if $f(\.,y') : Y \-> \Theta$ and $f(y,\.) : Y' \-> \Theta$ are measurable for all $y$ and $y'$.
 
 A \emphmarginnote{probability measure} is a countably additive map $\pi_y : \c{Y} \-> [0,1]$ satisfying $\pi_Y(Y) = 1$. 
 This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is according to the measure---in this view, probability measures describe uncertainty.
@@ -171,9 +175,7 @@ In particular, unlike most presentations of stochastic processes, we \emph{never
 Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, with the pushforward taken in the first argument---by \Cref{lem:rcrv-rvm-equiv}, this is a probability kernel.
 
 
-
-\section{Bayesian learning}
-
+\subsection{Bayes' Rule for probability measures}
 The key idea behind Bayesian learning is to define \emph{learning} using \emph{conditional probability}.
 Building a model therefore entails quantifying the relationship between the \emph{quantity of interest} $\theta$, and the \emph{data} $y$.
 This is done as follows.
@@ -400,6 +402,8 @@ TODO.
 
 We now use the Bayesian formalism to construct a probabilistic theory of decision-making.
 To begin, we formalize the very general concept of an abstract agent making decisions in an environment in pursuit of some goal.
+
+\subsection{Markov decision processes}
 
 \begin{definition}[Discrete-time Markov decision process]
 A \emph{discrete-time Markov decision process} is a $4$-tuple consisting of the following.
@@ -1085,7 +1089,7 @@ Both of these contributions were developed jointly with the other authors.
 \chapter{Pathwise Conditioning}
 \label{ch:pathwise}
 
-We now study Bayesian learning with Gaussian processes.
+\lettrine{W}{e now study} Bayesian learning with Gaussian processes.
 We begin with a review of conjugacy results, which describe how to calculate posterior distributions of Gaussian models.
 This is the standard view which has been used in machine learning, and it mirrors the behavior of the general measure-theoretic setup common to all Bayesian models.
 
@@ -1885,7 +1889,7 @@ TODO: talk about Bayesian optimization showcase
 \chapter{Non-Euclidean Matérn Gaussian Processes}
 \label{ch:noneuclidean}
 
-At present, the most widely-used Gaussian process models employ stationary kernels defined on Euclidean spaces.
+\lettrine{A}{t present}, the most widely-used Gaussian process models employ stationary kernels defined on Euclidean spaces.
 These kernels are attractive because they work effectively and it is generally easy to understand the kind of prior information they introduce into a problem.
 This makes them a valuable tool for practitioners to use in the manner required for the task at hand.
 
@@ -1912,13 +1916,14 @@ We now briefly review the notions needed to define and understand manifolds.\foo
 Thus, a \emph{manifold} is a \emph{space with many views into it}, which I find to be well-chosen and evocative.}
 These are sets equipped with additional structure encoding their geometric shape.
 
-A \emphmarginnote{topological space} is a set $X$ together with a \emph{topology}, which is a collection of subsets $\c{O}_X \subseteq 2^X$ called the \emph{open sets}, which contain the emptyset, the space itself, and are closed under pairwise intersections and arbitrary unions.
+A \emphmarginnote{topological space} is a set $X$ together with a \emph{topology}, which is a collection of subsets $\c{O}_X \subseteq 2^X$ called the \emph{open sets}---these include the empty set, the space itself, and are closed under pairwise intersections and arbitrary unions.
 A given set generally admits many topologies.
-Topological spaces admit notions of \emph{locality}, \emph{convergence}, \emph{continuity}, \emph{compactness}, and many others.
+Topological spaces admit notions of \emph{locality}, \emph{convergence}, \emph{continuity}, \emph{compactness}, \emph{denseness}, and many others.
+The \emph{Hausdorff} property implies that limits are unique.
 
 \parmarginnote{Topological manifold}
 A paracompact Hausdorff topological space $(X,\c{O}_X)$ is called a $d$-dimensional \emph{topological manifold} if it is locally homeomorphic to $\R^d$ equipped with the standard topology.
-For such a manifold, there is a set $\c{A}_X$ called the \emph{atlas} whose elements are these local homeomorphisms, called \emph{charts}.
+For such a manifold, there is a set $\c{A}_X$ called the \emph{atlas} whose elements are the local homeomorphisms, called \emph{charts}.
 An atlas is \emph{maximal} if it is the largest possible such set, in which case it is unique.
 
 A \emphmarginnote{smooth differentiable manifold} is a triple  $(X,\c{O}_X,\c{A}_X)$ where $X$ is a topological manifold, and $\c{A}_X$ is a $C^\infty$-atlas.
@@ -2103,11 +2108,11 @@ We begin by recalling key notions of abstract Gaussian processes defined on gene
 Specifically, we work with Gaussian processes in the sense of duality whose space of test functionals is given by a Hilbert space.
 
 \begin{definition}[Generalized Gaussian~field]
-A centered generalized Gaussian field $f$ over a Hilbert space $H$ is a stochastic process $f : \Omega \x H \-> \R$ satisfying two key properties.
+A \emph{centered generalized Gaussian field} $f$ over a Hilbert space $H$ is a stochastic process $f : \Omega \x H \-> \R$ satisfying two key properties.
 \1 $\E(f(\.,g)) = 0$ for all $g \in H$.
 \2 There exists a bounded linear self-adjoint non-negative operator $\c{K}$ on $H$, called the \emph{covariance operator}, such that 
 \[
-\E(f(\.,g)f(\.,g')) = \innerprod{\c{K}g}{g')}    
+\E(f(\.,g)f(\.,g')) = \innerprod{\c{K}g}{g'}    
 \]
 for all $g,g' \in H$.
 \0 
@@ -2147,7 +2152,7 @@ For instance, if $f$ is regular enough that its samples lie in $L^2(X)$ almost s
 This clarifies how this general notion relates to Gaussian processes in the standard sense.
 To continue, we introduce the notion of a \emph{solution} of a stochastic partial differential equation.
 
-\begin{definition}[Solution of an SPDE]
+\begin{definition}[Stochastic partial differential equation]
 Let $H$ be a Hilbert space, let $\c{L} : H \-> G$ be a bounded linear operator, and let $\c{W}$ be a centered generalized Gaussian field on $G$.
 Then the zero-mean generalized Gaussian field $f$ over $H$ is a solution of the abstract stochastic partial differential equation 
 \[
@@ -2164,7 +2169,7 @@ The idea behind this definition is to take advantage of Gaussianity and use it t
 Instead, the operator $\c{L}$ is thought of as a map between the associated Hilbert spaces: if said Hilbert spaces are function spaces admitting reproducing kernels, the generalized Gaussian fields defined over them yield Gaussian processes in the classical sense.
 In the given setting, this solution concept ends up being useful, thanks to the following general result.
 
-\begin{result}[SPDE solution criteria]
+\begin{result}[SPDE solution]
 If $\c{L}$ is invertible, then
 \[
 f(\omega,g) = \c{W}(\omega, \c{L}^{-*} g)
