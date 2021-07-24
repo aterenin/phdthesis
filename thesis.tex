@@ -5,6 +5,13 @@
 \usepackage{microtype}
 \usepackage{lettrine}
 
+\usepackage{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{fadings}
+
 \usepackage[commands,environments,enumerate,citations,notes,a4paper]{AVT}
 
 \bibliography{citations}
@@ -115,10 +122,17 @@ Together, we therefore begin by defining the key mathematical notions needed.
 
 \section{Bayesian learning}
 
-TODO
+The first concept we develop in depth along our path towards a mathematically precise understanding of statistical decision-making will be \emph{Bayesian learning}---a mathematical formalism for reasoning about unknown quantities of interest on the basis of data.
+Bayesian learning is a \emph{probabilistic} theory: a model specifies how the quantity of interest and the data depend on one another as random variables.
+Learning then entails calculating how the distribution of the quantity of interest changes upon observing the data.
+
+One of the key strengths of Bayesian theory is that it applies in very wide generality, owing to the substantial scope of probability theory. 
+In particular, one can consider unknown quantities of interest that are function-valued, and study learning in such settings.
+This, however, requires a non-elementary treatment, as one cannot rely solely on probability densities to define what conditional distributions are.
+We therefore begin by recalling the necessary formalism.
 
 \subsection{Review of probability theory}
-We adopt the language of measure-theoretic probability, which we now recall.
+We adopt the language of measure-theoretic probability, which we now describe.
 To ease presentation, we state the definitions together with useful ways of thinking about them.
 
 
@@ -176,9 +190,10 @@ Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\th
 
 
 \subsection{Bayes' Rule for probability measures}
-The key idea behind Bayesian learning is to define \emph{learning} using \emph{conditional probability}.
-Building a model therefore entails quantifying the relationship between the \emph{quantity of interest} $\theta$, and the \emph{data} $y$.
-This is done as follows.
+
+The key idea behind Bayesian learning is to formalize \emph{learning} using the concept of \emph{conditional probability}.
+This entails (i) building a model entails quantifying the relationship between the \emph{quantity of interest} $\theta$, and the \emph{data} $y$, and (ii) quantifying what is learned using Bayes' Rule.
+We now begin to make these concepts precise in the language of measure-theoretic probability.
 
 \begin{definition}[Bayesian model]
 Let $Y$ and $\Theta$ be sets.
@@ -242,7 +257,7 @@ The formulation is given as follows.
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[Bayes' Rule Visual]
+[Bayes' Rule 3D Visual]
 \vspace*{10ex}
 \caption{TODO.}
 \end{figure*}
@@ -419,7 +434,7 @@ For instance, one can consider continuous-time, purely deterministic, and partia
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[Markov Decision Process Visual]
+[Markov Decision Process Visual Diagram]
 \vspace*{10ex}
 \caption{TODO.}
 \end{figure*}
@@ -527,9 +542,12 @@ We thus begin by introducing formalism and notation better suited to the given s
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[Multi-armed Bandit Visual]
+[Multi-armed Bandit Plot]
 \vspace*{10ex}
-\caption{TODO.}
+\caption{Here, we illustrate a simple three-armed bandit. 
+Each of the three arms has its own reward distribution, shown on the left.
+These are unknown to the agent, which only sees the rewards obtained by actions it takes, shown in the center, and must the obtained information to decide which arm to pick.
+Each arm's regret is given by its expected decrease in reward compared to the optimal arm, shown on the right.}
 \end{figure*}
 
 \begin{definition}[Multi-armed bandit]
@@ -545,12 +563,6 @@ An algorithm, then, assigns every dataset of arbitrary size to a probability mea
 Each dataset consists of $(x, y)$ pairs where $x$ are the locations chosen by the algorithm, and $y$ are the noisy observed values---recall $\omega$ is the randomness used by the noise.
 Some algorithms maximize $f$ faster than others---we consider this next.
 
-\begin{figure*}[t]
-\vspace*{10ex}
-[Regret Visual]
-\vspace*{10ex}
-\caption{TODO.}
-\end{figure*}
 
 \begin{definition}[Regret]
 For a given multi-armed bandit, let $f(x^*)$ be the global maxima of $f$. 
@@ -561,6 +573,9 @@ R(T) = \sum_{t=1}^T f(x^*) - f(x_t)
 where $x_t \~ \pi(y_0,..,y_{t-1})$, $y_t = f(x_t) + \eps_t$, and $\eps_t \~ \eps(x)$.
 \end{definition}
 
+Regret thus counts the total reward lost by virtue of not knowing the optimal arm in advance.
+Algorithms which achieve small regret therefore learn the optimal rewards effectively, and avoid getting stuck pulling bad arms.
+
 Regret behavior in multi-armed bandit problems is strongly dependent on properties of the underlying function $f$, and in particular its domain $X$.
 It is clear by considering for instance $X = \R$ that if $X$ is too large or too unstructured, no algorithm achieves better than linear regret.
 We therefore begin studying the simplest non-trivial domain class.
@@ -569,6 +584,20 @@ We therefore begin studying the simplest non-trivial domain class.
 We say that a multi-armed bandit defined over a finite set with cardinality $K=|X|$ is a \emph{$K$-armed bandit}.
 Moreover, if $y(\.,x)$ is a Bernoulli random variable for all $x$, we say it is a \emph{Bernoulli bandit}.
 \end{definition}
+
+For such bandits, regret can be decomposed on a per-arm basis in the manner given as follows.
+
+\begin{lemma}
+Regret satisfies 
+\[
+R(T) = \sum_{x=1}^K \Delta(x) n_x(T)
+\]
+where $n_x(T) = \sum_{t=1}^T \1_{x_t = x}$ and $\Delta(x) = f(x^*) - f(x)$.
+\end{lemma}
+
+\begin{proof}
+Follows directly from definition by grouping terms in the sum.
+\end{proof}
 
 What kind of performance is possible on such a problem?
 One can ask and answer this question as follows.
@@ -641,9 +670,13 @@ Many different acquisition functions for the given setting have been proposed.
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[UCB Visual]
+[UCB Visual Plot]
 \vspace*{10ex}
-\caption{TODO.}
+\caption{Here, we show an illustrated of the UCB algorithm. 
+The idea behind this method is to use the observed data to construct a set of error bars, shown on the left, encoding what has been learned about the mean rewards for each arm using the data observed so far.
+To take advantage of what is already known while allowing errors, the next arm is chosen to be the maxima of the error bars, which need not coincide with the maximum mean. 
+This process is repeated iteratively as additional data is obtained.
+}
 \end{figure*}
 
 We now proceed to explore a more general setting which will enable us to employ the ideas developed so far to develop efficient black-box optimization algorithms.
@@ -682,7 +715,7 @@ Here, the data is $Y = \R^n$, and our quantity of interest is the actual \emph{f
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[Bayesian Optimization Visual]
+[Bayesian Optimization Plot]
 \vspace*{10ex}
 \caption{TODO.}
 \end{figure*}
@@ -784,7 +817,7 @@ y = \sigma z + \mu
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[Gaussian Density Visual]
+[Gaussian Density Plot]
 \vspace*{10ex}
 \caption{TODO.}
 \end{figure*}
@@ -849,7 +882,7 @@ A random variable $\v{y} : \Omega\->\R^d$ is called \emph{multivariate Gaussian}
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[Multivariate Gaussian Visual]
+[Multivariate Gaussian 3D Visual]
 \vspace*{10ex}
 \caption{TODO.}
 \end{figure*}
@@ -946,7 +979,7 @@ A random process $f: \Omega \x X \-> \R$ is called a \emph{Gaussian process} if,
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[Gaussian Process Visual]
+[Gaussian Process Plot]
 \vspace*{10ex}
 \caption{TODO.}
 \end{figure*}
@@ -1086,6 +1119,9 @@ My contributions also include the differential-geometric formalism on how to rig
 Both of these contributions were developed jointly with the other authors.
 
 
+
+
+
 \chapter{Pathwise Conditioning}
 \label{ch:pathwise}
 
@@ -1154,10 +1190,15 @@ By non-singularity, $(\v\theta,\v{y})$ admits a Lebesgue density, and the claim 
 \end{proof}
 
 \begin{figure*}[t]
-\vspace*{10ex}
-[MVN Distributional Conditioning Visual]
-\vspace*{10ex}
-\caption{TODO.}
+\begin{subfigure}{8cm}
+\input{figures/tex/mvn-dist-joint.tex}
+\caption{Calculate conditional distribution.}
+\end{subfigure}
+\begin{subfigure}{8cm}
+\input{figures/tex/mvn-dist-cond.tex}
+\caption{Sample from conditional distribution.}
+\end{subfigure}
+\caption{Illustration of distributional conditioning of a bivariate Gaussian. Here, we form the joint distribution, calculate the conditional distribution, and then draw samples from it. Note that all steps except the very last one are \emph{distributional} in nature and do not involve the use of random variables, which only appear at the very end of the process.}
 \label{fig:dist-cond-mvn}
 \end{figure*}
 
@@ -1272,10 +1313,16 @@ The claim follows.
 \end{proof}
 
 \begin{figure*}[t]
-\vspace*{10ex}
-[MVN Pathwise Conditioning Visual]
-\vspace*{10ex}
-\caption{TODO.}
+\begin{subfigure}{8cm}
+\input{figures/tex/mvn-pw-joint.tex}
+\caption{Sample from joint distribution.}
+\end{subfigure}
+\begin{subfigure}{8cm}
+\input{figures/tex/mvn-pw-cond.tex}
+\caption{Transform into conditional distribution.}
+\end{subfigure}
+\caption{Illustration of pathwise conditioning of a bivariate Gaussian. Here, we first sample a random vector from the joint distribution, then transform it into a sample from the conditional distribution.
+These steps are called \emph{pathwise} because they are defined directly using random variables, rather than indirectly through probability distributions.}
 \label{fig:pw-cond-mvn}
 \end{figure*}
 
@@ -1338,7 +1385,7 @@ Apply \Cref{prop:mvn-cond} to a set of finite-dimensional marginals.
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[GP Distributional Conditioning Visual]
+[GP Distributional Conditioning Plot]
 \vspace*{10ex}
 \caption{TODO.}
 \label{fig:dist-cond-gp}
@@ -1396,7 +1443,7 @@ Apply \Cref{thm:mvn-pw} to a set of finite-dimensional marginals.
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[GP Pathwise Conditioning Visual]
+[GP Pathwise Conditioning Plot]
 \vspace*{10ex}
 \caption{TODO.}
 \label{fig:pw-cond-gp}
@@ -1435,7 +1482,7 @@ We show in the sequel that for appropriate choices of $\tilde{f}$, such approxim
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[RFF GP Pathwise Conditioning Visual]
+[RFF GP Pathwise Conditioning Plot]
 \vspace*{10ex}
 \caption{TODO.}
 \label{fig:pw-cond-gp-rff}
@@ -1554,6 +1601,13 @@ Here, \emph{symmetry} of $\rho$ refers to invariance under reflection about the 
 This result is true more generally if $X$ is replaced by a locally compact Abelian group, for which the corresponding spectral measure will be supported on the Pontryagin dual group---we omit this level of generality because we will not need it.
 We do briefly note, however, that this means that spectral measures of kernels on compact spaces are \emph{discrete}---this behavior will reappear under a different guise in \Cref{ch:noneuclidean}.
 
+\begin{figure*}[t]
+\vspace*{10ex}
+[RFF Prior Sampling Plot]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
+
 From here, it is clear that the feature map we seek can be constructed by Monte Carlo sampling the integral representation given by Bochner's Theorem.
 To maintain order, we introduce a \emph{second} probability space $(\Xi,\c{G},\bb{Q})$ to distinguish the stochasticity associated with the random feature expansion from stochasticity associated with the Gaussian process.
 Letting $\Re$ denote the real part of a complex number, our approximate prior is\footnote{TODO: check if this is really the one we want.}
@@ -1606,6 +1660,13 @@ TODO: cite.
 
 More generally, an analogous result, albeit with a weaker form of convergence, also holds for general \emph{square-integrable} stochastic processes which may be non-Gaussian.
 Since we will not consider such processes, we do not pursue this direction here.
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[KL Expansion Boundary Constrained Plot]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
 
 For a general kernel, finding the eigenfunctions of the covariance operator may be difficult.
 For certain classes of Gaussian processes constructed to satisfy appropriate boundary constraints, however, the eigenfunctions of the covariance operator will coincide with the eigenfunctions of a boundary-constrained Laplacian.
@@ -1667,6 +1728,13 @@ Our approximate prior can therefore be written
 What is particularly powerful about this technique is that it gives us a significant degree of freedom for what kinds of finite sets of basis functions we can choose for $\phi$ and $\psi$.
 A fruitful choice, provided the operator $\c{L}$ is a differential operator of sufficiently low order that this makes sense, is to take them to be compactly supported piecewise linear functions, since this will cause the matrices $\m{A}$ and $\m{M}$ to be sparse.
 This can enable one to use a much larger set of basis functions compared to alternative methods.
+
+\begin{figure*}[t]
+\vspace*{10ex}
+[Finite Element Plot]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
 
 The main difficulty with finite element methods is that they typically demand more from practitioners compared to alternatives.
 In particular, one usually needs to understand the stochastic partial differential equations governing the Gaussian process of interest with a reasonable degree of detail to know how to choose basis functions well.
@@ -1735,6 +1803,13 @@ The claim follows.
 We have therefore proven that the \emph{inducing point} approximation of \textcite{opper09}, when re-interpreted using the variational inference framework of \textcite{titsias09}, coincides with the pathwise variational approximation constructed here.
 The same is true for other classes of inducing points, including the family where $\v{u}$ is randomized, as originally proposed by \textcite{titsias09}.
 
+\begin{figure*}[t]
+\vspace*{10ex}
+[Inducing Point Plot]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
+
 Better yet, the constructions above are straightforward, principled, and mathematically sound.
 In particular, we do not rely on heuristic arguments involving \emph{evidence lower bounds} which effectively require us to \emph{posit} that optimizing certain quantities will result in improved posterior approximation.
 Instead, by virtue of the Kullback--Leibler divergence generating a Hausdorff topology on the space of probability measures, this is proven.
@@ -1770,7 +1845,7 @@ This is to be contrasted with the approximate pathwise update, for which this di
 
 \begin{figure*}[t]
 \vspace*{10ex}
-[Variance Starvation Visual]
+[Variance Starvation Plot]
 \vspace*{10ex}
 \caption{TODO.}
 \label{fig:variance-starvation}
@@ -1964,6 +2039,12 @@ By Nash's Embedding Theorem, every Riemannian manifold can be isometrically embe
 This identifies Riemannian manifolds as geometric shapes located within Euclidean spaces.
 This perspective is often avoided for both technical and conceptual reasons: if the spacetime of the universe is a manifold, can an ambient space actually have physical meaning?
 
+\begin{figure*}[t]
+\vspace*{10ex}
+[Common Manifolds 3D Visual]
+\vspace*{10ex}
+\caption{TODO.}
+\end{figure*}
 
 \subsection{The Laplace--Beltrami operator}
 

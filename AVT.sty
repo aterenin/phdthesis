@@ -429,7 +429,8 @@
 \renewcommand{\contentsname}{Table of Contents}
 
 % caption format
-\RequirePackage[format=plain,labelsep=period,font=sl]{caption}
+\RequirePackage[format=plain,labelsep=period]{caption}
+\RequirePackage[font=large]{subcaption}
 
 % theorem styles and margin notes
 \RequirePackage{amsthm}
@@ -463,6 +464,8 @@
 \ifAVT@centerfigures
 
 \g@addto@macro\@floatboxreset{\centering}
+\providecommand\@subfloatboxreset{}
+\g@addto@macro\@subfloatboxreset{\centering}
 
 \fi
 
