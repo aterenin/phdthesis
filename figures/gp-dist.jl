@@ -11,7 +11,9 @@ save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> T
 z = [0.5,0.75]
 u = [0.15,-0.15]
 x = 0:0.0125:1
-k = 0.1 * compose(Matern52Kernel(), ScaleTransform(10))
+a = 0.1
+ls = 0.1
+k = a * with_lengthscale(Matern52Kernel(), ls)
 s = 0.01
 l = 32
 
@@ -24,7 +26,7 @@ K_cond = Symmetric(K_xx - K_xz * ((K_zz + s*I) \ K_xz'))
 
 dist_cond = MvNormal(m_cond, K_cond)
 Random.seed!(1)
-samples_cond = rand(dist_cond, 32)
+samples_cond = rand(dist_cond, l)
 
 @pgf Axis(
     {
@@ -140,7 +142,7 @@ samples_cond = rand(dist_cond, 32)
             opacity = 0.5
         },
         Coordinates(x, samples_cond[:,i])
-    ) for i in 1:size(samples_cond, 2)]...,
+    ) for i in 1:l]...,
     Plot(
         { 
             only_marks,

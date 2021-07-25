@@ -1610,29 +1610,60 @@ TODO: cite.
 
 Here, \emph{symmetry} of $\rho$ refers to invariance under reflection about the origin.
 This result is true more generally if $X$ is replaced by a locally compact Abelian group, for which the corresponding spectral measure will be supported on the Pontryagin dual group---we omit this level of generality because we will not need it.
-We do briefly note, however, that this means that spectral measures of kernels on compact spaces are \emph{discrete}---this behavior will reappear under a different guise in \Cref{ch:noneuclidean}.
+We do briefly note, however, that this means that spectral measures of kernels on compact spaces are \emph{discrete}---this behavior will reappear under a different guise in \Cref{ch:noneuclidean}.\footnote{TODO: don't forget to actually mention this.}
 
 \begin{figure}
-\vspace*{10ex}
-[RFF Prior Sampling Plot]
-\vspace*{10ex}
-\caption{TODO.}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-rff-basis.tex}
+\caption{Fourier basis functions}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-rff-samples.tex}
+\caption{Approximate prior samples}
+\end{subfigure}
+\caption{Illustration of random Fourier feature methods for sampling from approximate priors. Here, we show a small subset of randomly sampled Fourier basis functions, along with approximate prior samples constructed using the random Fourier basis functions.}
+\label{fig:gp-rff-prior}
 \end{figure}
 
 From here, it is clear that the feature map we seek can be constructed by Monte Carlo sampling the integral representation given by Bochner's Theorem.
 To maintain order, we introduce a \emph{second} probability space $(\Xi,\c{G},\bb{Q})$ to distinguish the stochasticity associated with the random feature expansion from stochasticity associated with the Gaussian process.
-Letting $\Re$ denote the real part of a complex number, our approximate prior is\footnote{TODO: check if this is really the one we want.}
+Letting $k(\v{x},\v{x}) = \sigma^2$, write
 \[
-\tilde{f}(\.) &= \frac{1}{\sqrt{\ell}} \Re \del{\sum_{i=1}^\ell w_i(\omega) e^{2\pi i \v\varpi(\xi)^T(\.)}}
+k(\v{x} - \v{x}') &= \sigma^2 \int_{\R^d} e^{2\pi i \v\varpi^T (\v{x} - \v{x}')} \d\rho(\v\varpi)
+\\
+&= \sigma^2 \int_{\R^d} e^{2\pi i \v\varpi^T \v{x}} \conj{e^{2\pi i \v\varpi^T \v{x}'}} \d\rho(\v\varpi)
+\\
+&\approx \frac{\sigma^2}{\ell} \sum_{j=1}^\ell e^{2\pi i \v\varpi_j(\xi)^T \v{x}} \conj{e^{2\pi i \v\varpi_j(\xi)^T \v{x}'}}
+\\
+&= \frac{\sigma^2}{\ell} \sum_{i=1}^\ell \begin{aligned}
+\cos&(2\pi \v\varpi_i(\xi)^T \v{x})\cos(2\pi \v\varpi_i(\xi)^T \v{x}') 
+\\
++&\sin(2\pi \v\varpi_i(\xi)^T \v{x})\sin(2\pi \v\varpi_i(\xi)^T \v{x}')
+\end{aligned}
+\\
+&= \v\phi(\xi,\v{x})^T\v\phi(\xi,\v{x}')
+\]
+where
+\[
+\phi_i(\xi,\v{x}) = \begin{cases}
+\displaystyle \frac{\sigma}{\sqrt{\ell}} \cos(2\pi \v\varpi_i(\xi)^T \v{x}), & i \t{odd}
+\\[2ex]
+\displaystyle \frac{\sigma}{\sqrt{\ell}} \sin(2\pi \v\varpi_{i-1}(\xi)^T \v{x}), & i \t{even}
+\end{cases}
+\]
+which, for $\ell$ even, gives our approximate prior as
+\[
+\tilde{f}(\.) &= \sum_{i=1}^\ell w_i(\omega) \phi_i(\xi,\.)
 &
 w_i &\~[N](0,1)
 &
-\v\varpi &\~ \rho
+\v\varpi_i &\~ \rho
+.
 \]
 
 What is remarkable about random feature methods is that, owing to the Monte Carlo nature of the approximation, the decay rate of appropriately defined approximation error is \emph{dimension-free}.
 This limits the effect of the curse of dimensionality to constant factors.
-Better yet, random feature methods are well-understood owing to their widespread use in other areas, and error bounds are available.
+Better yet, random feature methods are well-understood owing to their widespread use in other areas, and error bounds are available \cite{sutherland15}.
 For this reason, they are often the technique of choice for stationary Euclidean kernels.
 We now consider other cases.
 
