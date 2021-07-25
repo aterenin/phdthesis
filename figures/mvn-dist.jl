@@ -27,6 +27,7 @@ function density_to_patches(distribution::AbstractMvNormal, num_contours::Int, n
         end
     end
     xyc = hcat([[x,y,pdf(distribution,[x,y])] for (x,y) in rectangles]...)
+    xyc[abs.(xyc) .< 0.005] .= 0
     return Table([:x => xyc[1,:], :y => xyc[2,:], :c => xyc[3,:]])
 end
 
@@ -75,8 +76,8 @@ samples_cond = rand(cond, 250)
 ), Axis(
     {
         axis_lines = "none",
-        height = "8cm",
-        width = "8cm",
+        height = "6.5cm",
+        width = "6.5cm",
         xmin=-3, xmax=3, ymin=-3, ymax=3,
         clip_mode="individual",
     },
@@ -103,8 +104,8 @@ samples_cond = rand(cond, 250)
 @pgf Axis(
     {
         axis_lines = "none",
-        height = "8cm",
-        width = "8cm",
+        height = "6.5cm",
+        width = "6.5cm",
         xmin=-3, xmax=3, ymin=-3, ymax=3,
         clip_mode="individual",
         
@@ -116,6 +117,7 @@ samples_cond = rand(cond, 250)
     Plot(
         {
             no_markers,
+            smooth,
             ultra_thick,
             color=colorant"#1f77b4",
             fill=colorant"#1f77b4",
@@ -134,7 +136,7 @@ samples_cond = rand(cond, 250)
         { 
             only_marks,
             mark="|",
-            mark_size="3pt",
+            mark_size="3.5pt",
             color=colorant"#1f77b4",
             opacity = 0.5,
         },

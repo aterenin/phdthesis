@@ -6,12 +6,12 @@
 \usetikzlibrary{fadings}
 \begin{document}
 \begin{tikzpicture}
-\begin{axis}[axis lines={none}, height={8cm}, width={8cm}, xmin={-3}, xmax={3}, ymin={-3}, ymax={3}, clip mode={individual}]
+\begin{axis}[axis lines={none}, height={6.5cm}, width={6.5cm}, xmin={-3}, xmax={3}, ymin={-3}, ymax={3}, clip mode={individual}]
     \node at (-3,-3) {};
     \node at (-3,3) {};
     \node at (3,3) {};
     \node at (3,-3) {};
-    \addplot[no markers, ultra thick, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, fill={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, fill opacity={0.25}]
+    \addplot[no markers, smooth, ultra thick, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, fill={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, fill opacity={0.25}]
         coordinates {
             (-3.0,-1.0)
             (-2.9,-1.0)
@@ -77,7 +77,7 @@
         }
         ;
     \draw[black, ultra thick] ({rel axis cs:1,0}|-{axis cs:0,-1}) -- ({rel axis cs:0,0}|-{axis cs:0,-1});
-    \addplot[only marks, mark={|}, mark size={3pt}, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, opacity={0.5}]
+    \addplot[only marks, mark={|}, mark size={3.5pt}, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, opacity={0.5}]
         coordinates {
             (1.029584828171896,-1)
             (1.0666825380016693,-1)

@@ -429,7 +429,8 @@
 \renewcommand{\contentsname}{Table of Contents}
 
 % caption format
-\RequirePackage[format=plain,labelsep=period]{caption}
+\RequirePackage{setspace}
+\RequirePackage[format=plain,labelsep=period,font={stretch=0.85}]{caption}
 \RequirePackage[font=large]{subcaption}
 
 % theorem styles and margin notes
@@ -448,6 +449,10 @@
 \RequirePackage{ifoddpage}
 \renewenvironment{figure*}[1][]{\@float{figure}[#1]\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
 \renewenvironment{table*}[1][]{\@float{table}[#1]\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
+
+% place figures at the top by default
+\def\fps@figure{t}
+\def\fps@table{t}
 
 % center figures and load theorem names
 \AVT@centerfigurestrue

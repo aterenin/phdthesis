@@ -34,8 +34,8 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
 @pgf Axis(
     {
         axis_lines = "none",
-        height = "8cm",
-        width = "8cm",
+        height = "6.5cm",
+        width = "6.5cm",
         xmin=-3, xmax=3, ymin=-3, ymax=3,
         clip_mode="individual",
     },
@@ -73,8 +73,8 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
 @pgf Axis(
     {
         axis_lines = "none",
-        height = "8cm",
-        width = "8cm",
+        height = "6.5cm",
+        width = "6.5cm",
         xmin=-3, xmax=3, ymin=-3, ymax=3,
         clip_mode="individual",
     },
@@ -84,6 +84,8 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
     [raw"\node at (3,-3) {};"],
     Plot(
         {
+            no_markers,
+            smooth,
             ultra_thick,
             color=colorant"#1f77b4",
             fill=colorant"#1f77b4",
@@ -94,6 +96,7 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
     Plot(
         {
             no_markers,
+            smooth,
             black,
             very_thick,
             dashed,
@@ -111,7 +114,7 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
         { 
             only_marks,
             mark="|",
-            mark_size="3pt",
+            mark_size="3.5pt",
             color=colorant"#1f77b4",
             opacity = 0.5,
         },
@@ -120,8 +123,8 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
     Plot(
         {
             no_markers,
-            black,
             dashed,
+            black,
             thick,
         },
         Coordinates([tuple(highlight_joint...),(highlight_cond,highlight_joint[2]),(highlight_cond,y_cond)])
@@ -130,7 +133,7 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
         { 
             only_marks,
             mark="|",
-            mark_size="3pt",
+            mark_size="3.5pt",
             ultra_thick,
             color=colorant"#ff7f0e",
         },
@@ -140,7 +143,7 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
         {
             quiver = {u = raw"\thisrow{u}", v = raw"\thisrow{v}"},
             very_thick,
-            "-stealth"
+            "-latex"
         },
         Table(x = [highlight_joint[1]], y = [highlight_joint[2]], u = 0.99.*[highlight_cond - highlight_joint[1]], v = 0.99.*[y_cond - highlight_joint[2]])
     ),

@@ -255,12 +255,12 @@ More specifically, the likelihood describes how $y$ would be distributed if $\th
 Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution---note that this is meant in a \emph{distributional} sense, not a random-variable-based sense.
 The formulation is given as follows.
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Bayes' Rule 3D Visual]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 \begin{result}[Bayes' Rule]
 Suppose that $\Theta$ and $Y$ are second-countable topological spaces, and let $\pi_y = \pi_{\theta,y}(\Theta\x\.)$.
@@ -432,12 +432,12 @@ A \emph{discrete-time Markov decision process} is a $4$-tuple consisting of the 
 This is a very broad notion---however, a number of variations are also possible.
 For instance, one can consider continuous-time, purely deterministic, and partially observed analogs---each of these involve their own subtleties and deserve study in their own right, but we do not pursue them here.
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Markov Decision Process Visual Diagram]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 The idea behind this definition is that, at every point in time, the agent observes the current state, chooses an action $a \in A$, and obtains another state $s' \~ p(s,a)$.
 Note that \emph{time} can, and often will, be part of the state $s$.
@@ -540,7 +540,7 @@ The goal is to minimize  expected loss, or, equivalently, maximize total expecte
 Multi-armed bandits can be viewed as discrete-time Markov decision processes with a one-element state space, but this is not necessarily the most fruitful way to think about them.
 We thus begin by introducing formalism and notation better suited to the given setting, which can be viewed as special cases of the notions considered previously.
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Multi-armed Bandit Plot]
 \vspace*{10ex}
@@ -548,7 +548,7 @@ We thus begin by introducing formalism and notation better suited to the given s
 Each of the three arms has its own reward distribution, shown on the left.
 These are unknown to the agent, which only sees the rewards obtained by actions it takes, shown in the center, and must the obtained information to decide which arm to pick.
 Each arm's regret is given by its expected decrease in reward compared to the optimal arm, shown on the right.}
-\end{figure*}
+\end{figure}
 
 \begin{definition}[Multi-armed bandit]
 Let $f : X \-> \R$ be bounded above function, let $\eps : \Omega \x X \-> \R$ be a stochastic process such that $\E(\eps(x)) = 0$, and let $y(\omega,x) = f(x) + \eps(\omega,x)$.
@@ -668,7 +668,7 @@ More generally, a function $\alpha : X \-> \R$ constructed using a posterior dis
 Many different acquisition functions for the given setting have been proposed.
 
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [UCB Visual Plot]
 \vspace*{10ex}
@@ -677,7 +677,7 @@ The idea behind this method is to use the observed data to construct a set of er
 To take advantage of what is already known while allowing errors, the next arm is chosen to be the maxima of the error bars, which need not coincide with the maximum mean. 
 This process is repeated iteratively as additional data is obtained.
 }
-\end{figure*}
+\end{figure}
 
 We now proceed to explore a more general setting which will enable us to employ the ideas developed so far to develop efficient black-box optimization algorithms.
 This will enable us to use Bayesian methods to solve a broad class of decision problems of practical interest.
@@ -713,12 +713,12 @@ y_t(\omega) &= f(x_t) + \eps_t(\omega)
 Here, the data is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which we view as an element of an infinite-dimensional vector space, say, for instance, the space of continuous functions $C^0(X;\R)$.
 
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Bayesian Optimization Plot]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 
 It is now clear why we bothered with setting up a dense, abstract formalism for Bayesian learning in general measure spaces: this formalism is rich and powerful enough to enable us to properly define priors on spaces like this---we explore these in the sequel.
@@ -815,12 +815,12 @@ y = \sigma z + \mu
 \end{definition}
 
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Gaussian Density Plot]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 Note that we do \emph{not} require $\sigma \geq 0$: hence, every Gaussian random variable is determined uniquely in 
 distribution by the pair $(\mu,\sigma^2)$, which we call its \emph{mean} and \emph{variance}, respectively. 
@@ -880,12 +880,12 @@ A random variable $\v{y} : \Omega\->\R^d$ is called \emph{multivariate Gaussian}
 \end{definition}
 
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Multivariate Gaussian 3D Visual]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 Every multivariate Gaussian is determined by its \emph{mean vector} $\v\mu$ and positive semi-definite \emph{covariance matrix} $\m\Sigma = \m{L}\m{L}^T$, and, as before, is called \emph{centered} if $\v\mu = \v{0}$.
 We write $\v{y}\~[N](\v\mu,\m\Sigma)$ can obtain a centered multivariate Gaussian with a given distribution by calculating a \emph{matrix square root} of $\m\Sigma$, multiplying it with a standard Gaussian.
@@ -977,12 +977,12 @@ Let $X$ be a set.
 A random process $f: \Omega \x X \-> \R$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.,x_1),..,f(\.,x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
 \end{definition}
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Gaussian Process Plot]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 Immediately upon writing this definition, one is left to wonder: does it actually make sense?
 In particular, do Gaussian processes in the sense given here exist?
@@ -1189,18 +1189,18 @@ Then we have that
 By non-singularity, $(\v\theta,\v{y})$ admits a Lebesgue density, and the claim follows by direct calculation via applying Bayes' Rule for densities.
 \end{proof}
 
-\begin{figure*}[t]
-\begin{subfigure}{8cm}
+\begin{figure}
+\begin{subfigure}{0.49\textwidth}
 \input{figures/tex/mvn-dist-joint.tex}
-\caption{Calculate conditional distribution.}
+\caption{Calculate conditional}
 \end{subfigure}
-\begin{subfigure}{8cm}
+\begin{subfigure}{0.49\textwidth}
 \input{figures/tex/mvn-dist-cond.tex}
-\caption{Sample from conditional distribution.}
+\caption{Draw samples}
 \end{subfigure}
 \caption{Illustration of distributional conditioning of a bivariate Gaussian. Here, we form the joint distribution, calculate the conditional distribution, and then draw samples from it. Note that all steps except the very last one are \emph{distributional} in nature and do not involve the use of random variables, which only appear at the very end of the process.}
-\label{fig:dist-cond-mvn}
-\end{figure*}
+\label{fig:mvn-dist-cond}
+\end{figure}
 
 The non-singularity requirement is more-or-less necessary: otherwise, the marginal distribution of $\v{y}$ may admit too many null sets, rendering the desired conditional distribution non-unique, except in regions where one can apply a linear map to recover a suitable Lebesgue density and apply the above argument on the obtained subspace.
 
@@ -1294,6 +1294,20 @@ This gives us the candidate random variables to use for $\v{b}$ and $\v{c}$, if 
 Finally, recall that for multivariate Gaussians, we have $\E(\v\theta\given\v{y}) = \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}\v{y}$, where we note in our setting that the inverse always exists by non-singularity of $\v{y}$.
 With these preparations, we are ready to revisit \Cref{thm:mvn-pw}.
 
+\begin{figure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/mvn-pw-joint.tex}
+\caption{Sample jointly}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/mvn-pw-cond.tex}
+\caption{Transform into conditional}
+\end{subfigure}
+\caption{Illustration of pathwise conditioning of a bivariate Gaussian. Here, we first sample a random vector from the joint distribution, then transform it into a sample from the conditional distribution.
+These steps are called \emph{pathwise} because they are defined directly using random variables, rather than indirectly through probability distributions.}
+\label{fig:mvn-pw-cond}
+\end{figure}
+
 \thmmvnpw*
 
 \begin{proof}
@@ -1311,20 +1325,6 @@ Applying \Cref{lem:cond-repr} yields
 where we have substituted $\E(\v\theta\given\v{y}) = \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}} \v{y}$. 
 The claim follows.
 \end{proof}
-
-\begin{figure*}[t]
-\begin{subfigure}{8cm}
-\input{figures/tex/mvn-pw-joint.tex}
-\caption{Sample from joint distribution.}
-\end{subfigure}
-\begin{subfigure}{8cm}
-\input{figures/tex/mvn-pw-cond.tex}
-\caption{Transform into conditional distribution.}
-\end{subfigure}
-\caption{Illustration of pathwise conditioning of a bivariate Gaussian. Here, we first sample a random vector from the joint distribution, then transform it into a sample from the conditional distribution.
-These steps are called \emph{pathwise} because they are defined directly using random variables, rather than indirectly through probability distributions.}
-\label{fig:pw-cond-mvn}
-\end{figure*}
 
 From \Cref{thm:mvn-pw}, we obtain a second way of representing multivariate Gaussian conditionals.
 This entails two steps: (i) sample $\v\theta,\v{y}$ jointly, and (ii) transform $\v\theta,\v{y}$ into $\v\theta\given\v{y}=\v\gamma$ by employing the given expression.
@@ -1383,13 +1383,18 @@ f\given\v{y}\~[N](\m{K}_{(\.)x} \m{K}_{xx}^{-1}\v\gamma, \m{K}_{(\.,\.)} - \m{K}
 Apply \Cref{prop:mvn-cond} to a set of finite-dimensional marginals.
 \end{proof}
 
-\begin{figure*}[t]
-\vspace*{10ex}
-[GP Distributional Conditioning Plot]
-\vspace*{10ex}
-\caption{TODO.}
-\label{fig:dist-cond-gp}
-\end{figure*}
+\begin{figure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-dist-cond.tex}
+\caption{Calculate conditional}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-dist-samples.tex}
+\caption{Draw samples}
+\end{subfigure}
+\caption{Illustration of distributional conditioning of a Gaussian process. Here, we calculate the conditional distribution at a finite set of locations, and then draw samples from a multivariate Gaussian. This view of conditioning \emph{distributional}, since random variables appear only at the end of the process.}
+\label{fig:gp-dist-cond}
+\end{figure}
 
 This result gives us a way of carrying out Bayesian learning using Gaussian processes, given a finite set of data.
 Note the \emph{bottom-up} nature of this perspective: we describe the posterior Gaussian process---which is an actual \emph{process} defined everywhere---using its posterior finite-dimensional marginals.
@@ -1441,13 +1446,19 @@ where $\v\eps \~[N](\v{0},\m\Sigma)$.
 Apply \Cref{thm:mvn-pw} to a set of finite-dimensional marginals.
 \end{proof}
 
-\begin{figure*}[t]
-\vspace*{10ex}
-[GP Pathwise Conditioning Plot]
-\vspace*{10ex}
-\caption{TODO.}
-\label{fig:pw-cond-gp}
-\end{figure*}
+\begin{figure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-pw-prior.tex}
+\caption{Sample from prior}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-pw-cond.tex}
+\caption{Transform into conditional}
+\end{subfigure}
+\caption{Illustration of pathwise conditioning of a Gaussian process. Here, we first sample a random function from the prior, along with random noise variables at each of the data locations, then transform these into a sample from the posterior distribution.
+This view of conditioning is termed \emph{pathwise}, since it is defined directly at the level of random functions.}
+\label{fig:gp-pw-cond}
+\end{figure}
 
 Note that in this expression, the prior is evaluated jointly at all locations---the random variables $f(\omega,\.)$ and $\v{f}(\omega)$ are \emph{dependent}.
 Similarly, equality can clearly only hold in distribution because the random variable $(f\given\v{y})(\.,\v\gamma)$ is only defined in distribution to begin with.
@@ -1480,13 +1491,13 @@ Once the random weights $\v{w}$ are sampled, the posterior becomes a determinist
 Thus, under this approximations, our cubic costs with respect to the number of evaluation locations become \emph{linear}.
 We show in the sequel that for appropriate choices of $\tilde{f}$, such approximations can achieve excellent error control, ensuring they perform effectively in practice.
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [RFF GP Pathwise Conditioning Plot]
 \vspace*{10ex}
 \caption{TODO.}
 \label{fig:pw-cond-gp-rff}
-\end{figure*}
+\end{figure}
 
 We now examine a different aspect of the pathwise representation of posterior Gaussian processes: the role of the data.
 By re-expressing the matrix-vector product of the kernel matrix term $\m{K}_{(\.)\v{x}}$ as a sum, we obtain
@@ -1601,12 +1612,12 @@ Here, \emph{symmetry} of $\rho$ refers to invariance under reflection about the 
 This result is true more generally if $X$ is replaced by a locally compact Abelian group, for which the corresponding spectral measure will be supported on the Pontryagin dual group---we omit this level of generality because we will not need it.
 We do briefly note, however, that this means that spectral measures of kernels on compact spaces are \emph{discrete}---this behavior will reappear under a different guise in \Cref{ch:noneuclidean}.
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [RFF Prior Sampling Plot]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 From here, it is clear that the feature map we seek can be constructed by Monte Carlo sampling the integral representation given by Bochner's Theorem.
 To maintain order, we introduce a \emph{second} probability space $(\Xi,\c{G},\bb{Q})$ to distinguish the stochasticity associated with the random feature expansion from stochasticity associated with the Gaussian process.
@@ -1661,12 +1672,12 @@ TODO: cite.
 More generally, an analogous result, albeit with a weaker form of convergence, also holds for general \emph{square-integrable} stochastic processes which may be non-Gaussian.
 Since we will not consider such processes, we do not pursue this direction here.
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [KL Expansion Boundary Constrained Plot]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 For a general kernel, finding the eigenfunctions of the covariance operator may be difficult.
 For certain classes of Gaussian processes constructed to satisfy appropriate boundary constraints, however, the eigenfunctions of the covariance operator will coincide with the eigenfunctions of a boundary-constrained Laplacian.
@@ -1729,12 +1740,12 @@ What is particularly powerful about this technique is that it gives us a signifi
 A fruitful choice, provided the operator $\c{L}$ is a differential operator of sufficiently low order that this makes sense, is to take them to be compactly supported piecewise linear functions, since this will cause the matrices $\m{A}$ and $\m{M}$ to be sparse.
 This can enable one to use a much larger set of basis functions compared to alternative methods.
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Finite Element Plot]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 The main difficulty with finite element methods is that they typically demand more from practitioners compared to alternatives.
 In particular, one usually needs to understand the stochastic partial differential equations governing the Gaussian process of interest with a reasonable degree of detail to know how to choose basis functions well.
@@ -1803,12 +1814,12 @@ The claim follows.
 We have therefore proven that the \emph{inducing point} approximation of \textcite{opper09}, when re-interpreted using the variational inference framework of \textcite{titsias09}, coincides with the pathwise variational approximation constructed here.
 The same is true for other classes of inducing points, including the family where $\v{u}$ is randomized, as originally proposed by \textcite{titsias09}.
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Inducing Point Plot]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 Better yet, the constructions above are straightforward, principled, and mathematically sound.
 In particular, we do not rely on heuristic arguments involving \emph{evidence lower bounds} which effectively require us to \emph{posit} that optimizing certain quantities will result in improved posterior approximation.
@@ -1843,13 +1854,13 @@ Therefore, if change the model, then the posterior becomes a sum of the specifie
 This therefore means its representational capacity---in the sense of the dimension of the vector space spanned by all basis functions used---also does not grow as data size increases.
 This is to be contrasted with the approximate pathwise update, for which this dimensionality grows due to the presence of $n$ kernel functions $k(x_j,\.)$ in the sum.
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Variance Starvation Plot]
 \vspace*{10ex}
 \caption{TODO.}
 \label{fig:variance-starvation}
-\end{figure*}
+\end{figure}
 
 The result is that if the data size is large enough, performance degrades disastrously---this is seen in \Cref{fig:variance-starvation}
 This phenomenon has been called \emph{variance starvation} in the literature, due to its ability to produce error bars that are too narrow as a result of lack of representational capacity---we note this name is misleading because it is also capable of producing error bars which are far too large.
@@ -1987,7 +1998,7 @@ There are multiple potential definitions one can introduce, some of which will t
 In order to pursue these questions, we begin by introducing and reviewing the setting of differential geometry.
 
 \subsection{Review of differential geometry}
-We now briefly review the notions needed to define and understand manifolds.\footnote{The Russian word for \emph{manifold} is \emph{mnogoobrazie} (mnəg\rotatebox[origin=c]{180}{aa}br{\textquotesingle}az\textsuperscript{j}\textsc{i}jə). The word \emph{mnogo} means \emph{many}, and the word \emph{obraz} roughly means \emph{form}, \emph{view}, or \emph{image}. 
+We now briefly review the notions needed to define and understand manifolds.\footnote{The Russian word for \emph{manifold} is \emph{mnogoobrazie} (mn\rotatebox[origin=c]{180}{e}g\rotatebox[origin=c]{180}{aa}br{\textquotesingle}az\textsuperscript{j}\textsc{i}j\rotatebox[origin=c]{180}{e}). The word \emph{mnogo} means \emph{many}, and the word \emph{obraz} roughly means \emph{form}, \emph{view}, or \emph{image}. 
 Thus, a \emph{manifold} is a \emph{space with many views into it}, which I find to be well-chosen and evocative.}
 These are sets equipped with additional structure encoding their geometric shape.
 
@@ -2021,12 +2032,12 @@ Functions can multiply against tensor fields by scaling them pointwise.
 Vector fields can be inserted into covector fields by pairing vectors with covectors in each tangent space.
 This defines the \emph{interior product} $\mathbin{\lrcorner}$, and extends to tensor fields as long as the pairing being considered makes logical sense.
 We say that a totally antisymmetric $(0,k)$-tensor field is a $k$-form, and that a smooth function is a $0$-form.
-The \emphmarginnote{differential} map, denoted by $\d$, maps $k$-forms into $(k+1)$-forms.
+The \emphmarginnote{exterior derivative}, denoted by $\d$, maps $k$-forms into $(k+1)$-forms.
 Interior products preserve antisymmetry.
 
 \parmarginnote{Volume}
 Differential forms are often used to formalize and encode geometric structure in a way that is amenable to analysis.
-For example, a nowhere-vanishing $d$-form is called a \emph{volume form}---such a form induces a notion of integration, and in turn, by the Riesz--Markov--Kakutani representation theorem, a Radon measure on the manifold which we call the \emph{volume measure}.
+For example, a nowhere-vanishing $d$-form is called a \emph{volume form}---such a form induces a notion of integration, and in turn, by the Riesz--Markov--Kakutani representation theorem, a Radon measure on the manifold, which we call the \emph{volume measure}.
 On a general smooth manifold, the choice of a volume form is heavily non-unique.
 
 A \emphmarginnote{Riemannian manifold} is a quadruple $(X,\c{O}_X,\c{A}_X,g)$, usually written $(X,g)$, where $X$ is a smooth manifold and $g$ is the \emph{metric tensor}, which is a smooth non-degenerate symmetric positive definite $(0,2)$-tensor field.
@@ -2035,16 +2046,16 @@ In particular, we denote both the volume form and volume measure induced by the 
 
 \parmarginnote{Nash Embedding}
 Riemannian manifolds are, by definition, topological spaces with additional structure.
-By Nash's Embedding Theorem, every Riemannian manifold can be isometrically embedded within a $2d+1$-dimensional Euclidean space.
+By Nash's Embedding Theorem, every Riemannian manifold can be isometrically embedded within a $(2d+1)$-dimensional Euclidean space.
 This identifies Riemannian manifolds as geometric shapes located within Euclidean spaces.
 This perspective is often avoided for both technical and conceptual reasons: if the spacetime of the universe is a manifold, can an ambient space actually have physical meaning?
 
-\begin{figure*}[t]
+\begin{figure}
 \vspace*{10ex}
 [Common Manifolds 3D Visual]
 \vspace*{10ex}
 \caption{TODO.}
-\end{figure*}
+\end{figure}
 
 \subsection{The Laplace--Beltrami operator}
 
