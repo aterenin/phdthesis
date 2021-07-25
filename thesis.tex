@@ -1692,7 +1692,7 @@ f(\omega,\.) &= \sum_{i=1}^\infty w_i(\omega) \phi_i(\.)
 &
 w_i &\~[N](0,1)
 \]
-where convergence holds almost surely, and $\phi_i$ are an orthogonal basis on $L^2(X;\R)$ given by the eigenfunctions of the covariance operator.
+where convergence holds almost surely, and $\phi_i$ are an orthogonal basis on $L^2(X;\R)$ given by rescaled eigenfunctions of the covariance operator.
 Moreover, for every $\ell\in \N$, truncating this series yields an $L^1(\Omega;L^2(X;\R))$-optimal approximation among all $\ell$-term sums of $L^2(X;\R)$-orthogonal functions.
 \end{result}
 
@@ -1704,10 +1704,18 @@ More generally, an analogous result, albeit with a weaker form of convergence, a
 Since we will not consider such processes, we do not pursue this direction here.
 
 \begin{figure}
-\vspace*{10ex}
-[KL Expansion Boundary Constrained Plot]
-\vspace*{10ex}
-\caption{TODO.}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-kl-basis.tex}
+\caption{Karhunen--Loève basis}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-kl-samples.tex}
+\caption{Approximate prior samples}
+\end{subfigure}
+\caption{Illustration of a Karhunen-Loève expansion for a boundary-constrained squared exponential kernel in the sense of \textcite{solin19} on the unit interval.
+For this kernel, the basis functions coincide with the eigenfunctions of the Dirichlet Laplacian.
+We show the first four eigenfunctions, along with approximate prior samples using the first 87 terms in the expansion. This truncation was chosen because the remaining terms are zero in floating-point arithmetic, highlighting the approximation's efficiency.}
+\label{fig:gp-kl-prior}
 \end{figure}
 
 For a general kernel, finding the eigenfunctions of the covariance operator may be difficult.

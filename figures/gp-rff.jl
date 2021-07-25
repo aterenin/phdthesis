@@ -33,12 +33,12 @@ colors = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), weig
         axis_lines = "none",
         height = "5cm",
         width = "6.5cm",
-        xmin=-0.5, xmax=0.5, ymin=-1.25, ymax=1.25,
+        xmin=-0.5, xmax=0.5, ymin=-2.5, ymax=2.5,
     },
-    [raw"\node at (0,-1.25) {};"],
-    [raw"\node at (0,1.25) {};"],
-    [raw"\node at (1,1.25) {};"],
-    [raw"\node at (1,-1.25) {};"],
+    [raw"\node at (-0.5,-2.5) {};"],
+    [raw"\node at (-0.5,2.5) {};"],
+    [raw"\node at (0.5,2.5) {};"],
+    [raw"\node at (0.5,-2.5) {};"],
     [Plot(
         {
             no_markers,
@@ -60,10 +60,10 @@ colors = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), weig
         width = "6.5cm",
         xmin=-0.5, xmax=0.5, ymin=-1, ymax=1,
     },
-    [raw"\node at (0,-1) {};"],
-    [raw"\node at (0,1) {};"],
-    [raw"\node at (1,1) {};"],
-    [raw"\node at (1,-1) {};"],
+    [raw"\node at (-0.5,-1) {};"],
+    [raw"\node at (-0.5,1) {};"],
+    [raw"\node at (0.5,1) {};"],
+    [raw"\node at (0.5,-1) {};"],
     [Plot(
         {
             no_markers,
