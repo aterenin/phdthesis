@@ -45,7 +45,6 @@ colors = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), weig
             smooth,
             ultra_thick,
             color=colors[i],
-            opacity = 0.5
         },
         Coordinates(x, basis_rff[:,vcat(1:L,l+1:l+L)[i]])
     ) for i in 1:2*L]...,

@@ -170,7 +170,7 @@ Though this makes expressions slightly denser, it also avoids ambiguity and pres
 There are multiple senses in which we can say random variables are equal.
 We say that $y = y'$ \emph{surely} if they are equal as mathematical functions.
 This notion is essentially never used, because it is exceedingly strong.
-We say that $y = y'$ \emph{almost surely} if $\P(y \neq y') = 0$, in which case $y$ and $y'$ are equal as functions, except possibly on a set of measure zero.
+We say that $y = y'$ \emph{almost surely} if $\P(y \neq y') = 0$, in which case $y$ and $y'$ are equal as functions, except possibly on a set of probability zero.
 We say that $y = y'$ \emph{in distribution} if $y_* \P = y'_* \P$, meaning their distributions are equal.
 
 \parmarginnote{Existence of a random variable with given distribution}
@@ -1562,7 +1562,7 @@ A consequence of the above definition is that given a reproducing kernel Hilbert
 It is easy to see that $k_{\c{H}}$ is positive semi-definite.\footnote{TODO: check if it's PD or PSD.}
 It turns out a converse statement also holds.
 
-\begin{result}[Moore-Aronszajn Theorem]
+\begin{result}[Moore--Aronszajn Theorem]
 Let $k : X \x X \-> \R$ be a symmetric positive semi-definite kernel.
 Then there is a unique Hilbert space $\c{H}_k \subseteq \R^X$ for which $k$ is the reproducing kernel.
 \end{result}
@@ -1780,10 +1780,19 @@ A fruitful choice, provided the operator $\c{L}$ is a differential operator of s
 This can enable one to use a much larger set of basis functions compared to alternative methods.
 
 \begin{figure}
-\vspace*{10ex}
-[Finite Element Plot]
-\vspace*{10ex}
-\caption{TODO.}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-fe-basis.tex}
+\caption{Finite element basis}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-fe-samples.tex}
+\caption{Approximate prior samples}
+\end{subfigure}
+\caption{Illustration of finite element approximate prior samples for a Matérn kernel with smoothness $3/2$ and length scale $\kappa$.
+In one dimension, following \textcite{lindgren11}, the bilinear form for this kernel is $a(f,h) = \int_X \frac{3}{\kappa^2} f(x)h(x) + \grad f(x) \. \grad h(x) \d x$. 
+Since this bilinear form is of first order in both arguments, we employ a piecewise linear finite element basis consisting of compactly supported triangle-shaped functions, using it to represent both $f$ and $h$.
+This results in matrices $\m{A}$ and $\m{M}$ which are symmetric tridiagonal.}
+\label{fig:gp-fe-prior}
 \end{figure}
 
 The main difficulty with finite element methods is that they typically demand more from practitioners compared to alternatives.
@@ -1854,10 +1863,22 @@ We have therefore proven that the \emph{inducing point} approximation of \textci
 The same is true for other classes of inducing points, including the family where $\v{u}$ is randomized, as originally proposed by \textcite{titsias09}.
 
 \begin{figure}
-\vspace*{10ex}
-[Inducing Point Plot]
-\vspace*{10ex}
-\caption{TODO.}
+\begin{subfigure}{\textwidth}
+\input{figures/tex/gp-ip-cond.tex}
+\caption{Posterior samples}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-ip-basis.tex}
+\caption{Canonical basis functions}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-ip-samples.tex}
+\caption{Update terms}
+\end{subfigure}
+\caption{Pathwise inducing point approximation using the variation family of \textcite{titsias09}. Here, we use seven inducing points to represent the posterior distribution under thirty-one data points, shown using vertical dashes. 
+The inducing approximation employs the seven displayed canonical basis functions, rather than the thirty-one used in the true posterior, which possess significantly more overlap.
+The update term fades to zero as we move away from the data, highlighting the role of the prior in representing uncertainty.}
+\label{fig:gp-inducing}
 \end{figure}
 
 Better yet, the constructions above are straightforward, principled, and mathematically sound.

@@ -1,0 +1,91 @@
+\documentclass[tikz]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{fadings}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[axis lines={none}, height={5cm}, width={6.5cm}, xmin={0}, xmax={1}, ymin={-0.75}, ymax={1.75}]
+    \node at (0,-2.5) {};
+    \node at (0,2.5) {};
+    \node at (1,2.5) {};
+    \node at (1,-2.5) {};
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.5608;green,0.7333;blue,0.851}]
+        coordinates {
+            (0.0,1)
+            (0.1,0)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.4588;green,0.6353;blue,0.7529}]
+        coordinates {
+            (0.0,0)
+            (0.1,1)
+            (0.2,0)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.3137;green,0.4863;blue,0.6039}]
+        coordinates {
+            (0.1,0)
+            (0.2,1)
+            (0.3,0)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.1647;green,0.3333;blue,0.451}]
+        coordinates {
+            (0.2,0)
+            (0.3,1)
+            (0.4,0)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.4118;green,0.5843;blue,0.698}]
+        coordinates {
+            (0.3,0)
+            (0.4,1)
+            (0.5,0)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.2627;green,0.4353;blue,0.5529}]
+        coordinates {
+            (0.4,0)
+            (0.5,1)
+            (0.6,0)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.1137;green,0.2863;blue,0.4039}]
+        coordinates {
+            (0.5,0)
+            (0.6,1)
+            (0.7,0)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.3608;green,0.5333;blue,0.651}]
+        coordinates {
+            (0.6,0)
+            (0.7,1)
+            (0.8,0)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.2118;green,0.3843;blue,0.502}]
+        coordinates {
+            (0.7,0)
+            (0.8,1)
+            (0.9,0)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.0627;green,0.2353;blue,0.3529}]
+        coordinates {
+            (0.8,0)
+            (0.9,1)
+            (1.0,0)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.5137;green,0.6863;blue,0.8039}]
+        coordinates {
+            (0.9,0)
+            (1.0,1)
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
