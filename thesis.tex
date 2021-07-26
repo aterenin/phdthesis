@@ -1915,14 +1915,16 @@ This therefore means its representational capacity---in the sense of the dimensi
 This is to be contrasted with the approximate pathwise update, for which this dimensionality grows due to the presence of $n$ kernel functions $k(x_j,\.)$ in the sum.
 
 \begin{figure}
-\vspace*{10ex}
-[Variance Starvation Plot]
-\vspace*{10ex}
-\caption{TODO.}
+\input{figures/tex/gp-vs.tex}
+\caption{Example of the \emph{variance starvation} phenomenon in a random Fourier feature model (solid), compared to the true posterior (dashed).
+We see two problems: the mean spuriously oscillates and the error bars grow too slowly away from the data.
+This can cause global minima of the error bars---which, in Bayesian optimization, is the UCB acquisition---to appear in the completely wrong location.
+With the given hyperparameter choices, $n=10$ data points is enough to exhibit considerable approximation error.}
 \label{fig:variance-starvation}
 \end{figure}
 
-The result is that if the data size is large enough, performance degrades disastrously---this is seen in \Cref{fig:variance-starvation}
+The result is that if the true posterior takes on a difficult-to-represent shape---which will often be the case if $n$ is large enough, but can also occur even if it is not---then performance degrades disastrously.
+This can be seen in \Cref{fig:variance-starvation}.
 This phenomenon has been called \emph{variance starvation} in the literature, due to its ability to produce error bars that are too narrow as a result of lack of representational capacity---we note this name is misleading because it is also capable of producing error bars which are far too large.
 
 By not approximating terms that do not need to be approximated, pathwise approximations avoid limiting representational capacity and thus retain performance.

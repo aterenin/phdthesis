@@ -27,12 +27,12 @@ m_cond = K_xz * ((K_zz + s*I) \ u)
 K_cond = Symmetric(K_xx - K_xz * ((K_zz + s*I) \ K_xz'))
 
 Random.seed!(5)
-dist_joint = MvNormal(zeros(length(x)), K_xx)
-samples_joint = rand(dist_joint, l) 
+dist_prior = MvNormal(zeros(length(x)), K_xx)
+samples_prior = rand(dist_prior, l) 
 dist_noise = MvNormal(zeros(length(z)), s*I)
 samples_noise = rand(dist_noise, l)
 
-samples_cond = samples_joint + K_xz * ((K_zz + s*I) \ (u .- samples_joint[idx_z,:] .- samples_noise))
+samples_cond = samples_prior + K_xz * ((K_zz + s*I) \ (u .- samples_prior[idx_z,:] .- samples_noise))
  
 
 @pgf Axis(
@@ -88,8 +88,8 @@ samples_cond = samples_joint + K_xz * ((K_zz + s*I) \ (u .- samples_joint[idx_z,
             color=colorant"#1f77b4",
             opacity = 0.5
         },
-        Coordinates(x, samples_joint[:,i])
-    ) for i in 1:size(samples_joint, 2)]...,
+        Coordinates(x, samples_prior[:,i])
+    ) for i in 1:size(samples_prior, 2)]...,
     Plot(
         { 
             only_marks,
