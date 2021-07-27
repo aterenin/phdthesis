@@ -2,8 +2,9 @@
 .venv
 *-blx.bib
 *.aux
+*.auxlock
 *.bbl
-*.bcf*
+*.bcf
 *.blg
 *.fdb_latexmk
 *.fls

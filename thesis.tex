@@ -8,9 +8,13 @@
 \usepackage{standalone}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.17}
+\usepgfplotslibrary{external}
 \usepgfplotslibrary{groupplots}
 \usepgfplotslibrary{fillbetween}
 \usetikzlibrary{fadings}
+\tikzsetexternalprefix{figures/}
+
+\tikzexternalize
 
 \usepackage[commands,environments,enumerate,citations,notes,a4paper]{AVT}
 

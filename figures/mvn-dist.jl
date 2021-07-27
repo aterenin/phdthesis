@@ -4,8 +4,8 @@ using Distributions
 using Random
 using LinearAlgebra: cholesky
 
-preamble = [raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> TikzDocument(p, use_default_preamble=false, preamble = preamble))
+preamble = [raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
+save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
 
 if !isdefined(PGFPlotsX, :TikzFadingFromPicture) @eval(PGFPlotsX, PGFPlotsX.@define_axislike TikzFadingFromPicture "tikzfadingfrompicture"); using PGFPlotsX: TikzFadingFromPicture, TikzPicture end
 TikzPicture(a::Vector{PGFPlotsX.AxisLike}) = TikzPicture(a...)
