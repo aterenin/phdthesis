@@ -48,12 +48,12 @@ K_true = Symmetric(K_xx - K_xz * ((K_zz + s*I) \ K_xz'))
         axis_lines = "none",
         height = "5cm",
         width = "9.75cm",
-        xmin=min(x...), xmax=max(x...), ymin=-1, ymax=1,
+        xmin=-0.15, xmax=1.25, ymin=-1, ymax=1,
     },
-    ["\\node at ($(min(x...)),-1) {};"],
-    ["\\node at ($(min(x...)),1) {};"],
-    ["\\node at ($(max(x...)),1) {};"],
-    ["\\node at ($(max(x...)),-1) {};"],
+    [raw"\node at (-0.15,-1) {};"],
+    [raw"\node at (-0.15,1) {};"],
+    [raw"\node at (1.25,1) {};"],
+    [raw"\node at (1.25,-1) {};"],
     Plot(
         {
             no_markers,

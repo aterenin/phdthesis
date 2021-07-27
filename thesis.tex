@@ -1491,13 +1491,11 @@ Once the random weights $\v{w}$ are sampled, the posterior becomes a determinist
 Thus, under this approximations, our cubic costs with respect to the number of evaluation locations become \emph{linear}.
 We show in the sequel that for appropriate choices of $\tilde{f}$, such approximations can achieve excellent error control, ensuring they perform effectively in practice.
 
-\begin{figure}
-\vspace*{10ex}
-[RFF GP Pathwise Conditioning Plot]
-\vspace*{10ex}
-\caption{TODO.}
+\begin{figure*}
+\input{figures/tex/gp-cond.tex}
+\caption{Approximate pathwise conditioning, with bases on bottom row.}
 \label{fig:pw-cond-gp-rff}
-\end{figure}
+\end{figure*}
 
 We now examine a different aspect of the pathwise representation of posterior Gaussian processes: the role of the data.
 By re-expressing the matrix-vector product of the kernel matrix term $\m{K}_{(\.)\v{x}}$ as a sum, we obtain
@@ -1926,6 +1924,11 @@ With the given hyperparameter choices, $n=10$ data points is enough to exhibit c
 The result is that if the true posterior takes on a difficult-to-represent shape---which will often be the case if $n$ is large enough, but can also occur even if it is not---then performance degrades disastrously.
 This can be seen in \Cref{fig:variance-starvation}.
 This phenomenon has been called \emph{variance starvation} in the literature, due to its ability to produce error bars that are too narrow as a result of lack of representational capacity---we note this name is misleading because it is also capable of producing error bars which are far too large.
+
+A number of ways of alleviating Variance starvation have been proposed in the literature.
+One is to avoid using Fourier bases for representing the posterior, and rely instead on basis functions which are compactly supported or otherwise possess some sense of locality.
+This mirrors ideas in numerical analysis surrounding \emph{Runge's phenomenon}, where similar behavior occurs in polynomial interpolation.
+From this angle, the pathwise viewpoint offers a canonical way to select the functions used for representing the data.
 
 By not approximating terms that do not need to be approximated, pathwise approximations avoid limiting representational capacity and thus retain performance.
 Variance starvation has been a key performance issue in Bayesian optimization algorithms for some time---in our view, pathwise approximations of the kind described here largely resolve the issue.
