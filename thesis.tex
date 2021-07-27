@@ -979,10 +979,23 @@ A random process $f: \Omega \x X \-> \R$ is called a \emph{Gaussian process} if,
 \end{definition}
 
 \begin{figure}
-\vspace*{10ex}
-[Gaussian Process Plot]
-\vspace*{10ex}
-\caption{TODO.}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-sm-12.tex}
+\caption{Exponential}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-sm-32.tex}
+\caption{Matérn-3/2}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-sm-52.tex}
+\caption{Matérn-5/2}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-sm-inf.tex}
+\caption{Squared exponential}
+\end{subfigure}
+\caption{Random functions generated from Gaussian processes with four different covariance kernels, which differ in particular according to their regularity, ranging from nowhere-differentiable in the exponential case to infinitely-differentiable in the squared exponential case.}
 \end{figure}
 
 Immediately upon writing this definition, one is left to wonder: does it actually make sense?
