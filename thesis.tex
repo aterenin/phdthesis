@@ -544,9 +544,18 @@ Multi-armed bandits can be viewed as discrete-time Markov decision processes wit
 We thus begin by introducing formalism and notation better suited to the given setting, which can be viewed as special cases of the notions considered previously.
 
 \begin{figure}
-\vspace*{10ex}
-[Multi-armed Bandit Plot]
-\vspace*{10ex}
+\begin{subfigure}{0.3\textwidth}
+\input{figures/tex/mab-dist.tex}
+\caption{Rewards}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\input{figures/tex/mab-data.tex}
+\caption{Data}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\input{figures/tex/mab-regret.tex}
+\caption{Regret}
+\end{subfigure}
 \caption{Here, we illustrate a simple three-armed bandit. 
 Each of the three arms has its own reward distribution, shown on the left.
 These are unknown to the agent, which only sees the rewards obtained by actions it takes, shown in the center, and must the obtained information to decide which arm to pick.

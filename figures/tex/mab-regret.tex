@@ -1,0 +1,57 @@
+\documentclass[tikz]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{external}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{fadings}
+\begin{document}
+\tikzsetnextfilename{figures/tex/mab-regret.pdf}
+\begin{tikzpicture}
+\begin{axis}[axis lines={none}, height={5cm}, width={4cm}, xmin={-1.5}, xmax={1.5}, ymin={-3}, ymax={3}, clip mode={individual}]
+    \node at (-1.5,-3) {};
+    \node at (1.5,-3) {};
+    \node at (1.5,3) {};
+    \node at (-1.5,3) {};
+    \draw[black, very thick] ({axis cs:-1,0}|-{rel axis cs:0,1}) -- ({axis cs:-1,0}|-{rel axis cs:0,0});
+    \draw[black, very thick] ({axis cs:0,0}|-{rel axis cs:0,1}) -- ({axis cs:0,0}|-{rel axis cs:0,0});
+    \draw[black, very thick] ({axis cs:1,0}|-{rel axis cs:0,1}) -- ({axis cs:1,0}|-{rel axis cs:0,0});
+    \addplot[no markers, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, line width={4pt}]
+        coordinates {
+            (-1.0,0.75)
+            (-1.0,0.0)
+        }
+        ;
+    \addplot[no markers, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, line width={4pt}]
+        coordinates {
+            (0.0,0.75)
+            (0.0,0.75)
+        }
+        ;
+    \addplot[no markers, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, line width={4pt}]
+        coordinates {
+            (1.0,0.75)
+            (1.0,0.5)
+        }
+        ;
+    \addplot[only marks, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, mark={-}, mark size={4pt}, very thick]
+        coordinates {
+            (-1.0,0.75)
+            (-1.0,0.0)
+        }
+        ;
+    \addplot[only marks, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, mark={-}, mark size={4pt}, very thick]
+        coordinates {
+            (0.0,0.75)
+            (0.0,0.75)
+        }
+        ;
+    \addplot[only marks, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, mark={-}, mark size={4pt}, very thick]
+        coordinates {
+            (1.0,0.75)
+            (1.0,0.5)
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
