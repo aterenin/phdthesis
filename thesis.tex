@@ -600,11 +600,12 @@ Moreover, if $y(\.,x)$ is a Bernoulli random variable for all $x$, we say it is 
 For such bandits, regret can be decomposed on a per-arm basis in the manner given as follows.
 
 \begin{lemma}
+\label{lem:regret-arms}
 Regret satisfies 
 \[
-R(T) = \sum_{x=1}^K \Delta(x) n_x(T)
+R(T) = \sum_{x=1}^K \Delta(x) n_T(x)
 \]
-where $n_x(T) = \sum_{t=1}^T \1_{x_t = x}$ and $\Delta(x) = f(x^*) - f(x)$.
+where $n_T(x) = \sum_{t=1}^T \1_{x_t = x}$ and $\Delta(x) = f(x^*) - f(x)$.
 \end{lemma}
 
 \begin{proof}
@@ -638,15 +639,115 @@ x_{t+1} &= \argmax_{x\in X} \mu_t(x)
 &
 \mu_t(x) &= \frac{\sum_{t=1}^T \1_{y_t = 1} \1_{x_t = x}}{\sum_{t=1}^T \1_{x_t = x}}
 \]
-does not achieve optimal regret.
+achieves linear regret.
 \end{proposition}
 
 \begin{proof}
-TODO.
+For an event $S$, we may write
+\[
+\E(R(T)) &= \E(R(T) \given S) \P(S) + \E(R(T) \given S^c) \P(S^c) 
+\\
+&\geq \E(R(T) \given S) \P(S)
+.
+\]
+So, it suffices to exhibit a bandit along with an event $S$, which we call the \emph{stuck event}, which occurs with constant probability and induces linear regret.
+Let $S$ be the event that during the initial first arm pulls, the optimal arm yields zero reward, while some other arm yields a reward: clearly $\P(S) > 0$.
+On the other hand, $\E(R(T) \given S) = \c{O}(T)$, because the optimal arm conditional on $S$ has empirical mean zero, which is always smaller than the alternative, and will never be selected again.
+The claim follows.
 \end{proof}
 
 This algorithm therefore fails to resolve the explore-exploit tradeoff, and gets stuck with suboptimal choices.
+While the setup is obviously contrived---for instance, giving each arm some non-zero selection probability even if it previously gave bad rewards would seemingly break our lower bound---it also illustrates an important principle: the algorithm must explore.
+The question, then, is how should it explore?
 As an alternative, consider a conjugate model with a simple uncertainty-based decision rule for selecting arms.
+
+\begin{definition}[Hoeffding--UCB algorithm]
+Define the \emph{Hoeffding upper confidence bound} algorithm which tries each arm once, and then, for a total of $T$ rounds, selects actions by
+\[
+x_{t+1} &= \argmax_{x\in X} f^+_t(x) 
+&
+f^+_t(x) &= \mu_t(x) + c_t\sigma_t(x)
+\]
+where $\mu_t$ are the empirical means, $\sigma_t(x) = \sqrt{\frac{1}{n_t(x)}}$, and $c_t = \sqrt{2\ln(T)}$.
+\end{definition}
+
+We now consider this algorithm's regret.
+It turns out this simple modification, consisting of adding a set of error bars with a threshold growing in time and decreasing with data, is enough to result in different regret behavior.
+
+\begin{theorem}
+Hoeffding--UCB achieves an expected regret of
+\[
+\E(R(T)) \leq \tl{\c{O}}\del{\sqrt{KT}}
+\]
+uniformly for all $f$, where $\tl{\c{O}}$ denotes asymptotics up to logarithmic factors.
+\end{theorem}
+
+\begin{proof}
+First, let $B$ denote the event that the \emph{bound holds}, namely $f^-_t(x) \leq f(x) \leq f^+_t(x)$ for all $x\in X$ and all $t \leq T$, where $f^-_t(x) = \mu_t(x) - c_t \sigma_t(x)$. 
+Under this event, the upper confidence bound is a true bound on the rewards.
+Then 
+\[
+\E(R(T)) &= \E(R(T) \given B) \P(B) + \E(R(T) \given B^c) \P(B^c)
+\\
+&\leq \E(R(T) \given B) + T \P(B^c)
+\]
+since $\P(B) \leq 1$, and a regret of $T$ is the maximum possible value as there are $T$ rounds and rewards are in $[0,1]$.
+Our strategy will be to bound $\E(R(T) \given B)$, while choosing the scaling factor $c_t$ in the width of the upper confidence bound to ensure that $\P(B^c)$ decays fast enough that the latter term is negligible.
+We begin with the latter.
+By the union bound, we have
+\[
+\P(B^c) &\leq \sum_{t=1}^T \sum_{x\in X} \P(p_x \leq f^-_t(x)) + \P(p_x \geq f^+_t(x))
+\\
+&= 2KT \max_{\substack{x\in X\\1 \leq t \leq T}} \P(p_x \geq f^+_t(x))
+\]
+where $p_x$ is the Bernoulli parameter for arm $x$, and we have used symmetry of our error bars, which we recall are defined using the standard deviation, to combine terms.
+For each $n > 0$, the probability we want to bound is
+\[
+\P\del{p_x \geq \frac{y}{n} + \sqrt{\frac{2\ln(T)}{n}}} \leq \exp\del{-2 \del{\sqrt{\frac{2\ln(T)}{n}}}^2 n} = \frac{1}{T^4}
+\]
+using Hoeffding's inequality.
+Since holds uniformly in $n$, it follows that
+\[
+\P(p_x \geq f^+_t(x)) = \P\del{p_x \geq \frac{y}{n_t(x)} + \sqrt{\frac{2\ln(T)}{n_t(x)}}} \leq \frac{1}{T^4}
+\]
+We therefore conclude that 
+\[
+T\P(B^c) \leq \frac{2KT}{T^4} = \c{O}(1)
+\]
+which shows that the upper confidence bounds are exceeded sufficiently rarely that this possibility incurs no regret in the asymptotic limit, and completes this part of the argument.
+We now proceed to analyze the $\E(R(T) \given B)$ term---assume henceforth that $B$ holds.
+We have that 
+\[
+\Delta(x_t) &= f(x^*) - f(x_t)
+\\
+&\leq f^+_t(x^*) - f^-_t(x_t)
+\\
+&\leq f^+_t(x_t) - f^-_t(x_t)
+\\
+&= 2\sigma_t(x_t)
+\]
+using the definition of the event $B$.
+Now, if we consider the rescaled error bar width $c_t\sigma_t(x_t)$ of the arm chosen at time $t$, this is
+\[
+\Delta(x_t) \leq \c{O}(c_t\sigma_t(x_t)) = \tl{\c{O}}\del{\frac{1}{\sqrt{n_t}}}
+.
+\]
+By \Cref{lem:regret-arms}---which we note still holds conditional on $B$ via the exact same argument---we have
+\[
+\E(R(T)\given B) &= \sum_{x=1}^K \Delta(x) n_T(x) 
+\\
+&\leq \sum_{x=1}^K \tl{\c{O}}\del{\sqrt{n_T(x)}}
+\\
+&\leq \tl{\c{O}}\del{\sqrt{K} \sqrt{\sum_{x\in X} n_T(X)}}
+\\
+&= \tl{\c{O}}\del{\sqrt{KT}}
+\]
+which completes the argument.
+\end{proof}
+
+This shows that the proposed algorithm, which uncertainty built via the posterior distribution, effectively balances exploration and exploitation in this setting.
+The above behavior is not unique to the given form of the upper confidence bound, nor to the upper confidence bound rule itself.
+For example, we can consider a variation of the above algorithm, where the width of the error bars is constructed via a Bayesian model.
 
 \begin{definition}[Beta--Bernoulli--UCB algorithm]
 Define a Bayesian model via the likelihood $\gamma(x) \~[Ber](\mu(x))$ and prior $\mu(x) \~[Beta](a,b)$.
@@ -654,36 +755,21 @@ Define the \emph{beta--Bernoulli upper confidence bound} algorithm which selects
 \[
 x_{t+1} &= \argmax_{x\in X} f^+_t(x) 
 &
-f^+_t(x) &= \mu_t(x) + \sigma_t(x)
+f^+_t(x) &= \mu_t(x) + c_t \sigma_t(x)
 \]
 where $(\mu_t, \sigma_t)$ are the mean and standard deviation of the posterior distribution $\mu\given\gamma(x_1) = y_1, .., \gamma(x_t) = y_t$.
 \end{definition}
 
-We now consider this algorithm's regret.
-It turns out this simple modification is enough to result in different regret behavior.
+One can show this algorithm achieves the same regret as Hoeffding--UCB: the proof is similar, but instead uses the empirical Bernstein inequality, and is significantly more messy owing to the complicated form of the posterior mean and standard deviation.
+Even more generally, one can select arms by optimizing a function $\alpha : X \-> \R$, called an \emph{acquition function}, built from a posterior distribution, confidence set, or other appropriate construction.
+Many different acquisition functions have been proposed.
 
-\begin{theorem}
-Beta--Bernoulli--UCB achieves an expected regret of
-\[
-\E(R(T)) \leq \tl{\c{O}}(\sqrt{KT})
-\]
-uniformly for all $f$ where $\tl{\c{O}}$ denotes asymptotics up to logarithmic factors.
-\end{theorem}
-
-\begin{proof}
-TODO.
-\end{proof}
-
-This means that our proposed algorithm, which uncertainty built via the posterior distribution, suffices to balance exploration and exploitation in this setting.
-This behavior is not unique to the given model, nor to the upper confidence bound rule.
-More generally, a function $\alpha : X \-> \R$ constructed using a posterior distribution is called an \emph{acquition function}.
-Many different acquisition functions for the given setting have been proposed.
-
+We have made no attempt to optimize the bound, and significant improvements are possible, particularly when considering variations of the UCB algorithm.
+Of these, algorithms built using \emph{confidence sets} rather than posterior distributions, such as the closely-related Hoeffding--UCB algorithm, are particularly important in the $K$-armed bandit setting.
+We focus on the Bayesian view because it generalizes well to more complex settings.
 
 \begin{figure}
-\vspace*{10ex}
-[UCB Visual Plot]
-\vspace*{10ex}
+TODO.
 \caption{Here, we show an illustrated of the UCB algorithm. 
 The idea behind this method is to use the observed data to construct a set of error bars, shown on the left, encoding what has been learned about the mean rewards for each arm using the data observed so far.
 To take advantage of what is already known while allowing errors, the next arm is chosen to be the maxima of the error bars, which need not coincide with the maximum mean. 
@@ -1415,7 +1501,7 @@ Apply \Cref{prop:mvn-cond} to a set of finite-dimensional marginals.
 \input{figures/tex/gp-dist-samples.tex}
 \caption{Draw samples}
 \end{subfigure}
-\caption{Illustration of distributional conditioning of a Gaussian process. Here, we calculate the conditional distribution at a finite set of locations, and then draw samples from a multivariate Gaussian. This view of conditioning \emph{distributional}, since random variables appear only at the end of the process.}
+\caption{Illustration of distributional conditioning of a Gaussian process. Here, we calculate the conditional distribution at a finite set of locations, and then draw samples from a multivariate Gaussian. This view of conditioning is called \emph{distributional}, since random variables appear only at the end of the process.}
 \label{fig:gp-dist-cond}
 \end{figure}
 
