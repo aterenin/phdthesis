@@ -822,10 +822,26 @@ Here, the data is $Y = \R^n$, and our quantity of interest is the actual \emph{f
 
 
 \begin{figure}
-\vspace*{10ex}
-[Bayesian Optimization Plot]
-\vspace*{10ex}
-\caption{TODO.}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-ts-1.tex}
+\caption{$t = 1$}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-ts-2.tex}
+\caption{$t = 2$}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-ts-3.tex}
+\caption{$t = 3$}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-ts-4.tex}
+\caption{$t = 4$}
+\end{subfigure}
+\caption{Bayesian optimization using Thompson sampling. 
+Here, we sample a random function from the posterior distribution over possible functions, and choose the next evaluation point to be the minima of the sampled random function. 
+As additional data is obtained, the posterior distribution concentrates around the true function. 
+Unlike the upper confidence bound acquisition function considered previously, Thompson sampling makes use of a full probability distribution, rather than just a set of error bars.}
 \end{figure}
 
 
