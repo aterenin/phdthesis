@@ -757,7 +757,7 @@ x_{t+1} &= \argmax_{x\in X} f^+_t(x)
 &
 f^+_t(x) &= \mu_t(x) + c_t \sigma_t(x)
 \]
-where $(\mu_t, \sigma_t)$ are the mean and standard deviation of the posterior distribution $\mu\given\gamma(x_1) = y_1, .., \gamma(x_t) = y_t$.
+where $(\mu_t, \sigma_t)$ are the mean and standard deviation of the posterior distribution $\mu\given\gamma(x_1) = y_1, .., \gamma(x_t) = y_t$. and $c_t$ is defined as previously.
 \end{definition}
 
 One can show this algorithm achieves the same regret as Hoeffding--UCB: the proof is similar, but instead uses the empirical Bernstein inequality, and is significantly more messy owing to the complicated form of the posterior mean and standard deviation.
@@ -769,12 +769,22 @@ Of these, algorithms built using \emph{confidence sets} rather than posterior di
 We focus on the Bayesian view because it generalizes well to more complex settings.
 
 \begin{figure}
-TODO.
-\caption{Here, we show an illustrated of the UCB algorithm. 
-The idea behind this method is to use the observed data to construct a set of error bars, shown on the left, encoding what has been learned about the mean rewards for each arm using the data observed so far.
-To take advantage of what is already known while allowing errors, the next arm is chosen to be the maxima of the error bars, which need not coincide with the maximum mean. 
-This process is repeated iteratively as additional data is obtained.
-}
+\begin{subfigure}{0.3\textwidth}
+\input{figures/tex/mab-samples.tex}
+\caption{Data}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\input{figures/tex/mab-post.tex}
+\caption{Posterior}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\input{figures/tex/mab-ucb.tex}
+\caption{UCB}
+\end{subfigure}
+\caption{The idea behind the UCB algorithm is to use the observed data to construct a set of error bars that reflect what has been learned about the mean rewards.
+Here, we construct these using the posterior distribution under a Gaussian prior and likelihood.
+The next arm is chosen as the maximum of the quantile-based error bars.
+This process is repeated iteratively as additional data is obtained, with the quantile becoming more strict over time, ensuring the bounds hold increasingly often.}
 \end{figure}
 
 We now proceed to explore a more general setting which will enable us to employ the ideas developed so far to develop efficient black-box optimization algorithms.

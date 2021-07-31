@@ -1,0 +1,39 @@
+\documentclass[tikz]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{external}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{fadings}
+\begin{document}
+\tikzsetnextfilename{figures/tex/mab-ucb.pdf}
+\begin{tikzpicture}
+\begin{axis}[axis lines={none}, height={5cm}, width={4cm}, xmin={-1.5}, xmax={1.5}, ymin={-3}, ymax={3}, clip mode={individual}]
+    \node at (-1.5,-3) {};
+    \node at (1.5,-3) {};
+    \node at (1.5,3) {};
+    \node at (-1.5,3) {};
+    \draw[black, very thick] ({axis cs:-1,0}|-{rel axis cs:0,1}) -- ({axis cs:-1,0}|-{rel axis cs:0,0});
+    \draw[black, very thick] ({axis cs:0,0}|-{rel axis cs:0,1}) -- ({axis cs:0,0}|-{rel axis cs:0,0});
+    \draw[black, very thick] ({axis cs:1,0}|-{rel axis cs:0,1}) -- ({axis cs:1,0}|-{rel axis cs:0,0});
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}]
+        coordinates {
+            (-1.3333333333333333,-0.11420240645610524)
+            (-0.6666666666666667,-0.11420240645610524)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}]
+        coordinates {
+            (-0.3333333333333333,1.18468200645656)
+            (0.3333333333333333,1.18468200645656)
+        }
+        ;
+    \addplot[no markers, ultra thick, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}]
+        coordinates {
+            (0.6666666666666667,0.8230914654039072)
+            (1.3333333333333333,0.8230914654039072)
+        }
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
