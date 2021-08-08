@@ -123,6 +123,20 @@ Following these, \Cref{ch:conclusion} concludes.
 To pursue these goals, it is critically important that all of the concepts described in the preceding paragraphs be made into rigorous mathematics, so that the ideas described in the sequel ultimately reduce to definitions and implications, and not metaphor or opinion.
 Together, we therefore begin by defining the key mathematical notions needed.
 
+\subsection*{Contributions}
+
+The work presented in this thesis is published as a series of papers.
+My contributions to the individual works are primarily on the theoretical and methodological side, and are described below.
+
+In \Cref{ch:pathwise}, we present pathwise conditioning techniques: this work is published as \textcite{wilson20,wilson21}.
+My contributions include (i) development of the random-function-based formalism for describing pathwise conditioning of Gaussian processes, (ii) error analysis of basis-function-approximation-based pathwise sampling, (iii) re-interpretation of inducing point methods, and (iv) review of prior sampling methods.
+All of these were developed jointly with the other authors. 
+
+In \Cref{ch:noneuclidean}, we present Matérn Gaussian processes in non-Euclidean settings: this work is published in \textcite{borovitskiy20,borovitskiy21} and under review in \textcite{hutchinson21}.
+My contributions include (i) developing the stochastic-partial-differential-equation-based formalism for defining scalar-valued Gaussian processes on Riemannian manifolds and graphs, (ii) lifting the former constructions to the vector field setting via a differential-geometric formalism, and (iii) defining computational techniques for working with these models in practice.
+These ideas were developed jointly with the other authors.
+
+
 \section{Bayesian learning}
 
 The first concept we develop in depth along our path towards a mathematically precise understanding of statistical decision-making will be \emph{Bayesian learning}---a mathematical formalism for reasoning about unknown quantities of interest on the basis of data.
@@ -1158,7 +1172,7 @@ is positive semi-definite.
 
 The \emph{covariance kernel} of a Gaussian process then is defined by
 \[
-k(x,x') = \Cov(f\.,x),f(\.,x'))    
+k(x,x') = \Cov(f(\.,x),f(\.,x'))    
 .
 \]
 It is then clear that the pair $(\mu,k)$ uniquely define a Gaussian process, and so we write $f\~[GP](\mu,k)$.
@@ -1194,14 +1208,166 @@ Defining positive semi-definite kernels there turns out to be non-trivial, and t
 
 We therefore proceed to adopt a function-analytic perspective which is more technical, but significantly more powerful, and will allow us to recover the previous set of tools in a much more pure and abstract form.
 
-\subsection{Gaussian processes in general vector spaces}
+\subsection{Gaussians in the sense of duality}
 \label{sec:abstract-gp}
 
-Duality
+In the preceding section, we established a notion of a \emph{Gaussian process}, generalizing the notion of Gaussianity to random functions.
+In developing this viewpoint, some of the appeal of Gaussianity was lost: in particular, unlike in the finite-dimensional setting, no simple covariance kernel transformation rule was available.
+Here, we consider an alternative function-analytic view which avoids these difficulties at cost of a higher degree of abstraction.
 
-Covariance form
 
-Covariance operator
+\begin{definition}[Gaussian in the sense of duality]
+Let $V$ and $W$ be a pair of measurable real vector spaces equipped with a jointly measurable non-degenerate bilinear form $\dualprod{\.}{\.} : V \x W \-> \R$.
+We say that a random variable $f : \Omega \-> V$ is a \emph{Gaussian in the sense of duality} if, for any $\phi \in W$, the scalar-valued random variable $\dualprod{\phi}{f}$ is Gaussian.
+\end{definition}
+
+This is an exceedingly broad definition, which is more useful as an organizing framework connecting different concepts than as a technical tool in its own right.
+At first glance, it is not clear what, if anything, this notion has to do with the Gaussian processes we have considered previously.
+To better understand this, an illustrative example is in order.
+
+Let $f \~[GP](\mu,k)$ be a Gaussian process defined on $[0,1]$ whose sample paths are almost surely continuous, and note by compactness that they are automatically bounded.
+Our random variable $f : \Omega \-> \R^{[0,1]}$ can therefore by assumption be viewed as a random variable $f : \Omega \-> C^0([0,1];\R)$. 
+We endow the latter space with the supremum norm, making it into a Banach space.
+If we take another function $\phi \in C^\infty([0,1],\R)$, called the \emph{test function}, we cab define the pairing
+\[
+\dualprod{\phi}{f} = \int_0^1 \phi(x)f(x) \d x
+\]
+which by boundedness is almost surely finite.
+Now, note that since sums of Gaussians are Gaussian, Riemann sums of Gaussian processes are Gaussian.
+Since limits of Gaussians are Gaussian, the quantity $\dualprod{\phi}{f}$ will be a \emph{Gaussian} scalar.
+Therefore, a Gaussian in the sense of duality can loosely be thought of as a Gaussian process whose integral against arbitrary test functions is always Gaussian---an adaptation of the dot product notion encountered previously to the infinite-dimensional setting.
+
+Of course, the above only describes how one can intuitively think about Gaussians in the sense of duality.
+For a general Gaussians, there is no defined notion of an \emph{integral}---only of a dual pairing.
+Such a Gaussian also need not be a random real-valued function: it's possible to consider random distributions and other objects generalizing the usual notion of a function.
+It is therefore clear this view is very general.
+
+This generality comes with a price: the resulting random vectors become more abstract, and it is much more difficult to understand whether or not they actually exist or say anything useful about them.
+This difficulty is handled by specializing to less-general settings: for example, \textcite{bogachev98} studies the setting where $V$ is a locally convex topological vector space and $V^*$ is its topological dual, and \textcite{hairer09} studies cases where $V$ is a Banach or Hilbert space.
+In these cases, a number of results are available.
+
+Provided we are considering a Gaussian $f$ which does exist, what objects play the role of a mean and covariance, and uniquely characterize $f$?
+Since the canonical pairing $\dualprod{\.}{\.}$ is linear and non-degenerate, we know that $f = g$ holds if and only if $\dualprod{\phi}{f} = \dualprod{\phi}{g}$ for all $\phi\in W$, where both equalities hold in distribution.
+It is therefore clear that the \emph{mean} of a Gaussian process is simply a vector $\mu\in V$, since such a vector uniquely determines all expectations $\E\dualprod{\phi}{f}$.
+The covariance is only slightly more subtle.
+
+\begin{definition}[Covariance form]
+We say that a symmetric positive semi-definite bilinear form $k : W \x W \-> \R$ is a \emph{covariance form}.
+\end{definition}
+
+The covariance form of a Gaussian in the sense of duality is defined by 
+\[
+k(\phi,\psi) = \Cov(\dualprod{\phi}{f},\dualprod{\psi}{f})
+.  
+\]
+It is clear that two Gaussian processes $f$ and $g$ are equal in distribution if and only if they have the same mean and covariance form.
+This can be seen by noting these requirements force $\dualprod{\phi}{f} = \dualprod{\phi}{g}$ to hold for all $\phi\in W$.
+
+We now ask: what relationship does the covariance form have with the covariance kernel defined previously?
+Consider again our Gaussian process $f$ defined on the space of continuous functions. 
+For any pair of test functions $\phi,\psi \in C^\infty([0,1];\R)$, the symmetric positive semi-definite bilinear form
+\[
+(\phi,\psi) \|> \int_X\int_X \phi(x)k(x,x')\psi(x') \d x \d x'
+\]
+is the covariance form of $f$.
+
+So far, this perspective mirrors the preceding ones, albeit with a more abstract presentation.
+We have only introduced definitions.
+These definitions, however, suffice to recover a notion of affine maps.
+
+\begin{proposition}[Affine maps between Gaussian processes]
+Let $f \~[GP](\mu, k)$. For $\c{A} : V \-> V'$ and $b\in V'$ we have 
+\[
+\c{A} f + b \~[GP](\c{A}f + b, k(\c{A}^*(\.),\c{A}^*(\.)))
+\]
+where $V'$ and $W'$ are a dual pair, and $\c{A}^* : W' \-> W$ is the adjoint operator defined by $\dualprod{\c{A}^*\phi}{v} = \dualprod{\phi}{\c{A}v}$.
+\end{proposition}
+
+\begin{proof}
+Immediate by definition.
+\end{proof}
+
+Suppose now that $V$ is a locally convex topological vector space, and $W = V^*$ its topological dual.
+Since the covariance form is a map $k : V^* \x V^* \-> \R$, it gives rise to an operator $\c{K} : V^* \-> V^{**}$, called the \emphmarginnote{covariance operator}, which in the case that $V$ is reflexive becomes an operator $\c{K} : V^* \-> V$.
+For our running example, this operator is given by 
+\[
+\phi \|> \int_X \phi(x)k(x,\.) \d x
+.
+\]
+One can easily see that the transformation rule for covariance operators under affine maps is given by
+\[
+\c{K} \|> \c{A} \c{K}\c{A}^*
+.    
+\]
+If it is often unclear whether or not a Gaussian process with a given covariance form exists, it is generally even less clear whether or not a Gaussian process with a given covariance operator exists.
+Nonetheless, this notion is important, because in certain cases these operators can be studied using spectral theory. 
+We now move to the final concept we consider at this level of generality: that of a \emph{standard Gaussian}.
+
+\begin{definition}[Gaussian white noise]
+Let $W$ be a Hilbert space.
+We say that $\c{W} : \Omega \-> V$ is a Gaussian white noise process if its covariance form is given by the inner product.
+\end{definition}
+
+With these definitions in hand, we have recovered the two technical notions lost when transitioning from multivariate Gaussians to Gaussian processes in the sense of random functions.
+The introduced machinery gives a way of constructing Gaussian processes that is does not rely on defining a kernel: (a) construct a Gaussian white noise process, and (b) define the Gaussian process of interest as an affine map of white noise.
+
+We employ a variation of this strategy in \Cref{ch:noneuclidean} to construct Gaussian processes on Riemannian manifolds, where defining a kernel directly leads to difficulties.
+Loosely speaking, we do so by taking $V$ to be a space of distributions, and $\c{A}$ to be the inverse of a differential operator.
+This is chosen to ensure that $\c{A}$ smooths its inputs, so that its output is regular enough to be understood as a random function.
+
+This line of thought leads one to the theory of stochastic partial differential equations driven by Gaussian white noise.
+The main issue swept under the rug is that there is a convenient way to sidestep much of the analysis needed to carry out the above calculations, using the theory of reproducing kernel Hilbert spaces.
+Roughly, this amounts to working with certain Lebesgue and Sobolev spaces, rather than distributions, which nonetheless sufficiently constrain behavior to uniquely determine the kernel of interest.
+
+We also use the theory of Gaussians in the sense of duality for a second purpose: to construct a \emph{coordinate-free} notion of Gaussianity as a suitable building block for constructing Gaussian vector fields on Riemannian manifolds.
+The issue here is that the Gaussian process \emph{cannot} be understood as a real-valued random function due to topological obstructions---it is instead a random section, which we define in \Cref{ch:noneuclidean}.
+Finite-dimensional Gaussians in the sense of duality end up being the right tool for this setting.
+
+For this, we prove a general existence theorem on Gaussians in the sense of duality in finite-dimensional settings.
+Aside from giving an intrinsic reinterpretation of the multivariate Gaussians described previously, this ensures our technical tool is suited for its purpose in the coordinate-free setting.
+
+\begin{proposition}
+Let $V$ be a finite-dimensional real topological vector space, and let $W = V^*$ be its topological dual.
+Then for any vector $\mu \in V$ and covariance form $k : V^* \x V^* \-> \R$, there exists a unique-in-distribution random vector $y \~[N](\mu, k)$.
+\end{proposition}
+
+\begin{proof}
+To prove this, choose a basis $e_i$ on $V$, and let $e^i$ be the dual basis. 
+Let $V \-> \R^d$ be the continuous linear isomorphism induced by the basis, and define $y = \c{E}^{-1} \v{y}$ with $\v{y}\~[N](\v\mu,\m{K})$ defined by 
+\[
+\v\mu &= \begin{bmatrix}
+\dualprod[0]{e^1}{\mu}
+\\
+\vdots
+\\
+\dualprod[0]{e^d}{\mu}
+\end{bmatrix}
+&
+\m{K} &= \begin{bmatrix}
+k(e^1, e^1) & \hdots & k(e^1, e^d)
+\\
+\vdots & \ddots & \vdots
+\\
+k(e^d, e^1) & \hdots & k(e^d, e^d)
+\end{bmatrix}  
+.  
+\]
+It is clear by direct calculation using Gaussians on $\R^d$ that the resulting vector is Gaussian with the right mean and covariance form.
+The claim follows by noting that assumed non-degeneracy of the dual pairing forces the distribution of every Gaussian in the sense of duality to be uniquely determined by its mean and covariance form.
+\end{proof}
+
+Here, we see the key difference between the coordinate-free view and the matrix-vector view considered previously: the Gaussian random vector can be viewed as a real-valued multivariate Gaussian in any basis, but itself is defined independently of this choice directly on $V$.
+The value of considering this distinction in the first place will become clear in \Cref{ch:noneuclidean}.
+Note also that here, finite-dimensionality suffices to ensure existence: the story in infinite-dimensional settings is completely different and requires case-by-case analysis.
+
+To conclude, we reflect on the introduced ideas. 
+We began by studying Gaussian random variables and random vectors, before generalizing these to Gaussian random functions, which offered a concrete framework where certain aspects of Gaussianity were seemingly lost.
+Adopting a function-analytic view sufficed to restore these aspects, at cost of increased abstraction.
+This view also provides a coordinate-free way to reinterpret the preceding multivariate constructions.
+
+While much of the technical power of this framework is extraneous for our purposes, studying it nonetheless helps provide a unified conceptual framework from which to interpret our developments.
+By considering these notions, it becomes much clearer how one should understand the constructions encountered later, which might otherwise appear as if they arise out of thin air.
+This completes our study of Gaussianity for its own sake, independent of Bayesian learning and other machine-learning-related considerations.
 
 \section{Discussion}
 
@@ -1237,24 +1403,6 @@ Thus, in settings where probabilistic methods can be used, they absolutely shoul
 As a step towards building decision systems that progress towards general artificial intelligence, it seems fruitful to expand probabilistic approaches built via Bayesian learning to more general settings.
 Improved understanding of these phenomena may yield lessons of broad interest to understanding of decision.
 Contributions presented here include development of \emph{pathwise conditioning} methods for making Gaussian process models easier to work with, and a variety of \emph{non-Euclidean Gaussian processes}, which are described next.
-
-\section{Contributions}
-
-The work presented in this thesis is published as part of a series of papers.
-For both sets of papers, my contributions to the individual works are primarily on the theoretical and methodological side, and are described below.
-
-In \Cref{ch:pathwise}, we present pathwise conditioning techniques: this work is published as \textcite{wilson20,wilson21}, with equal contribution shared among the first four authors.
-In this work, my contributions include development of the random-function-based formalism for describing pathwise conditioning of Gaussian processes, error analysis of basis-function-approximation-based pathwise sampling, re-interpretation of inducing point methods, and review of prior sampling methods.
-All of these were developed jointly with the other authors. 
-\Cref{ch:pathwise} also contributes additional Bayesian optimization experiments not included in the published work, performed solely by me.
-
-In \Cref{ch:noneuclidean}, we present Matérn Gaussian processes in a number of non-Euclidean settings, as published in \textcite{borovitskiy20,borovitskiy21} and under review in \textcite{hutchinson21}.
-Here, my contributions include development of the stochastic-partial-differential-equation-based formalism for defining scalar-valued Gaussian processes on Riemannian manifolds and graphs, as well as computational techniques for working with them in practice.
-My contributions also include the differential-geometric formalism on how to rigorously define such processes in the Riemannian vector field setting.
-Both of these contributions were developed jointly with the other authors.
-
-
-
 
 
 \chapter{Pathwise Conditioning}
