@@ -154,7 +154,7 @@ To ease presentation, we state the definitions together with useful ways of thin
 
 
 We say that \emphmarginnote{measurable space} is a pair $(Y,\c{Y})$ consisting of a set $Y$ and a $\sigma$-algebra $\c{Y}$ over $Y$.
-A \emph{$\sigma$-algebra} is a set of subsets of $Y$ containing the space itself which is closed under unions, intersections, complements, and set-theoretic monotone limits.
+A \emph{$\sigma$-algebra} is a set of subsets of $Y$ containing the space itself which is closed under countable unions, intersections, complements, and therefore set-theoretic monotone limits.
 These can be reinterpreted as Boolean logical operations, so $\c{Y}$ can be thought of as the set of all true-false questions one can ask about elements of the set $Y$. 
 These questions, then, are closed under \emph{and/or/not} operations and monotone limits thereof.
 
@@ -166,7 +166,7 @@ We call $\c{Y}'$ the \emph{subset $\sigma$-algebra}.
 
 \parmarginnote{Measurable function}
 A map $f : Y \-> Y'$ between measurable spaces $(Y,\c{Y})$ and $(Y',\c{Y}')$ is said to be \emph{measurable} if its preimage defines a map $f^{-1} : \c{Y}' \-> \c{Y}$ between the respective $\sigma$-algebras.
-This means that true-false questions for the space $Y'$ can be asked and answered relative to true-false questions for the space $Y$.
+This intuitively means that true-false questions for the space $Y'$ can be asked and answered relative to those in $Y$.
 On product spaces, a map $f : Y \-> \Theta \x \Theta'$ is measurable if its components are measurable, but a map $f : Y \x Y' \-> \Theta$ \emph{need not} automatically be measurable if $f(\.,y') : Y \-> \Theta$ and $f(y,\.) : Y' \-> \Theta$ are measurable for all $y$ and $y'$.
 
 A \emphmarginnote{probability measure} is a countably additive map $\pi_y : \c{Y} \-> [0,1]$ satisfying $\pi_Y(Y) = 1$. 
@@ -174,13 +174,13 @@ This can be thought of as a map that takes a true/false question, and assigns a 
 A \emph{probability space} is a measurable space $(\Omega,\c{F})$ equipped with a probability measure $\P$.
 The set $\Omega$ can be viewed as a space of abstract random numbers, with a random number generator described by $\P$.
 
-Given a probability space, we say that a \emphmarginnote{random variable} is measurable map $y : \Omega \-> Y$.
+Given a probability space, we say that a \emphmarginnote{random variable} is a measurable map $y : \Omega \-> Y$.
 A random variable, then, maps random numbers $\omega\in\Omega$ into the space $Y$.
-The \emph{distribution}\marginnote{Distribution} of a random variable is defined as the \emph{pushforward measure} $\pi_y(A_y) = (y_* \P)(A_y) = \P(y^{-1}(A_y))$ for all $A_y\in\c{Y}$.
+The \emph{distribution}\marginnote{Distribution} of a random variable is defined as the \emph{pushforward measure} $\pi_y = y_* \P$ where $y_*$ is defined as $(y_* \P)(A_y) = \P(y^{-1}(A_y))$ for all $A_y\in\c{Y}$.
 The probability of an event $A_y$, then, is determined by measuring the probability of random numbers under which $A_y$ occurs---measurability guarantees this is possible.
 
 \parmarginnote{Notation for random variables}
-In this work, we will generally \emph{not} adopt the standard convention of suppressing $\omega$-arguments of random variables from our notation, and will write such arguments explicitly.
+In this work, we will generally \emph{not} adopt the standard convention of suppressing $\omega$-arguments of random variables from our notation, and will write such arguments explicitly in cases that other function arguments are also used.
 Though this makes expressions slightly denser, it also avoids ambiguity and presents the mathematics more precisely.
 
 \parmarginnote{Equality of random variables}
@@ -197,7 +197,7 @@ We will thus implicitly assume all probability spaces are large enough to ensure
 
 \parmarginnote{Probability kernel}
 We will be interested in probability measures extended to allow them to be parameterized by other quantities.
-A \emph{probability kernel} is defined to be a map $\pi_{y\given\theta} : \c{Y} \x \Theta \-> [0,1]$ satisfying two conditions: (i) the map $\pi_{y\given\theta}(\.,\vartheta) : \c{Y} \-> [0,1]$ is a probability measure for almost all $\vartheta\in\Theta$, and (ii) the map $\pi_{y\given\theta}(A_y,\.) : \Theta \-> [0,1]$ is measurable for all $A_y\in\c{Y}$.
+A \emph{probability kernel} is defined to be a map $\pi_{y\given\theta} : \c{Y} \x \Theta \-> [0,1]$ satisfying two conditions: (i) the map $\pi_{y\given\theta}(\.,\vartheta) : \c{Y} \-> [0,1]$ is a probability measure for all $\vartheta\in\Theta$, and (ii) the map $\pi_{y\given\theta}(A_y,\.) : \Theta \-> [0,1]$ is measurable for all $A_y\in\c{Y}$.
 
 \parmarginnote{Conditional distribution}
 Random variables can also be extended to parameterize them by other quantities.
@@ -209,7 +209,7 @@ Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\th
 \subsection{Bayes' Rule for probability measures}
 
 The key idea behind Bayesian learning is to formalize \emph{learning} using the concept of \emph{conditional probability}.
-This entails (i) building a model entails quantifying the relationship between the \emph{quantity of interest} $\theta$, and the \emph{data} $y$, and (ii) quantifying what is learned using Bayes' Rule.
+This entails (i) building a model quantifying the relationship between the \emph{quantity of interest} $\theta$, and the \emph{data} $y$, and (ii) quantifying what is learned using Bayes' Rule.
 We now begin to make these concepts precise in the language of measure-theoretic probability.
 
 \begin{definition}[Bayesian model]
@@ -2357,45 +2357,53 @@ These are sets equipped with additional structure encoding their geometric shape
 
 A \emphmarginnote{topological space} is a set $X$ together with a \emph{topology}, which is a collection of subsets $\c{O}_X \subseteq 2^X$ called the \emph{open sets}---these include the empty set, the space itself, and are closed under pairwise intersections and arbitrary unions.
 A given set generally admits many topologies.
-Topological spaces admit notions of \emph{locality}, \emph{convergence}, \emph{continuity}, \emph{compactness}, \emph{denseness}, and many others.
+Topological spaces admit notions of \emph{locality}, \emph{convergence}, \emph{continuity}, \emph{compactness}, \emph{paracompactness}, \emph{denseness}, and many others.
 The \emph{Hausdorff} property implies that limits are unique.
 
 \parmarginnote{Topological manifold}
 A paracompact Hausdorff topological space $(X,\c{O}_X)$ is called a $d$-dimensional \emph{topological manifold} if it is locally homeomorphic to $\R^d$ equipped with the standard topology.
 For such a manifold, there is a set $\c{A}_X$ called the \emph{atlas} whose elements are the local homeomorphisms, called \emph{charts}.
-An atlas is \emph{maximal} if it is the largest possible such set, in which case it is unique.
+An atlas is \emph{maximal} if it is the largest possible such set: for any given atlas, a maximal atlas containing it it is unique.
 
 A \emphmarginnote{smooth differentiable manifold} is a triple  $(X,\c{O}_X,\c{A}_X)$ where $X$ is a topological manifold, and $\c{A}_X$ is a $C^\infty$-atlas.
-A $C^\infty$-atlas is a maximal subset of the maximal atlas, in which, for any charts $x,y \in \c{A}_X$ with overlapping domain, the \emph{chart transition map} $y\after x^{-1}$ is an infinitely differentiable function.
+A $C^\infty$-atlas is an atlas in which, for any charts $x,y \in \c{A}_X$ with overlapping domain, the \emph{chart transition map} $y\after x^{-1}$ is an infinitely differentiable function.
 Homeomorphisms compatible with such charts are called \emph{diffeomorphisms}.
 A smooth manifold is called \emph{oriented} if the Jacobian determinant of all chart transition maps in its atlas is positive.
 Such atlases admit maximal analogs.
 
+A \emphmarginnote{manifold with boundary} is one of a wide class of spaces generalizing the notion of a manifold while preserving most geometric characteristics that make manifolds useful and interesting in the first place.
+Such a space is defined analogously, except that it is also possible for it to be locally homeommorphic to a Euclidean half-plane.
+The ideas we consider admit natural generalizations to such settings, but we do not pursue these, and in particular only consider manifolds without boundary.
+
 Every smooth manifold $X$ gives rise to its \emphmarginnote{tangent bundle} $(TX,\proj_X,X)$, which contains a smooth manifold $TX$ and a surjective projection map $\proj_X : TX \-> X$.
-The former is defined as $TX = \U_{x\in X} (x,T_x X)$, where $T_x X$ is the tangent space, defined as a vector space of equivalence classes of directional derivatives of smooth curves through $x$.
+The former is defined as $TX = \U_{x\in X} \{(x,v) : v \in T_x X\}$, where $T_x X$ is the tangent space, defined as a vector space of equivalence classes of directional derivatives of smooth curves through $x$.
 This set can canonically be equipped with the structure of a smooth manifold.
 
 A map $f : X \-> TX$ satisfying $\proj_X \after f = \id_X$ is called a \emphmarginnote{vector field}.
 Note that this is \emph{not the same} as a map $X \-> \R^d$ and often cannot usefully be expressed in this way: we expand on this in the sequel.
 If $f$ is smooth, we write $f \in \Gamma(TX)$.
-In cases where $TX$ is replaced by a general bundle, we say that $f$ is a \emph{cross-section}, or simply a \emphmarginnote{section}, of that bundle---this gives rise to the notion of a \emph{tensor field} and other generalizations.
-Functions can multiply against tensor fields by scaling them pointwise.
+We also say that $f$ is a \emph{cross-section}, or simply a \emphmarginnote{section}, of the tangent bundle.
+Functions can multiply against vector fields by scaling them pointwise.
+
+Analogously, we can define the \emphmarginnote{cotangent bundle} $T^* X = \U_{x\in X} \{(x,\phi) : \phi \in T_x X^*\}$ where, compared to the tangent bundle, we have replaced the vector space $T_x X$ with its topological dual $T_x X^*$.
+A smooth sections of this bundle is called a \emphmarginnote{covector field}.
+We can similarly define a number of other bundles, each equipped with a projection map onto the base space.
+Introducing sections of such bundles gives rise to the notion of a \emphmarginnote{tensor field} and other generalizations.
 
 \parmarginnote{Interior product}
-Vector fields can be inserted into covector fields by pairing vectors with covectors in each tangent space.
-This defines the \emph{interior product} $\mathbin{\lrcorner}$, and extends to tensor fields as long as the pairing being considered makes logical sense.
+Vector fields can be inserted into covector fields by pairing vectors in each tangent space: this defines the \emph{interior product} $\mathbin{\lrcorner}$, which extends to tensor fields as long as the pairing being considered makes logical sense.
 We say that a totally antisymmetric $(0,k)$-tensor field is a $k$-form, and that a smooth function is a $0$-form.
 The \emphmarginnote{exterior derivative}, denoted by $\d$, maps $k$-forms into $(k+1)$-forms.
 Interior products preserve antisymmetry.
 
 \parmarginnote{Volume}
 Differential forms are often used to formalize and encode geometric structure in a way that is amenable to analysis.
-For example, a nowhere-vanishing $d$-form is called a \emph{volume form}---such a form induces a notion of integration, and in turn, by the Riesz--Markov--Kakutani representation theorem, a Radon measure on the manifold, which we call the \emph{volume measure}.
+For example, a nowhere-vanishing $d$-form is called a \emph{volume form}---such a form induces a notion of a \emph{volume density}, which induces a notion of \emphmarginnote{integration} of smooth functions, and in turn, by the Riesz--Markov--Kakutani representation theorem, a Radon measure on the manifold, which we call the \emph{volume measure}.
 On a general smooth manifold, the choice of a volume form is heavily non-unique.
 
 A \emphmarginnote{Riemannian manifold} is a quadruple $(X,\c{O}_X,\c{A}_X,g)$, usually written $(X,g)$, where $X$ is a smooth manifold and $g$ is the \emph{metric tensor}, which is a smooth non-degenerate symmetric positive definite $(0,2)$-tensor field.
-The metric tensor can be thought of as an algebraic object encoding the manifold's quantitative shape, and \emph{canonically} give rise to notions such as \emph{geodesics}, \emph{volume}, \emph{integration}.
-In particular, we denote both the volume form and volume measure induced by the metric tensor as $\vol_g$.
+The metric tensor can be thought of as an algebraic object encoding the manifold's quantitative shape, and \emph{canonically} give rise to notions such as \emph{volume}, \emph{integration}, and \emph{geodesics}.
+In particular, we denote both the volume measure and volume density induced by the metric tensor as $\vol_g$.
 
 \parmarginnote{Nash Embedding}
 Riemannian manifolds are, by definition, topological spaces with additional structure.
@@ -2417,7 +2425,7 @@ These objects are generally built using the metric along with derivatives and ot
 The \emph{Laplace--Beltrami operator} is one such object, and forms a basic building block for defining differentual equations on manifolds.
 
 \begin{definition}[Laplace--Beltrami operator]
-Let $(X,g)$ be an oriented Riemannian manifold.
+Let $(X,g)$ be an Riemannian manifold.
 Define the \emph{divergence} of a vector field to be the unique map 
 \[
 \f{div}_g : \Gamma(TX) &\-> C^\infty(X)
@@ -2426,7 +2434,7 @@ Define the \emph{divergence} of a vector field to be the unique map
 \quad
 \forall v \in \Gamma(TX)
 \]
-where $\.$ is pointwise multiplication of $k$-forms by smooth functions, and the \emph{gradient} of a scalar function to be the unique map 
+where $\.$ is pointwise multiplication of $k$-densities by smooth functions, and the \emph{gradient} of a scalar function to be the unique map 
 \[
 \f{grad}_g : C^\infty(X) &\-> \Gamma(TX)
 &
@@ -2450,7 +2458,7 @@ The latter expression illustrates that a Laplace--Beltrami operator maps functio
 For us, the relatively rich spectral properties possessed by this operator will be of key interest.
 
 \begin{result}
-Let $(X,g)$ be a compact Riemannian manifold without boundary.
+Let $(X,g)$ be a compact Riemannian manifold.
 Then the operator $-\lap_g : C^\infty(X) \-> C^\infty(X)$ extends uniquely to a self-adjoint unbounded positive operator $-\lap_g: D(\lap_g) \-> L^2(X)$, where $D(\lap_g) \subseteq L^2(X)$.
 \end{result}
 
@@ -2463,8 +2471,8 @@ Viewed in this way, the range of the Laplace--Beltrami operator is a Hilbert spa
 In particular, one can show that, owing to compactness, the spectrum of $-\lap_g$ is discrete---this gives a particularly simple view of $-\lap_g$ thorugh its eigenvalues and eigenfunctions.
 
 \begin{result}[Sturm--Liouville decomposition]
-Let $(X,g)$ be a compact Riemannian manifold without boundary.
-Then there exists an orthonormal basis $f_n$, $n\in\Z_+$, of $L^2(X)$ such that $-\lap_g f_n = \lambda_n f_n$ with $0 = \lambda_0 < \lambda_1 \leq .. \leq \lambda_n$ and $\lambda_n\-> \infty$ as $n\->\infty$.
+Let $(X,g)$ be a compact Riemannian manifold.
+Then there exists an orthonormal basis $f_n$, $n\in\Z_+$, of $L^2(X)$ such that $-\lap_g f_n = \lambda_n f_n$ with $0 = \lambda_0 \leq \lambda_1 \leq .. \leq \lambda_n$ and $\lambda_n\-> \infty$ as $n\->\infty$.
 Moreover, $-\lap_g$ admits the representation
 \[
 -\lap_g f = \sum_{n=0}^\infty \lambda_n \innerprod{f}{f_n} f_n
@@ -2567,7 +2575,7 @@ We will take the right-hand-sides of our stochastic partial differential equatio
 Before continuing, we prove that in the case that $H$ is a reproducing kernel Hilbert space, then generalized Gaussian fields can be reinterpreted as Gaussian processes in the classical sense.
 
 \begin{proposition}
-Let $f : \Omega \x H \-> \R$ be a centered generalized Gaussian field defined over a reproducing kernel Hilbert space $H$.
+Let $f : \Omega \x H \-> \R$ be a centered generalized Gaussian field defined over a reproducing kernel Hilbert space $H$ with identity covariance operator.
 Then letting $\f{ev}_x \in H^*$ be a pointwise evaluation functional, the stochastic process $f : \Omega \x X \-> \R$ defined by $f(\omega, x) = f(\omega,\f{ev}_x)$ is a Gaussian process whose covariance is given by the reproducing kernel of $H$.
 \end{proposition}
 
@@ -2610,14 +2618,18 @@ f(\omega,\c{L}^* g) = \c{W}(\omega,g)
 holds almost surely.
 \end{definition}
 
+For our purposes, it also suffices to replace the almost sure equality with equality in distribution. 
+Eeven if one considers this weaker notion, the same kind of results and calculations follow in our setting, and work equally well in both cases.
+We therefore do not dwell on this distinction.
+
 The idea behind this definition is to take advantage of Gaussianity and use it to avoid even attempting to construct a pathwise solution theory on random variables.
-Instead, the operator $\c{L}$ is thought of as a map between the associated Hilbert spaces: if said Hilbert spaces are function spaces admitting reproducing kernels, the generalized Gaussian fields defined over them yield Gaussian processes in the classical sense.
+Instead, the operator $\c{L}$ is thought of as a map between the associated Hilbert spaces: if one or both are function spaces admitting reproducing kernels, the generalized Gaussian fields respectively yield Gaussian processes in the classical sense.
 In the given setting, this solution concept ends up being useful, thanks to the following general result.
 
 \begin{result}[SPDE solution]
 If $\c{L}$ is invertible, then
 \[
-f(\omega,g) = \c{W}(\omega, \c{L}^{-*} g)
+f(\omega,h) = \c{W}(\omega, \c{L}^{-*} g)
 \]
 is the unique solution to $\c{L}f = \c{W}$.
 \end{result}
@@ -2626,8 +2638,9 @@ is the unique solution to $\c{L}f = \c{W}$.
 \textcite[Theorem 4.2.2.]{lototsky17}.
 \end{proof}
 
-It is rather remarkable that such a minimalist solution theory, which relies very fundamentally on the fact that Gaussian processes are uniquely determined by their associated reproducing kernel Hilbert spaces or generalization thereof, gives a description concrete enough for our purposes.
-Indeed, this result will tell us nothing about what function space $f$ lies in as a random variable, and in particular nothing about its regularity properties such as continuity---however, for Bayesian learning, we don't actually need these.
+It is rather remarkable that such a minimalist solution theory, which relies very fundamentally on the fact that Gaussian processes are uniquely determined by their associated reproducing kernel Hilbert spaces or generalizations thereof, gives a description concrete enough for our purposes.
+Indeed, this result generally determines but does not reveal what function space $f$ lies in as a random variable, along with its regularity properties such as continuity---however, for Bayesian learning, we don't actually need these.
+
 
 For this construction to yield a Gaussian process in the classical sense, we should choose $H$ to be a reproducing kernel Hilbert space, since this lets us build the Gaussian processes of interest from pointwise evaluation functionals as described previously.
 The main challenge, then, is finding appropriate spaces and operators in order to apply the above results.
@@ -2652,10 +2665,10 @@ This kernel is very well-studied and among the most widely-used Euclidean kernel
 Building on this idea, \textcite{lindgren11} proposed a formalism based on Galerkin finite element analysis for giving precise meaning to such calculations, including treatment of boundary conditions and other considerations.
 
 In particular, \textcite{lindgren11} define the \emphmarginnote{Riemannian Matérn kernel} to be the covariance kernel of the solutions of analogs of the above stochastic partial differential equation, where $\R^d$ is replaced with a Riemannian manifold $X$, and the Euclidean Laplacian $\lap$ is replaced by the Laplace--Beltrami operator $\lap_g$.
-This kernel is well-defined, but its definition is implicit: \textcite{lindgren11} provide techniques for training the resulting Gaussian processes via solving the stochastic partial differential equation numerically.
+The resulting kernel is well-defined, but its definition is implicit: \textcite{lindgren11} provide techniques for training the resulting Gaussian processes via solving the stochastic partial differential equation numerically.
 
 We develop an alternative, more constructive formalism.
-This is done by improving on the above prior results in two ways: (1) we bypass finite element analysis by instead working with the previously-introduced theory of Gaussian stochastic partial differential equations of \textcite{lototsky17}, and (2) we deduce numerical expressions for calculating the kernels of the resulting processes, enabling them to be trained using standard methods.
+This is done by improving on the above prior results in two ways: (1) we bypass finite element analysis by instead working with the previously-introduced theory of Gaussian stochastic partial differential equations described by \textcite{lototsky17}, and (2) we deduce numerical expressions for calculating the kernels of the resulting processes, enabling them to be trained using standard methods.
 To start, we define the right-hand-side of our equations.
 
 \begin{definition}[Riemannian white noise]
@@ -2664,35 +2677,35 @@ By applying Kolmogorov's Extension Theorem to a family of finite-dimensioanl mar
 \end{definition}
 
 This stochastic process \emph{cannot} be viewed as a scalar-valued random function.
-Though Kolmogorov's Extension Theorem does imply there is a random variable $\c{W} : \Omega \-> \R^{L^2(X)}$ whose finite-dimensional marginals coincide with $\c{W} : \Omega \x L^2(X) \-> \R$, this is next-to-useless because $\R^{L^2(X)}$ is highly irregular and we can say little about which subspace $\c{W}$ concentrates on without additional considersations that we may conveniently avoid.
+Though Kolmogorov's Extension Theorem does imply there is a random variable $\c{W}_g : \Omega \-> \R^{L^2(X)}$ whose finite-dimensional marginals coincide with $\c{W}_g : \Omega \x L^2(X) \-> \R$, this is next-to-useless because $\R^{L^2(X)}$ is highly irregular and we can say little about which subspace $\c{W}$ concentrates on without additional considersations that we may conveniently avoid.
 
 Next, we define the left-hand-side of the stochastic partial differential equations under study, including the Hilbert spaces and operators $\c{L}$ of interest using functional calculus.
-For this, a recent result on Riemannian reproducing kernel Hilbert spaces will be of key interest.
+For this, a result on Riemannian reproducing kernel Hilbert spaces will be of key interest.
 
 \begin{result}[Riemannian Sobolev and diffusion spaces]
-Define the Riemannian Sobolev space $H^k(X)$ by
+Define the Riemannian Sobolev space $H^s(X)$ by
 \[
-H^k(X) = \cbr{f \in D'(X) : f = (1 + \lap_g)^{-k/2} g : g \in L^2(X)}
+H^s(X) = \cbr{f \in D'(X) : f = (1 - \lap_g)^{-s/2} h : h \in L^2(X)}
 \]
-and the Riemannian diffusion space $\c{H}^k(X)$ by
+and the Riemannian diffusion space $\c{H}^s(X)$ by
 \[
-\c{H}^k(X) = \cbr{f \in D'(X) : f = e^{-\frac{k}{2}\lap_g} g : g \in L^2(X)}
+\c{H}^s(X) = \cbr{f \in D'(X) : f = e^{\frac{s}{2}\lap_g} h : h \in L^2(X)}
 .
 \]
-Then $H^k(X)$ and $\c{H}^k(X)$ are reproducing kernel Hilbert spaces.\footnote{TODO: don't use $g$ for both test functions and the metric tensor.}
+Then $H^s(X)$ and $\c{H}^s(X)$ are reproducing kernel Hilbert spaces.
 \end{result}
 
 \begin{proof}
 \textcite[Theorem 3 and Theorem 6]{devito20}.
 \end{proof}
 
-This result is the key technical pillar upon which our calculations rest.
+This gives the key technical pillar upon which our calculations rest.
 It both provides appropriate Hilbert spaces to use within the solution theory, and, by virtue of admitting reproducing kernels, guarantees that they are spaces of \emph{actual functions} $f : X \-> \R$ on the Riemannian manifold.
 This enables us to plug pointwise evaluation functionals into the obtained generalized Gaussian field, yielding Riemannian Gaussian processes in the classical sense---the objects we sought to construct in the first place.
 
 \parmarginnote{Riemannian squared exponential kernel}
-Note that the operators $e^{-\frac{k}{2}\lap_g}$ can be viewed as limits of appropriately rescaled versions of the operators $(1 + \lap_g)^{-k/2}$. 
-Given that the Euclidean Matérn kernel converges to the Euclidean squared exponential kernel as $\nu\->\infty$, we therefore view stochastic partial differential equations induced by $e^{-\frac{k}{2}\lap_g}$ as giving rise to the \emph{Riemannian squared exponential kernel}---we make this perspective precise shortly.
+Note that the operators $e^{\frac{s}{2}\lap_g}$ can be viewed as limits of appropriately rescaled versions of the operators $(1 - \lap_g)^{-s/2}$. 
+Given that the Euclidean Matérn kernel converges to the Euclidean squared exponential kernel as $\nu\->\infty$, we therefore view stochastic partial differential equations induced by $e^{\frac{s}{2}\lap_g}$ as giving rise to the \emph{Riemannian squared exponential kernel}---we make this perspective precise shortly.
 
 To carry the necessary calculations out and compute the kernels of the Gaussian processes defined by our stochastic partial differential equations, we need to relate the Sobolev and diffusion spaces of \textcite{devito20} with the equations studied by \textcite{whittle63} and \textcite{lindgren11}.
 To do so, we state and prove the main result.
