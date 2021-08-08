@@ -5,7 +5,7 @@ using SparseArrays
 using LinearAlgebra: cholesky
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
 
 function assemble_matrices(x::AbstractVector)
     n = length(x)
@@ -82,7 +82,7 @@ color_idx = [1, 3, 6, 9, 4, 7, 10, 5, 8, 11, 2]
         },
         Coordinates([(x[end-1],0),(x[end],1)])
     ),
-) |> save_tex("tex/gp-fe-basis.tex")
+) |> save_tex("gp-fe-basis.tex")
 
 
 
@@ -106,4 +106,4 @@ color_idx = [1, 3, 6, 9, 4, 7, 10, 5, 8, 11, 2]
         },
         Coordinates(x, w[:,i])
     ) for i in 1:n]...,
-) |> save_tex("tex/gp-fe-samples.tex")
+) |> save_tex("gp-fe-samples.tex")

@@ -5,7 +5,7 @@ using Random
 using KernelFunctions
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
 
 x = 0:0.02:1
 x12 = 0:0.005:1
@@ -52,7 +52,7 @@ samples_inf = f(x)
         },
         Coordinates(x12, samples_12[:,i])
     ) for i in 1:n]...,
-) |> save_tex("tex/gp-sm-12.tex")
+) |> save_tex("gp-sm-12.tex")
 
 @pgf Axis(
     {
@@ -74,7 +74,7 @@ samples_inf = f(x)
         },
         Coordinates(x, samples_32[:,i])
     ) for i in 1:n]...,
-) |> save_tex("tex/gp-sm-32.tex")
+) |> save_tex("gp-sm-32.tex")
 
 
 @pgf Axis(
@@ -97,7 +97,7 @@ samples_inf = f(x)
         },
         Coordinates(x, samples_52[:,i])
     ) for i in 1:n]...,
-) |> save_tex("tex/gp-sm-52.tex")
+) |> save_tex("gp-sm-52.tex")
 
 @pgf Axis(
     {
@@ -119,6 +119,6 @@ samples_inf = f(x)
         },
         Coordinates(x, samples_inf[:,i])
     ) for i in 1:n]...,
-) |> save_tex("tex/gp-sm-inf.tex")
+) |> save_tex("gp-sm-inf.tex")
 
 

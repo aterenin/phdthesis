@@ -4,7 +4,7 @@ using Distributions
 using Random
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
 
 function condition(prior, likelihood, data)
     map(enumerate(data)) do (i,y)
@@ -91,7 +91,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         }, 
         i
     ) for i in -1:1:1]...,
-) |> save_tex("tex/mab-dist.tex")
+) |> save_tex("mab-dist.tex")
 
 @pgf Axis(
     {
@@ -120,7 +120,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         },
         Coordinates(fill((-1:1.:1)[i], length(samples[i])), samples[i])
     ) for i in 1:3]...,
-) |> save_tex("tex/mab-data.tex")
+) |> save_tex("mab-data.tex")
 
 @pgf Axis(
     {
@@ -160,7 +160,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         },
         Coordinates([((-1:1.:1)[i], mean(dist[2])), ((-1:1.:1)[i], mean(dist[i]))])
     ) for i in 1:3]...,
-) |> save_tex("tex/mab-regret.tex")
+) |> save_tex("mab-regret.tex")
 
 
 
@@ -213,7 +213,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         },
         Coordinates(fill((-1:1.:1)[i], length(samples[i])), samples[i])
     ) for i in 1:3]...,
-) |> save_tex("tex/mab-samples.tex")
+) |> save_tex("mab-samples.tex")
 
 
 @pgf Axis(
@@ -247,7 +247,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         }, 
         i
     ) for i in -1:1:1]...,
-) |> save_tex("tex/mab-post.tex")
+) |> save_tex("mab-post.tex")
 
 
 @pgf Axis(
@@ -278,4 +278,4 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         },
         Coordinates([((-1:1:1)[i] - 1/3, ucb[i]), ((-1:1:1)[i] + 1/3, ucb[i])])
     ) for i in 1:3]...,
-) |> save_tex("tex/mab-ucb.tex")
+) |> save_tex("mab-ucb.tex")

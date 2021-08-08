@@ -6,7 +6,7 @@ using KernelFunctions
 using LinearAlgebra: I, Symmetric, diag
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
 
 z = [0.5,0.75]
 u = [0.15,-0.15]
@@ -83,7 +83,7 @@ samples_cond = rand(dist_cond, l)
         },
         Coordinates(z, u)
     ),
-) |> save_tex("tex/gp-dist-cond.tex")
+) |> save_tex("gp-dist-cond.tex")
 
 
 @pgf Axis(
@@ -151,4 +151,4 @@ samples_cond = rand(dist_cond, l)
         },
         Coordinates(z, u)
     ),
-) |> save_tex("tex/gp-dist-samples.tex")
+) |> save_tex("gp-dist-samples.tex")

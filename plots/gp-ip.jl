@@ -6,7 +6,7 @@ using KernelFunctions
 using LinearAlgebra: I, Symmetric, diag
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
 
 z = 0.4:0.05:0.7
 u = zeros(length(z))
@@ -117,7 +117,7 @@ colors = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), weig
         },
         Coordinates(z, u)
     ),
-) |> save_tex("tex/gp-ip-cond.tex")
+) |> save_tex("gp-ip-cond.tex")
 
 
 @pgf Axis(
@@ -140,7 +140,7 @@ colors = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), weig
         },
         Coordinates(x, K_xz[:,(1:L)[i]])
     ) for i in 1:L]...,
-) |> save_tex("tex/gp-ip-basis.tex")
+) |> save_tex("gp-ip-basis.tex")
 
 
 
@@ -165,4 +165,4 @@ colors = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), weig
         },
         Coordinates(x, samples_canonical[:,i])
     ) for i in 1:l]...,
-) |> save_tex("tex/gp-ip-samples.tex")
+) |> save_tex("gp-ip-samples.tex")

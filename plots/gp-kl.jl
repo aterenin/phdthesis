@@ -5,7 +5,7 @@ using Random
 using LinearAlgebra: Diagonal
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
 
 
 
@@ -51,7 +51,7 @@ colors = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), weig
         },
         Coordinates(x, basis_kl[:,(1:L)[i]])
     ) for i in 1:L]...,
-) |> save_tex("tex/gp-kl-basis.tex")
+) |> save_tex("gp-kl-basis.tex")
 
 
 
@@ -76,4 +76,4 @@ colors = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), weig
         },
         Coordinates(x, samples_kl[:,i])
     ) for i in 1:n]...,
-) |> save_tex("tex/gp-kl-samples.tex")
+) |> save_tex("gp-kl-samples.tex")

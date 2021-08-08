@@ -5,7 +5,7 @@ using Random
 using LinearAlgebra: cholesky
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
 
 if !isdefined(PGFPlotsX, :TikzFadingFromPicture) @eval(PGFPlotsX, PGFPlotsX.@define_axislike TikzFadingFromPicture "tikzfadingfrompicture"); using PGFPlotsX: TikzFadingFromPicture, TikzPicture end
 TikzPicture(a::Vector{PGFPlotsX.AxisLike}) = TikzPicture(a...)
@@ -97,7 +97,7 @@ samples_cond = rand(cond, 250)
         }, 
         y_cond
     ),
-)] |> save_tex("tex/mvn-dist-joint.tex")
+)] |> save_tex("mvn-dist-joint.tex")
 
 
 
@@ -142,4 +142,4 @@ samples_cond = rand(cond, 250)
         },
         Coordinates(samples_cond,fill(y_cond,length(samples_cond)))
     ),
-) |> save_tex("tex/mvn-dist-cond.tex")
+) |> save_tex("mvn-dist-cond.tex")

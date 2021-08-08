@@ -5,7 +5,7 @@ using Random
 using KernelDensity
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex(file, axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
 
 
 
@@ -66,7 +66,7 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
         },
         Coordinates([highlight_joint[1]], [highlight_joint[2]])
     ),
-) |> save_tex("tex/mvn-pw-joint.tex")
+) |> save_tex("mvn-pw-joint.tex")
 
 
 
@@ -155,4 +155,4 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
         },
         Coordinates([highlight_joint[1]], [highlight_joint[2]])
     ),
-) |> save_tex("tex/mvn-pw-cond.tex")
+) |> save_tex("mvn-pw-cond.tex")
