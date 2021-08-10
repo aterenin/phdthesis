@@ -2372,12 +2372,12 @@ A smooth manifold is called \emph{oriented} if the Jacobian determinant of all c
 Such atlases admit maximal analogs.
 
 A \emphmarginnote{manifold with boundary} is one of a wide class of spaces generalizing the notion of a manifold while preserving most geometric characteristics that make manifolds useful and interesting in the first place.
-Such a space is defined analogously, except that it is also possible for it to be locally homeommorphic to a Euclidean half-plane.
+Such a space is defined analogously to an ordinary manifold, except that it is also possible for it to be locally homeommorphic to a Euclidean half-plane.
 The ideas we consider admit natural generalizations to such settings, but we do not pursue these, and in particular only consider manifolds without boundary.
 
 Every smooth manifold $X$ gives rise to its \emphmarginnote{tangent bundle} $(TX,\proj_X,X)$, which contains a smooth manifold $TX$ and a surjective projection map $\proj_X : TX \-> X$.
 The former is defined as $TX = \U_{x\in X} \{(x,v) : v \in T_x X\}$, where $T_x X$ is the tangent space, defined as a vector space of equivalence classes of directional derivatives of smooth curves through $x$.
-This set can canonically be equipped with the structure of a smooth manifold.
+This set can be equipped with the structure of a smooth manifold, arising canonically from the smooth structure of $X$.
 
 A map $f : X \-> TX$ satisfying $\proj_X \after f = \id_X$ is called a \emphmarginnote{vector field}.
 Note that this is \emph{not the same} as a map $X \-> \R^d$ and often cannot usefully be expressed in this way: we expand on this in the sequel.
@@ -2522,7 +2522,7 @@ The argument clearly cannot extend to the manifold setting, where there are no l
 It turns out that no argument can, because in the manifold setting the corresponding claim isn't true.
 
 \begin{result}
-Let $(X,g)$ be a complete Riemannian manifold without boundary.
+Let $(X,g)$ be a complete Riemannian manifold.
 If the geodesic squared exponential kernel is positive semi-definite for all $\kappa > 0$, then $X$ is isometric to a Euclidean space.
 \end{result}
 
@@ -2548,7 +2548,7 @@ See \textcite[Chapter 26]{villani08} for a definition of flatness in the above s
 Complete Riemannian manifolds are geodesic spaces, but the former result is sharper than the latter: in particular, the torus equipped with the product metric is flat, but is not isometric to a Euclidean space.
 
 These results are an absolute disaster for the geodesic squared exponential kernel, and give good reason to completely abandon this approach.
-The fundamental issue is that there are few useful tools for proving positive-definiteness of geodesic kernels, and, in light of the above results, it isn't obvious which functions are going to be positive semi-definite in the first place and which are not.
+The fundamental issue is that there are few useful tools for proving positive-semi-definiteness of geodesic kernels, and, in light of the above results, it isn't obvious which functions are going to be positive semi-definite in the first place and which are not.
 We therefore explore the alternative, differential-equation-based approach briefly mentioned in the preceding section.
 
 \subsection{Stochastic partial differential equations}
@@ -2915,10 +2915,268 @@ In spite of their similarity, however, these models can be used in settings whic
 We now illustrate a few possibilities.
 
 \subsection{Illustrated examples}
+
+
+
+
 \section{Gaussian Vector Fields on Riemannian Manifolds}
 
-\subsection{Review of vector fields on manifolds}
-\subsection{Gauge-equivariant projected kernels}
+In the preceding sections, we studied Gaussian processes in two different non-Euclidean settings, namely those of graphs and manifolds.
+In both cases, the models obtained were scalar-valued.
+We now ask: can we use these models to define vector-valued Gaussian processes on manifolds?
+The first step, then, is to understand what such a notion ougth to actually mean.
+
+\subsection{Vector fields on manifolds}
+
+A \emph{vector field} $f$ on a smooth manifold $X$ is defined as a section of the tangent bundle---we recall that this is a function $f : X \-> TX$ such that $\proj_X \after f = \id_X$.
+This requirement is very intuitive: it says that for any point $x$, the tangent vector $v_x = f(x)$ must be attached to $x$.
+Vector fields on manifolds exhibit certain behaviors not present in the Euclidean case---we illustrate one of the most important cases below.
+
+\begin{result}[Hairy ball theorem]
+There does not exist a nowhere-vanishing smooth section on any even-dimensional sphere whose dimension is at least two.
+\end{result}
+
+\begin{proof}
+\textcite[Theorem 13.32]{lee10}.
+\end{proof}
+
+This result is called the \emph{hairy ball} theorem due to its interpretation: namely, it tell us in particular that if consider a two-dimensional sphere with hair on its surface, then it is not possible to comb the hair without creating a swirl or other location where the direction of the hair changes abruptly.
+
+This result restricts the kind of technical tools available for studying vector fields on manifolds.
+In particular, it implies that for a generic smooth manifold, it is not possible to choose a smoothly-varying set of basis vectors in each tangent space simultaneously.
+Because of this, it also follows that a smooth section $f : X \-> TX$ \emph{cannot} be reinterpreted a continuous function $f : X \-> \R^d$ in general.
+This makes understanding vector fields a more delicate endeavour for manifolds compared to Euclidean spaces.
+
+We are interested in defining vector-valued Gaussian processes on manifolds.
+The first question that arises, then, is what should one actually mean when describing a random function $f : \Omega \x X \-> TX$ as \emph{Gaussian}?
+The preceding sections suggest two possible approaches.
+
+\1 Adapt the notion of \emph{Gaussian finite-dimensional marginal distributions} to the tangent bundle setting.
+\2 Introduce an appropriate infinite-dimensional \emph{vector space of sections} and work with Gaussians in the sense of duality.
+\0 
+
+Clearly, the latter approach is more elegant and more general, but it is also also more effortful and potentially less constructive.
+Since we are ultimately interested in working with Gaussian vector fields algorithmically, we adopt the former approach, but keep the latter view in mind to ensure soundness of our overall strategy.
+We proceed as follows.
+
+\begin{definition}[Gaussian vector field]
+Let $X$ be a smooth manifold.
+We say that a random section $f : \Omega \x X \-> TX$ is \emph{Gaussian} if for any finite set of locations $x_1, \ldots, x_n \in X$, the random vector $(f(\.,x_1),\ldots,f(\.,x_n)) \in T_{x_1}X \oplus \ldots \oplus T_{x_n}X$ is Gaussian in the sense of duality.
+\end{definition}
+
+Thus, we see that in spite of the fact that a tangent bundle is a manifold, and not a vector space, it possesses enough linear structure to admit a sensible notion of finite-dimensional marginals.
+Here, we immediately see the value of the duality-based approach to Gaussianity originally developed in \Cref{ch:intro}: by using this, rather than working with bases, we avoid the need for cumbersome change-of-basis consistency checks.
+We now examine this notion's view from the vantage point of an embedding into Euclidean space.
+
+\begin{proposition}
+Let $i : X \-> \R^p$ be a smooth embedding. Then 
+\[
+f_i : \Omega \x i(X) &\-> \R^p
+&
+f_i(\omega,x) &= i_* f(\omega, i^{-1}(x))&
+\]
+is a vector-valued Gaussian process in the standard sense.
+\end{proposition}
+
+\begin{proof}
+Since the embedding $i$ is bijective on its image, any set of locations $x_1^{(i)},..,x_n^{(i)} \in i(X)$, will map uniquely onto a set of locations $x_1,..,x_n \in X$.
+By definition of vector pushforward maps, $i_*$ maps tangent vectors from $T_{x_1} X \oplus .. \oplus T_{x_n} X$ into $\R^{n\times p}$ linearly.
+Since Gaussianity is preserved by linearity, every set of finite-dimensional marginals in the embedded process is Gaussian, and the claim follows.
+\end{proof}
+
+This confirms that out definition of a vector-valued Gaussian process is the right one: if we embed the manifold in a Euclidean space, we obtain the correct kind of stochastic process.
+
+As before, the mean of such a process will simply be a given vector field.
+The next step is to determine what is an appropriate notion of a \emph{kernel}.
+In the Euclidean case, a \emphmarginnote{matrix-valued kernel} is a symmetric positive semi-definite function $k : X \x X \-> \R^{d \x d}$.
+This notion more-or-less completely analogous to the scalar-valued case.
+A priori, this notion seems completely coordinate-dependent due to the matrix appearing in the output.
+To avoid this, we instead consider the map
+\[
+((x,\v{v}), (x',\v{v}')) \|> \v{v}^T \m{K}_{xx'} \v{v}'
+\]
+which describes the action of the kernel matrix on vectors.
+To continue, we need an appropriate notion of bilinearity for the given setting.
+
+\begin{definition}[Fiberwise bilinear function]
+Let $B$ be a vector bundle over $X$ with fibers $V_x$, $x\in X$.
+We say that a function $k : B \x B \-> \R$ \emph{fiberwise bilinear} if for all pairs of points $x, x' \in X$ we have that
+\[
+k(\kappa \alpha_x + \lambda \beta_x, \gamma_{x'}) &= \kappa k(\alpha_x, \gamma_{x'}) + \lambda k(\beta_x, \gamma_{x'})
+\\
+k(\alpha_x, \mu \gamma_{x'} + \nu \delta_{x'}) &= \mu k(\alpha_x, \gamma_{x'}) + \nu k(\alpha_x, \delta_{x'})
+\]
+for any $\alpha_x, \beta_x \in V_x$, $\gamma_{x'}, \delta_{x'} \in V_{x'}$ and $\kappa, \lambda, \mu, \nu \in \R$.
+\end{definition}
+
+This leads to the following notion of a kernel.
+
+\begin{definition}[Positive semi-definite kernel]
+A symmetric fiberwise bilinear function $k : T^* X \x T^* X \-> \R$ is called \emph{positive semi-definite kernel} if for any set of covectors $\alpha_{x_1}, \ldots, \alpha_{x_n} \in T^*X$, we have 
+\[
+\sum_{i=1}^n\sum_{j=1}^n k(\alpha_{x_i}, \alpha_{x_j}) \geq 0
+.
+\]
+\end{definition}
+
+At first, this may seem surprising: why should the kernel be a function defined on the \emph{cotangent} bundle, rather than the tangent bundle?
+A clue is given by the form of the multivariate Gaussian density, which contains a $\v{x}^T\m{K}_{\v{x}\v{x}}^{-1}\v{x}$ term---note the presence of the inverse.
+This suggests that since the inverse kernel matrix acts on vectors, the kernel matrix should act on covectors.
+This is clarified further by considering the kernel of a given Gaussian vector field.
+
+\begin{definition}[Cross-covariance kernel]
+The \emph{cross-covariance kernel} of a Gaussian vector field is defined as the map
+\[
+\alpha_x, \beta_{x'} \|> \Cov(\dualprod{\alpha_x}{f(\.,x)}, \dualprod{\beta_{x'}}{f(\.,x')}).
+\]
+\end{definition}
+
+We now verify that this is indeed the correct notion of a kernel for the given setting.
+To do this, we need a general form of the Kolmogorov Extension Theorem, given by the following result.
+
+\begin{result}[Kolmogorov Extension Theorem]
+Let $(X_\alpha,\c{B}_\alpha,\c{O}_\alpha)_{\alpha\in A}$ be a family of measurable spaces, each equipped with a topology.
+For each finite $B \subseteq A$, let $\mu_B$ be an inner regular probability measure on $X_B = \prod_{\alpha\in B} X_\alpha$ with $\sigma$-algebra $\c{B}_B$ and with the product topology $\c{O}_B$ obeying
+\[\label{project-measure}
+\del{\proj_C}_* \mu_B = \mu_C
+\]
+whenever $C \subseteq B \subseteq A$ are two nested finite subsets of $A$. 
+Here, projections $\proj_C: X_B \-> X_C$ are defined by $\proj_C(\cbr{x_\alpha}_{\alpha \in B}) = \cbr{x_\alpha}_{\alpha \in C}$ and $\del{\proj_C}_*$ denotes the pushforward by $\proj_{C}$.
+Then there exists a unique probability measure $\mu_A$ on $\c{B}_A$ with the property that $\del{\proj_B}_* \mu_A = \mu_B$ for all finite $B \subseteq A$.
+\end{result}
+
+\begin{proof}
+\textcite[Theorem 2.4.3]{tao11}.
+\end{proof}
+
+We are now ready to prove our bijective correspondence.
+
+\begin{theorem}
+The distribution of every Gaussian vector field is uniquely determined by its mean vector field and cross-covariance kernel.
+Moreover, each such pair defines a Gaussian vector field.
+\end{theorem}
+
+\begin{proof}
+Let $x_1,..,x_n \in X$ and for $\alpha = (\alpha_{x_1},..,\alpha_{x_n})$ and $\beta = (\beta_{x_1},..,\beta_{x_n})$ define 
+\[
+\mu_{x_1,..,x_n} &= (\mu(x_1),..,\mu(x_n))
+&
+k_{x_1,..,x_n}(\alpha, \beta) &= \sum_{i=1}^n \sum_{j=1}^n k(\alpha_{x_i}, \beta_{x_j})
+.
+\]
+Let $\pi_{x_1,..,x_n} \~[N](\mu_{x_1,..,x_n}, k_{x_1,..,x_n})$ be defined in the sense of duality.
+These are our finite-dimensional marginals: by Gaussianity, it is clear these are uniquely determined by the mean and kernel.
+Taking $X$ to be the index set, and $(T_x X)_{x\in X}$ with standard topology and Borel $\sigma$-algebra to be our measurable spaces, we claim that the family of measures $(\pi_{x_1,..,x_n})_{\{x_1,..,x_n\} \subseteq X}$ satisfies the requirements of Kolmogorov's Extension Theorem.
+First, for any $\{x_1,..,x_n\} \subseteq \{x_1,..,x_n\}$, by direct calculation we have 
+\[
+(\proj_{x_1,..,x_m})_* \pi_{x_1,..,x_n} = \pi_{x_1,..,x_m}
+\]
+using the canonical projection induced by the direct sum.
+Next, note that each $\pi_{x_1,..,x_n}$ is a probability measure on a finite-dimensional real space, it is automatically inner regular.
+Thus, it follows that there exists a unique measure on the infinite product space $\prod_{x\in X} T_x X$.
+This is a topological measure space: if we equip it with the obvious linear structure, and define the linear operator 
+\[
+\c{I} : \prod_{x\in X} T_x X &\-> \Gamma_{\f{ns}}(TX)
+&
+(\c{I}s)(x) &= (x, \proj_x s)
+\]
+where $\Gamma_{\f{alg}}(TX)$ is the space of not necessarily smooth sections, equipped with the pushforward $\sigma$-algebra, we obtain by pushforward the probability distribution of our desired process.
+The claim follows.
+\end{proof}
+
+\subsection{Coordinate representations and gauge equivariance}
+
+Using the preceding recipe, we now understand what needs to be defined in order to construct a vector-valued Gaussian processes on manifolds. 
+To make this construction concrete, we proceed to develop the calculations needed to implement such processes numerically.
+The first step is to understand how to represent vector fields in coordinates---we do so using bases in each tangent space.
+
+\begin{definition}[Frame]
+Define a \emph{frame} $F$ to be a collection of not necessarily smooth sections $e_i : X \-> TX$ for $i=1,..,d$ such that, for every $x \in X$, the vectors $e_i(x)$ form a basis of $T_x X$.
+Given a frame, define the \emph{coframe} $F^*$ to be the collection of sections $e^i : X \-> T^* X$ defined pointwise using the dual basis with respect to $F$.
+\end{definition}
+
+The key words in the above definition are \emph{not necessarily smooth}: recall again that for many manifolds, choosing a frame which varies smoothly in space is impossible---a single component of such a frame would yield a non-vanishing vector field, and such a vector field might not exist.
+We can use this to calculate the coordinate expression of a cross-covariance kernel with respect to a frame.
+This is given by a function $\m{K}_F : X \x X \-> \R^{d \x d}$ as
+\[
+\m{K}_F(x,x') = \begin{bmatrix} \label{eq:K_F}
+k(e^1(x), e^1(x')) & \dots  & k(e^1(x), e^d(x')) \\
+\vdots           & \ddots & \vdots \\
+k(e^d(x), e^1(x')) & \dots  & k(e^d(x), e^d(x'))
+\end{bmatrix}
+\]
+which is a matrix-valued kernel in the usual sense.
+This expression is frame-dependent: to see how it transforms upon a change of frame, introduce a frame $\tl{F}$, and consider a function
+\[
+f(x) &= \sum_{i=1}^d f^i(x) e_i(x) = \sum_{i=1}^d \tl{f}^i(x) \tl{e}_i(x)
+\]
+expressed with respect to $F$ and $\tl{F}$, where $\tl{f}^i$ and $g^i$ are scalar-valued functions.
+We say that $\tl{F}$ is obtained from $F$ by a \emphmarginnote{gauge transformation} if there is a matrix-valued function $\m{A} : X \-> \R^{d \x d}$ such that 
+\[
+\v{\tilde{f}}(x) = \m{A}(x) \v{f}(x)
+\]
+for all $x$.
+Since $e_i$ and $\tl{e}_i$ are bases, such a function always exists.
+By direct calculation, $\m{K}_F$ can be re-expressed as 
+\[
+\m{K}_{\tl{F}}(x,x') = \m{A}(x)\m{K}_F(x,x')\m{A}(x)^T
+\]
+with respect to $\tl{F}$.
+This condition is called \emphmarginnote{gauge equivariance}.
+At this point, it is clear why we did not even attempt to generalize matrix-valued kernels directly by guessing the required formulas: for an arbirary manifold, there is very little hope of guessing an expression that is positive semi-definite and gauge-equivariant simultaneously.
+
+\subsection{Projected kernels}
+
+Now that we understand how to write kernels of Gaussian vector fields in coordinates, we are ready to consider techniques for constructnig such kernels and calculating them numerically. 
+With our preparation complete, the construction we present is extremely simple, consiting of two steps.
+\1 Embed a set of $p$ scalar-valued Riemannian Gaussian processes from $X$ into $i(X) \subseteq \R^p$, and use them to assemble a vector-valued Gaussian process defined on on $i(X)$.
+\2 Project the tangent vectors onto each tangent space, obtaining a tangential vector field in the embedded space, and therefore a vector field on $X$.
+\0 
+We now proceed to make this precisel.
+Suppose that we have an embedding
+\[
+i : X &\-> \R^p
+&
+i_{x,*} : T_x X &\-> \R^p
+\]
+where the pushforward is defined at all points $x\in X$.
+Introducing a frame $F$ allows us to define the projection map, which is a matrix-valued function $\m{P} : X \-> \R^{p \x d}$ defined by
+\[
+\m{P}(x) =\begin{bmatrix}
+i_{x,*}(e_i(x)) \\
+\vdots \\ 
+i_{x,*}(e_d(x))
+\end{bmatrix} 
+\]
+which describes how to project arbitrary vectors onto tangent planes.
+Note that the linear map given by this matrix is a right-inverse to the map given by $\m{P}^T$, which describes how a vector field with respect to a frame can be re-expressed with respect to the coordinates in the embedded space.
+In particular, if $X$ is Riemannian with metric $g$, we have $\m{P}^T \m{P} = \m\Gamma$, where $\Gamma_{ij} = g(e_i(x_i), e_j(x))$, giving the coordinate representation of the identity map with respect to the metric.
+It is now clear how to make our idea precise.
+
+\begin{definition}[Projected kernel]
+Let $\v{f} : \Omega \x X \-> \R^{p\x p}$ be a Gaussian process defined on $i(X) \subseteq \R^p$, and define the Gaussian vector field
+\[
+f(\omega, x) = \m{P}(x) \v{f}(\omega, i(x))
+.
+\]
+We call the cross-covariance kernel of a process constructed this way a \emph{projected kernel}.
+\end{definition}
+
+It that if $\v\kappa : X \x X \-> \R^{p \x p}$ is the cross-covariance kernel of $\v{f}$, then the cross-covariance kernel of our Gaussian vector field is given by 
+\[
+\m{K}_F(x,x') = \m{P}(x) \v\kappa(x,x') \m{P}(x)^T
+.    
+\]
+Note that here, we generally require a Riemannian structure on $X$ in order to define a useful set of scalar-valued processes in order to obtain $\v{f}$ or, equivalently, $\v\kappa$, to begin with.
+The simplest approach is to make each component in the embedded space independent.
+Particularly in cases where the embedding is isometric, this gives a wide class of easy-to-understand kernels.
+
+It's easy to see that all cross-covariance kernels arise this way: using Nash's Theorem, we can embed an arbitrary Gaussian vector field on a Riemannian manifold into a Euclidean space, glue together the resulting scalar components, and project back to obtain the Gaussian vector field we started with.
+
+This completes our technical development. 
+Starting from first principles, we defined the notion of a Gaussian vector field, described in what sense such processes possess mean vectors and cross-covariance kernels, and defined a wide-ranging class of kernels which is completely constructive and can be implemented in software.
+In particular, our constructions are automatically compatible with standard training methods such as variational inference.
+
 \subsection{Illustrated examples}
 
 \section{Discussion}
