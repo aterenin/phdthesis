@@ -92,31 +92,33 @@ Replicating the processes biological systems use to learn and adapt is a fundame
 To this end, the development of mathematical formalisms rich enough to capture the notion of learning is one of the crowning achievements of statistics, machine learning, and artificial intelligence.
 
 One such formalism is the \emph{Bayesian} view of learning.
-In this framework, one starts with (i) a probability distribution describing the information known about the quantity of interest external to the data, and (ii) a conditional probability distribution describing how the quantity of interest relates to the data.
-These are combined into a joint distribution and conditioned on the specific observed data values, giving a probability distribution describing what was learned about the quantity of interest by observing the data.
+The idea behind Bayesian learning is to represent the information known about the quantity of interest using probability.
+The relationship between the quantity of interest and the data is formalized as a joint probability distribution.
+This gives rise to a conditional probability distribution describing what was learned about the quantity of interest by observing the data.
 
-The Bayesian view of learning gives rise to a theory of \emph{decision}, which describes how an abstract decision system should select actions in pursuit of a goal.
+
+Bayesian learning fits naturally within a theory of \emph{decision}, which describes how an abstract decision system should select actions in pursuit of a goal.
 This is done by learning how different actions affect pursuit of the goal, and selecting optimal actions consistent with what was learned.
-By virtue of being probabilistic, such decisions systems assess and propagate uncertainty, enabling them to balance what is already known with what could be learned by taking actions---a concept known as the \emph{explore-exploit tradeoff}.
+By virtue of being probabilistic, such decisions systems assess and propagate uncertainty, enabling them to balance what is already known with what could be learned by taking actions---a concept known as the \emph{explore-exploit~tradeoff}.
 
 The performance of a decision system can be evaluated by examining how quickly its decisions improve and become optimal.
 A decision system's \emph{regret} is the reduction in its quality of decisions by virtue of not knowing the quantity of interest in advance.
-In most non-trivial settings, one can show that some regret is inevitable: a decision-making system must make some degree of mistakes in order to learn.
+In most non-trivial settings, one can show that some regret is inevitable: a decision-making system must make some mistakes in order to learn.
 A decision system is considered \emph{optimal} if its regret is within a constant factor of the best possible regret.
 
 Decisions systems with optimal or close-to-optimal regret require less data in order to solve their respective tasks, and are called \emph{data-efficient}.
 Data-efficiency is a key concern in practical settings, where data-collection takes time and can be expensive.
 By virtue of resolving explore-exploit tradeoffs in a manner amenable to regret analysis, the Bayesian formalism gives broad tools for constructing data-efficient decision systems.
 
-The key limitation of the Bayesian approach is that it is often \emph{too powerful}, and leads to computational problems which are intractable.
+The key limitation of the Bayesian approach is that it often leads to computational problems which are intractable.
 Conditional distributions generally contain more information than actually needed to make optimal decisions, yet calculating them is largely unavoidable.
-Probabilistic decision systems are thus most attractive settings where their strengths---including data-efficiency, solid technical foundations, and amenability to analysis---can shine, while computational costs are kept under control.
+Probabilistic decision systems are thus most attractive in settings where their strengths---including data-efficiency, solid technical foundations, and amenability to analysis---can shine, while computational costs are kept under control.
 
 In my view, \emph{Gaussian processes} are one such setting: they are powerful enough to model wide classes of unknown quantities of interest, yet their computational costs are generally polynomial.
-Better yet, Gaussian-process-based decision systems have been demonstrated to exhibit excellent performance in a number of practical settings, including ones deployed in real-world scientific applications.
+Better yet, Gaussian-process-based decision systems have demonstrated excellent performance in real-world scientific applications.
 Studying Gaussian processes is therefore a promising avenue towards improved understanding of Bayesian learning and Bayesian decision-making in pursuit of artificial intelligence.
 
-The goals of this dissertation are twofold: (i) to make Gaussian processes easier to work with through improved numerical methods, particularly in cases where they are used within larger decision systems, and (ii) to expand the set of settings where Gaussian processes can be practically employed in, enabling construction of decision systems for applications not previously considered.
+The goals of this dissertation are twofold: (i) to make Gaussian processes easier to work with when used within larger decision systems, and (ii) to expand the set of settings where Gaussian processes can used, enabling construction of decision systems for applications not previously considered.
 Contributions toward (i) include path-wise conditioning techniques studied in \Cref{ch:pathwise}, and contributions toward (ii) include non-Euclidean Gaussian processes studied in \Cref{ch:noneuclidean}.
 Following these, \Cref{ch:conclusion} concludes.
 
@@ -139,14 +141,14 @@ These ideas were developed jointly with the other authors.
 
 \section{Bayesian learning}
 
-The first concept we develop in depth along our path towards a mathematically precise understanding of statistical decision-making will be \emph{Bayesian learning}---a mathematical formalism for reasoning about unknown quantities of interest on the basis of data.
-Bayesian learning is a \emph{probabilistic} theory: a model specifies how the quantity of interest and the data depend on one another as random variables.
-Learning then entails calculating how the distribution of the quantity of interest changes upon observing the data.
+The first concept we develop in depth along our path towards a mathematically precise understanding of statistical decision-making is \emph{Bayesian learning}---a mathematical formalism for reasoning about unknown quantities of interest on the basis of data.
+Bayesian learning is a \emph{probabilistic} theory: a model specifies how the quantity of interest and the data depend on one another within a probability distribution.
+Learning entails calculating how the distribution of the quantity of interest changes upon observing the data.
 
-One of the key strengths of Bayesian theory is that it applies in very wide generality, owing to the substantial scope of probability theory. 
-In particular, one can consider unknown quantities of interest that are function-valued, and study learning in such settings.
-This, however, requires a non-elementary treatment, as one cannot rely solely on probability densities to define what conditional distributions are.
-We therefore begin by recalling the necessary formalism.
+One of the key strengths of Bayesian theory is that it applies in wide generality, owing to the substantial scope of probability theory. 
+In particular, one can study learning of quantities of interest that are function-valued using observed data consisting of pointwise function evaluations.
+This, however, requires a non-elementary treatment, as one cannot rely on probability densities to define what conditional distributions are.
+We therefore begin by recalling the necessary mathematical formalism.
 
 \subsection{Review of probability theory}
 We adopt the language of measure-theoretic probability, which we now describe.
@@ -171,7 +173,7 @@ On product spaces, a map $f : Y \-> \Theta \x \Theta'$ is measurable if its comp
 
 A \emphmarginnote{probability measure} is a countably additive map $\pi_y : \c{Y} \-> [0,1]$ satisfying $\pi_Y(Y) = 1$. 
 This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is according to the measure---in this view, probability measures describe uncertainty.
-A \emph{probability space} is a measurable space $(\Omega,\c{F})$ equipped with a probability measure $\P$.
+A \emphmarginnote{probability space} $(\Omega,\c{F},\P)$ consists of a measurable space and probability measure.
 The set $\Omega$ can be viewed as a space of abstract random numbers, with a random number generator described by $\P$.
 
 Given a probability space, we say that a \emphmarginnote{random variable} is a measurable map $y : \Omega \-> Y$.
@@ -201,7 +203,7 @@ A \emph{probability kernel} is defined to be a map $\pi_{y\given\theta} : \c{Y} 
 
 \parmarginnote{Conditional distribution}
 Random variables can also be extended to parameterize them by other quantities.
-A $\c{F}\ox \mathit\Theta$-measurable map $y\given\theta : \Omega \x \Theta \-> Y$ is called a \emph{jointly measurable stochastic process}---we largely eschew this terminology to emphasize the Bayesian nature of our formalism.
+A $\c{F}\ox \mathit\Theta$-measurable map $y\given\theta : \Omega \x \Theta \-> Y$ is called a \emph{jointly measurable stochastic process}---we largely eschew this terminology to emphasize the Bayesian formalism.
 In particular, unlike most presentations of stochastic processes, we \emph{never} think of $\Theta$ as representing time.
 Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, with the pushforward taken in the first argument---by \Cref{lem:rcrv-rvm-equiv}, this is a probability kernel.
 
@@ -220,6 +222,15 @@ A \emph{Bayesian model} is a probability measure defined on $\Theta \x Y$.
 A model can be constructed in a number of different ways.
 The most common technique is to specify two components: (i) a probability distribution describing what is known about the quantity of interest external to the data, and (ii) how the data relates to the quantity of interest.
 These are called the \emph{prior distribution} and \emph{likelihood}, respectively.
+For example, a simple Gaussian model is given by
+\[
+y_i \given &\theta \~[N](\theta, 1)
+&
+\theta &\~[N](0,1)
+.
+\]
+In this model, $\theta$ is an unknown scalar assigned a standard normal prior, while $y_i\given\theta$ is assigned a Gaussian likelihood centered at $\theta$.
+Our first goal is to make this notation into proper mathematics.
 
 \begin{proposition}
 A Bayesian model can be constructed in the following ways.
@@ -257,7 +268,7 @@ Write
 \\
 &= \int_\Omega\1_{\theta(\omega)\in A_\theta} \int_\Omega \1_{(y\given\theta)(\omega',\theta(\omega)) \in A_y} \d\bb{P}(\omega') \d\bb{P}(\omega)
 \\
-&= \int_{\Omega\x\Omega} \1_{(\theta(\omega),(y\given\theta)(\omega',\theta(\omega))) \in A_\theta \x A_y} \d\bb{P}^2(\omega,\omega')
+&= \int_\Omega\int_\Omega \1_{(\theta(\omega),(y\given\theta)(\omega',\theta(\omega))) \in A_\theta \x A_y} \d\bb{P}(\omega') \d\bb{P}(\omega)
 \\
 &= \int_\Omega \1_{(\theta(\omega),(y\given\theta)(\omega,\theta(\omega))) \in A_\theta \x A_y}\d\bb{P}(\omega)
 \\
@@ -281,7 +292,11 @@ The formulation is given as follows.
 
 \begin{result}[Bayes' Rule]
 Suppose that $\Theta$ and $Y$ are second-countable topological spaces, and let $\pi_y = \pi_{\theta,y}(\Theta\x\.)$.
-Then for every Bayesian model $\pi_{\theta,y}$ there is a $\pi_y\ae[-]$ unique probability kernel $\pi_{\theta\given y}$, which we call the \emph{posterior distribution}.
+Then for every Bayesian model $\pi_{\theta,y}$ there is a $\pi_y\ae[-]$ unique probability kernel $\pi_{\theta\given y}$ satisfying
+\[
+\pi_{\theta,y}(A_\theta \x A_y) = \int_{A_y} \pi_{\theta\given y}(A_\theta \given y) \d\pi_y(y)
+\]
+which we call the \emph{posterior distribution}.
 \end{result}
 
 \begin{proof}
@@ -290,12 +305,13 @@ Apply the Disintegration Theorem.
 
 This result shows that given a Bayesian model, the posterior distribution \emph{exists}.
 In its full abstract formulation, however, Bayes' Rule is \emph{non-constructive}, and it is not at all clear how to calculate any kind of useful formula from it.
-Fortunately, in many settings this is possible by virtue of additional structure.
+Moreover, the null sets can be problematic: to ensure that $\pi_{\theta\given y}$ is defined pointwise, one needs further properties such as continuity.
+Fortunately, in many settings these issues are resolved by virtue of additional structure.
 
-The simplest such structure occurs when $\pi_{\theta,y}$ admits a density with respect to a reference measure $\lambda$.
-In this case, it follows \Cref{lem:prod-density} that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
-Define a \emph{conditional density} as the ratio of joint and marginal densities, and let $\propto$ denote equality up to a proportionality constant.
-Then we have the following.
+The simplest such structure occurs when $\pi_{\theta,y}$ admits a density with respect to a product measure $\lambda$.
+In this case, it follows \Cref{lem:ref-density} that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
+Define a \emph{conditional density} as the ratio of joint and marginal densities, for instance $f_{\theta\given y} = \frac{f_{\theta,y}}{f_y}$, and let $\propto$ denote equality up to a multiplicative proportionality constant.
+Then, we have the following.
 
 \begin{proposition}[Bayes' Rule for densities]
 Suppose that $\pi_{\theta,y}$ admits the density $f_{\theta,y}$ with respect to $\lambda_{\theta,y}$.
@@ -316,23 +332,42 @@ f_{\theta,y} &= \frac{f_{\theta,y}}{f_y} f_y = f_{\theta\given y}f_y
 which, when combined, give the result.
 \end{proof}
 
-Sometimes, the knowledge of $f(\theta\given y)$ up to proportionality is enough to fully deduce its form.
-For example, if the likelihood is Gaussian with unknown mean and known variance, and the prior is also Gaussian, then the posterior is Gaussian.
-In cases such as this, the pair $(\pi_{y\given\theta}, \pi_\theta)$ are called \emph{conjugate}.
+Sometimes, the knowledge of $f_{\theta\given y}$ up to proportionality is enough to fully deduce its form.
+For example, if the likelihood is Gaussian with unknown mean and known variance, and the prior is Gaussian, then posterior is also Gaussian.
+In cases such as this, where the prior and posterior land in the same parameterized class of distributions, the pair $(\pi_{y\given\theta}, \pi_\theta)$ are called \emph{conjugate}.
 
 Bayes' Rule for densities is remarkable in its generality yet restrictiveness.
-On one hand, we require no direct assumptions about the spaces $\Theta$ and $Y$, and in particular allow real spaces, discrete spaces, and Riemannian manifolds.
+On the one hand, we require no direct assumptions about the spaces $\Theta$ and $Y$, and in particular allow for real spaces, discrete spaces, and Riemannian manifolds.
 On the other hand, other than in the aforementioned settings, where we can employ the Lebesgue, counting, and Riemannian volume measures, respectively, finding a suitable reference measure can be difficult.
 
 We will work with posterior distributions in infinite-dimensional vector spaces in the sequel---there, densities are either not available or not convenient.
 In those cases, it is enough to calculate the posterior on arbitrary finite-dimensional marginal projections to uniquely determine its value on the full infinite-dimensional space.
 
 \begin{proposition}[Conditioning and marginalization]
-Conditioning and marginalization commute.
+Conditioning and marginalization commute: given a probability measure $\pi_{\theta,\theta',y}$, if Bayes' Rule holds, then we have $\pi_y\ae[-]$ that
+\[
+\pi_{\theta \given y} = \pi_{\theta,\theta' \given y}(\. \x \Theta')
+.
+\]
 \end{proposition}
 
 \begin{proof}
-TODO.
+Let $\pi_{\theta,\theta'\given y}$ be the $\pi_y\ae[-]$ unique probability kernel given by the Disintegration Theorem satisfying
+\[
+\pi_{\theta,\theta',y}(A_{\theta,\theta'} \x A_y) = \int_{A_y} \pi_{\theta,\theta'\given y}(A_{\theta,\theta'} \given y) \d\pi_y(y)
+.
+\]
+Plugging in $A_{\theta} \x \Theta'$ for $A_{\theta,\theta'}$ gives
+\[
+\pi_{\theta,y}(A_\theta \x A_y) = \int_{A_y} \pi_{\theta,\theta'\given y}(A_\theta \x \Theta' \given y) \d\pi_y(y)
+.
+\]
+On the other hand, applying the Disintegration Theorem to $\pi_{\theta,y}$ gives a $\pi_y\ae[-]$ unique probability kernel satisfying
+\[
+\pi_{\theta,y}(A_\theta \x A_y) = \int_{A_y} \pi_{\theta\given y}(A_\theta \given y) \d\pi_y(y)
+.
+\]
+Since both $\pi_{\theta,\theta'\given y}$ and $\pi_{\theta,y}$ are defined with respect to the same null sets, we conclude by uniqueness that they coincide, and the claim follows.
 \end{proof}
 
 This result makes densities into a substantially more powerful tool than they would be otherwise, since it enables us to use them for calculating posterior distributions even where they are not directly available.
@@ -394,14 +429,52 @@ Finally, since for any bounded measurable $f : \Omega \x A \-> \R$, the map $a \
 \end{proof}
 
 \begin{lemma}
-\label{lem:cyl-prod}
-Let $\pi : \c{A} \x \c{B} \-> [0,1]$ be a function satisfying the measure axioms.
-Then $\pi$ extends uniquely to a measure on the product sigma-algebra.
+\label{lem:semi-algebra}
+Let $\c{S}$ be a \emph{semi-algebra of sets}, which is defined as a family of sets satisfying the following.
+\1 $\c{S}$ contains the empty set.
+\2 $\c{S}$ is closed under finite intersections.
+\3 The complement of any set in $\c{S}$ can be written as a finite union of disjoint sets in $\c{S}$.
+\0 
+Then any countably additive function $\mu : \c{S} \-> [0,1]$ satisfying $\mu(\emptyset) = 0$ extends uniquely to a measure on the smallest $\sigma$-algebra containing $\c{S}$.
 \end{lemma}
 
 \begin{proof}
-Apply a $\pi$-$\lambda$ argument.
-TODO.
+Define the \emph{algebra of sets} generated by $\c{S}$ to be
+\[
+a(\c{S}) = \cbr{\U_{i=1}^n S_i : S_i \in \c{S} \t{disjoint}}
+\]
+and note that the smallest $\sigma$-algebra generated by $\c{S}$ obviously coincides with the smallest $\sigma$-algebra generated by $a(\c{S})$.
+We claim every function $\mu : \c{S} \-> [0,1]$ satisfying the measure axioms extends uniquely to a function on $a(\c{S})$.
+Every element of $\c{S}$ can be written as a finite union of disjoint sets---using this, define 
+\[
+\mu^{(a)} : a(\c{S}) &\-> [0,1]
+&
+\mu^{(a)}\del{\U_{i=1}^n S_i} &= \sum_{i=1}^n \mu(S_i)
+.
+\]
+To ensure this is well-defined, we check that the definition is independent of the choice of which disjoint subsets to take the union of---suppose that $\U_{i=1}^n S_i = \U_{j=1}^m T_j$.
+Then we have $S_i = \U_{j=1}^m S_i \^ T_j$ and similarly $T_j = \U_{i=1}^n S_i \^ T_j$: plugging these in to $\mu$ yields a double sum of disjoint sets and affirms well-definedness.
+Next, note that $\mu^{(a)}(\emptyset) = \mu(\emptyset) = 0$.
+To see that $\mu$ inherits countable additivity, take a sequence $S_1,S_2,.. \in a(\c{S})$ and note that
+\[
+\U_{n=1}^\infty S_n = \U_{n=1}^\infty \U_{m=1}^n T_{nm}
+\]
+where $T_{nm} \in \c{S}$.
+Plugging this into $\mu^{(a)}$ and applying countable additivity of $\mu$ gives the desired property.
+We have thus obtained a uniquely defined countably additive function $\mu^{(a)} : a(\c{S}) \-> [0,1]$ defined on an algebra of sets $a(\c{S})$ which extends $\mu$.
+This function satisfies the assumptions of Carathéodory's Extension Theorem---see \textcite[Theorem A1.1]{kallenberg06} or \textcite[Theorem 3.1]{billingsley08}---applying this result gives the claim, where we note that uniqueness follows since the range of $\mu^{(a)}$ is $[0,1]$.
+\end{proof}
+
+\begin{lemma}
+\label{lem:cyl-prod}
+Let $\pi : \c{A} \x \c{B} \-> [0,1]$ be a countably additive function with $\pi(\emptyset) = 0$.
+Then $\pi$ extends uniquely to a measure on the product $\sigma$-algebra.
+\end{lemma}
+
+\begin{proof}
+By \Cref{lem:semi-algebra}, it suffices to show that $\c{A} \x \c{B}$ is a semi-algebra of sets.
+The first required property is immediate, the second and third properties follow by $(A \x B) \^ (A' \x B') = (A \x A') \^ (B \x B')$ and $(A \x B)^c = (A^c \x B) \u (A \x B^c) \u (A^c \x B^c)$.
+The claim follows.
 \end{proof}
 
 \begin{lemma}
@@ -420,14 +493,23 @@ TODO.
 \end{proof}
 
 \begin{lemma}
-\label{lem:prod-density}
-Let $\pi_{a,b}$ be a measure which admits a density with respect to $\lambda$.
-Then $\pi_{a,b}(\.\x B)$ admits a density with respect to $\lambda(\.\x B)$, and similarly in the other argument.
+\label{lem:ref-density}
+Let $\pi_{a,b}$ be a measure which admits the density $f_{a,b}$ with respect to a product measure $\lambda_{a,b}$.
+Then $\pi_a = \pi_{a,b}(\.\x B)$ admits the density $f_a$ with respect to $\lambda_a = \lambda_{a,b}(\.\x B)$, and similarly in the other argument.
 \end{lemma}
 
 \begin{proof}
-Apply a Fubini-type argument.
-TODO.
+By assumption and Tonelli's Theorem, we have 
+\[
+\pi_a(A_a) &= \pi_{a,b}(A_a \x B) 
+\\
+&= \int_{A_a \x B} f_{a,b}(\alpha,\beta) \d\lambda_{a,b}(\alpha,\beta)
+\\
+&= \int_{A_a} \int_B f_{a,b}(\alpha,\beta) \d\lambda_b(\beta)\d\lambda_a(\alpha) 
+\\
+&= \int_{A_a} f_a(\alpha) \d\lambda_a(\alpha) 
+\]
+where the desired probability density is $f_a(\alpha) = \int_B f_{a,b}(\alpha,\beta) \d\lambda_b(\beta)$.
 \end{proof}
 
 \section{Statistical decision-making}
@@ -436,6 +518,8 @@ We now use the Bayesian formalism to construct a probabilistic theory of decisio
 To begin, we formalize the very general concept of an abstract agent making decisions in an environment in pursuit of some goal.
 
 \subsection{Markov decision processes}
+A Markov decision process is a stochastic system consisting of a set of states, actions, and transitions between states, together with a rewards that vary depending on states and actions.
+This is defined as follows.
 
 \begin{definition}[Discrete-time Markov decision process]
 A \emph{discrete-time Markov decision process} is a $4$-tuple consisting of the following.
@@ -486,17 +570,17 @@ where $r_t \given s_t,a_t \~ r(s_t,a_t)$, $a_t \given s_t \~ \pi(s_t)$, and $s_{
 Finding an optimal policy therefore amounts to selecting the best possible actions to maximize total rewards.
 It is therefore of key interest to find an optimal policy, if one exists.
 Note that closely-related alternative notions of optimality, such as minimizing infinite discounted sums, or limits of averages, are also possible.
-The most important distinction between different problems for finding optimal policies is given by what is assumed known.
+The most important distinction between different decision problems for finding optimal policies is given by what is assumed known.
 
 \1 If $p$ and $r$ are known, we say we have an \emph{optimal control} problem.
-\2 Otherwise, we say we have an \emph{decision} problem.
+\2 Otherwise, we say we have a \emph{reinforcement learning} problem.
 \0 
 
 These classes differ fundamentally from one another. 
 Optimal control problems can be viewed as a class of structured optimization problems, where the goal is to compute $\pi$ by evaluating $r$ and $p$ as necessary.
 Here, one generally proceeds by proving that $V^{(\pi)}$ and $\pi$ satisfy certain recursive equations, and developing schemes for solving them.
 
-Decision problems do not behave in this manner.
+Reinforcement learning problems are more complex.
 Due to the rewards or dynamics being \emph{unknown}, they cannot simply be maximized and their expectation must be \emph{learned}.
 This forces one to consider whether to take advantage of actions known to be good, or to try others in case they might be better---this is known as the \emph{explore-exploit tradeoff}.
 For such settings, we need an appropriate solution concept---to obtain one, define the following.
@@ -529,15 +613,15 @@ One way to construct algorithms for solving decision problems is to employ a \em
 \0 
 
 The details of such approaches depends on the setting.
-We distinguish between two key kinds of decision problems.
+We distinguish between two key kinds of reinforcement learning problems.
 
-\1 If $|S| = 1$, it is known as a \emph{multi-armed bandit} problem.
-\2 Otherwise, it is known as a \emph{reinforcement learning} problem.
+\1 If $|S| = 1$, it is known as a \emphmarginnote{multi-armed bandit} problem.
+\2 Otherwise, it is known as a general reinforcement learning problem.
 \0 
 
 Multi-armed bandits possess no variable state, and thus only require one to learn the rewards and determine which actions are optimal.
-Reinforcement learning allows actions to influence transitions between states, and requires long-term planning, making it much more general, difficult, and important.
-I believe that as a mathematical theory, reinforcement learning is powerful enough to describe many aspects of human and animal intelligence, making it a fundamentally interesting theory to study and develop.
+In general reinforcement learning, actions can influence transitions between states---these problems require long-term planning, making them much more general, difficult, and important.
+I believe that as a mathematical theory, reinforcement learning is powerful enough to describe many aspects of human and animal intelligence, making it fundamentally interesting to study and develop.
 
 We now restrict ourselves to the bandit setting, which is substantially easier to study and so can be understood much more deeply.
 Here, even when $A$ is a finite set and the rewards are Gaussian, the model-based approach consisting of (i) estimating rewards using empirical risk minimization and (ii) choosing the policy which maximizes rewards is known to be non-optimal.
@@ -759,7 +843,7 @@ By \Cref{lem:regret-arms}---which we note still holds conditional on $B$ via the
 which completes the argument.
 \end{proof}
 
-This shows that the proposed algorithm, which uncertainty built via the posterior distribution, effectively balances exploration and exploitation in this setting.
+This shows that the proposed algorithm, which uncertainty built via the error bars, effectively balances exploration and exploitation in this setting.
 The above behavior is not unique to the given form of the upper confidence bound, nor to the upper confidence bound rule itself.
 For example, we can consider a variation of the above algorithm, where the width of the error bars is constructed via a Bayesian model.
 
@@ -1166,7 +1250,7 @@ is positive semi-definite.
 We can recover such a kernel from a given Gaussian process.
 
 \begin{definition}[Covariance kernel]
-The \emph{covariance kernel} of a Gaussian process then is defined by
+The \emph{covariance kernel} of a Gaussian process is defined by
 \[
 k(x,x') = \Cov(f(\.,x),f(\.,x'))    
 .
