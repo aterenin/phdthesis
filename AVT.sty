@@ -134,7 +134,7 @@
 \let\nothing\emptyset
 \renewcommand{\emptyset}{\varnothing}
 \newcommand{\st}{\t{s.t.}} % such that
-\renewmathcommand{\~}[1][]{\sim\ifx\\#1\\\else\operatorname{#1}\fi} % tilde
+\renewmathcommand{\~}[1][]{\sim\if\relax\detokenize{#1}\relax\else\operatorname{#1}\fi} % tilde
 \newcommand{\after}{\circ} % composition
 
 \renewmathcommand{\v}{\expandafter\boldsymbol} % vector
@@ -229,7 +229,7 @@
 \renewcommand{\1}{\relax\ifmmode\bb{1}\else\expandafter\@onenonmath\fi} % indicator function and enumerate/itemize shorthand
 \newcommand{\@onenonmath}{\@ifstar\@onestarred\@onenonstarred}
 \newcommand{\@onestarred}{\begin{itemize}\item} % itemize shorthand
-\newcommand{\@onenonstarred}[1][]{\ifx\\#1\\\begin{enumerate}\item\else\begin{enumerate}[#1]\item\fi} % enumerate with possible iteration choice
+\newcommand{\@onenonstarred}[1][]{\if\relax\detokenize{#1}\relax\begin{enumerate}\item\else\begin{enumerate}[#1]\item\fi} % enumerate with possible iteration choice
 \providecommand{\2}{} % xymatrix workaround
 \renewcommand{\2}{\@ifstar\item\item} % enumerate/itemize shorthand
 \newcommand{\3}{\@ifstar\item\item} % enumerate/itemize shorthand
@@ -447,8 +447,8 @@
 
 % full width starred figures and tables
 \RequirePackage{ifoddpage}
-\renewenvironment{figure*}[1][]{\@float{figure}[#1]\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
-\renewenvironment{table*}[1][]{\@float{table}[#1]\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
+\renewenvironment{figure*}[1][]{\@float{figure}\if\relax\detokenize{#1}\relax\else[#1]\fi\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
+\renewenvironment{table*}[1][]{\@float{table}\if\relax\detokenize{#1}\relax\else[#1]\fi\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
 
 % place figures at the top by default
 \def\fps@figure{t}

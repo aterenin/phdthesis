@@ -162,16 +162,17 @@ These questions, then, are closed under \emph{and/or/not} operations and monoton
 
 \parmarginnote{Product of measurable spaces}
 Given two measurable spaces $(Y,\c{Y})$ and $(\Theta,\mathit\Theta)$, if we form the Cartesian product $Y \x \Theta$, then we can define the \emph{product $\sigma$-algebra} $\c{Y}\ox\mathit\Theta$ as the smallest $\sigma$-algebra containing all sets of the form $A_y \x A_\theta$ with $A_y \in\c{Y}$ and $A_\theta\in\mathit\Theta$.
-\marginnote{Subset of a measurable space}
-For a measurable subset $Y' \subseteq Y$, we can define $\c{Y}' = \{A_y \^ Y' : A_y \in\c{Y}\}$, which is also a $\sigma'$-algebra, thereby making $(Y',\c{Y}')$ into a measurable space. 
+\marginnote{Measurable subspace}
+For a measurable subset $Y' \subseteq Y$, we can define $\c{Y}' = \{A_y \^ Y' : A_y \in\c{Y}\}$, which is also a $\sigma$-algebra, thereby making $(Y',\c{Y}')$ into a measurable space. 
 We call $\c{Y}'$ the \emph{subset $\sigma$-algebra}.
+If $Y$ is a topological space, the \emphmarginnote{Borel $\sigma$-algebra} $\c{B}(Y)$ is defined as the smallest $\sigma$-algebra containing the open sets.
 
 \parmarginnote{Measurable function}
 A map $f : Y \-> Y'$ between measurable spaces $(Y,\c{Y})$ and $(Y',\c{Y}')$ is said to be \emph{measurable} if its preimage defines a map $f^{-1} : \c{Y}' \-> \c{Y}$ between the respective $\sigma$-algebras.
 This intuitively means that true-false questions for the space $Y'$ can be asked and answered relative to those in $Y$.
 On product spaces, a map $f : Y \-> \Theta \x \Theta'$ is measurable if its components are measurable, but a map $f : Y \x Y' \-> \Theta$ \emph{need not} automatically be measurable if $f(\.,y') : Y \-> \Theta$ and $f(y,\.) : Y' \-> \Theta$ are measurable for all $y$ and $y'$.
 
-A \emphmarginnote{probability measure} is a countably additive map $\pi_y : \c{Y} \-> [0,1]$ satisfying $\pi_Y(Y) = 1$. 
+A \emphmarginnote{probability measure} is a non-negative countably additive map $\pi_y : \c{Y} \-> \R$ satisfying $\pi_Y(Y) = 1$. 
 This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is according to the measure---in this view, probability measures describe uncertainty.
 A \emphmarginnote{probability space} $(\Omega,\c{F},\P)$ consists of a measurable space and probability measure.
 The set $\Omega$ can be viewed as a space of abstract random numbers, with a random number generator described by $\P$.
@@ -199,7 +200,7 @@ We will thus implicitly assume all probability spaces are large enough to ensure
 
 \parmarginnote{Probability kernel}
 We will be interested in probability measures extended to allow them to be parameterized by other quantities.
-A \emph{probability kernel} is defined to be a map $\pi_{y\given\theta} : \c{Y} \x \Theta \-> [0,1]$ satisfying two conditions: (i) the map $\pi_{y\given\theta}(\.,\vartheta) : \c{Y} \-> [0,1]$ is a probability measure for all $\vartheta\in\Theta$, and (ii) the map $\pi_{y\given\theta}(A_y,\.) : \Theta \-> [0,1]$ is measurable for all $A_y\in\c{Y}$.
+A \emph{probability kernel} is defined to be a map $\pi_{y\given\theta} : \c{Y} \x \Theta \-> \R$ satisfying two conditions: (i) the map $\pi_{y\given\theta}(\.,\vartheta) : \c{Y} \-> \R$ is a probability measure for all $\vartheta\in\Theta$, and (ii) the map $\pi_{y\given\theta}(A_y,\.) : \Theta \-> \R$ is measurable for all $A_y\in\c{Y}$.
 
 \parmarginnote{Conditional distribution}
 Random variables can also be extended to parameterize them by other quantities.
@@ -235,15 +236,15 @@ Our first goal is to make this notation into proper mathematics.
 \begin{proposition}
 A Bayesian model can be constructed in the following ways.
 \1 Using measures: integrate the following two components.
-\1 \emph{Prior}: a probability measure $\pi_\theta$.
-\2 \emph{Likelihood}: a probability kernel $\pi_{y\given\theta}$.
+\1 \emph{Prior}: a probability measure $\pi_\theta : \mathit\Theta \-> \R$.
+\2 \emph{Likelihood}: a probability kernel $\pi_{y\given\theta} : \c{Y}\x\Theta \-> \R$.
 \0 
 \2 Using random variables: compose the following two components.
 \1 \emph{Prior}: a random variable $\theta:\Omega\->\Theta$.
 \2 \emph{Likelihood}: a jointly measurable stochastic process $y\given\theta: \Omega\x\Theta\->Y$.
 \0 
 \0 
-Moreover, if $y\given\theta$ additionally satisfies the \emph{non-duplicate dependence} condition---namely, that for almost every $\theta'\in\Theta$, the random variable $(y\given\theta)(\.,\theta') : \Omega \-> Y$ is independent of $\theta$---then the constructions coincide.
+Moreover, if one takes the pushforward of the composition of the obtained random variables with respect to $\P\x\P$, then the two constructions coincide.
 \end{proposition}
 
 \begin{proof}
@@ -254,11 +255,11 @@ For the former, define
 which extends to the full product $\sigma$-algebra by \Cref{lem:cyl-prod}, giving the desired probability measure.
 For the latter, define the random variable
 \[
-\gamma : \Omega &\-> \Theta \x Y
+\gamma : \Omega\x\Omega &\-> \Theta \x Y
 &
-\gamma : \omega &\|> (\theta(\omega), (y\given\theta)(\omega,\theta(\omega)))
+\gamma : (\omega,\omega') &\|> (\theta(\omega), (y\given\theta)(\omega',\theta(\omega)))
 \]
-and take $\pi_{\theta,y} = \gamma_* \P$. 
+and take $\pi_{\theta,y} = \gamma_* (\P\x\P)$. 
 We now prove these expressions coincide.
 Write 
 \[
@@ -270,15 +271,15 @@ Write
 \\
 &= \int_\Omega\int_\Omega \1_{(\theta(\omega),(y\given\theta)(\omega',\theta(\omega))) \in A_\theta \x A_y} \d\bb{P}(\omega') \d\bb{P}(\omega)
 \\
-&= \int_\Omega \1_{(\theta(\omega),(y\given\theta)(\omega,\theta(\omega))) \in A_\theta \x A_y}\d\bb{P}(\omega)
-\\
-&= \P((\theta,(y\given\theta)(\.,\theta)) \in A_\theta \x A_y)
+&= (\P\x\P)((\theta,(y\given\theta)(\.,\theta)) \in A_\theta \x A_y)
 \]
-which follows using Tonelli's Theorem, \Cref{lem:cyl-prod}, and \Cref{lem:non-dupl-dep} via the non-duplicate dependence condition.
+which follows using Tonelli's Theorem and \Cref{lem:cyl-prod}.
 \end{proof}
 
 These two components should be interpreted as follows: $\theta$ describes what is known about the quantity of interest external to the data, and $y\given\theta$ describes how the data $y$ relates to the quantity of interest.
 More specifically, the likelihood describes how $y$ would be distributed if $\theta$ was known and equal to the conditioned value.
+
+The condition that the pushforward of the composition of the prior and likelihood needs to be taken with respect to the product measure $\P\x\P$ should be interpreted as a kind of \emph{non-duplicate dependence} condition which ensures that $y\given\theta$ depends on $\theta$ only through its second argument, and not through the abstract random numbers $\omega$.
 
 Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution---note that this is meant in a \emph{distributional} sense, not a random-variable-based sense.
 The formulation is given as follows.
@@ -377,31 +378,37 @@ We now introduce the \emph{variational formulation} of Bayes' Rule, which expres
 
 \begin{proposition}[Bayes' Rule in variational form]
 \label{prop:variational-bayes}
-Assume TODO.
+Let $\pi_{y,\theta}$ be a Bayesian model, and assume it admits the density $f_{\theta,y}$ with respect to a product measure $\lambda$.
 Then for every $\gamma\in Y$, the posterior distribution satisfies 
 \[
 \pi_{\theta\given y}(\.\given \gamma) = \argmin_{\bb{q}_\theta \in \c{M}_1(\Theta)} D_{\f{KL}}(\bb{q}_\theta \from \pi_\theta) - \operatorname*{\E}_{\vartheta\~\bb{q}_\theta} \ln f_{y\given\theta}(\gamma\given\vartheta)
 \]
-where the minima does not depend on the choice of reference measure used in defining the likelihood density.
+where the minima does not depend on the choice of $\lambda$.
 \end{proposition}
 
 \begin{proof}
-We prove the result twice, using two different techniques---by computations that involve Kullback--Leibler divergences, and by employing ideas from the calculus of variations.
-We start with the former. 
-Since the topology generated by the Kullback--Leibler divergence on the space of probability measures is Hausdorff, we have
+Write the quantity being minimized as
 \[
-\pi_{\theta\given y}(\.\given \gamma) &= \argmin_{\bb{q}_\theta \in \c{M}_1(\Theta)} D_{\f{KL}}(\bb{q}_\theta \from \pi_{\theta\given y}(\.\given \gamma))
+D_{\f{KL}}(\bb{q}_\theta \from \pi_\theta) - \operatorname*{\E}_{\vartheta\~\bb{q}_\theta} \ln f_{y\given\theta}(\gamma\given\vartheta) &= \operatorname*{\E}_{\vartheta\~\bb{q}_\theta} \ln \frac{f_{\bb{q}}(\vartheta)}{f_\theta(\vartheta) f_{y\given\theta}(\gamma\given\vartheta)}
+\\
+&= \operatorname*{\E}_{\vartheta\~\bb{q}_\theta} \ln \frac{f_{\bb{q}}(\vartheta)}{f_{\theta\given y}(\vartheta\given\gamma) f_y(\gamma)}
+\\
+&= D_{\f{KL}}(\bb{q}_\theta \from \pi_{\theta\given y}(\.\given \gamma)) - \ln f_y(\gamma)
 \]
-TODO
+Since $\ln f_y(\gamma)$ does not depend on $\bb{q}_\theta$, and since $D_{\f{KL}}(\mu \from \nu) = 0$ implies $\mu = \nu$, we conclude that the objective is minimized by taking $\bb{q}_\theta = \pi_{\theta\given y}(\.\given\gamma)$.
+Since the minima does not depend on the choice of the measure $\lambda$ with respect to which the densities are defined, the claim follows.
 \end{proof}
 
 For any given dataset, this result shows that  Bayes' Rule can be viewed in \emph{information-theoretic} manner: among all probability measures, the posterior maximizes predictive power, while retaining as many bits as possible from the prior, in the sense given by the Kullback--Leibler divergence.
 
-The result also suggests a way to approximately compute posterior distributions: solve the optimization problem on a suitably chosen subspace of the space of all probability measures $\c{M}_1(\Theta)$.
+It's also possible to prove the result in a different way using the calculus of variations, with variations taken in the Banach space of signed measures under the total variation norm.
+That argument also employs Bayes' Rule for densities for its key step, making it largely similar in spirit.
+
+The result also suggests a way to approximately compute posterior distributions: restrict the optimization problem to a suitably chosen subspace of the space of all probability measures $\c{M}_1(\Theta)$.
 This strategy will be particularly fruitful in the later-described setting of Gaussian processes, where techniques for constructing such approximations with well-understood and favorable accuracy will be considered.
 
 We will \emph{always} view variational approximations as minimization of Kullback--Leibler divergences, as this is mathematically sound.
-We will eschew standard presentations involving \emph{evidence lower bounds}: the only mathematical explanations for why maximizing these bounds should improve model performance, that I am aware of, appeal to Kullback--Leibler divergences---so, then, why talk about evidence lower bounds in the first place?
+We will eschew standard presentations involving \emph{evidence lower bounds}: the only mathematical explanations for why maximizing these bounds should improve model performance that I am aware of appeal to Kullback--Leibler divergences---so, then, why talk about evidence lower bounds in the first place?
 
 Once a posterior is calculated, the next step is to extract the relevant quantities from it.
 Traditionally, this is often done by displaying summary statistics to be evaluated and interpreted by a person with statistical training, often with a focus on assessing uncertainty.
@@ -430,12 +437,12 @@ Finally, since for any bounded measurable $f : \Omega \x A \-> \R$, the map $a \
 
 \begin{lemma}
 \label{lem:semi-algebra}
-Let $\c{S}$ be a \emph{semi-algebra of sets}, which is defined as a family of sets satisfying the following.
+Let $\c{S}$ be a \emph{semi-algebra of sets}, which is defined as a family of sets satisfying the following conditions.
 \1 $\c{S}$ contains the empty set.
 \2 $\c{S}$ is closed under finite intersections.
 \3 The complement of any set in $\c{S}$ can be written as a finite union of disjoint sets in $\c{S}$.
 \0 
-Then any countably additive function $\mu : \c{S} \-> [0,1]$ satisfying $\mu(\emptyset) = 0$ extends uniquely to a measure on the smallest $\sigma$-algebra containing $\c{S}$.
+Then any bounded countably additive non-negative function $\mu : \c{S} \-> \R$ satisfying $\mu(\emptyset) = 0$ extends uniquely to a measure defined on the smallest $\sigma$-algebra containing $\c{S}$.
 \end{lemma}
 
 \begin{proof}
@@ -444,10 +451,10 @@ Define the \emph{algebra of sets} generated by $\c{S}$ to be
 a(\c{S}) = \cbr{\U_{i=1}^n S_i : S_i \in \c{S} \t{disjoint}}
 \]
 and note that the smallest $\sigma$-algebra generated by $\c{S}$ obviously coincides with the smallest $\sigma$-algebra generated by $a(\c{S})$.
-We claim every function $\mu : \c{S} \-> [0,1]$ satisfying the measure axioms extends uniquely to a function on $a(\c{S})$.
+We claim every function $\mu : \c{S} \-> \R$ satisfying the given assumptions extends uniquely to a function on $a(\c{S})$.
 Every element of $\c{S}$ can be written as a finite union of disjoint sets---using this, define 
 \[
-\mu^{(a)} : a(\c{S}) &\-> [0,1]
+\mu^{(a)} : a(\c{S}) &\-> \R
 &
 \mu^{(a)}\del{\U_{i=1}^n S_i} &= \sum_{i=1}^n \mu(S_i)
 .
@@ -461,13 +468,13 @@ To see that $\mu$ inherits countable additivity, take a sequence $S_1,S_2,.. \in
 \]
 where $T_{nm} \in \c{S}$.
 Plugging this into $\mu^{(a)}$ and applying countable additivity of $\mu$ gives the desired property.
-We have thus obtained a uniquely defined countably additive function $\mu^{(a)} : a(\c{S}) \-> [0,1]$ defined on an algebra of sets $a(\c{S})$ which extends $\mu$.
-This function satisfies the assumptions of Carathéodory's Extension Theorem---see \textcite[Theorem A1.1]{kallenberg06} or \textcite[Theorem 3.1]{billingsley08}---applying this result gives the claim, where we note that uniqueness follows since the range of $\mu^{(a)}$ is $[0,1]$.
+We have thus obtained a uniquely defined countably additive function $\mu^{(a)} : a(\c{S}) \-> \R$ defined on an algebra of sets $a(\c{S})$ which extends $\mu$.
+This function satisfies the assumptions of Carathéodory's Extension Theorem---see \textcite[Theorem A1.1]{kallenberg06} or \textcite[Theorem 3.1]{billingsley08}---applying this result gives the claim, where we note that uniqueness follows since the range of $\mu^{(a)}$ is bounded.
 \end{proof}
 
 \begin{lemma}
 \label{lem:cyl-prod}
-Let $\pi : \c{A} \x \c{B} \-> [0,1]$ be a countably additive function with $\pi(\emptyset) = 0$.
+Let $\pi : \c{A} \x \c{B} \-> \R$ be a countably additive function with $\pi(\emptyset) = 0$.
 Then $\pi$ extends uniquely to a measure on the product $\sigma$-algebra.
 \end{lemma}
 
@@ -475,21 +482,6 @@ Then $\pi$ extends uniquely to a measure on the product $\sigma$-algebra.
 By \Cref{lem:semi-algebra}, it suffices to show that $\c{A} \x \c{B}$ is a semi-algebra of sets.
 The first required property is immediate, the second and third properties follow by $(A \x B) \^ (A' \x B') = (A \x A') \^ (B \x B')$ and $(A \x B)^c = (A^c \x B) \u (A \x B^c) \u (A^c \x B^c)$.
 The claim follows.
-\end{proof}
-
-\begin{lemma}
-\label{lem:non-dupl-dep}
-Let $a : \Omega \-> A$ be a random variable and $b : \Omega \x A \-> B$ be a jointly measurable stochastic process.
-Suppose that for almost all $a'\in A$, the random variable $b(\.,a') : \Omega \-> B$ is independent of $a$.
-Then for all bounded measurable functions $f$ we have
-\[
-\int_\Omega f(a(\omega),b(\omega,a(\omega))) \d\bb{P}(\omega) = \int_{\Omega\x\Omega}f(a(\omega),b(\omega',a(\omega))) \d\bb{P}^2(\omega,\omega')
-.
-\]
-\end{lemma}
-
-\begin{proof}
-TODO.
 \end{proof}
 
 \begin{lemma}
@@ -540,7 +532,7 @@ For instance, one can consider continuous-time, purely deterministic, and partia
 \caption{TODO.}
 \end{figure}
 
-The idea behind this definition is that, at every point in time, the agent observes the current state, chooses an action $a \in A$, and obtains another state $s' \~ p(s,a)$.
+The idea behind this definition is that, at every point in time, the agent observes the current state, chooses an action $a \in A$, and obtains another state $s' \~ p(s\given a)$.
 Note that \emph{time} can, and often will, be part of the state $s$.
 The agent's goal is to choose each action so as to control the entire trajectory of states in order to obtain maximum rewards.
 The choice of actions in every state is called a \emph{policy}, and is formalized as follows.
@@ -567,8 +559,7 @@ V^{(\pi)}(x_0) = \E \sum_{t=0}^T r_t
 where $r_t \given s_t,a_t \~ r(s_t,a_t)$, $a_t \given s_t \~ \pi(s_t)$, and $s_{t+1} \given s_t,a_t \~ p(s_t, a_t)$.
 \end{definition}
 
-Finding an optimal policy therefore amounts to selecting the best possible actions to maximize total rewards.
-It is therefore of key interest to find an optimal policy, if one exists.
+Finding an optimal policy therefore amounts to selecting the best possible actions to maximize expected total rewards.
 Note that closely-related alternative notions of optimality, such as minimizing infinite discounted sums, or limits of averages, are also possible.
 The most important distinction between different decision problems for finding optimal policies is given by what is assumed known.
 
@@ -590,7 +581,7 @@ The \emph{regret} of a policy $\pi$ is defined as
 \[
 R^{(\pi)}(x_0) = V^*(x_0) - V^{(\pi)}(x_0)
 \]
-where $V^*$ is the optimal value function, which is assumed to exist.
+provided that the value function $V^*$ with respect to an optimal policy exists.
 \end{definition}
 
 Minimizing regret is equivalent to maximizing value, but when $p$ and $r$ are unknown doing so directly is impossible.
@@ -635,7 +626,7 @@ We therefore proceed to study multi-armed bandits in more detail.
 
 The multi-armed bandit problem takes its name from a casino analogy.
 In the 1950s, slot machines often had levers one could pull instead of buttons one could press, and were called \emph{one-armed bandits} for their ability to empty gamblers' wallets.
-A \emph{multi-armed bandit} is a slot machine which for a fixed cost, allows one to pull an arm $x \in X$, and receive a random reward whose distribution depends on $x$.
+A \emph{multi-armed bandit} is a slot machine, which, for a fixed cost, allows one to pull an arm $x \in X$ and receive a random reward whose distribution depends on $x$.
 The goal is to minimize  expected loss, or, equivalently, maximize total expected rewards.
 
 Multi-armed bandits can be viewed as discrete-time Markov decision processes with a one-element state space, but this is not necessarily the most fruitful way to think about them.
@@ -664,7 +655,7 @@ Each arm's regret is given by its expected decrease in reward compared to the op
 Let $f : X \-> \R$ be bounded above function, let $\eps : \Omega \x X \-> \R$ be a stochastic process such that $\E(\eps(x)) = 0$, and let $y(\omega,x) = f(x) + \eps(\omega,x)$.
 Define the following.
 \1 We say that the Markov decision process $(\{1\},X,y_*\P,\delta_{1})$, with $\delta_1$ defined below, is a \emph{multi-armed bandit}.
-\2 We say that a probability kernel  $\pi : \c{X} \x \bigoplus_{n=1}^\infty (X \x [0,1])^n \-> \R$ is a \emph{multi-armed bandit algorithm}.
+\2 We say that a probability kernel  $\pi : \c{X} \x \bigoplus_{n=1}^\infty (X \x \R)^n \-> \R$ is a \emph{multi-armed bandit algorithm}.
 \0
 Here, $\delta_1$ is the Dirac measure centered at $1$ for all actions $x\in X$, which is the only possible conditional probability distribution over a one-element set, and $\bigoplus$ denotes the disjoint union of measurable spaces.
 \end{definition}
@@ -678,9 +669,9 @@ Some algorithms maximize $f$ faster than others---we consider this next.
 For a given multi-armed bandit, let $f(x^*)$ be the global maxima of $f$. 
 Define the \emph{regret} of an algorithm $\pi$ at time $T$ to be
 \[
-R(T) = \sum_{t=1}^T f(x^*) - f(x_t)
+R(\omega,T) = \sum_{t=1}^T f(x^*) - f(x_t(\omega))
 \]
-where $x_t \~ \pi(y_0,..,y_{t-1})$, $y_t = f(x_t) + \eps_t$, and $\eps_t \~ \eps(x)$.
+where $x_t \~ \pi(y_0,..,y_{t-1})$, $y_t(\omega) = f(x_t) + \eps_t(\omega)$, and $\eps_t \~ \eps(\.,x_t)$.
 \end{definition}
 
 Regret thus counts the total reward lost by virtue of not knowing the optimal arm in advance.
@@ -701,9 +692,9 @@ For such bandits, regret can be decomposed on a per-arm basis in the manner give
 \label{lem:regret-arms}
 Regret satisfies 
 \[
-R(T) = \sum_{x=1}^K \Delta(x) n_T(x)
+R(\omega,T) = \sum_{x=1}^K \Delta(x) n_T(\omega,x)
 \]
-where $n_T(x) = \sum_{t=1}^T \1_{x_t = x}$ and $\Delta(x) = f(x^*) - f(x)$.
+where $n_T(\omega,x) = \sum_{t=1}^T \1_{x_t(\omega) = x}$ and $\Delta(x) = f(x^*) - f(x)$.
 \end{lemma}
 
 \begin{proof}
@@ -716,7 +707,7 @@ One can ask and answer this question as follows.
 \begin{theorem}
 For any algorithm defined over a class of $K$-armed bandits there is an $f$ such that
 \[
-\E(R(T)) \geq \Omega(\sqrt{KT})
+\E(R(\.,T)) \geq \Omega(\sqrt{KT})
 .
 \]
 \end{theorem}
@@ -737,20 +728,20 @@ x_{t+1} &= \argmax_{x\in X} \mu_t(x)
 &
 \mu_t(x) &= \frac{\sum_{t=1}^T \1_{y_t = 1} \1_{x_t = x}}{\sum_{t=1}^T \1_{x_t = x}}
 \]
-achieves linear regret.
+of the random observed data achieves linear regret.
 \end{proposition}
 
 \begin{proof}
 For an event $S$, we may write
 \[
-\E(R(T)) &= \E(R(T) \given S) \P(S) + \E(R(T) \given S^c) \P(S^c) 
+\E(R(\.,T)) &= \E(R(\.,T) \given S) \P(S) + \E(R(\.,T) \given S^c) \P(S^c) 
 \\
-&\geq \E(R(T) \given S) \P(S)
+&\geq \E(R(\.,T) \given S) \P(S)
 .
 \]
 So, it suffices to exhibit a bandit along with an event $S$, which we call the \emph{stuck event}, which occurs with constant probability and induces linear regret.
 Let $S$ be the event that during the initial first arm pulls, the optimal arm yields zero reward, while some other arm yields a reward: clearly $\P(S) > 0$.
-On the other hand, $\E(R(T) \given S) = \c{O}(T)$, because the optimal arm conditional on $S$ has empirical mean zero, which is always smaller than the alternative, and will never be selected again.
+On the other hand, $\E(R(\.,T) \given S) = \c{O}(T)$, because the optimal arm conditional on $S$ has empirical mean zero, which is always smaller than the alternative, and will never be selected again.
 The claim follows.
 \end{proof}
 
@@ -769,6 +760,7 @@ f^+_t(x) &= \mu_t(x) + c_t\sigma_t(x)
 where $\mu_t$ are the empirical means, $\sigma_t(x) = \sqrt{\frac{1}{n_t(x)}}$, and $c_t = \sqrt{2\ln(T)}$.
 \end{definition}
 
+Note that here, again, no $\omega$-arguments are present in the notation because randomness only enters through the observed data.
 We now consider this algorithm's regret.
 It turns out this simple modification, consisting of adding a set of error bars with a threshold growing in time and decreasing with data, is enough to result in different regret behavior.
 
@@ -916,7 +908,7 @@ y_t(\omega) &= f(x_t) + \eps_t(\omega)
 \eps_t &\~[N](0,\sigma^2)
 .
 \]
-Here, the data is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which we view as an element of an infinite-dimensional vector space, say, for instance, the space of continuous functions $C^0(X;\R)$.
+Here, the space of observed values is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which we view as an element of an infinite-dimensional vector space, say, for instance, the space of continuous functions $C^0(X;\R)$.
 
 
 \begin{figure}
@@ -962,6 +954,7 @@ which is a \emph{random} acquisition function, and \emph{expected improvement}
 x_{t+1} = \argmax_{x\in X} \E \max(0,f_t(\.,x) - f(x^*_t))
 \]
 where $f_t = f \given y_1,..,y_t$ is the posterior, and $x^*_t = \argmin_{t \in \{1,..,t\}} f(x_t)$ is the smallest value observed so far.
+Many other effective acquisition functions, including \emph{probability of improvement}, \emph{predictive entropy search}, and \emph{information directed sampling}, are also possible.
 
 Regret analysis for all of these choices is possible, and will in general depend on the detailed properties on the model, acquisition function, and the unknown function $f$.
 In particular, regularity and smoothness properties may play a role, as well as structure present in the domain $X$.
@@ -1593,7 +1586,7 @@ The computational costs will be cubic in the dimension of both $\v\theta$ and $\
 
 The preceding considerations gave closed-form analytic expressions for Gaussian conditionals in terms of matrix-vector expressions that can be computed numerically.
 From this, one might be tempted to conclude that there is nothing more to say conditioning multivariate Gaussians---this, however, would miss an alternative view.
-Miraculously, Gaussian conditional distributions---in general, a purely \emph{distributional} notion---can also be described in a \emph{pathwise} manner using \emph{random variables}.
+Miraculously, Gaussian conditionals, which in general are a purely \emph{distributional} notion, can also be described in a \emph{pathwise} manner using \emph{random variables}.
 
 \begin{restatable}[Matheron's update rule]{theorem}{thmmvnpw}
 \label{thm:mvn-pw}
@@ -1658,9 +1651,9 @@ We now recall this notion and some of its key properties.
 
 Conditional expectation is defined as the orthogonal projection from the Lebesgue space $L^2(\Omega,\c{F},\P;\R^n)$ onto the subspace $L^2(\Omega,\sigma(\v{y}),\P;\R^n)$ where $\sigma(\v{y})$ is the smallest $\sigma$-algebra containing all preimages $\v{y}^{-1}(A_{\v{y}})$ where $A_{\v{y}}\in\c{B}(\R^n)$. 
 Recall that the preimage is a map $\v{y}^{-1} : \c{B}(\R^n) \-> \c{F}$ between $\sigma$-algebras.
-This definition might seem daunting, but is reasonably intuitive: we can think of this as projecting onto the subspace induced by all collections of random numbers in $\Omega$ which play a role in determining what $\v{y}$ does.
+This definition is reasonably intuitive: we can think of this as projecting onto the subspace induced by all collections of random numbers in $\Omega$ which play a role in determining what $\v{y}$ does.
 
-Recall that $L^2(\Omega,\c{F},\P;\R^n)$ is a Hilbert space of equivalence classes of random variables with inner product given by $\innerprod{\v{a}}{\v{b}} = \E(\v{a}\cdot\v{b})$.
+Recall that $L^2(\Omega,\c{F},\P;\R^n)$ is the Hilbert space of equivalence classes of random variables with inner product given by $\innerprod{\v{a}}{\v{b}} = \E(\v{a}\cdot\v{b})$.
 Using this, it follows from the Projection Theorem for Hilbert spaces that the terms\footnote{TODO: check.} $\E(\v\theta\given\v{y})$ and $(\v\theta - \E(\v\theta\given\v{y}))$ are uncorrelated---and, in the Gaussian case, that they are independent.
 This gives us the candidate random variables to use for $\v{b}$ and $\v{c}$, if we choose conditional expectation for $f$.
 
