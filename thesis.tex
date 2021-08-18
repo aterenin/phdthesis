@@ -421,7 +421,7 @@ We now prove a number of technical lemmas used in the preceding text, which for 
 \begin{lemma}
 \label{lem:rcrv-rvm-equiv}
 Let $b:\Omega\x A\->B$ be a jointly measurable stochastic process.
-Then the map $b_*\P : \c{B} \x A \-> [0,1]$, where the pushforward is taken in the first argument, is a probability kernel.
+Then the map $b_*\P : \c{B} \x A \-> \R$, where the pushforward is taken in the first argument, is a probability kernel.
 \end{lemma}
 
 \begin{proof}
@@ -526,10 +526,105 @@ This is a very broad notion---however, a number of variations are also possible.
 For instance, one can consider continuous-time, purely deterministic, and partially observed analogs---each of these involve their own subtleties and deserve study in their own right, but we do not pursue them here.
 
 \begin{figure}
-\vspace*{10ex}
-[Markov Decision Process Visual Diagram]
-\vspace*{10ex}
-\caption{TODO.}
+\tikzset{external/export next=false}
+\begin{tikzpicture}
+\begin{scope}[shift={(-5.75,2.125)}, scale=0.0085, thick]
+\clip[preaction = {draw,ultra thick}] (300, -395) -- (285, -355) .. controls (285, -355) and (269.142, -342.071) .. (255, -335) .. controls (245, -330) and (227.237, -322.04) .. (215, -320) .. controls (185, -315) and (175, -295) .. (175, -295) .. controls (175, -295) and (150, -295) .. (135, -285) .. controls (129.117, -281.078) and (100, -250) .. (100, -235) .. controls (100, -215) and (105, -205) .. (115, -195) .. controls (135.274, -174.726) and (144.617, -159.069) .. (186.751, -142.257) .. controls (230, -125) and (245, -125.009) .. (255, -125) .. controls (270.117, -124.987) and (289.478, -127.154) .. (305.786, -129.965) .. controls (335, -135) and (347.49, -144.511) .. (364.446, -158.01) .. controls (378.439, -169.15) and (389.863, -183.998) .. (397.853, -200) .. controls (405.048, -214.411) and (409.778, -230.664) .. (410, -246.769) .. controls (410.144, -257.217) and (410.264, -270.263) .. (402.959, -277.316) .. controls (395, -285) and (385, -290) .. (385, -290) .. controls (385, -290) and (377.69, -310.274) .. (375.386, -315.536) .. controls (371.018, -325.511) and (360.595, -330.936) .. (350.937, -334.628) .. controls (340.799, -338.503) and (318.451, -336.817) .. (318.451, -336.817) -- (326.08, -380.928) -- cycle;
+\draw (300, -400) -- (300, -275);
+\draw (275, -350) -- (275, -250) -- (225, -250);
+\draw (250, -350) -- (250, -275);
+\draw (225, -325) -- (225, -300) -- (200, -275) -- (100, -275);
+\draw (325, -350) -- (325, -250) -- (300, -250);
+\draw (400, -300) -- (350, -300) -- (350, -275) -- (375, -250) -- (375, -200) -- (400, -200);
+\draw (350, -250) -- (350, -225) -- (250, -225) -- (250, -175) -- (225, -150) -- (150, -150);
+\draw (350, -200) -- (300, -200) -- (300, -175);
+\draw (400, -175) -- (325, -175) -- (300, -150) -- (300, -125);
+\draw (200, -250) -- (150, -250) -- (125, -225) -- (75, -225);
+\draw (175, -200) -- (225, -200) -- (225, -225) -- (175, -225);
+\draw (225, -175) -- (150, -175) -- (150, -200) -- (100, -200);
+\draw (275, -200) -- (275, -125);
+\draw[fill=white] (200, -250) circle (7.5);
+\draw[fill=white] (225, -250) circle (7.5);
+\draw[fill=white] (250, -275) circle (7.5);
+\draw[fill=white] (300, -275) circle (7.5);
+\draw[fill=white] (300, -250) circle (7.5);
+\draw[fill=white] (350, -250) circle (7.5);
+\draw[fill=white] (350, -200) circle (7.5);
+\draw[fill=white] (175, -225) circle (7.5);
+\draw[fill=white] (175, -200) circle (7.5);
+\draw[fill=white] (225, -175) circle (7.5);
+\draw[fill=white] (300, -175) circle (7.5);
+\draw[fill=white] (275, -200) circle (7.5);
+\end{scope}
+\begin{scope}[shift={(2.5,-1)}, scale=0.0125, very thick, line cap=round]
+\draw (2, 2) -- (66, 2);
+\draw (82, 2) -- (162, 2);
+\draw (50, 18) -- (114, 18);
+\draw (146, 18) -- (162, 18);
+\draw (18, 34) -- (50, 34);
+\draw (98, 34) -- (114, 34);
+\draw (2, 50) -- (34, 50);
+\draw (50, 50) -- (66, 50);
+\draw (114, 50) -- (146, 50);
+\draw (18, 66) -- (34, 66);
+\draw (66, 66) -- (114, 66);
+\draw (130, 66) -- (146, 66);
+\draw (34, 82) -- (66, 82);
+\draw (98, 82) -- (130, 82);
+\draw (2, 98) -- (18, 98);
+\draw (34, 98) -- (50, 98);
+\draw (82, 98) -- (98, 98);
+\draw (146, 98) -- (162, 98);
+\draw (50, 114) -- (66, 114);
+\draw (82, 114) -- (98, 114);
+\draw (2, 130) -- (18, 130);
+\draw (34, 130) -- (50, 130);
+\draw (98, 130) -- (114, 130);
+\draw (130, 130) -- (146, 130);
+\draw (18, 146) -- (34, 146);
+\draw (50, 146) -- (66, 146);
+\draw (114, 146) -- (130, 146);
+\draw (146, 146) -- (162, 146);
+\draw (2, 162) -- (82, 162);
+\draw (98, 162) -- (162, 162);
+\draw (2, 2) -- (2, 162);
+\draw (18, 18) -- (18, 34);
+\draw (18, 66) -- (18, 82);
+\draw (18, 98) -- (18, 114);
+\draw (18, 130) -- (18, 146);
+\draw (34, 2) -- (34, 18);
+\draw (34, 50) -- (34, 66);
+\draw (34, 82) -- (34, 114);
+\draw (50, 18) -- (50, 34);
+\draw (50, 50) -- (50, 82);
+\draw (50, 114) -- (50, 130);
+\draw (50, 146) -- (50, 162);
+\draw (66, 34) -- (66, 66);
+\draw (66, 82) -- (66, 114);
+\draw (66, 130) -- (66, 146);
+\draw (82, 18) -- (82, 50);
+\draw (82, 66) -- (82, 98);
+\draw (82, 114) -- (82, 162);
+\draw (98, 34) -- (98, 66);
+\draw (98, 98) -- (98, 114);
+\draw (98, 130) -- (98, 162);
+\draw (114, 18) -- (114, 34);
+\draw (114, 82) -- (114, 130);
+\draw (130, 2) -- (130, 34);
+\draw (130, 50) -- (130, 146);
+\draw (146, 34) -- (146, 50);
+\draw (146, 82) -- (146, 98);
+\draw (146, 114) -- (146, 130);
+\draw (162, 2) -- (162, 162);
+\end{scope}
+\node[minimum size=85] at (-3.5,0) (a) {};
+\node[minimum size=85] at (3.5,0) (e) {};
+\node[anchor=north] at (a.south) {Agent};
+\node[anchor=north] at (e.south) {Environment};
+\draw[-latex,very thick] (a) to[bend left=22.5] node[midway, above] {action} (e);
+\draw[-latex,very thick] (e) to[bend left=22.5] node[midway, below] {reward, next state} (a);
+\end{tikzpicture}
+\caption{Illustration of the feedback loop induced by a Markov decision process. Here, the agent chooses an action, which results in the environment changing to a new state. The agent observes the new state, as well as the reward given by the previous state and action. The agent's goal is to select actions to maximize long-term rewards.}
 \end{figure}
 
 The idea behind this definition is that, at every point in time, the agent observes the current state, chooses an action $a \in A$, and obtains another state $s' \~ p(s\given a)$.
