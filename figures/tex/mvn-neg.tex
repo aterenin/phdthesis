@@ -7,7 +7,7 @@
 \usepgfplotslibrary{fillbetween}
 \usetikzlibrary{fadings}
 \begin{document}
-\tikzsetnextfilename{figures/tex/mvn-dist-joint.pdf}
+\tikzsetnextfilename{figures/tex/mvn-neg.pdf}
 \begin{tikzpicture}
 \begin{tikzfadingfrompicture}[name={densityfade}]
     \begin{axis}[axis lines={none}, height={3.375cm}, width={3.375cm}, xmin={-3}, xmax={3}, ymin={-3}, ymax={3}, clip mode={individual}]
@@ -2330,7 +2330,6 @@
     \node at (3,-3) {};
     \fill
     [path fading={densityfade}, fill={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, fit fading={true}] (-3,-3) rectangle (3,3);
-    \draw[black, ultra thick] ({rel axis cs:1,0}|-{axis cs:0,-1}) -- ({rel axis cs:0,0}|-{axis cs:0,-1});
     \draw
     [draw={none}, fill={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, fill opacity={0.5}] (0,0) circle (1.6pt);
     \addplot[no markers, smooth, ultra thick, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, opacity={0.5}]

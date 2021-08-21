@@ -10,11 +10,15 @@ save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> Tik
 if !isdefined(PGFPlotsX, :TikzFadingFromPicture) @eval(PGFPlotsX, PGFPlotsX.@define_axislike TikzFadingFromPicture "tikzfadingfrompicture"); using PGFPlotsX: TikzFadingFromPicture, TikzPicture end
 TikzPicture(a::Vector{PGFPlotsX.AxisLike}) = TikzPicture(a...)
 
-function density_to_patches(distribution::AbstractMvNormal, num_contours::Int, num_points_per_contour::Int)
+function density_to_ellipse(distribution::AbstractMvNormal, num_points_per_contour::Int)
     angles = range(0, 2*pi, length = num_points_per_contour + 1)
-    radii = vcat(0, range(0, 3, length = num_contours + 1)[3:end], 30)
     circle = hcat(cos.(angles),sin.(angles))
-    ellipse = circle * cholesky(cov(distribution)).U
+    return circle * cholesky(cov(distribution)).U
+end
+
+function density_to_patches(distribution::AbstractMvNormal, num_contours::Int, num_points_per_contour::Int)
+    ellipse = density_to_ellipse(distribution, num_points_per_contour)
+    radii = vcat(0, range(0, 3, length = num_contours + 1)[3:end], 30)
     ellipse_pairs = tuple.(eachcol(hcat(ellipse[1:end-1,:], ellipse[2:end,:]))...)
     radius_pairs = tuple.(eachcol(hcat(radii[1:end-1], radii[2:end]))...)
     rectangles = Tuple[]
@@ -48,57 +52,71 @@ density_cond = [pdf(cond, a) for a in x]
 Random.seed!(1)
 samples_cond = rand(cond, 250)
 
-
-
-@pgf [PGFPlotsX.TikzFadingFromPicture(
-    {
-        name = "densityfade"
-    },
-    Axis(
+for (dist,name) in ((MvNormal(m, [1. 0.6; 0.6 1]),"mvn-pos"),(joint,"mvn-neg"),(joint,"mvn-dist-joint"))
+    @pgf [TikzFadingFromPicture(
+        {
+            name = "densityfade"
+        },
+        Axis(
+            {
+                axis_lines = "none",
+                height = "3.375cm",
+                width = "3.375cm",
+                xmin=-3, xmax=3, ymin=-3, ymax=3,
+                clip_mode="individual",
+            },
+            Plot(
+                { 
+                    patch,
+                    patch_type = "rectangle",
+                    point_meta = raw"\thisrow{c}",
+                    shader = "interp",
+                    colormap="{blackwhite}{gray(0cm)=(0); gray(1cm)=(0.75)}",
+                },
+                density_to_patches(dist, 12, 48)
+            ),
+        )
+    ), Axis(
         {
             axis_lines = "none",
-            height = "3.375cm",
-            width = "3.375cm",
+            height = "6.5cm",
+            width = "6.5cm",
             xmin=-3, xmax=3, ymin=-3, ymax=3,
             clip_mode="individual",
         },
-        Plot(
+        [raw"\node at (-3,-3) {};"],
+        [raw"\node at (-3,3) {};"],
+        [raw"\node at (3,3) {};"],
+        [raw"\node at (3,-3) {};"],
+        [raw"\fill", {
+            path_fading = "densityfade",
+            fill = colorant"#1f77b4",
+            fit_fading = true,
+        }, raw"(-3,-3) rectangle (3,3);"],
+        if name=="mvn-dist-joint" HLine(
             { 
-                patch,
-                "patch type" = "rectangle",
-                "point meta" = raw"\thisrow{c}",
-                shader = "interp",
-                colormap="{blackwhite}{gray(0cm)=(0); gray(1cm)=(1)}",
+                black,
+                ultra_thick,
+            }, 
+            y_cond
+        ) else [] end,
+        [raw"\draw", {
+            draw="none",
+            fill=colorant"#1f77b4",
+            fill_opacity=0.5
+        }, "(0,0) circle (1.6pt);"],
+        [Plot(
+            {
+                no_markers,
+                smooth,
+                ultra_thick,
+                color=colorant"#1f77b4",
+                opacity=0.5,
             },
-            density_to_patches(joint, 12, 48)
-        ),
-    )
-), Axis(
-    {
-        axis_lines = "none",
-        height = "6.5cm",
-        width = "6.5cm",
-        xmin=-3, xmax=3, ymin=-3, ymax=3,
-        clip_mode="individual",
-    },
-    [raw"\node at (-3,-3) {};"],
-    [raw"\node at (-3,3) {};"],
-    [raw"\node at (3,3) {};"],
-    [raw"\node at (3,-3) {};"],
-    [raw"\fill", {
-        path_fading = "densityfade",
-        fill = colorant"#1f77b4",
-        fit_fading = true,
-    }, raw"(-3,-3) rectangle (3,3);"],
-    HLine(
-        { 
-            black,
-            ultra_thick,
-        }, 
-        y_cond
-    ),
-)] |> save_tex("mvn-dist-joint.tex")
-
+            Coordinates(radius .* density_to_ellipse(dist, 48)[:,1], radius .* density_to_ellipse(dist, 48)[:,2])
+        ) for radius in [quantile(Normal(0,1),0.8),quantile(Normal(0,1),0.95),quantile(Normal(0,1),0.99)]]...
+    )] |> save_tex("$name.tex")
+end
 
 
 @pgf Axis(
@@ -108,7 +126,6 @@ samples_cond = rand(cond, 250)
         width = "6.5cm",
         xmin=-3, xmax=3, ymin=-3, ymax=3,
         clip_mode="individual",
-        
     },
     [raw"\node at (-3,-3) {};"],
     [raw"\node at (-3,3) {};"],
