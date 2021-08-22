@@ -6,7 +6,7 @@ using KernelFunctions
 using LinearAlgebra: I, Symmetric, diag
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> picture -> PGFPlotsX.savetex("../figures/tex/$file", picture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
 
 z = [0.5,0.75]
 u = [0.15,-0.15]
@@ -98,7 +98,7 @@ samples_cond = samples_prior + K_xz * ((K_zz + s*I) \ (u .- samples_prior[idx_z,
         },
         Coordinates(z, u)
     ),
-) |> save_tex("gp-pw-prior.tex")
+) |> TikzPicture |> save_tex("gp-pw-prior.tex")
 
 
 
@@ -167,4 +167,4 @@ samples_cond = samples_prior + K_xz * ((K_zz + s*I) \ (u .- samples_prior[idx_z,
         },
         Coordinates(z, u)
     ),
-) |> save_tex("gp-pw-cond.tex")
+) |> TikzPicture |> save_tex("gp-pw-cond.tex")

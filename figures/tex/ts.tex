@@ -7,7 +7,7 @@
 \usepgfplotslibrary{fillbetween}
 \usetikzlibrary{fadings}
 \begin{document}
-\tikzsetnextfilename{figures/tex/ts.pdf}
+\tikzsetnextfilename{ts}
 \begin{tikzpicture}
 \begin{groupplot}[group style={group size={3 by 3}, horizontal sep={1cm}, vertical sep={1.5cm}}]
     \nextgroupplot[height={5.75cm}, width={5.75cm}, separate axis lines, axis x line*={bottom}, axis x line shift={10pt}, axis y line shift={10pt}, xlabel shift={10pt}, ylabel shift={10pt}, minor tick num={1}, grid={both}, xtick align={outside}, ytick align={outside}, enlarge x limits={false}, enlarge y limits={false}, x axis line style={cap={rect}}, y axis line style={cap={rect}}, every tick/.style={black, thin}, grid style={black, opacity={0.1}, cap={rect}}, title style={font={\small}}, label style={font={\small}}, tick label style={font={\small}}, x tick label style={/pgf/number format/1000 sep=}, legend columns={-1}, legend style={draw=none, fill=none, at={(0.5,1.2)}, anchor=south, font={\footnotesize}, /tikz/every even column/.append style={column sep=0.25cm}}, xtick={1,16,32,48,64}, ymin={-3}, ymax={1}, title={$\ell = 256$}, axis y line*={left}]

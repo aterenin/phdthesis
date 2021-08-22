@@ -5,7 +5,7 @@ using Random
 using KernelDensity
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> picture -> PGFPlotsX.savetex("../figures/tex/$file", picture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
 
 
 
@@ -61,12 +61,13 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
     Plot(
         { 
             only_marks,
+            very_thick,
             mark_size="3pt",
             fill=colorant"#ff7f0e",
         },
         Coordinates([highlight_joint[1]], [highlight_joint[2]])
     ),
-) |> save_tex("mvn-pw-joint.tex")
+) |> TikzPicture |> save_tex("mvn-pw-joint.tex")
 
 
 
@@ -150,9 +151,10 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
     Plot(
         { 
             only_marks,
+            very_thick,
             mark_size="3pt",
             fill=colorant"#ff7f0e",
         },
         Coordinates([highlight_joint[1]], [highlight_joint[2]])
     ),
-) |> save_tex("mvn-pw-cond.tex")
+) |> TikzPicture |> save_tex("mvn-pw-cond.tex")

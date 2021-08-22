@@ -6,7 +6,7 @@ using KernelFunctions
 using LinearAlgebra: I, Symmetric, diag
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> picture -> PGFPlotsX.savetex("../figures/tex/$file", picture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
 
 
 x =  -0.5:0.01:0.5
@@ -115,5 +115,5 @@ for t in 1:4
             },
             z[t]
         ),
-    ) |> save_tex("gp-ts-$t.tex")
+    ) |> TikzPicture |> save_tex("gp-ts-$t.tex")
 end

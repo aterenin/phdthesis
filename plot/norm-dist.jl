@@ -4,7 +4,7 @@ using Distributions
 using Random
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> picture -> PGFPlotsX.savetex("../figures/tex/$file", picture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
 
 dist_1 = Normal(0, 1)
 dist_2 = Normal(-5, 2)
@@ -45,8 +45,8 @@ density = [pdf_1,pdf_2,pdf_3,pdf_4]
     HLine(
         { 
             black,
-            very_thick,
+            ultra_thick,
         }, 
         0
     ),
-) |> save_tex("norm-dist.tex")
+) |> TikzPicture |> save_tex("norm-dist.tex")

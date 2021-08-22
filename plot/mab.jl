@@ -4,7 +4,7 @@ using Distributions
 using Random
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> picture -> PGFPlotsX.savetex("../figures/tex/$file", picture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
 
 function condition(prior, likelihood, data)
     map(enumerate(data)) do (i,y)
@@ -68,8 +68,6 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
             smooth,
             ultra_thick,
             color=colorant"#1f77b4",
-            fill=colorant"#1f77b4",
-            fill_opacity = 0.25,
         },
         Coordinates([((-1:1.:1)[i], mean(dist[i])), ((-1:1.:1)[i] + max(density[i]...), mean(dist[i]))])
     ) for i in 1:3]...,
@@ -77,7 +75,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         {
             no_markers,
             smooth,
-            ultra_thick,
+            very_thick,
             color=colorant"#1f77b4",
             fill=colorant"#1f77b4",
             fill_opacity = 0.25,
@@ -91,7 +89,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         }, 
         i
     ) for i in -1:1:1]...,
-) |> save_tex("mab-dist.tex")
+) |> TikzPicture |> save_tex("mab-dist.tex")
 
 @pgf Axis(
     {
@@ -120,7 +118,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         },
         Coordinates(fill((-1:1.:1)[i], length(samples[i])), samples[i])
     ) for i in 1:3]...,
-) |> save_tex("mab-data.tex")
+) |> TikzPicture |> save_tex("mab-data.tex")
 
 @pgf Axis(
     {
@@ -160,7 +158,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         },
         Coordinates([((-1:1.:1)[i], mean(dist[2])), ((-1:1.:1)[i], mean(dist[i]))])
     ) for i in 1:3]...,
-) |> save_tex("mab-regret.tex")
+) |> TikzPicture |> save_tex("mab-regret.tex")
 
 
 
@@ -190,7 +188,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
     join(string.(zip((-1:1:1)[i] .+ [0, max(density[i]...)], fill(mean(dist[i]),2))), "  "),
     "};"] for i in 1:3]...,
     [[raw"\draw", {
-        ultra_thick,
+        very_thick,
         draw=colorant"#1f77b4",
         fill=colorant"#1f77b4",
         fill_opacity = 0.5,
@@ -213,7 +211,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         },
         Coordinates(fill((-1:1.:1)[i], length(samples[i])), samples[i])
     ) for i in 1:3]...,
-) |> save_tex("mab-samples.tex")
+) |> TikzPicture |> save_tex("mab-samples.tex")
 
 
 @pgf Axis(
@@ -233,7 +231,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         {
             no_markers,
             smooth,
-            ultra_thick,
+            very_thick,
             color=colorant"#1f77b4",
             fill=colorant"#1f77b4",
             fill_opacity = 0.25,
@@ -247,7 +245,7 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         }, 
         i
     ) for i in -1:1:1]...,
-) |> save_tex("mab-post.tex")
+) |> TikzPicture |> save_tex("mab-post.tex")
 
 
 @pgf Axis(
@@ -273,9 +271,9 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
     [Plot(
         {
             no_markers,
-            ultra_thick,
+            very_thick,
             color=colorant"#1f77b4",
         },
         Coordinates([((-1:1:1)[i] - 1/3, ucb[i]), ((-1:1:1)[i] + 1/3, ucb[i])])
     ) for i in 1:3]...,
-) |> save_tex("mab-ucb.tex")
+) |> TikzPicture |> save_tex("mab-ucb.tex")

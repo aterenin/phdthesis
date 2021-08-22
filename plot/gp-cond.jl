@@ -6,7 +6,7 @@ using KernelFunctions
 using LinearAlgebra: I, Symmetric, diag
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> picture -> PGFPlotsX.savetex("../figures/tex/$file", picture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
 
 z = range(-0.225,0.25;length=4)
 u = -z
@@ -262,4 +262,4 @@ colors_ip = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), w
             Coordinates(x, K_xz[:,(1:M)[i]])
         ) for i in 1:M]...,
     )
- ) |> save_tex("gp-cond.tex")
+ ) |> TikzPicture |> save_tex("gp-cond.tex")

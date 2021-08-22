@@ -7,7 +7,7 @@
 \usepgfplotslibrary{fillbetween}
 \usetikzlibrary{fadings}
 \begin{document}
-\tikzsetnextfilename{figures/tex/mvn-pw-joint.pdf}
+\tikzsetnextfilename{mvn-pw-joint}
 \begin{tikzpicture}
 \begin{axis}[axis lines={none}, height={6.5cm}, width={6.5cm}, xmin={-3}, xmax={3}, ymin={-3}, ymax={3}, clip mode={individual}]
     \node at (-3,-3) {};
@@ -519,7 +519,7 @@
         }
         ;
     \draw[black, ultra thick] ({rel axis cs:1,0}|-{axis cs:0,-1}) -- ({rel axis cs:0,0}|-{axis cs:0,-1});
-    \addplot[only marks, mark size={3pt}, fill={rgb,1:red,1.0;green,0.498;blue,0.0549}]
+    \addplot[only marks, very thick, mark size={3pt}, fill={rgb,1:red,0.8902;green,0.9333;blue,0.9647}]
         coordinates {
             (-1.25,1.0)
         }

@@ -4,7 +4,7 @@ using DelimitedFiles
 using Statistics
 
 preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> axis -> PGFPlotsX.savetex("../figures/tex/$file", axis |> TikzPicture |> p -> TikzDocument("\\tikzsetnextfilename{figures/tex/$(replace(file, ".tex" => ".pdf"))}", p, use_default_preamble=false, preamble = preamble))
+save_tex = file -> picture -> PGFPlotsX.savetex("../figures/tex/$file", picture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
 
 function non_repeated_indices(v)
     d = findall(diff(v) .!= 0)
@@ -91,4 +91,4 @@ color = Dict("direct" => "black", "cholesky" => colorant"#2ca02c", "rff" => colo
             "fill between [of = $(c)_75 and $(c)_25]",
         ) for c in ("direct","cholesky","rff","random","pathwise")]...,
     ) for d in (2,4,8) for l in (256,1024,4096)]...,
- ) |> save_tex("ts.tex")
+ ) |> TikzPicture |> save_tex("ts.tex")
