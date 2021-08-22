@@ -63,7 +63,7 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
             only_marks,
             very_thick,
             mark_size="3pt",
-            fill=colorant"#ff7f0e",
+            fill=weighted_color_mean(0.875,colorant"#ffffff",colorant"#1f77b4"),
         },
         Coordinates([highlight_joint[1]], [highlight_joint[2]])
     ),
@@ -131,29 +131,25 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
         Coordinates([tuple(highlight_joint...),(highlight_cond,highlight_joint[2]),(highlight_cond,y_cond)])
     ),
     Plot(
-        { 
-            only_marks,
-            mark="|",
-            mark_size="3.5pt",
-            ultra_thick,
-            color=colorant"#ff7f0e",
-        },
-        Coordinates([highlight_cond], [y_cond])
-    ),
-    Plot(
         {
             quiver = {u = raw"\thisrow{u}", v = raw"\thisrow{v}"},
             very_thick,
             "-latex"
         },
-        Table(x = [highlight_joint[1]], y = [highlight_joint[2]], u = 0.99.*[highlight_cond - highlight_joint[1]], v = 0.99.*[y_cond - highlight_joint[2]])
+        Table(x = [highlight_joint[1]], y = [highlight_joint[2]], u = 0.975.*[highlight_cond - highlight_joint[1]], v = 0.99.*[y_cond - highlight_joint[2]])
     ),
+    [raw"\draw", 
+        {
+            thick,
+            fill=weighted_color_mean(0.875,colorant"#ffffff",colorant"#1f77b4"),
+        }, 
+        "({axis cs:$(highlight_cond-0.045),$(y_cond-0.17)}) rectangle ({axis cs:$(highlight_cond+0.045),$(y_cond+0.17)});"],
     Plot(
         { 
             only_marks,
             very_thick,
             mark_size="3pt",
-            fill=colorant"#ff7f0e",
+            fill=weighted_color_mean(0.875,colorant"#ffffff",colorant"#1f77b4"),
         },
         Coordinates([highlight_joint[1]], [highlight_joint[2]])
     ),

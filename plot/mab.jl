@@ -55,7 +55,6 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         height = "5cm",
         width = "4cm",
         xmin=-1.5, xmax=1.5, ymin=-3, ymax=3,
-        clip_mode="individual",
         
     },
     [raw"\node at (-1.5,-3) {};"],
@@ -97,7 +96,6 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         height = "5cm",
         width = "4cm",
         xmin=-1.5, xmax=1.5, ymin=-3, ymax=3,
-        clip_mode="individual",
         
     },
     [raw"\node at (-1.5,-3) {};"],
@@ -126,7 +124,6 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         height = "5cm",
         width = "4cm",
         xmin=-1.5, xmax=1.5, ymin=-3, ymax=3,
-        clip_mode="individual",
         
     },
     [raw"\node at (-1.5,-3) {};"],
@@ -168,7 +165,6 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         height = "5cm",
         width = "4cm",
         xmin=-1.5, xmax=1.5, ymin=-3, ymax=3,
-        clip_mode="individual",
         
     },
     [raw"\node at (-1.5,-3) {};"],
@@ -220,7 +216,6 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         height = "5cm",
         width = "4cm",
         xmin=-1.5, xmax=1.5, ymin=-3, ymax=3,
-        clip_mode="individual",
         
     },
     [raw"\node at (-1.5,-3) {};"],
@@ -254,7 +249,6 @@ ucb = get_ucb(posterior, length(samples_1) + length(samples_2) + length(samples_
         height = "5cm",
         width = "4cm",
         xmin=-1.5, xmax=1.5, ymin=-3, ymax=3,
-        clip_mode="individual",
         
     },
     [raw"\node at (-1.5,-3) {};"],

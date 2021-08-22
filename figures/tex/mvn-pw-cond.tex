@@ -406,18 +406,15 @@
             (0.55,-1)
         }
         ;
-    \addplot[only marks, mark={|}, mark size={3.5pt}, ultra thick, color={rgb,1:red,0.8902;green,0.9333;blue,0.9647}]
-        coordinates {
-            (0.55,-1)
-        }
-        ;
     \addplot[quiver={u={\thisrow{u}}, v={\thisrow{v}}}, very thick, -latex]
         table[row sep={\\}]
         {
             x  y  u  v  \\
-            -1.25  1.0  1.782  -1.98  \\
+            -1.25  1.0  1.755  -1.98  \\
         }
         ;
+    \draw
+    [thick, fill={rgb,1:red,0.8902;green,0.9333;blue,0.9647}] ({axis cs:0.505,-1.17}) rectangle ({axis cs:0.5950000000000001,-0.83});
     \addplot[only marks, very thick, mark size={3pt}, fill={rgb,1:red,0.8902;green,0.9333;blue,0.9647}]
         coordinates {
             (-1.25,1.0)

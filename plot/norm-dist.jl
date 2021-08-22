@@ -11,7 +11,7 @@ dist_2 = Normal(-5, 2)
 dist_3 = Normal(3, 0.5)
 dist_4 = Normal(6.5, 1.25)
 
-x = -12:0.25:12
+x = -12:0.125:12
 
 pdf_1 = [pdf(dist_1, a) for a in x]
 pdf_2 = [pdf(dist_2, a) for a in x]
@@ -26,7 +26,6 @@ density = [pdf_1,pdf_2,pdf_3,pdf_4]
         height = "5cm",
         width = "12cm",
         xmin=-10, xmax=10, ymin=-0.25, ymax=1,
-        clip_mode="individual",
         
     },
     [raw"\node at (0,-0.25) {};"],

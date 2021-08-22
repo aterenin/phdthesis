@@ -89,7 +89,8 @@ colors_ip = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), w
         Plot(
             { 
                 only_marks,
-                fill=colorant"#1f77b4",
+                thick,
+                fill=weighted_color_mean(0.875,colorant"#ffffff",colorant"#1f77b4"),
             },
             Coordinates(z, u)
         ),
@@ -203,7 +204,8 @@ colors_ip = range(weighted_color_mean(2/3, colorant"#1f77b4",colorant"white"), w
         Plot(
             { 
                 only_marks,
-                fill=colorant"#1f77b4",
+                thick,
+                fill=weighted_color_mean(0.875,colorant"#ffffff",colorant"#1f77b4"),
             },
             Coordinates(z, u)
         ),

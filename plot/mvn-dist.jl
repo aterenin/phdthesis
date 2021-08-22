@@ -66,7 +66,6 @@ for (dist,name) in ((MvNormal(m, [1. 0.6; 0.6 1]),"mvn-pos"),(joint,"mvn-neg"),(
                     height = "3.375cm",
                     width = "3.375cm",
                     xmin=-3, xmax=3, ymin=-3, ymax=3,
-                    clip_mode="individual",
                 },
                 Plot(
                     { 
@@ -94,11 +93,6 @@ for (dist,name) in ((MvNormal(m, [1. 0.6; 0.6 1]),"mvn-pos"),(joint,"mvn-neg"),(
             [raw"\node at (-3,3) {};"],
             [raw"\node at (3,3) {};"],
             [raw"\node at (3,-3) {};"],
-            [raw"\fill", {
-                path_fading = "densityfade",
-                fill = colorant"#1f77b4",
-                fit_fading = true,
-            }, raw"(-3,-3) rectangle (3,3);"],
             if name=="mvn-dist-joint" HLine(
                 { 
                     black,
@@ -106,6 +100,11 @@ for (dist,name) in ((MvNormal(m, [1. 0.6; 0.6 1]),"mvn-pos"),(joint,"mvn-neg"),(
                 }, 
                 y_cond
             ) else [] end,
+            [raw"\fill", {
+                path_fading = "densityfade",
+                fill = colorant"#1f77b4",
+                fit_fading = true,
+            }, raw"(-3,-3) rectangle (3,3);"],
             [raw"\draw", {
                 draw="none",
                 fill=colorant"#1f77b4",
@@ -120,7 +119,7 @@ for (dist,name) in ((MvNormal(m, [1. 0.6; 0.6 1]),"mvn-pos"),(joint,"mvn-neg"),(
                     opacity=0.5,
                 },
                 Coordinates(radius .* density_to_ellipse(dist, 48)[:,1], radius .* density_to_ellipse(dist, 48)[:,2])
-            ) for radius in [quantile(Normal(0,1),0.8),quantile(Normal(0,1),0.95),quantile(Normal(0,1),0.99)]]...
+            ) for radius in [quantile(Normal(0,1),0.8),quantile(Normal(0,1),0.95),quantile(Normal(0,1),0.99)]]...,
         )
     )] |> save_tex("$name.tex")
 end

@@ -45,6 +45,8 @@ for t in 1:4
     push!(F, alpha)
 end
 
+
+
 for t in 1:4
     @pgf Axis(
         {
@@ -105,15 +107,24 @@ for t in 1:4
         Plot(
             { 
                 only_marks,
-                fill=colorant"#1f77b4",
+                thick,
+                fill=weighted_color_mean(0.875,colorant"#ffffff",colorant"#1f77b4"),
             },
             Coordinates(z[1:t-1], u[1:t-1])
         ),
         VLine(
             { 
-                dashed
+                dashed,
+                opacity=0.5,
             },
             z[t]
         ),
+        HLine(
+            { 
+                dashed,
+                opacity=0.5,
+            },
+            minimum(F[t])
+        )
     ) |> TikzPicture |> save_tex("gp-ts-$t.tex")
 end

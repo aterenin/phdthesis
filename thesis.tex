@@ -2008,9 +2008,8 @@ We proceed to explore a number of techniques for doing so.
 
 In the preceding section, we explored a class of approximate posterior Gaussian processes constructed by plugging a finite-basis-function-based approximate prior into the pathwise update.
 Such approximate priors can be constructed in many ways, including by expressing the true prior within a basis of an appropriate space of functions, and truncating the resulting infinite sum.
-Within this class, different bases will have different properties.
-This will affect applicability, ease of use, and approximation error.
-We now explore a number of possible choices.
+Different choices of bases will result in different applicability, ease of use, and approximation error.
+We now explore possible choices.
 
 
 \subsection{Random feature methods}
@@ -2181,7 +2180,7 @@ Since we will not consider such processes, we do not pursue this direction here.
 \input{figures/tex/gp-kl-samples.tex}
 \caption{Approximate prior samples}
 \end{subfigure}
-\caption{Illustration of a Karhunen-Loève expansion for a boundary-constrained squared exponential kernel in the sense of \textcite{solin19} on the unit interval.
+\caption{Illustration of a Karhunen--Loève expansion for a boundary-constrained squared exponential kernel in the sense of \textcite{solin19} on the unit interval.
 For this kernel, the basis functions coincide with the eigenfunctions of the Dirichlet Laplacian.
 We show the first four eigenfunctions, along with approximate prior samples using the first 87 terms in the expansion. This truncation was chosen because the remaining terms are zero in floating-point arithmetic, highlighting the approximation's efficiency.}
 \label{fig:gp-kl-prior}
@@ -2331,11 +2330,23 @@ The claim follows.
 We have therefore proven that the \emph{inducing point} approximation of \textcite{opper09}, when re-interpreted using the variational inference framework of \textcite{titsias09}, coincides with the pathwise variational approximation constructed here.
 The same is true for other classes of inducing points, including the family where $\v{u}$ is randomized, as originally proposed by \textcite{titsias09}.
 
+
 \begin{figure}
-\begin{subfigure}{\textwidth}
-\input{figures/tex/gp-ip-cond.tex}
-\caption{Posterior samples}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-ex-cond.tex}
+\caption{Posterior Gaussian process}
 \end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-ip-cond.tex}
+\caption{Variational approximation}
+\end{subfigure}
+\caption{Inducing point approximation using the variation family of \textcite{titsias09}. Here, we use seven inducing points to represent the posterior distribution under thirty-one data points. 
+The inducing approximation approximates the posterior as accurately as possible, using a sparsified Gaussian process as the variational approximation.}
+\label{fig:gp-inducing}
+\end{figure}
+
+
+\begin{figure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gp-ip-basis.tex}
 \caption{Canonical basis functions}
@@ -2344,10 +2355,9 @@ The same is true for other classes of inducing points, including the family wher
 \input{figures/tex/gp-ip-samples.tex}
 \caption{Update terms}
 \end{subfigure}
-\caption{Pathwise inducing point approximation using the variation family of \textcite{titsias09}. Here, we use seven inducing points to represent the posterior distribution under thirty-one data points, shown using vertical dashes. 
-The inducing approximation employs the seven displayed canonical basis functions, rather than the thirty-one used in the true posterior, which possess significantly more overlap.
+\caption{The type of approximation made using inducing points can be understood in a pathwise manner: the inducing approximation employs the seven displayed canonical basis functions, rather than the thirty-one used in the true posterior, which possess significantly more overlap.
 The update term fades to zero as we move away from the data, highlighting the role of the prior in representing uncertainty.}
-\label{fig:gp-inducing}
+\label{fig:gp-inducing-basis}
 \end{figure}
 
 Better yet, the constructions above are straightforward, principled, and mathematically sound.
@@ -2384,10 +2394,17 @@ This therefore means its representational capacity---in the sense of the dimensi
 This is to be contrasted with the approximate pathwise update, for which this dimensionality grows due to the presence of $n$ kernel functions $k(x_j,\.)$ in the sum.
 
 \begin{figure}
+\begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gp-vs.tex}
-\caption{Example of the \emph{variance starvation} phenomenon in a random Fourier feature model (solid), compared to the true posterior (dashed).
+\caption{Sine and cosine}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-vs-phase.tex}
+\caption{Random phase}
+\end{subfigure}
+\caption{Example of the \emph{variance starvation} phenomenon in two different random Fourier feature models (solid), compared to the true posterior (dashed).
 We see two problems: the mean spuriously oscillates and the error bars grow too slowly away from the data.
-This can cause global minima of the error bars---which, in Bayesian optimization, is the UCB acquisition---to appear in the completely wrong location.
+This can cause the UCB acquisition, which is global minima of the error bars, to appear in the completely wrong location.
 With the given hyperparameter choices, $n=10$ data points is enough to exhibit considerable approximation error.}
 \label{fig:variance-starvation}
 \end{figure}
@@ -2402,7 +2419,7 @@ This mirrors ideas in numerical analysis surrounding \emph{Runge's phenomenon}, 
 From this angle, the pathwise viewpoint offers a canonical way to select the functions used for representing the data.
 
 By not approximating terms that do not need to be approximated, pathwise approximations avoid limiting representational capacity and thus retain performance.
-Variance starvation has been a key performance issue in Bayesian optimization algorithms for some time---in our view, pathwise approximations of the kind described here largely resolve the issue.
+Variance starvation has been an ongoing difficulty in Bayesian optimization algorithms for some time---in our view, pathwise approximations of the kind described here largely resolve the issue.
 
 
 \section{Error analysis}

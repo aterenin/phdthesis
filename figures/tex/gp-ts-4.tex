@@ -437,14 +437,15 @@
             (0.5,-0.00011076372576146465)
         }
         ;
-    \addplot[only marks, fill={rgb,1:red,0.1216;green,0.4667;blue,0.7059}]
+    \addplot[only marks, thick, fill={rgb,1:red,0.8902;green,0.9333;blue,0.9647}]
         coordinates {
             (0.38,-0.2070146572377099)
             (0.2,0.0220799969775498)
             (-0.32,-0.4727739587549149)
         }
         ;
-    \draw[dashed] ({axis cs:-0.33,0}|-{rel axis cs:0,1}) -- ({axis cs:-0.33,0}|-{rel axis cs:0,0});
+    \draw[dashed, opacity={0.5}] ({axis cs:-0.33,0}|-{rel axis cs:0,1}) -- ({axis cs:-0.33,0}|-{rel axis cs:0,0});
+    \draw[dashed, opacity={0.5}] ({rel axis cs:1,0}|-{axis cs:0,-0.475272659225353}) -- ({rel axis cs:0,0}|-{axis cs:0,-0.475272659225353});
 \end{axis}
 \end{tikzpicture}
 \end{document}
