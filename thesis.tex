@@ -1184,7 +1184,7 @@ A random variable $\v{y} : \Omega\->\R^d$ is called \emph{multivariate Gaussian}
 \vspace*{10ex}
 [Multivariate Gaussian 3D Visual]
 \vspace*{10ex}
-\caption{TODO.}
+\caption{Two multivariate Gaussian densities, in dimension two, with unit variances and different correlation coefficients $\rho$. As $|\rho| \to 1$, the individual components of the multivariate Gaussian become more and more dependent.}
 \end{figure}
 
 Every multivariate Gaussian is determined by its \emph{mean vector} $\v\mu$ and positive semi-definite \emph{covariance matrix} $\m\Sigma = \m{L}\m{L}^T$, and, as before, is called \emph{centered} if $\v\mu = \v{0}$.
@@ -2693,6 +2693,14 @@ This is a powerful result for many reasons: the eigenfunctions $f_n$ can be view
 By expanding a function within the basis of eigenfunctions, we obtain an infinite sequence of basis coefficients---just like representing a function $L^2([-\pi,\pi];\R)$ by an infinite sum of complex exponentials.
 One reason of particular interest for our purposes is that the Sturm--Liouvile decomposition gives rise to a notion of \emph{functional calculus}, which we now introduce.
 
+
+\begin{figure}
+\vspace*{10ex}
+[Eigenfunction 3D Visual]
+\vspace*{10ex}
+\caption{Eigenfunctions of the Laplace--Beltrami operator on a sphere and dragon manifold.}
+\end{figure}
+
 \begin{definition}[Functional calculus]
 Let $\Phi : [0,\infty) \-> \R$. 
 Define the (possibly unbounded) operator $\Phi(-\lap_g) : D(\Phi(-\lap_g)) \-> L^2(X)$ by
@@ -2869,6 +2877,14 @@ where $\Gamma$ is the gamma function and $K_\nu$ is the modified Bessel function
 This kernel is very well-studied and among the most widely-used Euclidean kernels in practice.
 Building on this idea, \textcite{lindgren11} proposed a formalism based on Galerkin finite element analysis for giving precise meaning to such calculations, including treatment of boundary conditions and other considerations.
 
+
+\begin{figure}
+\vspace*{10ex}
+[Kernel 3D Visual]
+\vspace*{10ex}
+\caption{The Matérn-1/2 kernel $k_{1/2}(x,\.)$ defined on a sphere and dragon manifold, where the point $x$ is marked by a red dot.}
+\end{figure}
+
 In particular, \textcite{lindgren11} define the \emphmarginnote{Riemannian Matérn kernel} to be the covariance kernel of the solutions of analogs of the above stochastic partial differential equation, where $\R^d$ is replaced with a Riemannian manifold $X$, and the Euclidean Laplacian $\lap$ is replaced by the Laplace--Beltrami operator $\lap_g$.
 The resulting kernel is well-defined, but its definition is implicit: \textcite{lindgren11} provide techniques for training the resulting Gaussian processes via solving the stochastic partial differential equation numerically.
 
@@ -2962,6 +2978,13 @@ TODO: copy large calculation from paper.
 \end{proof}
 
 \subsection{Illustrated examples}
+
+\begin{figure}
+\vspace*{10ex}
+[Posterior 3D Visual]
+\vspace*{10ex}
+\caption{A posterior Matérn Gaussian process on the dragon manifold. We plot true function values, along with the posterior mean and standard deviations. Here, the black dots represent data. We observe that the standard deviation increases as we move away from the training locations.}
+\end{figure}
 
 From the preceding section, we have defined the Riemannian Gaussian processes of interest as solutions of stochastic partial differential equations, and derived expressions for their kernels which are explicit enough to be amenable to approximation. 
 Here, we explore what these processes look like, as well as their use as priors in Bayesian learning.
@@ -3164,6 +3187,13 @@ Clearly, the latter approach is more elegant and more general, but it is also al
 Since we are ultimately interested in working with Gaussian vector fields algorithmically, we adopt the former approach, but keep the latter view in mind to ensure soundness of our overall strategy.
 We proceed as follows.
 
+\begin{figure}
+\vspace*{10ex}
+[Frame 3D Visual]
+\vspace*{10ex}
+\caption{A vector field can be represented by specifying its values in any frame. Here, we illustrate the same vector field on the sphere represented using two different frames.}
+\end{figure}
+
 \begin{definition}[Gaussian vector field]
 Let $X$ be a smooth manifold.
 We say that a random section $f : \Omega \x X \-> TX$ is \emph{Gaussian} if for any finite set of locations $x_1, \ldots, x_n \in X$, the random vector $(f(\.,x_1),\ldots,f(\.,x_n)) \in T_{x_1}X \oplus \ldots \oplus T_{x_n}X$ is Gaussian in the sense of duality.
@@ -3357,6 +3387,13 @@ which describes how to project arbitrary vectors onto tangent planes.
 Note that the linear map given by this matrix is a right-inverse to the map given by $\m{P}^T$, which describes how a vector field with respect to a frame can be re-expressed with respect to the coordinates in the embedded space.
 In particular, if $X$ is Riemannian with metric $g$, we have $\m{P}^T \m{P} = \m\Gamma$, where $\Gamma_{ij} = g(e_i(x_i), e_j(x))$, giving the coordinate representation of the identity map with respect to the metric.
 It is now clear how to make our idea precise.
+
+\begin{figure}
+\vspace*{10ex}
+[Projected Kernel 3D Visual]
+\vspace*{10ex}
+\caption{Here, we show how to construct Gaussian process on the sphere whose cross-covariance kernel is a projected kernel. First, we construct three scalar Gaussian processes on the sphere. Then, embed the sphere in $\R^3$, and the scalar Gaussian processes to form a vector-valued Gaussian process on the embedded sphere. Finally, we project the resulting Gaussian process onto the sphere, yielding the desired tangential vector field.}
+\end{figure}
 
 \begin{definition}[Projected kernel]
 Let $\v{f} : \Omega \x X \-> \R^{p\x p}$ be a Gaussian process defined on $i(X) \subseteq \R^p$, and define the Gaussian vector field
