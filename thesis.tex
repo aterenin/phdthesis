@@ -2497,7 +2497,7 @@ In this sense, our bounds are very well-behaved with respect to dimension.
 This concludes our theoretical presentation and analysis.
 We now move to evaluating these ideas in practical settings, and discussing the broad picture painted by the ideas presented here and in the preceding sections.
 
-\section{Bayesian optimization}
+\section{Parallel Thompson sampling}
 
 We now study empirically how pathwise approximations affect downstream performance of Gaussian process models, using a simple experiment to showcase the key behavior.
 For this, we perform a Bayesian optimization experiment using parallel Thompson sampling for acquisition.
@@ -2594,7 +2594,7 @@ Depending on the application and user preference, this might be much more conven
 Exploring these alternatives is a promising avenue for further work.
 
 Similarly, pathwise approximations make a strong case that efficiently sampling from a Gaussian process prior is a key software primitive that a Gaussian process package should support as part of its kernel implementations. 
-Understanding how to organize different approximations, which may possess different properties and may also be computed in different ways, is promising another avenue for future work.
+Understanding how to organize different approximations, which may possess different properties and may also be computed in different ways, is another promising avenue for future work.
 
 Gaussian processes have been applied in many settings, ranging from areas such as spatial statistics where they are mostly used by humans, to areas such as Bayesian optimization and model-based reinforcement learning where they are mostly used by computers.
 We hope that the contributions presented here improve their ease of use, broaden their applicability, and enable new applications not yet considered.
@@ -3060,11 +3060,37 @@ TODO: copy large calculation from paper.
 \vspace*{10ex}
 [Posterior 3D Visual]
 \vspace*{10ex}
-\caption{A posterior Matérn Gaussian process on the dragon manifold. We plot true function values, along with the posterior mean and standard deviations. Here, the black dots represent data. We observe that the standard deviation increases as we move away from the training locations.}
+\caption{A posterior Matérn Gaussian process on the dragon manifold. We plot true function values, along with the posterior mean and standard deviations. Here, the black dots represent data. We observe that the standard deviation generally increases as we move away from the training locations.}
+\label{fig:dr-posterior}
 \end{figure}
 
-From the preceding section, we have defined the Riemannian Gaussian processes of interest as solutions of stochastic partial differential equations, and derived expressions for their kernels which are explicit enough to be amenable to approximation. 
-Here, we explore what these processes look like, as well as their use as priors in Bayesian learning.
+Using the developed tools, we have defined Riemannian Gaussian processes of interest as solutions of stochastic partial differential equations, and derived expressions for their kernels which are explicit enough to be amenable to approximation. 
+Here, we explore using these processes as priors in Bayesian learning.
+Our goal is to understand how complicated geometry affects posterior uncertainty estimates.
+
+We focus on the dragon manifold from the Stanford 3D scanning repository \cite{curless96}, approximated numerically as a mesh.
+This mesh was chosen because it has no boundary and is geometrically more complex than other alternatives.
+We work with the largest connected component of the mesh, which has a total of $100\,179$ vertices and $201\,010$ triangular faces.
+
+On the mesh, discrete analogs of all of the differential-geometric notions we require are available, with reasonably well-understood approximation properties \cite{crane17}.
+We obtain $500$ discretized Laplace--Beltrami eigenpairs numerically in finite element space using the \emph{Firedrake} partial differental equation package \cite{rathgeber16}.
+These, in turn, gives expressions for evaluating the kernel and sampling the prior at any points on the manifold.
+
+To generate training data, we define a group truth function given by the sine of the geodesic distance from a distinguished point, chosen to be the first vertex on the mesh, which is located at the end of the dragon's snout.
+We observe this function at a total of $52$ points chosen from the mesh's vertices.
+We train a Matérn prior with smoothness $\nu = 3/2$ on this data using gradient descent, obtaining learned variance and length scale hyperparameters.
+Finally, we obtain the posterior samples over the entire mesh using pathwise sampling.
+
+Results are given in \Cref{fig:dr-posterior}.
+We observe that the both the mean predictions and uncertainty estimates adapt to the manifold's geometry.
+In particular, we see that uncertainty increases when moving away from the data.
+We see that the two upper and lower parts of the dragon's snout have different uncertainty estimates, in spite of the fact that they are close in ambient Euclidean distance.
+Overall, we conclude that the geometric Matérn models used produce uncertainty estimates which reflect the manifold's geometry.
+
+From the computational tools used, one can see that there is more to say about the developed model class.
+In particular, the discrete analogs of the Laplace--Beltrami operator used within the finite element computations give rise to discrete Gaussian processes in their own right.
+This leads one to ask: are there interesting analogs of Matérn models in useful classes of discrete spaces?
+We now proceed to develop one such analog.
 
 \section{Graph Matérn Gaussian Processes}
 
@@ -3075,7 +3101,7 @@ We now ask: can we repeat these constructions on graphs, obtaining Gaussian proc
 \subsection{Review of graph theory}
 
 \parmarginnote{Nodes, weights, edges}
-A weighted undirected graph consist of a finite set of \emph{nodes}, each of which is assigned a positive real number called the \emph{weight}, and \emph{edges} between nodes.
+A weighted undirected graph consists of a finite set of \emph{nodes}, each of which is assigned a positive real number called the \emph{weight}, and \emph{edges} between nodes.
 Graphs with unit weights can be visualized by drawing a set of points on a two-dimensional plane or in three-dimensional space, representing the nodes, and drawing lines between the points, representing the edges.
 
 \parmarginnote{Graphs and matrices}
