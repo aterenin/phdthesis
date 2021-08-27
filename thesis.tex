@@ -2114,9 +2114,9 @@ k(\v{x} - \v{x}') &= \sigma^2 \int_{\R^d} e^{2\pi i \v\varpi^T (\v{x} - \v{x}')}
 where
 \[
 \phi_i(\xi,\v{x}) = \begin{cases}
-\displaystyle \frac{\sigma}{\sqrt{\ell}} \cos(2\pi \v\varpi_i(\xi)^T \v{x}), & i \t{odd}
+\dfrac{\sigma}{\sqrt{\ell}} \cos(2\pi \v\varpi_i(\xi)^T \v{x}), & i \t{odd}
 \\[2ex]
-\displaystyle \frac{\sigma}{\sqrt{\ell}} \sin(2\pi \v\varpi_{i-1}(\xi)^T \v{x}), & i \t{even}
+\dfrac{\sigma}{\sqrt{\ell}} \sin(2\pi \v\varpi_{i-1}(\xi)^T \v{x}), & i \t{even}
 \end{cases}
 \]
 which, for $\ell$ even, gives our approximate prior as
@@ -2490,7 +2490,7 @@ This may tempt one to conclude that approximation error will grow, but this is o
 One way to see this is by considering posterior contraction: in large-data settings, the posterior will be concentrated, and since our approximations are exact with respect to the mean, there is little room left for error, in the absolute sense, to accumulate.
 
 Different prior approximations possess different error behavior.
-The random Fourier feature approach is particularly attractive because its Monte Carlo nature makes it decay at a dimension-free rate of $\sqrt{\ell}$---\textcite{sutherland15} provide bounds on this term.
+The random Fourier feature approach is particularly attractive because its Monte Carlo nature makes it decay at a dimension-free rate of $\sqrt{\ell}$: \textcite{sutherland15} provide bounds on this term.
 Note also that the terms in our kernel bounds depend on the dimension only through the kernel matrix, which itself depends on the dimension of the data and not the ambient space.
 In this sense, our bounds are very well-behaved with respect to dimension.
 
@@ -2499,31 +2499,108 @@ We now move to evaluating these ideas in practical settings, and discussing the 
 
 \section{Bayesian optimization}
 
-We now study empirically how pathwise approximations affect Bayesian optimization, using a simple experiment to showcase the key behavior.
+We now study empirically how pathwise approximations affect downstream performance of Gaussian process models, using a simple experiment to showcase the key behavior.
+For this, we perform a Bayesian optimization experiment using parallel Thompson sampling for acquisition.
+This variant of Thompson sampling consists of sampling $p$ independent posterior draws, then computing the acquisition and evaluating the target function at each location simultaneously.
+Specifically, for $s=1,..,p$, define
+\[
+x_{t+1,s}(\omega) &= \argmin_{x\in X} \phi_{t,s}(\omega,x)
+&
+\phi_{t,s}&\~ f \given y_1,..,y_t
+\]
+where $f$ is the Gaussian process.
+The domain $X$ is taken to be the unit hypercube in dimensions $d = 2$, $d = 4$, and $d = 8$.
+We use a Matérn prior with unit variance, length scale $\kappa = \sqrt{d/100}$, and smoothness $\nu = 5/2$.
+Each observation is assigned an independent Gaussian likelihood with error variance $\sigma^2 = 10^{-3}$.
+This defines the Bayesian model.
 
-TODO: new experiment
+We select target functions to minimize by sampling from a random Fourier feature approximation of the prior, and obtain their minima for purposes of regret using multi-start gradient descent.
+To account for variable problem difficulty, we allow the number of evaluations to vary according to dimension, setting $n=64$ for $d=2$, $n = 256$ for $d = 4$, and $n = 1024$ for $d = 8$.
+Similarly, we set the degree of parallelism to allow $p = d$ simultaneous evaluations.
+We repeat each experiment $32$ times to assess variability.
 
-\begin{figure*}
+We consider two sequential baselines and three approximate acquisition strategies using the posterior Gaussian process.
+For the sequential baselines, we use \emph{random search} \cite{bergstra12} and \emph{dividing rectangles} \cite{jones93}, selected for their simplicity.
+For the Gaussian process baselines, we consider (a) a \emph{Cholesky} grid-based approach, (b) a \emph{random Fourier feature} posterior process, and (c) a \emph{pathwise} approximate posterior using the same Fourier feature approximation for the prior term.
+We now describe these in more detail.
+
+\begin{figure*}[p!]
 \input{figures/tex/ts.tex}
-\caption{Thompson sampling results.}
+\caption{Parallel Thompson sampling benchmark results.}
+\label{fig:results-ts}
 \end{figure*}
+
+The Cholesky grid-based approach works by (i) drawing a set with $250,000$ points uniformly at random, (ii) sampling a vector of independent Gaussians whose mean and variance are equal to the posterior predictive distribution at those points, (iii) choosing the $2048$ smallest elements, (iv) sampling the posterior Gaussian process jointly at the chosen locations, and (v) choosing the smallest value.
+This gives an approximation to the true acquisition locations using the candidate locations on the grid.
+
+The random Fourier feature and pathwise approximate posterior approaches do not use grids.
+Instead, we (i) draw a set of $250,000$ points uniformly at random, (ii) evaluate $f \given \v{y}$ at those locations to choose the $32$ smallest points, and (iii) run multi-start optimization using L-BFGS-B \cite{byrd95} from each candidate location to find the minima.
+This procedure is selected so as to be relatively similar to the grid-based approach and ensure a fair comparison.
+
+
+To understand the effect of posterior approximation, we examine both basis-function-based Gaussian processes with a total of $\ell = 256$, $\ell = 1024$, and $\ell = 4096$ basis functions.
+For the pathwise approximate posterior, this is the sum of both the number of basis functions used for the prior with the number of canonical basis functions---this choice helps avoid unfairly penalizing the random fourier Feature model.
+We use random-phase-based Fourier features in both approximate posteriors.
+
+Results can be seen in \Cref{fig:results-ts}, where we plot regret curves 
+Immediately, we see that the effect of the strategy used for computing the acqusition function varies according to dimension.
+
+In the two-dimensional setting, all Gaussian process methods perform comparably, outperforming the random search and dividing rectangles baselines.
+This occurs even in the regime with $\ell = 256$ basis functions, and shows that posterior approximation error does not play a particularly significant role for the given comparisons and parameters.
+
+In the four-dimensional setting, the behavior is different.
+This time, in the $\ell = 256$ case, the pathwise approximate posterior outperforms both other Gaussian process baselines.
+Here, the random Fourier feature baseline performs worse than the Cholesky baseline.
+If we increase the amount of basis functions, the random Fourier feature baseline recovers this difference, yielding relatively comparable performance to the pathwise approximation for $\ell = 1024$ and $\ell = 4096$, and outperforming the Cholesky baseline.
+
+In the eight-dimensional setting, the pathwise approximation outperforms all baselines for $\ell = 256$ and $\ell = 1024$.
+In those cases, both the random Fourier feature and Cholesky baselines are hampered by the curse of dimensionality, and perform no better than the dividing rectangles baseline---for $\ell = 256$, random Fourier features are comparable to random search.
+With $\ell = 4096$ basis functions, the performance of Fourier features recovers.
+In contrast, the pathwise approximation is insensitive to the number of basis functions.
+
+In summary, these results largely confirm the viewpoint developed using the preceding theory.
+We saw previously that the pathwise approximate posterior can be seen as modfying the random Fourier feature posterior by replacing certain Monte Carlo approximations with their expected values.
+It is therefore reasonable to suppose that this gives a more accurate approximation of the true posterior.
+Our results are thus consistent with the true Gaussian process being a better-performing model for Bayesian optimization.
+
+For the Matérn prior used, this mirrors understanding in the current literature: low-rank and other finite-dimensional models are generally less expressive than true Gaussian processes and mostly favored in cases where their properties help control computational costs.
+Such analysis has been performed for variational Gaussian processes, Fourier feature methods, and many others.
+
+The benefits of using a method that avoids solving arbitrarily large linear systems at test-time are clear from the point of view of both computational complexity and numerical stability.
+From these perspectives, our results show that already in $d=4$ the improvements are enough to make a noticeable difference in downstream tasks.
+
 
 \section{Discussion}
 
 Pathwise conditioning gives a powerful way to think about posterior Gaussian processes.
-In the preceding sections, we used it to construct finite-dimensional approximations which yield actual random functions.
+In the preceding sections, we used this viewpoint to construct finite-dimensional approximations which yield actual random functions.
 These functions are sums of finite basis functions and random coefficients---these coefficients can be sampled in advance, after which the functions can be evaluated at arbitrary points, as well as differentiated using standard techniques.
 
-The resulting method is particularly useful in decision-making settings such as Bayesian optimization, where acquisition functions constructed from Gaussian process sample paths need to be optimized.
-Using the presented technique, this can be done in linear time and without incurring large approximation error that degrades performance.
-This is particularly useful in higher-dimensional settings.
+The resulting method is particularly useful in decision-making settings such as Bayesian optimization, where acquisition functions constructed from Gaussian process sample paths need to be optimized or evaluated at arbitrary locations.
+Within a modern automatic-differentiation-based software environment, this is straightforward to implement and does not require sophisticated bookkeeping.
+In particular, using approximate pathwise methods, there is no need to track at what points the Gaussian process has already been evaluated at.
+
+Using the presented technique, minimizing a Gaussian process sample path can be done in linear time and without incurring large approximation error that degrades performance as part of the iterative minimization procedure itself.
+This is particularly useful in higher-dimensional settings, where grid-based methods and other alternatives are often hampered by the curse of dimensionality.
 
 The performance of pathwise approximate posterior Gaussian processes depends on the approximation accuracy of the prior term.
 We presented a number of methods for doing so, each suited to their respective settings.
 For stationary kernels, random Fourier feature methods are particularly attractive due to their good behavior with respect to dimension, but are by no means the only choice.
-We hope these developments prompt further study of other possible choices.
+We hope these developments prompt further study of other possible choices for approximate priors.
 
-TODO: talk about Bayesian optimization showcase
+Pathwise approximations are also of interst as a potential organizing principle for designing interfaces in Gaussian process software packages.
+In particular, one can consider implementing a Gaussian processes with separate methods for evaluating the process and re-sampling its random weights.
+Depending on the application and user preference, this might be much more convenient than working with distributions at user-specified locations.
+Exploring these alternatives is a promising avenue for further work.
+
+Similarly, pathwise approximations make a strong case that efficiently sampling from a Gaussian process prior is a key software primitive that a Gaussian process package should support as part of its kernel implementations. 
+Understanding how to organize different approximations, which may possess different properties and may also be computed in different ways, is promising another avenue for future work.
+
+Gaussian processes have been applied in many settings, ranging from areas such as spatial statistics where they are mostly used by humans, to areas such as Bayesian optimization and model-based reinforcement learning where they are mostly used by computers.
+We hope that the contributions presented here improve their ease of use, broaden their applicability, and enable new applications not yet considered.
+We now proceed to study a different avenue for expanding the set of settings Gaussian processes can be applied in.
+
+
 
 
 
@@ -2690,7 +2767,7 @@ See \textcite[page 139]{chavel84} or \textcite[Theorem 44]{canzani13}.\footnote{
 \end{proof}
 
 This is a powerful result for many reasons: the eigenfunctions $f_n$ can be viewed as analogs of the Fourier basis adapted to the manifold's geometry.
-By expanding a function within the basis of eigenfunctions, we obtain an infinite sequence of basis coefficients---just like representing a function $L^2([-\pi,\pi];\R)$ by an infinite sum of complex exponentials.
+By expanding a function within the basis of eigenfunctions, we obtain an infinite sequence of basis coefficients---just like representing a periodic function $L^2([-\pi,\pi];\R)$ by an infinite sum of complex exponentials.
 One reason of particular interest for our purposes is that the Sturm--Liouvile decomposition gives rise to a notion of \emph{functional calculus}, which we now introduce.
 
 

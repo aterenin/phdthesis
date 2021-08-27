@@ -29,8 +29,8 @@ color = Dict("direct" => "black", "cholesky" => colorant"#2ca02c", "rff" => colo
     [Axis(
         merge(
             {
-                height = "5.75cm",
-                width = "5.75cm",
+                height = "5.625cm",
+                width = "5.625cm",
                 separate_axis_lines, 
                 "axis x line*={bottom}",
                 axis_x_line_shift = "10pt",
@@ -45,7 +45,7 @@ color = Dict("direct" => "black", "cholesky" => colorant"#2ca02c", "rff" => colo
                 enlarge_y_limits = false,
                 x_axis_line_style = { cap = "rect" },
                 y_axis_line_style = { cap = "rect" },
-                "every tick/.style" = { black, thin },
+                "every tick/.style={black, thin}",
                 grid_style = { black, opacity = 0.1, cap = "rect" },
                 title_style = { font = raw"\small" },
                 label_style = { font = raw"\small" },

@@ -447,8 +447,8 @@
 
 % full width starred figures and tables
 \RequirePackage{ifoddpage}
-\renewenvironment{figure*}[1][]{\@float{figure}\if\relax\detokenize{#1}\relax\else[#1]\fi\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
-\renewenvironment{table*}[1][]{\@float{table}\if\relax\detokenize{#1}\relax\else[#1]\fi\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
+\renewenvironment{figure*}[1][]{\if\relax\detokenize{#1}\relax\@float{figure}\else\@float{figure}[#1]\fi\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
+\renewenvironment{table*}[1][]{\if\relax\detokenize{#1}\relax\@float{table}\else\@float{table}[#1]\fi\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
 
 % place figures at the top by default
 \def\fps@figure{t}
