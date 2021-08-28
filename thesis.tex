@@ -3559,6 +3559,32 @@ In particular, our constructions are automatically compatible with standard trai
 
 \subsection{Illustrated examples}
 
+\begin{figure}
+\vspace*{10ex}
+[Posterior Vector Field 3D Visual]
+\vspace*{10ex}
+\caption{Posterior mean and trace of posterior covariance for a projected Gaussian vector field constructed using three independent Matérn-3/2 Gaussian processes on the sphere. Training locations are shown in white. We observe that uncertainty increases as we movea way from the training locations.}
+\label{fig:posterior-vector-field}
+\end{figure}
+
+We now explore training Gaussian vector fields on Riemannian manifolds on observed data. 
+Our goal is to demonstrate that the developed techniques are, in total, sufficiently explicit so as to enable Gaussian vector fields to be trained using standard methods without the need for any additional machinery.
+
+We work with the sphere.
+For training data, we consider interpolations of wind velocity data.
+Specifically, we consider interpolation of wind velocity deviations from historical average, at a fixed height, using wind velocity data directly observed by a satellite.
+For the prior, we use a Gaussian vector field model constructed using a projected kernel whose components are independent Matérn-3/2 scalar-valued Gaussian processes on the sphere.
+
+We train the Gaussian process using exactly the same procedure as that used in the preceding sections: by optimizing kernel hyperparameters using gradient descent, and computing the value of the vector field at all locations using pathwise sampling.
+All computations are performed in a with respect to a fixed frame defined by the latitude-longitude coordinate system.
+
+Results can be seen in \Cref{fig:posterior-vector-field}.
+We observe that for the vector field shown, posterior uncertainty increases as we move away from locations where training data is available.
+We also observe that the trained Gaussian process model is smooth, even though the choice of frame is non-smooth at the top of the sphere---one of our key motivations behind developing the theory for working with vector fields in a geometrically-sound way in the first place.
+
+While the model used here is, as in the preceding section, not at all realistic owing to the fact that it does not incorporate time or any kind of physical information into its design, we believe that it nonetheless serves as a demonstration that constructing vector-valued Gaussian processes using the ideas developed is practical.
+We hope this motivates further development to apply such models more broadly, both for the sphere and for other manifolds.
+
 \section{Geometry-aware Bayesian Optimization}
 
 \section{Discussion}
