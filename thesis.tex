@@ -2572,16 +2572,23 @@ From these perspectives, our results show that already in $d=4$ the improvements
 
 \section{Discussion}
 
-Pathwise conditioning gives a powerful way to think about posterior Gaussian processes.
-In the preceding sections, we used this viewpoint to construct finite-dimensional approximations which yield actual random functions.
-These functions are sums of finite basis functions and random coefficients---these coefficients can be sampled in advance, after which the functions can be evaluated at arbitrary points, as well as differentiated using standard techniques.
+In the Gaussian case, the distributional notion of \emph{conditioning} can be re-formualted using random variables, yielding a notion of \emph{pathwise conditioning}.
+In the preceding sections, we developed and studied this point of view for Gaussian processes, allowing us to express a posterior Gaussian process as the sum of a \emph{prior term}, and a \emph{data-dependent term}.
 
-The resulting method is particularly useful in decision-making settings such as Bayesian optimization, where acquisition functions constructed from Gaussian process sample paths need to be optimized or evaluated at arbitrary locations.
-Within a modern automatic-differentiation-based software environment, this is straightforward to implement and does not require sophisticated bookkeeping.
-In particular, using approximate pathwise methods, there is no need to track at what points the Gaussian process has already been evaluated at.
+Pathwise conditioning gives a powerful way to think about posterior Gaussian processes.
+Using this notion, we re-interpreted classical methods such as \emph{random Fourier features} and \emph{inducing points}, by observing that they correspond to approximations made to individual terms within the pathwise update.
+Crucially, we observed that one could approximate different terms within the formula individually.
+
+Using this observation, we constructed accurate finite-dimensional posterior approximations which nonetheless yield actual \emph{random functions}.
+These functions are sums of two sets of finite basis functions with dependent random coefficients.
+These coefficients can be sampled in advance, after which the functions effectively become deterministic and can be evaluated at arbitrary points, as well as differentiated using standard techniques.
+
+The resulting approximations are particularly useful in decision-making settings such as \emph{Bayesian optimization}, where acquisition functions constructed from Gaussian process sample paths need to be optimized or evaluated at arbitrary locations.
+This makes it possible to implement Thompson sampling using automatic differentiation in a straightforward manner without any sophisticated bookkeeping.
+In particular, there is no need to track at what points the Gaussian process has already been evaluated at.
 
 Using the presented technique, minimizing a Gaussian process sample path can be done in linear time and without incurring large approximation error that degrades performance as part of the iterative minimization procedure itself.
-This is particularly useful in higher-dimensional settings, where grid-based methods and other alternatives are often hampered by the curse of dimensionality.
+This is particularly useful in higher-dimensional settings, where grid-based methods and other alternatives may be hampered by the curse of dimensionality.
 
 The performance of pathwise approximate posterior Gaussian processes depends on the approximation accuracy of the prior term.
 We presented a number of methods for doing so, each suited to their respective settings.
@@ -3633,8 +3640,40 @@ Techniques such as the ones we have developed are therefore a promising tool for
 \section{Discussion}
 \label{sec:noneuclidean-discussion}
 
+In the preceding section, we have developed three key classes of \emph{non-Euclidean Gaussian process} models: the \emph{Riemannian Matérn} and \emph{graph Matérn} classes of scalar-valued Gaussian processes, and the \emph{projected kernel} class of vector-valued Gaussian processes on Riemannian manifolds.
+Each of these provides a unifying view of previously-proposed methods, and expands Gaussian processes models' scope of applicability.
 
+The key idea for defining Matérn Gaussian processes on Riemannian manifolds was to not attempt to define kernels using geodesic distances---such constructions, while intuitively appealing, turn out to not lead to an effective mathematical formalism.
+Instead, we relied on the idea of \emph{functional calculus} built using spectral theory of the Laplace--Beltrami operator to introduce operators through which we constructed the desired Gaussian processes as transformations of Gaussian white noise processes.
 
+Adopting this viewpoint enabled us to reinterpret models previously-proposed within a cumbersome finite element framework using a more abstract approach built via the theory of stochastic partial differential equations and reproducing kernel Hilbert spaces.
+From this approach, we obtained formulas for pointwise evaluation of the \emph{Riemannian Matérn kernel} in terms of eigenvalues and eigenfunctions of the Laplace--Beltrami operator.
+The formalism also enabled us to define and compute the \emph{Riemannian squared exponential kernel}.
+
+While our original original formalism was introduced for working with manifolds, it is clear that the constructions are more general.
+Inspired by the discrete computations used in implementing the Riemannian Gaussian processes we defined, we explored purely-discrete analogs of these models, obtaining the \emph{graph Matérn kernel} and \emph{graph squared exponential kernel}.
+These enabled us to apply Matérn Gaussian processes to model phenomena in purely discrete spaces whose geometry departs significantly from classical settings.
+
+Finally, we returned to the manifold setting, this time studying formalism for defining \emph{Gaussian vector fields}.
+This setting is non-trivial from the point of conceptualization: a vector-valued Gaussian is only \emph{locally} a vector-valued random function, and instead should be formulated using the differential-geometric formalism of \emph{random sections}.
+We therefore began by clarifying what the appropriate notion of a \emph{cross-covarince kernel} should be, and how to work with this notion numerically.
+
+Having clarified what a the notion of a \emph{Gaussian vector field} ought to be, we introduced a wide class of cross-covarince kernels for defining such processes called \emph{projected kernels}.
+These kernels can be built from the Riemannian Gaussian process models already defined, together with an embedding of the manifold into an ambient Euclidean space, and produce covariances that reflect the manifold's geometry.
+This construction enabled us to implement Bayesian learning of vector-valued data on the sphere.
+
+Having explored these constructions from a purely model-building point of view, we concluded by considering them within a decision-making setting, by studying \emph{geometry-aware Bayesian optimization}.
+There, saw that using geometry-aware models also resulted in a modest performance improvement in cases where topology and geometry play a non-trivial role, particularly for higher dimensional spaces.
+
+It is clear that our ideas apply within an even wider scope than what we have explored.
+For example, our derivations for the Matérn class apply essentially-unmodified to closely-related settings such as \emph{manifolds with boundary}, provided one introduces boundary conditions which ensure the operators of interest behave the same way as in our setting.
+Extensions such as this make excellent candidates for future work.
+
+Our differential-geometric framework also provides a promising way to study \emph{symmetry} within Gaussian processes and Bayesian optimization.
+Since symmetry plays a fundamental role in geometry and in physics, understanding how to handle symmetries is a promising avenue for building richer classes of Gaussian process models, and applying techniques such as Bayesian optimization to wider classes of scientific problems.
+
+We hope that techniques such as the ones presented here proivde a foundation upon which these and other developments can be built.
+We therefore conclude our presentation of contributions, and move to discuss the state and overall picture of Gaussian processes and decision systems that we have studied.
 
 
 \chapter{Conclusion}
