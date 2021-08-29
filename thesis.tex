@@ -21,7 +21,7 @@
 
 \title{Gaussian Processes and Statistical Decision-making in Non-Euclidean Spaces}
 \author{Alexander Terenin}
-\date{August 2021}
+\date{September 2021}
 
 \begin{document}
 
@@ -3586,6 +3586,49 @@ While the model used here is, as in the preceding section, not at all realistic 
 We hope this motivates further development to apply such models more broadly, both for the sphere and for other manifolds.
 
 \section{Geometry-aware Bayesian Optimization}
+
+We now study the role that geometry plays when working with decision systems built using Gaussian processes.
+To do so, we perform Bayesian optimization of standard benchmark functions on Riemannian manifolds using the Riemannian Matérn and squared exponential Gaussian processes with the numerical techniques developed herein.
+Following \textcite{jaquier20}, we call this setting \emph{geometry-aware Bayesian optimization}.
+
+We work with three manifolds, namely the spheres $\bb{S}^3$ and $\bb{S}^5$, and the special orthogonal group $SO(3)$.
+We view each of these as embedded within a $d'$-dimensional Euclidean space in the natural manner.
+We use three target functions commonly used as benchmark functions for global optimization, namely the \emph{Ackley} \cite{ackley87}, \emph{Rosenbrock} \cite{rosenbrock60}, and \emph{Styblinski--Tang} \cite{styblinski90} functions.
+In the ambient Euclidean space, these are defined as 
+\[
+f_{\f{A}}(x_1,..,x_{d'}) &= -20\exp\del{-0.2\sqrt{\frac{1}{d'} \sum_{i=1}^d x_i^2}} 
+\\
+&\qquad - \exp\del{\frac{1}{d'} \sum_{i=1}^{d'} \cos(2\pi x_i)} + 20 + e
+\\
+f_{\f{R}}(x_1,..,x_{d'}) &= \sum_{i=1}^{d'-1} 100(x_{i+1} - x_i^2)^2 + (x_i - 1)^2
+\\
+f_{\f{ST}}(x_1,..,x_{d'}) &= \frac{1}{2} \sum_{i=1}^{d'} (x_i^4 - 16x_i^2 + 5x_i)
+\]
+where $-32 \leq x_i \leq 32$ for $f_{\f{A}}$, $-5 \leq x_i \leq 10$ for $f_{\f{R}}$, and $-5 \leq x_i \leq 5$ for $f_{\f{ST}}$.
+The target function we seek to optimize is the restriction of each of these functions onto the desired manifold.
+
+\begin{figure*}[p!]
+\vspace*{40ex}
+[GaBO comparison]
+\vspace*{40ex}
+\caption{Geometry-aware Bayesian optimization comparison.}
+\label{fig:gabo}
+\end{figure*}
+
+
+For each manifold, we use two priors: Matérn with smoothness $\nu = 5/2$ and squared exponential, as well as a Gaussian likelihood.
+The remaining kernel hyperparameters and likelihood error variance are learned from observed data via gradient descent.
+We run for a total of $n=256$ iterations, and repeat each experiment $32$ times to assess variability.
+
+For the acquisition function, we use expected improvement, which was previously defined in \Cref{sec:bayesian-optimization}.
+Since this acquisition function can be computed from the Gaussian process directly, we work only with the kernel and do not rely on pathwise sampling.
+
+
+Results can be seen in \Cref{fig:gabo}.
+TODO: interpret.
+
+For manifolds embedded within Euclidean space, geometry-aware Bayesian optimization can be viewed as a form of Bayesian optimization with enforced constraints that require evaluations to lie on the embedded submanifold.
+Techniques such as the ones we have developed are therefore a promising tool for introducing geometric constraints into Bayesian optimization, potentially enabling new applications.
 
 \section{Discussion}
 \label{sec:noneuclidean-discussion}
