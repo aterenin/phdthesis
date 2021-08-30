@@ -2453,25 +2453,50 @@ Therefore, when restricted to pathwise approximations under mean-zero priors, th
 We now state our main result.
 
 \begin{proposition}[Pathwise posterior Wasserstein error bound]
-Assume $X \subseteq \R^d$ is compact and that $f \~[GP](\mu,k)$ is almost surely continuous.
+\label{prop:wasserstein-bound}
+Assume $X \subseteq \R^d$ is compact and that $f \~[GP](0,k)$ is almost surely continuous.
+Let $\tl{f}(\omega,x) = \sum_{i=1}^\ell w_i(\omega) \phi_i(x)$, and let $(\tl{f}\given\v{y})(\omega,x) = \tl{f}(\omega,x) + \m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1}(\v{y}- \tl{f}(\v{x}))$.
 Then we have 
 \[
-TODO
-.
+W_{2,L^2(X)}(\tl{f}\given\v{y}, f\given\v{y}) \leq C_1 W_{2,C(X)}(\tl{f},f)
 \]
+where $C_1 = \del{2\f{vol}(X)\del{1 + \norm{k}^2_{C(X\x X)} \norm{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1}}}^{1/2}$.
 \end{proposition}
 
 \begin{proof}
-TODO: clean up argument.
+The idea is to first use the pathwise update to prove a pointwise bound, then take expectations with respect to a minimizing coupling to obtain a Wasserstein bound.
+Using Hölder's inequality with $p=1$ and $q=\infty$, write 
+\[
+&\abs[1]{(\tl{f}\given\v{y})(\.) - (f\given\v{y})(\.)}^2 
+\\
+&\qquad\leq 2 \abs[1]{\tl{f}(\.) - f(\.)}^2 + 2 \abs[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1} (\tl{f}(\v{x}) - f(\v{x}))}^2
+\\
+&\qquad\leq 2\norm[1]{\tl{f} - f}^2_{L^\infty(X)} + 2 \norm[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1}}^2_{\ell^1} \norm[1]{\tl{f}(\v{x}) - f(\v{x})}^2_{\ell^\infty}
+\\ 
+&\qquad\leq 2 \del{1 + \norm[1]{\m{K}_{(\.)\v{x}}}^2_{\ell^\infty} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)}} \norm[1]{\tl{f} - f}^2_{L^\infty(X)}
+\\ 
+&\qquad\leq \ubr{2 \del{1 + \norm[1]{k}^2_{C(X\x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)}}}_{C_0} \norm[1]{\tl{f} - f}^2_{C(X)}
+\]
+where $\norm{\.}_{L(A;B)}$ is the operator norm between $A$ and $B$, and where we have used almost sure continuity of sample paths to replace $\norm{\.}_{L^\infty(X)}$ with $\norm{\.}_{C(X)}$.
+We now lift this bound to a bound on the Wasserstein distance by integrating both sides with respect to an optimal coupling $\gamma\in\Gamma(\tl\pi,\pi)$, where $\tl\pi$ and $\pi$ are the distributions of $\tl{f}$ and $f$, respectively.
+Writing
+\[
+W_{2,L^2(X)}(\tl{f}\given\v{y}, f\given\v{y})^2 &= \inf_{\gamma\in\Gamma(\tl\pi, \pi)} \E_\gamma \norm[1]{(\tl{f}\given\v{y}) - (f\given\v{y})}^2_{L^2(X)}
+\\
+&\leq C_0 \vol(X) \inf_{\gamma\in\Gamma(\tl\pi, \pi)} \E_\gamma \norm[1]{\tl{f} - f}_{C(X)}
+\\
+&\leq C_1^2 W_{2,C(X)}(\tl{f},f)^2
+\]
+and noting that $C(X)$ is a separable metric space, which ensures that the Wasserstein distance over it is well-defined, gives the claim.
 \end{proof}
 
 \begin{proposition}[Pathwise posterior kernel error bound]
-Assume $X \subseteq \R^d$ is compact and that $f \~[GP](\mu,k)$ is almost surely continuous.
-Then we have 
+\label{prop:kernel_bound}
+Under the same assumptions as \Cref{prop:wasserstein-bound}, letting $k^{(f\given\v{y})}$, $k^{(\tl{f}\given\v{y})}$, and $k^{(\tl{f})}$ be the covariance kernel of these respective processes, we have
 \[
-TODO
-.
+\norm[1]{k^{(\tl{f}\given\v{y})} - k^{(f\given\v{y})}}_{C(X\x X)} \leq C_2 \norm[1]{k^{(\tl{f})} - k}_{C(X\x X)}
 \]
+where $C_2 = n\del{1 + \norm[1]{k}_{C(X\x X)} \norm[1]{\m{K}_{\v{x}\v{x}}}_{L(\ell^\infty;\ell^1)}}$.
 \end{proposition}
 
 \begin{proof}
@@ -2479,7 +2504,7 @@ TODO: clean up argument.
 \end{proof}
 
 The above arguments shows that, for a given dataset size, posterior approximation error is controlled by prior approximation error.
-Thus, if we increase approximation accuracy in the prior, we are guaranteed to also increase approximation accuracy in the posterior, both in the limit and outside it..
+Thus, if we increase approximation accuracy in the prior, we are guaranteed to also increase approximation accuracy in the posterior, both in the limit and outside it.
 
 The key idea in the above arguments was to analyze the pathwise approximation by applying standard function-analytic inequalities to the pathwise representation itself.
 By varying the resulting norms, a wide set of similar inequalities follow: we make no attempt to optimize bounds, and instead focus on presenting the technique in the simplest manner.
