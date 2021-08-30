@@ -134,9 +134,9 @@ In \Cref{ch:pathwise}, we present pathwise conditioning techniques: this work is
 My contributions include (i) development of the random-function-based formalism for describing pathwise conditioning of Gaussian processes, (ii) error analysis of basis-function-approximation-based pathwise sampling, (iii) re-interpretation of inducing point methods, and (iv) review of prior sampling methods.
 All of these were developed jointly with the other authors. 
 
-In \Cref{ch:noneuclidean}, we present Matérn Gaussian processes in non-Euclidean settings: this work is published in \textcite{borovitskiy20,borovitskiy21} and under review in \textcite{hutchinson21}.
-My contributions include (i) developing the stochastic-partial-differential-equation-based formalism for defining scalar-valued Gaussian processes on Riemannian manifolds and graphs, (ii) lifting the former constructions to the vector field setting via a differential-geometric formalism, and (iii) defining computational techniques for working with these models in practice.
-These ideas were developed jointly with the other authors.
+In \Cref{ch:noneuclidean}, we present Matérn Gaussian processes in non-Euclidean settings: this work is published in \textcite{borovitskiy20,borovitskiy21} and under review in \textcite{hutchinson21,jacquier21}.
+My contributions include (i) developing of all of the differential-geometric and stochastic-partial-differential-equation-based formalisms for defining these processes, and (ii) describing computational techniques for working with these models in practice.
+All these ideas were developed jointly with the other authors.
 
 
 \section{Bayesian learning}
@@ -2500,7 +2500,61 @@ where $C_2 = n\del{1 + \norm[1]{k}_{C(X\x X)} \norm[1]{\m{K}_{\v{x}\v{x}}}_{L(\e
 \end{proposition}
 
 \begin{proof}
-TODO: clean up argument.
+The idea is again to apply standard function-analytic inequalities to the pathwise update.
+For a kernel $k$, define the linear operator $M_k : C(X \x X) \-> C(X \x X)$ by
+\[
+(M_k c)(\.,\.') &= c(\.,\.') - c(\.,\v{x})\m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)} - \m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1}c(\v{x},\.)
+\\
+&\qquad+ \m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}
+.
+\]
+By construction, we have that 
+\[
+k^{(f\given\v{y})} &= M_k k
+&
+k^{(\tl{f}\given\v{y})} &= M_k k^{(\tl{f})}
+.
+\]
+Thus, it suffices to prove that $M_k$ is bounded and calculate its operator norm.
+To do so, write 
+\[
+\norm[1]{M_k c}_{C(X \x X)} &\leq \norm[1]{c}_{C(X \x X)} + 2 \norm[1]{c(\.,\v{x})\m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C(X \x X)}
+\\
+&\qquad+ \norm[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C(X \x X)}
+.
+\]
+We bound these term-by-term.
+For the second term, using Hölder's inequality with $p=1$ and $q=\infty$, write 
+\[
+&\norm[1]{c(\.,\v{x})\m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C(X \x X)}
+\\
+&\qquad= \sup_{\v{x}',\v{x}'' \in X} c(\v{x}',\v{x})\m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}\v{x}''}
+\\
+&\qquad\leq \sup_{\v{x}',\v{x}'' \in X} \norm[1]{c(\v{x}',\v{x})}_{\ell^\infty} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{\m{K}_{\v{x}\v{x}''}}_{\ell^\infty}
+\\
+&\qquad\leq \norm[1]{c}_{C(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{k}_{C(X \x X)}
+\]
+where we have used continuity of $k$ to obtain the last inequality.
+For the third term, similarly, write 
+\[
+&\norm[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C(X \x X)}
+\\
+&\qquad= \sup_{\v{x}',\v{x}'' \in X} c(\v{x}',\v{x}) \m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}'')
+\\
+&\qquad \leq \norm[1]{k}^2_{C(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)}
+\\
+&\qquad \leq n \norm[1]{k}^2_{C(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)} \norm{c}_{C(X \x X)}
+\]
+where $n$ factor appears due to use of $\norm[1]{\.}_{L(\ell^\infty;\ell^1)}$.
+Putting these inequalities together gives 
+\[
+&\frac{\norm[1]{M_k c}_{C(X \x X)}}{\norm{c}_{C(X \x X)}}
+\\
+&\quad\leq \del{1 + 2 \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{k}_{C(X \x X)} + n \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)} \norm[1]{k}^2_{C(X \x X)}} 
+\\
+&\quad\leq n \del{1 + \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{k}_{C(X \x X)}}^2
+\]
+and so the claim follows.
 \end{proof}
 
 The above arguments shows that, for a given dataset size, posterior approximation error is controlled by prior approximation error.
