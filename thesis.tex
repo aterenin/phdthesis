@@ -2496,7 +2496,7 @@ Under the same assumptions as \Cref{prop:wasserstein-bound}, letting $k^{(f\give
 \[
 \norm[1]{k^{(\tl{f}\given\v{y})} - k^{(f\given\v{y})}}_{C(X\x X)} \leq C_2 \norm[1]{k^{(\tl{f})} - k}_{C(X\x X)}
 \]
-where $C_2 = n\del{1 + \norm[1]{k}_{C(X\x X)} \norm[1]{\m{K}_{\v{x}\v{x}}}_{L(\ell^\infty;\ell^1)}}$.
+where $C_2 = n\del{1 + \norm[1]{k}_{C(X\x X)} \norm[1]{\m{K}_{\v{x}\v{x}}}_{L(\ell^\infty;\ell^1)}}^2$.
 \end{proposition}
 
 \begin{proof}
@@ -2938,12 +2938,12 @@ Specifically, we work with Gaussian processes in the sense of duality whose spac
 
 \begin{definition}[Generalized Gaussian~field]
 A \emph{centered generalized Gaussian field} $f$ over a Hilbert space $H$ is a stochastic process $f : \Omega \x H \-> \R$ satisfying two key properties.
-\1 $\E(f(\.,g)) = 0$ for all $g \in H$.
+\1 $\E(f(\.,h)) = 0$ for all $h \in H$.
 \2 There exists a bounded linear self-adjoint non-negative operator $\c{K}$ on $H$, called the \emph{covariance operator}, such that 
 \[
-\E(f(\.,g)f(\.,g')) = \innerprod{\c{K}g}{g'}    
+\E(f(\.,h)f(\.,h')) = \innerprod{\c{K}h}{h'}
 \]
-for all $g,g' \in H$.
+for all $h,h' \in H$.
 \0 
 \end{definition}
 
@@ -2952,7 +2952,7 @@ Before continuing, we prove that in the case that $H$ is a reproducing kernel Hi
 
 \begin{proposition}
 Let $f : \Omega \x H \-> \R$ be a centered generalized Gaussian field defined over a reproducing kernel Hilbert space $H$ with identity covariance operator.
-Then letting $\f{ev}_x \in H^*$ be a pointwise evaluation functional, the stochastic process $f : \Omega \x X \-> \R$ defined by $f(\omega, x) = f(\omega,\f{ev}_x)$ is a Gaussian process whose covariance is given by the reproducing kernel of $H$.
+Then letting $\f{ev}_x \in H^*$ be a pointwise evaluation functional and $\Psi : H \-> H^*$ be the bijective linear isometry given by the Riesz Representation Theorem, the stochastic process $f : \Omega \x X \-> \R$ defined by $f(\omega, x) = f(\omega,\Psi^{-1} \f{ev}_x)$ is a Gaussian process whose covariance is given by the reproducing kernel of $H$.
 \end{proposition}
 
 \begin{proof}
@@ -2960,9 +2960,11 @@ It is clear that the resulting map is a centered Gaussian process, so it suffice
 Let $\f{ev}_x \in H^*$ and $\f{ev}_{x'} \in H^*$ be pointwise evaluation functionals.
 Then
 \[
-\Cov(f(\.,x),f(\.,x')) &= \Cov(f(\.,\f{ev}_x),f(\.,\f{ev}_{x'})) 
+\Cov(f(\.,x),f(\.,x')) &= \Cov(f(\.,\Psi^{-1} \f{ev}_x),f(\.,\Psi^{-1} \f{ev}_{x'})) 
 \\
-&= \innerprod{\f{ev}_x}{\f{ev}_{x'}}_H 
+&= \innerprod{\Psi^{-1}\f{ev}_x}{\Psi^{-1}\f{ev}_{x'}}_H 
+\\
+&= \innerprod{\f{ev}_x}{\f{ev}_{x'}}_{H^*}
 \\
 &= k(x,x')
 \]
@@ -2982,14 +2984,14 @@ This clarifies how this general notion relates to Gaussian processes in the stan
 To continue, we introduce the notion of a \emph{solution} of a stochastic partial differential equation.
 
 \begin{definition}[Stochastic partial differential equation]
-Let $H$ be a Hilbert space, let $\c{L} : H \-> G$ be a bounded linear operator, and let $\c{W}$ be a centered generalized Gaussian field on $G$.
+Let $H$ be a Hilbert space, let $\c{L} : H \-> H'$ be a bounded linear operator, and let $\c{W}$ be a centered generalized Gaussian field on $H'$.
 Then the zero-mean generalized Gaussian field $f$ over $H$ is a solution of the abstract stochastic partial differential equation 
 \[
 \c{L} f = \c{W}    
 \]
-if for every $g\in G$ we have that 
+if for every $h\in H'$ we have that 
 \[
-f(\omega,\c{L}^* g) = \c{W}(\omega,g)
+f(\omega,\c{L}^* h) = \c{W}(\omega,h)
 \]
 holds almost surely.
 \end{definition}
@@ -3005,7 +3007,7 @@ In the given setting, this solution concept ends up being useful, thanks to the 
 \begin{result}[SPDE solution]
 If $\c{L}$ is invertible, then
 \[
-f(\omega,h) = \c{W}(\omega, \c{L}^{-*} g)
+f(\omega,h) = \c{W}(\omega, \c{L}^{-*} h)
 \]
 is the unique solution to $\c{L}f = \c{W}$.
 \end{result}
@@ -3067,6 +3069,7 @@ Next, we define the left-hand-side of the stochastic partial differential equati
 For this, a result on Riemannian reproducing kernel Hilbert spaces will be of key interest.
 
 \begin{result}[Riemannian Sobolev and diffusion spaces]
+\label{res:riemannian-sobolev}
 Define the Riemannian Sobolev space $H^s(X)$ by
 \[
 H^s(X) = \cbr{f \in D'(X) : f = (1 - \lap_g)^{-s/2} h : h \in L^2(X)}
@@ -3135,20 +3138,73 @@ To extend this, the idea will be to let $\tilde{g} = \frac{2\nu}{\kappa}g$ be a 
 \del{1 - \lap_{\tilde{g}}}^{\frac{\nu}{2} + \frac{d}{4}} \tilde{f} &= \c{W}_{\tilde{g}}
 \]
 for which we would like to show that $f = \del{\frac{\kappa^2}{2\nu}}^{\frac{\nu}{2} + \frac{d}{2}} \tilde{f}$.
-To begin, we first prove these operators are well-defined.
-
-TODO: copy large calculation from paper.
+To begin, we first prove these operators are well-defined, by checking that they are bounded and invertible for all positive $\nu$ and $\kappa$.
+By \Cref{res:riemannian-sobolev} we know that for every $f \in H^{\nu + \frac{d}{2}}(X)$, there is an $h \in L^2(X)$ such that $f = (1-\lap_g)^{-\frac{\nu}{2}-\frac{d}{4}} h$.
+Moreover, both $f$ and $h$ can be expressed in the orthonormal basis given by Laplacian eigenfunctions $f_n$ as 
+\[
+h(x) &= \sum_{n=0}^\infty \alpha_n f_n
+&
+f(x) &= \sum_{n=0}^\infty \del{\frac{1}{1+\lambda_n}}^{\frac{\nu}{2}+\frac{d}{4}} \alpha_n f_n
+\]
+where the expression for $f$ follows by applying the operator $(1-\lap_g)^{-\frac{\nu}{2}-\frac{d}{4}}$ to the eigenfunctions.
+Finally, note that since $\lambda_n \geq 0$ we have
+\[
+\min\del{\frac{2\nu}{\kappa^2}, 1} \leq \frac{\frac{2\nu}{\kappa^2} + \lambda_n}{1+\lambda_n} \leq \max\del{1, \frac{2\nu}{\kappa^2}}
+.
+\]
+Using these identities, write
+\[
+\norm{\del{\frac{2\nu}{\kappa^2} - \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} f}^2_{L^2(X)} &= \norm{\sum_{n=0}^\infty \del{\frac{\frac{2\nu}{\kappa^2} + \lambda_n}{1+\lambda_n}}^{\frac{\nu}{2}+\frac{d}{4}} \alpha_n f_n}^2_{L^2(X)}
+\\
+&\leq \sum_{n=0}^\infty \max\del{1, \frac{2\nu}{\kappa^2}} \alpha_n^2
+\\
+&= \max\del{1, \frac{2\nu}{\kappa^2}} \norm{f}^2_{H^{\nu + \frac{d}{2}}(X)}
+\]
+and similarly 
+\[
+\norm{\del{\frac{2\nu}{\kappa^2} - \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} f}^2_{L^2(X)} &\geq \sum_{n=0}^\infty \min\del{\frac{2\nu}{\kappa^2},1} \alpha_n^2
+\\
+&= \min\del{\frac{2\nu}{\kappa^2},1} \norm{f}^2_{H^{\nu + \frac{d}{2}}(X)}  
+\]
+where we have also used orthonormality of $f_n$ as well as
+\[
+\sum_{n=0}^\infty \alpha_n^2 = \norm{h}^2_{L^2(X)} = \norm{f}^2_{H^{\nu + \frac{d}{2}}(X)}
+\]
+which follows from orthonormality of $f_n$ along with the definition of $h$ and \Cref{res:riemannian-sobolev}.
+This proves boundedness and invertability.
+To complete the argument, we check that the desired identity holds under a change of metric.
+The change of metric expressions of interest are given by 
+\[
+\lap_{\tilde{g}} &= \frac{\kappa^2}{2\nu} \lap_g
+&
+\tilde{\lambda}_n &= 
+&
+\tilde{f}_n &= \del{\frac{2\nu}{\kappa^2}}^{-\frac{d}{4}} f_n
+&
+\vol_{\tilde{g}} &= \del{\frac{2\nu}{\kappa^2}}^{\frac{d}{2}} \vol_g
+\]
+thus starting from $(1 + \lap_{\tilde{g}})^{\frac{\nu}{2} + \frac{d}{4}} \tilde{f} = \c{W}_{\tilde{g}}$ we can write
+\[
+(1 + \lap_{\tilde{g}})^{\frac{\nu}{2} + \frac{d}{4}} = \del[3]{1 + \frac{\kappa^2}{2\nu} \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} = \del[3]{\frac{\kappa^2}{2\nu}}^{\frac{\nu}{2} + \frac{d}{4}}  \del{\frac{2\nu}{\kappa^2} +  \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} 
+\]
+as well as 
+\[
+\c{W}_{\tilde{g}} = \del{\frac{2\nu}{\kappa^2}}^{\frac{d}{4}} \c{W}_g
+\]
+which when combined gives $f = \del{\frac{\kappa^2}{2\nu}}^{\frac{\nu}{2} + \frac{d}{2}} \tilde{f}$.
+On the other hand, under a change of metric, the series representation of the Matérn kernel is
+\[
+\tilde{k}(x,x') &= \sum_{n=0}^\infty (1 + \tilde{\lambda}_n)^{-\nu - \frac{d}{2}} \tilde{f}_n(x) \tilde{f}_n(x')
+\\
+&= \sum_{n=0}^\infty \del[3]{1 + \frac{\kappa^2}{2\nu} \lambda_n}^{-\nu - \frac{d}{2}} \del{\frac{2\nu}{\kappa^2}}^{-\frac{d}{2}} f_n(x) f_n(x')
+\\
+&= \del[3]{\frac{\kappa^2}{2\nu}}^{-\nu - d} \sum_{n=0}^\infty \del{\frac{2\nu}{\kappa^2} + \lambda_n}^{-\nu - \frac{d}{2}} f_n(x) f_n(x')
+\]
+where $\tilde{k}$ is the transformed kernel, for which we see that $\del{\frac{\kappa^2}{2\nu}}^{\nu + d} \tilde{k}(x,x') = k(x,x')$.
+But this exactly matches the covariance kernel of $f$ according to the given transformation of the Gaussian process, and the claim follows.
 \end{proof}
 
 \subsection{Illustrated examples}
-
-\begin{figure}
-\vspace*{10ex}
-[Posterior 3D Visual]
-\vspace*{10ex}
-\caption{A posterior Matérn Gaussian process on the dragon manifold. We plot true function values, along with the posterior mean and standard deviations. Here, the black dots represent data. We observe that the standard deviation generally increases as we move away from the training locations.}
-\label{fig:dr-posterior}
-\end{figure}
 
 Using the developed tools, we have defined Riemannian Gaussian processes of interest as solutions of stochastic partial differential equations, and derived expressions for their kernels which are explicit enough to be amenable to approximation. 
 Here, we explore using these processes as priors in Bayesian learning.
@@ -3166,6 +3222,14 @@ To generate training data, we define a group truth function given by the sine of
 We observe this function at a total of $52$ points chosen from the mesh's vertices.
 We train a Matérn prior with smoothness $\nu = 3/2$ on this data using gradient descent, obtaining learned variance and length scale hyperparameters.
 Finally, we obtain the posterior samples over the entire mesh using pathwise sampling.
+
+\begin{figure}
+\vspace*{10ex}
+[Posterior 3D Visual]
+\vspace*{10ex}
+\caption{A posterior Matérn Gaussian process on the dragon manifold. We plot true function values, along with the posterior mean and standard deviations. Here, the black dots represent data. We observe that the standard deviation generally increases as we move away from the training locations.}
+\label{fig:dr-posterior}
+\end{figure}
 
 Results are given in \Cref{fig:dr-posterior}.
 We observe that the both the mean predictions and uncertainty estimates adapt to the manifold's geometry.
