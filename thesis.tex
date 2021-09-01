@@ -3419,12 +3419,31 @@ To simplify the problem and aid visualization, we focus on a single time slice c
 We compute the kernel approximately using $500$ Laplace--Beltrami eigenpairs, and train the model by optimizing kernel hyperparameters and likelihood error variance.
 
 \begin{figure}
-\vspace*{10ex}
-[Traffic Figure]
-\vspace*{10ex}
-\caption{Posterior means and standard deviations, in miles per hour, for the probabilistic graph interpolation task on the road network. Nodes with white circles indicate sensor locations where data is available. We observe that standard deviation generally increases as we move away from the parts of the state space where there is data.}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/ggp-mean.tex}
+\caption{Mean}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/ggp-std.tex}
+\caption{Standard deviation}
+\end{subfigure}
+\caption{Posterior means and standard deviations, in miles per hour, for the probabilistic graph interpolation task on the road network. Nodes with white circles indicate sensor locations where data is available. We observe that standard deviation generally increases as we move away from the parts of the state space where there is data. Standard deviation values above 10 are clipped. }
 \label{fig:graph-posterior}
 \end{figure}
+
+\begin{figure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/ggp-mean-zoom.tex}
+\caption{Mean}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/ggp-std-zoom.tex}
+\caption{Standard deviation}
+\end{subfigure}
+\caption{View of a zoomed-in portion of the posterior means and standard deviations of the probabilistic graph interpolation task on the road network. Note the small-scale variation present within the error bars.}
+\end{figure}
+    
+    
 
 Results can be seen in \Cref{fig:graph-posterior}.
 Here, we see that in spite of the heavily non-manifold-like geometry present in this graph, the Gaussian process still reflects the graph's geometric structure.
