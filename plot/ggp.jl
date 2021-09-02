@@ -14,8 +14,6 @@ xy = readdlm("../results/ggp/ggp_xy.csv", ',')
 mean = readdlm("../results/ggp/ggp_mean.csv", ',') |> vec
 std = readdlm("../results/ggp/ggp_std.csv", ',') |> vec
 idxs = readdlm("../results/ggp/ggp_data.csv", ',', Int) |> vec
-zoom = findall((xy[:,1] .> -122) .& (xy[:,1] .< -121.9) .& (xy[:,2] .> 37.3) .& (xy[:,2] .< 37.35))
-
 
 
 for name in ("ggp-mean","ggp-std")
