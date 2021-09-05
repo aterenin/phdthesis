@@ -1,22 +1,10 @@
-using PGFPlotsX; @eval(PGFPlotsX, _OLD_LUALATEX = true); push!(PGFPlotsX.CLASS_OPTIONS, "11pt")
+include("plot.jl")
 using Colors
 using DelimitedFiles
 using Statistics
 
-preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> picture -> PGFPlotsX.savetex("../figures/tex/$file", picture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
-
-function non_repeated_indices(v)
-    d = findall(diff(v) .!= 0)
-    idxs = sort(unique(vcat(1, d, d .+ 1, length(v))))
-    (idxs, v[idxs])
-end
-
 data = Dict((d,l,c) => readdlm("../results/ts/ts_regret_d$(d)_l$(l)_$(c).csv", ',') for d in (2,4,8) for l in (256,1024,4096) for c in ("direct","cholesky","rff","random","pathwise"))
-
 color = Dict("direct" => "black", "cholesky" => colorant"#2ca02c", "rff" => colorant"#ff7f0e", "random" => "black","pathwise" => colorant"#1f77b4")
-
-
 
 @pgf GroupPlot(
     {

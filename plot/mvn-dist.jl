@@ -1,14 +1,10 @@
-using PGFPlotsX; @eval(PGFPlotsX, _OLD_LUALATEX = true); push!(PGFPlotsX.CLASS_OPTIONS, "11pt")
+include("plot.jl")
+@eval(PGFPlotsX, PGFPlotsX.@define_axislike TikzFadingFromPicture "tikzfadingfrompicture")
+using PGFPlotsX: TikzFadingFromPicture
 using Colors
 using Distributions
 using Random
 using LinearAlgebra: cholesky
-
-preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> picture -> PGFPlotsX.savetex("../figures/tex/$file", picture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
-
-@eval(PGFPlotsX, PGFPlotsX.@define_axislike TikzFadingFromPicture "tikzfadingfrompicture")
-using PGFPlotsX: TikzFadingFromPicture
 
 function density_to_ellipse(distribution::AbstractMvNormal, num_points_per_contour::Int)
     angles = range(0, 2*pi, length = num_points_per_contour + 1)

@@ -1,14 +1,8 @@
-using PGFPlotsX; @eval(PGFPlotsX, _OLD_LUALATEX = true); push!(PGFPlotsX.CLASS_OPTIONS, "11pt")
+include("plot.jl")
 using Colors
 using ColorSchemes
 using DelimitedFiles
 using Statistics
-
-preamble = [raw"\usepackage{lmodern}", raw"\usepackage{pgfplots}", raw"\pgfplotsset{compat=1.17}", raw"\usepgfplotslibrary{external}", raw"\usepgfplotslibrary{groupplots}", raw"\usepgfplotslibrary{fillbetween}", raw"\usetikzlibrary{fadings}"]
-save_tex = file -> picture -> PGFPlotsX.savetex("../figures/tex/$file", picture |> p -> TikzDocument("\\tikzsetnextfilename{$(replace(file, ".tex" => ""))}", p, use_default_preamble=false, preamble = preamble))
-
-colorscheme_to_pgf(name) = "{" * name * "}{" * join(map(rgb -> "rgb=($(rgb.r),$(rgb.g),$(rgb.b))", getproperty(ColorSchemes, Symbol(name))), "\n") * "}"
-
 
 for graph_name in ("comp","star","reg","ba")
     graph = readdlm("../results/ggp/gk_$(graph_name).csv", ',')
