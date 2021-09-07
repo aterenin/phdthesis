@@ -1435,7 +1435,7 @@ Since limits of Gaussians are Gaussian, the quantity $\dualprod{\phi}{f}$ will b
 Therefore, a Gaussian in the sense of duality can loosely be thought of as a Gaussian process whose integral against arbitrary test functions is always Gaussian---an adaptation of the dot product notion encountered previously to the infinite-dimensional setting.
 
 Of course, the above only describes how one can intuitively think about Gaussians in the sense of duality.
-For a general Gaussians, there is no defined notion of an \emph{integral}---only of a dual pairing.
+For general Gaussians, there is no defined notion of an \emph{integral}---only of a dual pairing.
 Such a Gaussian also need not be a random real-valued function: it's possible to consider random distributions and other objects generalizing the usual notion of a function.
 It is therefore clear this view is very general.
 
@@ -1515,7 +1515,7 @@ In cases where $\c{K}$ admits a sufficiently rich spectral theory, this can pote
 
 
 With these definitions in hand, we have recovered the two technical notions lost when transitioning from multivariate Gaussians to Gaussian processes in the sense of random functions.
-The introduced machinery gives a way of constructing Gaussian processes that is does not rely on defining a kernel: (a) construct a Gaussian white noise process, and (b) define the Gaussian process of interest as an affine map of white noise.
+The introduced machinery gives a way of constructing Gaussian processes that does not rely on defining a kernel: (i) construct a Gaussian white noise process, and (ii) define the Gaussian process of interest as an affine map of white noise.
 
 We employ a variation of this strategy in \Cref{ch:noneuclidean} to construct Gaussian processes on Riemannian manifolds, where defining a kernel directly leads to difficulties.
 Loosely speaking, we do so by taking $V$ to be a space of distributions, and $\c{A}$ to be the inverse of a differential operator.
@@ -1615,11 +1615,11 @@ Contributions presented here include development of \emph{pathwise conditioning}
 \label{ch:pathwise}
 
 \lettrine{G}{aussian processes} admit analytic conditional distributions, making them a key model class for Bayesian learning.
-In reviewing these results, we illustrate a classical point of view used in machine learning, which mirrors the general measure-theoretic setup common to all Bayesian models, and has strongly influenced how people think about Gaussian processes.
+The standard way of viewing these conditional distributions mirrors the general measure-theoretic setup common to all Bayesian models, and has strongly influenced how people think about Gaussian processes.
 
 In the early 1970s, an alternative view emerged in the geostatistics community.
 Miraculously, in the Gaussian case it is also possible to develop conditioning in a manner not purely based on \emph{distributions}, but on \emph{random variables} directly.
-This view turns out to lift from the multivariate to the Gaussian process setting, yielding \emph{pathwise} representations of posterior Gaussian processes, which have been overlooked in machine learning until now.
+This view turns out to lift from the multivariate to the Gaussian process setting, yielding \emph{pathwise} representations of posterior Gaussian processes, which have largely been overlooked in machine learning until now.
 
 The pathwise perspective turns out to be a powerful point of view with wide-ranging consequences.
 We will show how to use it to resolve a long-standing difficulty in Bayesian optimization: constructing a posterior approximation whose computational cost is linear both at training time and at test time, with excellent approximation properties and error control.
@@ -1699,9 +1699,9 @@ In particular, one can generate conditional sample via the expression
 &
 \v{z} &\~[N](\v{0},\m{I})
 \]
-where $\v\mu_{\v\theta\given\v{y}}$ is the conditional mean, and $\m{L}_{\v\theta\given\v{y}}$ is a Cholesky factor of the conditional covariance.
+where $\v\mu_{\v\theta\given\v{y}}$ is the conditional mean, and $\m{L}_{\v\theta\given\v{y}}$ is a Cholesky factor of the conditional covariance, or any other matrix square root obtained numerically.
 This enables one to calculate any quantity of interest depending on the conditional distribution numerically via the Monte Carlo method.
-The computational costs will be cubic in the dimension of both $\v\theta$ and $\v{y}$, owing to the need to compute $\m{L}_{\v\theta\given\v{y}}$ and invert $\m\Sigma_{\v{y}\v{y}}$, respectively.
+The computational costs will in general be cubic in the dimension of both $\v\theta$ and $\v{y}$, owing to the need to compute $\m{L}_{\v\theta\given\v{y}}$ and invert $\m\Sigma_{\v{y}\v{y}}$, respectively.
 
 
 \subsection{Pathwise conditioning}
@@ -1775,10 +1775,10 @@ Recall that the preimage is a map $\v{y}^{-1} : \c{B}(\R^n) \-> \c{F}$ between $
 This definition is reasonably intuitive: we can think of this as projecting onto the subspace induced by all collections of random numbers in $\Omega$ which play a role in determining what $\v{y}$ does.
 
 Recall that $L^2(\Omega,\c{F},\P;\R^n)$ is the Hilbert space of equivalence classes of random variables with inner product given by $\innerprod{\v{a}}{\v{b}} = \E(\v{a}\cdot\v{b})$.
-Using this, it follows from the Projection Theorem for Hilbert spaces that the terms\footnote{TODO: check.} $\E(\v\theta\given\v{y})$ and $(\v\theta - \E(\v\theta\given\v{y}))$ are uncorrelated---and, in the Gaussian case, that they are independent.
+Using this, it follows from the Projection Theorem for Hilbert spaces that the terms $\E(\v\theta\given\v{y})$ and $(\v\theta - \E(\v\theta\given\v{y}))$ are uncorrelated---and, in the Gaussian case, that they are independent.
 This gives us the candidate random variables to use for $\v{b}$ and $\v{c}$, if we choose conditional expectation for $f$.
 
-Finally, recall that for multivariate Gaussians, we have $\E(\v\theta\given\v{y}) = \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}\v{y}$, where we note in our setting that the inverse always exists by non-singularity of $\v{y}$.
+Finally, recall that for multivariate Gaussians, the conditional expectation is given by $\E(\v\theta\given\v{y}) = \v\mu_{\v\theta} + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v{y} - \v\mu_{\v{y}})$, where we note in our setting that the inverse always exists by non-singularity of $\v{y}$.
 With these preparations, we are ready to revisit \Cref{thm:mvn-pw}.
 
 \begin{figure}
@@ -1805,11 +1805,11 @@ Write
 and note that since $\E(\v\theta\given\v{y})$ and $(\v\theta - \E(\v\theta\given\v{y}))$ are uncorrelated and jointly Gaussian, they are independent.
 Applying \Cref{lem:cond-repr} yields
 \[
-(\v\theta\given\v{y}=\v\gamma) &= \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}} \v\gamma + (\v\theta - \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}} \v{y})
+(\v\theta\given\v{y})(\omega,\v\gamma) &= \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}} \v\gamma + (\v\theta(\omega) - \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}} \v{y}(\omega))
 \\
-&= \v\theta + \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}}(\v\gamma - \v{y})
+&= \v\theta(\omega) + \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}}(\v\gamma - \v{y}(\omega))
 \]
-where we have substituted $\E(\v\theta\given\v{y}) = \m\Sigma_{\v\theta\v{y}}\m\Sigma^{-1}_{\v{y}\v{y}} \v{y}$. 
+where we have substituted $\E(\v\theta\given\v{y}) = \v\mu_{\v\theta} + \m\Sigma_{\v\theta\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}(\v{y} - \v\mu_{\v{y}})$ and immediately cancelled the mean terms. 
 The claim follows.
 \end{proof}
 
@@ -1835,35 +1835,40 @@ This note contains no original material and will never be submitted anywhere for
 \end{quotation}
 
 The present state of affairs therefore seems to be that a small set of technical experts are aware of \Cref{thm:mvn-pw} but believe it to be too trivial to write about, while practitioners working in areas such as Bayesian optimization do not know that it exists.
-While for multivariate Gaussians the result certainly is trivial, we will subsequently show that using it in the right manner yields significant progress towards resolving certain long-standing issues in decision-making settings.
+While for multivariate Gaussians the result certainly is trivial, we subsequently show that using it in the right manner yields significant progress towards resolving certain issues in decision-making settings.
 To do so, we now consider Gaussian processes.
 
 \section{Conditioning Gaussian processes}
 
 We now study conditioning in Gaussian processes.
-Specifically, we will develop and showcase the two points of view introduced above---distributional and pathwise---in the Gaussian process setting.
+Specifically, we develop and showcase the two points of view---distributional and pathwise---introduced in the Gaussian process setting.
 We begin with the former.
 
 \subsection{Distributional conditioning}
 
-The standard way of representing Gaussian process conditionals is to use the finiteness of the data to pick a sufficiently large grid of points, and work with finite-dimensional marginals.
-Conditioning the Gaussian process then reduces to conditioning multivariate Gaussians.
-We now describe this, setting the prior mean to zero to ease notation.
+The standard way of representing Gaussian process conditionals is to use the finiteness of the data to pick a suitable set of locations and work with finite-dimensional marginals.
+Since conditioning and marginalization commute, conditioning the Gaussian process thus reduces to conditioning multivariate Gaussians.
+We now describe this.
+
+To ease notation, we now set the prior mean to zero: the general case can be recovered by adding and subtracting mean functions.
+Additionally, wn what follows, we let $\v{x} = (x_1,..,x_n)$ denote the data locations.
+For this case specifically, we use bold italic fonts to indicate a product structure rather than a linear structure, and in particular do not require $X$ to be a vector space.
+Finally, functions applied to product spaces are understood component-wise.
+With this notation in place, we are ready to state the claim.
 
 \begin{proposition}[Posterior Gaussian process]
 \label{prop:gp-cond}
 The Bayesian model
 \[
-\v{y} \given f &\~[N](\v{f}, \m\Sigma)
+\v{y} \given f &\~[N](f(\v{x}), \m\Sigma)
 &
 f &\~[GP](0,k)
 \]
-where $\v{f} = (f(x_1),..,f(x_n))$ admits a Gaussian process as its posterior. 
-Denoting $f\given y_1 = \gamma_1,..,y_n = \gamma_n$ by $f\given \v{y}$ for brevity, this process satisfies
+admits a Gaussian process
 \[
-f\given\v{y}\~[N](\m{K}_{(\.)x} \m{K}_{xx}^{-1}\v\gamma, \m{K}_{(\.,\.)} - \m{K}_{(\.)x} (\m{K}_{xx} + \m\Sigma)^{-1} \m{K}_{x(\.)})
-.
+(f\given\v{y})(\.,\v\gamma)\~[N](\m{K}_{(\.)\v{x}} \m{K}_{\v{x}\v{x}}^{-1}\v\gamma, \m{K}_{(\.,\.)} - \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1} \m{K}_{\v{x}(\.)})
 \]
+as its posterior. 
 \end{proposition}
 
 \begin{proof}
@@ -1904,12 +1909,12 @@ Summarizing, the computational costs of this expression are as follows.
 \2 Predictions: $\c{O}(n_*^3)$ where $n_*$ is the number of locations the posterior needs to be jointly evaluated at.
 \0
 
-This becomes more difficult if one considers that the evaluation locations may not be known in advance, and might be determined using previous points.
-Due to the need to factorize matrices at every intermediate computation step, roundoff errors will accumulate as computations proceed.
+This becomes more difficult if one considers evaluation locations that are not known in advance, and might be determined using previous points.
+Due to the need to iteratively re-condition on sampled process values and factorize matrices at every intermediate computation step, roundoff errors accumulate as computations proceed.
 Thus, even if we are willing to pay cubic costs, we must then face the secondary issue of numerical instability.
 The situation if one needs to differentiate through objectives such as $\phi_t$ is even worse.
 
-Without additional considerations, these costs are disastrous, and illustrate the difficulties in making methods such as Bayesian optimization perform effectively in practice.
+Without additional considerations, these costs are disastrous, and illustrate typical difficulties in building practical decision-making systems powered by Gaussian processes.
 Fortunately, a wide variety of techniques to deal with them are available: in particular, \emph{inducing point} methods provide a broad set of approximations for reducing the $\c{O}(n^3)$ costs.
 We will complement these ideas by introducing techniques to tackle the $\c{O}(n_*^3)$ costs in the sequel.
 For this, we proceed to develop a pathwise view of conditioning.
@@ -1924,7 +1929,7 @@ We answer this affirmatively below.
 \label{cor:gp-pw}
 For $\v{y}\given f$, $f$, and $\v{f}$ defined in \Cref{prop:gp-cond}, we have
 \[
-(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{f}(\omega) - \v\eps(\omega))
+(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - f(\omega,\v{x}) - \v\eps(\omega))
 \]
 where $\v\eps \~[N](\v{0},\m\Sigma)$.
 \end{corollary}
@@ -1947,10 +1952,10 @@ This view of conditioning is termed \emph{pathwise}, since it is defined directl
 \label{fig:gp-pw-cond}
 \end{figure}
 
-Note that in this expression, the prior is evaluated jointly at all locations---the random variables $f(\omega,\.)$ and $\v{f}(\omega)$ are \emph{dependent}.
+Note that in this expression, the prior is evaluated jointly at all locations---the random variables $f(\omega,\.)$ and $f(\omega,\v{x})$ are \emph{dependent}.
 Similarly, equality can clearly only hold in distribution because the random variable $(f\given\v{y})(\.,\v\gamma)$ is only defined in distribution to begin with.
 
-\Cref{cor:gp-pw} gives an alternative way of representing posterior Gaussian processes: (i) sample the prior and all auxillary random variables, and (ii) transform the sampled function to form the posterior as a random function.
+\Cref{cor:gp-pw} gives an alternative way of representing posterior Gaussian processes: (i) sample the prior and all auxillary random variables, such as the noise term $\v\eps$, and (ii) transform the sampled function to form the posterior as a random function.
 This is illustrated in Figure \ref{fig:gp-pw-cond}.
 
 This strategy can be carried out if we know the locations we wish to evaluate the posterior at.
@@ -1958,7 +1963,7 @@ In this case, we sample the prior at the data and evaluation locations jointly, 
 Examining the computational costs, we see these are $\c{O}(n^3)$ with respect to data size, and $\c{O}(n_*^3)$ with respect to the number of evaluation locations.
 At this stage, then, we have seemingly only gained numerical stability.
 
-\Cref{cor:gp-pw}, however, is not merely a computational result: it gives us a \emph{different way of thinking} about posterior Gaussian processes. 
+\Cref{cor:gp-pw}, however, is not merely a computational result: it gives us a powerful way of thinking about posterior Gaussian processes. 
 In particular, we can use the point of view it offers to construct posterior approximations.
 Observe that the cubic costs $\c{O}(n_*^3)$ occur entirely due to the need to jointly sample the prior at all evaluation locations.
 Suppose, then, that we can approximately express the prior as 
@@ -1970,9 +1975,9 @@ w_j &\~[N](0,1)
 \]
 We can substitute this approximation into \Cref{cor:gp-pw} to obtain
 \[
-(f \given\v{y})(\omega,\v\gamma) \overset{\d}{\approx} \tilde{f}(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))
+(f \given\v{y})(\omega,\v\gamma) \overset{\d}{\approx} \tilde{f}(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \tilde{f}(\omega,\v{x}) - \v\eps(\omega))
+.
 \]
-where $\tilde{f}_n = \tilde{f}(\.,x_n)$.
 We illustrate this idea in Figure \ref{fig:pw-cond-gp-rff}.
 Once the random weights $\v{w}$ are sampled, the posterior becomes a deterministic function, which can be evaluated at $\c{O}(n_*)$ costs.
 Thus, under this approximations, our cubic costs with respect to the number of evaluation locations become \emph{linear}.
@@ -1989,25 +1994,26 @@ By re-expressing the matrix-vector product of the kernel matrix term $\m{K}_{(\.
 \[
 (f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \sum_{j=1}^n v_j(\omega) k(x_j,\.)
 \]
-where $\v{v} = (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))$.
-This \ref{cor:gp-pw} identifies the effect of the data in a posterior Gaussian process as the addition of \emph{canonical basis functions} $k(x_i,\.)$ to the prior.
+where $\v{v} = (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - f(\omega,\v{x}) - \v\eps(\omega))$.
+This identifies the effect of the data in a posterior Gaussian process as the addition of \emph{canonical basis functions} $k(x_i,\.)$ to the prior.
 We explore this interpretation further in the sequel.
 From this viewpoint, our approximate posterior is
 \[
 (f \given\v{y})(\omega,\v\gamma) \overset{\d}{\approx} \sum_{i=1}^\ell w_i(\omega)\phi_i(\.) + \sum_{j=1}^n v_j(\omega) k(x_j,\.)
 \]
 which shows that our proposed approximation involves writing the posterior Gaussian process of interest as a sum of \emph{two} finite sets of basis functions---one for the prior, another for the data.
+We illustrate this in \Cref{fig:pw-cond-gp-rff}.
 The basis coefficients $w_i$ and $v_j$ here are dependent random variables.
 Summarizing, pathwise representations of posterior Gaussian processes provide a useful framework for constructing posterior approximations.
 
-In Bayesian optimization, the preceding techniques offer a promising avenue to avoid the computational difficulties described previously.
-If we again consider Thompson sampling, computing quantities such as
+In Bayesian optimization, these techniques offer a promising avenue to avoid the computational difficulties that result from working with finite-dimensional marginals.
+Computing the Thompson sampling acquisition function
 \[
 x_{t+1}(\omega) &= \argmax_{x\in X} \phi_t(\omega,x)
 &
 \phi_t&\~ f \given \v{y}
 \]
-can be done using a simple Monte Carlo approach as follows.
+or any other quantities that require evaluating the Gaussian process at arbitrary locations can be done using a simple Monte Carlo approach as follows.
 
 \1 Sample the random weights $(\v{w}, \v{v})$ to form the approximate posterior.
 \2 Maximize the approximate posterior using any numerical procedure.
@@ -2016,7 +2022,7 @@ can be done using a simple Monte Carlo approach as follows.
 The key advantage of this approach is that once the random weights are sampled, the posterior---a random function---effectively becomes deterministic.
 This allows us to not only evaluate it in linear time, but also to differentiate through posterior samples using automatic differentiation---here, enabling us to maximize them using gradient descent without computing gradient processes or employing special considerations of any kind.
 
-In total, we obtain a substantially more accurate and efficient way to compute acquisition functions such as Thompson sampling.
+In total, we obtain a simple, accurate, and efficient way to compute acquisition functions such as Thompson sampling.
 To obtain a complete algorithm, all that remains is to find finite basis approximations to Gaussian process priors: this will require additional structure present in specific classes of kernels.
 We proceed to explore a number of techniques for doing so.
 
@@ -2030,7 +2036,8 @@ We now explore possible choices.
 
 \subsection{Random feature methods}
 
-For stationary kernels on Euclidean spaces, random feature methods can be used to construct approximate priors whose properties make them one of the most attractive choices possible.
+One of the most popular classes of kernels is the class of stationary kernels defined on Euclidean spaces, which are kernels that factorize through a one-argument function depending only on the difference between points.
+For such kernels, random feature methods can be used to construct approximate priors whose properties make them a particularly attractive choice.
 We examine these now.
 
 To construct a basis function expansion, our strategy will be to find a \emph{feature map} $\varphi : \c{X} \-> \c{H}_k$ that maps states into vectors in the \emph{reproducing kernel Hilbert space} induced by $k$.
@@ -2041,9 +2048,12 @@ Let $X$ be a set, and let $\c{H} \subseteq \R^X$ be a Hilbert space of functions
 We say that $\c{H}$ is a \emph{reproducing kernel Hilbert space} if, for any $x\in X$, we have $\f{ev}_x \in \c{H}^*$ where $\f{ev}_x : \c{H} \-> \R$ is called the \emph{evaluation map} and is defined by $\f{ev}_x f = f(x)$.
 \end{definition}
 
+Note that in this definition, the statement $\f{ev}_x \in \c{H}^*$ means that $\f{ev}_x$ is a bounded linear functional.
+Reproducing kernel Hilbert spaces therefore impose continuity requirements on their pointwise evaluational functionals.
+
 Ostensibly, this definition has nothing to do with kernels, and it is unclear what a reproducing kernel Hilbert space \emph{induced by} $k$ actually means.
 A consequence of the above definition is that given a reproducing kernel Hilbert space $\c{H}$, we can define the function $k_{\c{H}}(x,x') = \innerprod[1]{\Psi_{\c{H}}^{-1}\f{ev}_x}{\Psi^{-1}_{\c{H}}\f{ev}_{x'}}$, called the \emphmarginnote{reproducing kernel}, where $\Psi_{\c{H}} : \c{H} \-> \c{H}^*$ is the bijective linear isometry given by the Riesz Representation Theorem.
-It is easy to see that $k_{\c{H}}$ is positive semi-definite.\footnote{TODO: check if it's PD or PSD.}
+It is easy to see that $k_{\c{H}}$ is positive semi-definite.
 It turns out a converse statement also holds.
 
 \begin{result}[Moore--Aronszajn Theorem]
@@ -2052,16 +2062,16 @@ Then there is a unique Hilbert space $\c{H}_k \subseteq \R^X$ for which $k$ is t
 \end{result}
 
 \begin{proof}
-TODO: cite.
+\textcite[Proposition 2.13 and Theorem 2.14]{paulsen16}.
 \end{proof}
 
 This gives another point of view from which one can study and understand kernels.
 We will need one final notion.
 We say that a function $\varphi : X \-> \c{H}_k$ is a \emphmarginnote{feature map} if $k(x,x') = \innerprod{\phi(x)}{\phi(x')}$.
-Now, we introduce the key idea for constructing our approximate Gaussian prior: suppose we have a \emph{finite-dimensional} approximation for such a feature map, namely a vector-valued function $\v\phi : X \-> \R^\ell$ such that $\v\phi(x)^T \v\phi(x') = \innerprod{\phi(x)}{\phi(x')}$.
+Now, we introduce the key idea for constructing our approximate Gaussian prior: suppose we have a \emph{finite-dimensional} approximation for such a feature map, namely a vector-valued function $\v\phi : X \-> \R^\ell$ such that $\v\phi(x)^T \v\phi(x') \approx \innerprod{\varphi(x)}{\varphi(x')}$.
 Then
 \[
-\tilde{f}(\.) &= \sum_{i=1}^\ell w_i(\omega) \phi_i(\.)
+\tilde{f}(\omega,\.) &= \sum_{i=1}^\ell w_i(\omega) \phi_i(\.)
 &
 w_i &\~[N](0,1)
 \]
@@ -2069,10 +2079,11 @@ by direct calculation has covariance approximately equal to that of $f$.
 Therefore, to construct an approximate prior, it suffices to find a finite-dimensional approximate feature map.
 
 For stationary kernels, techniques for constructing approximate feature maps are well-studied, originally motivated by questions arising in kernel support vector machines.
-We now introduce the \emph{random Fourier feature} method for constructing such maps, beginning with a description of the stationary setting.
+We now introduce the \emph{random Fourier feature} method for constructing such maps, beginning with a fully detailed description of the stationary setting.
 
 \parmarginnote{Stationary kernel}
 Let $X = \R^d$.
+In the remaining subsection, we use bold italic $\v{x}$ to denote linear rather than product structure.
 We say that a kernel $k(\v{x},\v{x}')$ is called \emph{stationary} if $k(\v{x},\v{x}') = k(\v{x} - \v{x})$ for a function $k : \R^d \-> \R$.
 A stationary kernel, then, is a two-argument positive definite function which factorizes through a one-argument function depending only on the difference between two points.
 Note that such a kernel is invariant under translation and can be characterized as such.
@@ -2089,12 +2100,13 @@ Conversely, every probability measure on $\R^d$ gives rise to such a kernel via 
 \end{result}
 
 \begin{proof}
-TODO: cite.
+\textcite[Theorem 10.4]{paulsen16}.
 \end{proof}
 
 Here, \emph{symmetry} of $\rho$ refers to invariance under reflection about the origin.
-This result is true more generally if $X$ is replaced by a locally compact Abelian group, for which the corresponding spectral measure will be supported on the Pontryagin dual group---we omit this level of generality because we will not need it.
-We do briefly note, however, that this means that spectral measures of kernels on compact spaces are \emph{discrete}---this behavior will reappear under a different guise in \Cref{ch:noneuclidean}.\footnote{TODO: don't forget to actually mention this.}
+This result is true more generally if $X$ is replaced by a locally compact Abelian group, for which the corresponding spectral measure will be supported on the Pontryagin dual group---see \textcite{paulsen16}. 
+We omit this level of generality because we will not need it.
+We do briefly note, however, that this means that spectral measures of kernels on compact spaces are \emph{discrete}---this behavior will reappear under a different guise in \Cref{ch:noneuclidean}.
 
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}
@@ -2109,8 +2121,8 @@ We do briefly note, however, that this means that spectral measures of kernels o
 \label{fig:gp-rff-prior}
 \end{figure}
 
-From here, it is clear that the feature map we seek can be constructed by Monte Carlo sampling the integral representation given by Bochner's Theorem.
-To maintain order, we introduce a \emph{second} probability space $(\Xi,\c{G},\bb{Q})$ to distinguish the stochasticity associated with the random feature expansion from stochasticity associated with the Gaussian process.
+From here, it is clear that the feature map we seek can be constructed by Monte Carlo approximation of the integral representation given by Bochner's Theorem.
+To maintain order, we introduce a second probability space $(\Xi,\c{G},\bb{Q})$ to distinguish the stochasticity associated with the random feature expansion from stochasticity associated with the Gaussian process.
 Letting $k(\v{x},\v{x}) = \sigma^2$, write
 \[
 k(\v{x} - \v{x}') &= \sigma^2 \int_{\R^d} e^{2\pi i \v\varpi^T (\v{x} - \v{x}')} \d\rho(\v\varpi)
@@ -2144,8 +2156,7 @@ w_i &\~[N](0,1)
 \v\varpi_i &\~ \rho
 .
 \]
-
-What is remarkable about random feature methods is that, owing to the Monte Carlo approximation, the decay rate of appropriately defined approximation error is \emph{dimension-free}.
+What is remarkable about random feature methods is that, owing to the Monte Carlo approximation, the decay rate of their approximation error is \emph{dimension-free} in the Monte Carlo sense.
 This limits the effect of the curse of dimensionality to constant factors.
 Better yet, random feature methods are well-understood owing to their widespread use in other areas, and error bounds are available \cite{sutherland15}.
 For this reason, they are often the technique of choice for stationary Euclidean kernels.
@@ -2181,7 +2192,7 @@ Moreover, for every $\ell\in \N$, truncating this series yields an $L^1(\Omega;L
 \end{result}
 
 \begin{proof}
-TODO: cite.
+\textcite[Theorem 5.28]{lord14}.
 \end{proof}
 
 More generally, an analogous result, albeit with a weaker form of convergence, also holds for general \emph{square-integrable} stochastic processes which may be non-Gaussian.
@@ -2229,9 +2240,9 @@ between generalized Gaussian fields---a formal treatment is given in \Cref{ch:no
 Assume that the generalized Gaussian field $f : \Omega \x H \-> \R$ can be written as the integral of a Gaussian process $f : \Omega \x X \-> \R$ as
 \[
 f(\omega, h) = \int_X f(\omega, x) h(x) \d x
+.
 \]
-which holds provided that $f$ is measurable.
-This, in turn, depends on regularity properties of the kernel, but will hold in essentially all practical cases of interest, and in particular on closed compact domains $X$ follows from sample-continuity.
+This amounts to requiring the stochastic partial differential equation's solution $f$ to possess some regularity, and in particular on closed compact domains $X$ follows from sample-continuity of $f$.
 If we define the bilinear form 
 \[
 a(\phi,\psi) = \int_X \phi(x) (\c{L}^*\psi)(x) \d x    
@@ -2242,7 +2253,7 @@ a(f(\omega,\.), h) = \c{W}(\omega, h)
 \]
 which is an equation between a Gaussian process, bilinear form, and random linear functional.
 Now, we introduce approximations: suppose that $f(\omega,x) \approx \tilde{f}(\omega,x) = \sum_{i=1}^\ell w_i(\omega) \phi_i(x)$ and that $h(x) \approx \sum_{j=1}^\ell v_j \psi_j(x)$.
-Plugging this in and differentiating to remove the coefficients $v_j$ yields 
+Plugging this in and differentiating to remove the coefficients $v_j$ yields the system of equations
 \[
 \sum_{i=1}^\ell w_i(\omega) a(\phi_i,\psi_j) = \c{W}(\omega, \psi_j)
 \]
@@ -2260,7 +2271,7 @@ Our approximate prior can therefore be written
 .
 \]
 What is particularly powerful about this technique is that it gives us a significant degree of freedom for what kinds of finite sets of basis functions we can choose for $\phi$ and $\psi$.
-A fruitful choice, provided the operator $\c{L}$ is a differential operator of sufficiently low order that this makes sense, is to take them to be compactly supported piecewise linear functions, since this will cause the matrices $\m{A}$ and $\m{M}$ to be sparse.
+A fruitful choice, provided the operator $\c{L}$ is a differential operator of sufficiently low order that this makes sense, is to take $\phi_i$ to be compactly supported piecewise linear functions, since this will cause the matrices $\m{A}$ and $\m{M}$ to be sparse.
 This can enable one to use a much larger set of basis functions compared to alternative methods.
 
 \begin{figure}
@@ -2279,7 +2290,7 @@ This results in matrices $\m{A}$ and $\m{M}$ which are symmetric tridiagonal.}
 \label{fig:gp-fe-prior}
 \end{figure}
 
-The main difficulty with finite element methods is that they typically demand more from practitioners compared to alternatives.
+The main issue with finite element methods is that they typically demand more from practitioners compared to alternatives.
 In particular, one usually needs to understand the stochastic partial differential equations governing the Gaussian process of interest with a reasonable degree of detail to know how to choose basis functions well.
 Additionally, sparse linear algebra in a parallel environment with automatic differentiation can be cumbersome.
 
@@ -2292,11 +2303,11 @@ We now proceed to study other aspects of the pathwise viewpoint.
 In the preceding section, we discussed techniques for approximating the prior using a finite set of basis functions with random coefficients.
 This enabled us to construct approximate pathwise representations of posterior Gaussian processes with $\c{O}(n_*)$ computational complexity, where we recall again that $n_*$ is the number of points where we wish to evaluate the posterior at.
 We now consider the other computational costs in the formula: $\c{O}(n^3)$, where $n$ is the size of the training data.
-These arise because computing
+These costs arise because computing
 \[
-(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{f}(\omega) - \v\eps(\omega))
+(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - f(\omega,\v{x}) - \v\eps(\omega))
 \]
-requires us to invert an $n\x n$ matrix.
+requires us to invert the $n\x n$ matrix $\m{K}_{\v{x}\v{x}} + \m\Sigma$.
 We now ask: from a pathwise perspective, what techniques are available for reducing these costs?
 
 \subsection{Inducing points}
@@ -2305,14 +2316,15 @@ Consider a simple approach to reducing the above cubic costs: instead of conditi
 To ensure this approximation is expressive enough, we can either (i) make $\v\mu$ random with a learnable mean and covariance, or (ii) introduce a learned noise covariance $\m\Lambda$, rather than reusing the one from the original model.
 The latter gives
 \[
-(f \given\v{u})(\omega,\v\mu) = f(\omega,\.) + \m{K}_{(\.)\v{z}} (\m{K}_{\v{z}\v{z}} + \m\Lambda)^{-1}(\v\mu - \v{f}(\omega) - \v\epsilon(\omega))
+(f \given\v{u})(\omega,\v\mu) = f(\omega,\.) + \m{K}_{(\.)\v{z}} (\m{K}_{\v{z}\v{z}} + \m\Lambda)^{-1}(\v\mu - f(\omega,\v{z}) - \v\epsilon(\omega))
 \]
 where $f\given\v{u}$ is the posterior under the modified likelihood employing the noise covariance $\m\Lambda$.
+For $\v{z}$, as with $\v{x}$, we also use bold italics to denotes product structure.
 This approximation has a particularly simple interpretation: we can re-write it as
 \[
 (f \given\v{u})(\omega,\v\mu) = f(\omega,\.) + \sum_{j=1}^m v_j(\omega) k(z_j,\.)
 \]
-where $\v{v}(\omega) = (\m{K}_{\v{z}\v{z}} + \m\Lambda)^{-1}(\v\mu - \v{f}(\omega) - \v\epsilon(\omega))$.
+where $\v{v}(\omega) = (\m{K}_{\v{z}\v{z}} + \m\Lambda)^{-1}(\v\mu - f(\omega,\v{z}) - \v\epsilon(\omega))$.
 Thus, we see that all we have done is replaced a large sum of data-dependent functions $k(x_j,\.)$ with $j=1,..,n$ induced by the kernel with a much smaller sum involving a sparsified set of functions $k(z_j,\.)$ with $j=1,..,m$ and $m \ll n$.
 
 Given such an approximate posterior, how should we select the introduced hyperparameters $\v{z},\v\mu,\m\Lambda$ to ensure quality?
@@ -2320,32 +2332,21 @@ At minimum, we should attempt to guarantee consistency of the approximation, in 
 We therefore seek to minimize some notion of \emph{distance} on the space of probability measures.
 
 The most natural choice one can consider is arguably the one that emerged from the analysis of Bayes' Rule presented in \Cref{ch:intro}: namely, the \emph{Kullback--Leibler divergence}.
-Minimizing this amounts to replacing the measure space in the variational formulation of Bayes' Rule of \Cref{prop:variational-bayes} with the parameterized subspace of measures induced by the set of approximate posteriors with different parameter values, which we the \emph{variational family}.
-This yields the optimization problem 
+Minimizing this amounts to replacing the measure space in the variational formulation of Bayes' Rule of \Cref{prop:variational-bayes} with the parameterized subspace of measures induced by the set of approximate posteriors with different parameter values
+
+Assume mutual absolute continuity between the distributions of the prior $\pi_f$ and true posterior $\pi_{f\given\v{y}}$.
+Define the \emphmarginnote{variational family} $\bb{Q}$ to be the set of all measures equal to the distribution of $f\given\v{u}$ for some choice of variational parameter values $\v{z},\v\mu,\m\Lambda$.
+Restricting the variational formulation of Bayes' Rule to $\bb{Q}$ yields the optimization problem 
 \[
 \argmin_{\bb{q}_f\in\bb{Q}} D_{\f{KL}}(\bb{q}_f \from \pi_f) + \frac{1}{2}\operatorname*{\E}_{f\~\bb{q}_f} (\v\gamma - f(\v{x}))^T \m\Sigma^{-1} (\v\gamma - f(\v{x}))
 \]
-where $\bb{Q}$ is the set of all measures equal to the distribution of $f\given\v{u}$ for some choice of variational parameter values $\v{z},\v\mu,\m\Lambda$, and $\bb{q}_f$ is the distribution of $f\given\v{u}$ for a specific set of such values.
-Note that we have dropped constant terms from the likelihood density because they do not affect the optima.
-Our \emph{variational approximation} is obtained by solving this optimization problem, which it turns out is necessarily well-posed.
+where we have dropped constant terms from the likelihood density because they do not affect the optima.
+Our \emphmarginnote{variational approximation} is obtained by solving this optimization problem.
+By the chain rule for Kullback--Leibler divergences, $D_{\f{KL}}(\bb{q}_f \from \pi_f) = D_{\f{KL}}(\bb{q}_{f(\v{z})} \from \pi_{f(\v{z})})$ reduces to the Kullback--Leibler divergence between the respective finite-dimensional marginal distributions at the inducing locations $\v{z}$.
+It follows that the optimization objective of the variational approximation is finite.
 
-\begin{proposition}[Variational objective for inducing point approximations]
-For all $\v{x},\v{y},\m\Sigma$, and all $\v{z},\v\mu,\m\Lambda$, the Kullback--Leibler divergence $D_{\f{KL}}(\bb{q}_f \from \pi_{f \given\v{y}})$ is finite and equal to the above objective up to an additive constant.
-Moreover, the prior Kullback--Leibler divergence $D_{\f{KL}}(\bb{q}_f \from \pi_f) = D_{\f{KL}}(\bb{q}_{f(\v{z})} \from \pi_{f(\v{z})})$ reduces to the Kullback--Leibler divergence between the respective finite-dimensional marginal distributions at the inducing locations $\v{z}$.
-\end{proposition}
-
-\begin{proof}
-We consider the two terms in the objective and the additive constant.
-\1 Finiteness of the first term, along with the second claim, follows by the chain rule for Kullback--Leibler divergences, since $\bb{q}_f$ is by construction a conditional distribution of a Gaussian process with the same covariance kernel as $k$.
-\2 Finiteness of the second term follows immediately, because it is the expectation of a quadratic with respect to a multivariate Gaussian.
-\3 Finiteness of the additive constant also follows, because it is by definition the log-density of a multivariate Gaussian.
-\0 
-The claim follows. 
-\end{proof}
-
-We have therefore proven that the \emph{inducing point} approximation of \textcite{opper09}, when re-interpreted using the variational inference framework of \textcite{titsias09}, coincides with the pathwise variational approximation constructed here.
-The same is true for other classes of inducing points, including the family where $\v{u}$ is randomized, as originally proposed by \textcite{titsias09}.
-
+We thus see that the \emph{inducing point} approximation of \textcite{opper09}, when re-interpreted using the variational inference framework of \textcite{titsias09}, coincides with the pathwise variational approximation constructed here.
+The same is true for other classes of inducing points, including the family where $\v{u}$ is randomized which was originally proposed by \textcite{titsias09}.
 
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}
@@ -2391,23 +2392,23 @@ An obvious question one can ask is, instead of approximating the prior term, why
 The answer to this question is that the resulting model becomes fundamentally finite-dimensional, and loses expressive capacity, resulting in reduced performance.
 This can be seen precisely by comparing its pathwise update 
 \[
-\tilde{f}(\omega,\.) + \ubr{\v\phi(\.)^T\v\phi(\v{x})}_{\t{replaces}\,\m{K}_{(\.)\v{x}}} (\ubr{\v\phi(\v{x})^T\v\phi(\v{x})}_{\t{replaces}\,\m{K}_{\v{x}\v{x}} } + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))
+\tilde{f}(\omega,\.) + \ubr{\v\phi(\.)^T\v\phi(\v{x})}_{\t{replaces}\,\m{K}_{(\.)\v{x}}} (\ubr{\v\phi(\v{x})^T\v\phi(\v{x})}_{\t{replaces}\,\m{K}_{\v{x}\v{x}} } + \m\Sigma)^{-1}(\v\gamma - \tilde{f}(\omega,\v{x}) - \v\eps(\omega))
 \]
 to the pathwise update
 \[
-f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))
+f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - f(\omega,\v{x}) - \v\eps(\omega))
 \]
 under the original, infinite-dimensional prior.
-Observe that all that has changed is that the kernel matrices $\m{K}_{(\.)\v{x}}$ and $\m{K}_{\v{x}\v{x}}$ have been replaced with the approximations $\v\phi(\.)^T\v\phi(\v{x})$ and $\v\phi(\v{x})^T\v\phi(\v{x})$.
+Observe that all that has changed is that the prior $f$ has been replaced with $\tilde{f}$, and the kernel matrices $\m{K}_{(\.)\v{x}}$ and $\m{K}_{\v{x}\v{x}}$ have been replaced with the approximations $\v\phi(\.)^T\v\phi(\v{x})$ and $\v\phi(\v{x})^T\v\phi(\v{x})$.
 Observe further that since $\tilde{f}(\omega,\.) = \v\phi(\.)^T\v{w}(\omega)$ where $w_i\~[N](0,1)$, we can write
 \[
 (f\given\v{y}) \approx \v\phi(\.)^T(\v{w}(\omega) + \v{\tilde{v}}(\omega))
 \]
-where $\v{\tilde{v}}(\omega) = \v{w}(\omega) + \v\phi(\v{x}) (\v\phi(\v{x})^T\v\phi(\v{x}) + \m\Sigma)^{-1}(\v\gamma - \v{\tilde{f}}(\omega) - \v\eps(\omega))$ are random weights.
-Therefore, if change the model, then the posterior becomes a sum of the specified finite basis functions, irrespective of the data, and in particular does not grow as data size increases.
+where $\v{\tilde{v}}(\omega) = \v{w}(\omega) + \v\phi(\v{x}) (\v\phi(\v{x})^T\v\phi(\v{x}) + \m\Sigma)^{-1}(\v\gamma - \tilde{f}(\omega,\v{x}) - \v\eps(\omega))$ are random weights.
+Therefore, if we change the model, then the posterior becomes a sum of the specified finite basis functions, which do not grow in quantity as data size increases.
 
-This therefore means its representational capacity---in the sense of the dimension of the vector space spanned by all basis functions used---also does not grow as data size increases.
-This is to be contrasted with the approximate pathwise update, for which this dimensionality grows due to the presence of $n$ kernel functions $k(x_j,\.)$ in the sum.
+If we think of the dimension of the vector space spanned by all basis functions as the representational capacity of the finite-dimensional model, we see that for Fourier feature posteriors this capacity does not grow as data size increases.
+This is to be contrasted with the approximate pathwise update, for which the representational capacity grows in spite of its finite-dimensional nature due to the presence of $n$ kernel functions $k(x_j,\.)$ in the sum.
 
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}
@@ -2429,8 +2430,8 @@ The result is that if the true posterior takes on a difficult-to-represent shape
 This can be seen in \Cref{fig:variance-starvation}.
 This phenomenon has been called \emph{variance starvation} in the literature, due to its ability to produce error bars that are too narrow as a result of lack of representational capacity---we note this name is misleading because it is also capable of producing error bars which are far too large.
 
-A number of ways of alleviating Variance starvation have been proposed in the literature.
-One is to avoid using Fourier bases for representing the posterior, and rely instead on basis functions which are compactly supported or otherwise possess some sense of locality.
+A number of ways of alleviating variance starvation have been proposed in the literature.
+One way is to avoid using Fourier bases for representing the posterior, and rely instead on basis functions which are compactly supported or otherwise possess some sense of locality.
 This mirrors ideas in numerical analysis surrounding \emph{Runge's phenomenon}, where similar behavior occurs in polynomial interpolation.
 From this angle, the pathwise viewpoint offers a canonical way to select the functions used for representing the data.
 
@@ -2465,59 +2466,59 @@ Moreover, unlike alternatives such as the Kullback--Leibler divergence or total 
 
 We will also analyze error in a second way: using the supremum norm between kernels.
 Observe that pathwise approximations under mean-zero priors possess the exact same mean as the true posterior.
-Therefore, when restricted to pathwise approximations under mean-zero priors, this notion lifts to a \emph{metric} rather than a pseudometric between probability distributions in the given class.
+Therefore, when restricted to pathwise approximations under mean-zero priors, this notion gives an actual metric between probability distributions in the given class.
 We now state our main result.
 
 \begin{proposition}[Pathwise posterior Wasserstein error bound]
 \label{prop:wasserstein-bound}
 Assume $X \subseteq \R^d$ is compact and that $f \~[GP](0,k)$ is almost surely continuous.
-Let $\tl{f}(\omega,x) = \sum_{i=1}^\ell w_i(\omega) \phi_i(x)$, and let $(\tl{f}\given\v{y})(\omega,x) = \tl{f}(\omega,x) + \m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1}(\v{y}- \tl{f}(\v{x}))$.
+Let $\tilde{f}(\omega,x) = \sum_{i=1}^\ell w_i(\omega) \phi_i(x)$, and let $(\tilde{f}\given\v{y})(\omega,x) = \tilde{f}(\omega,x) + \m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1}(\v{y}- \tilde{f}(\v{x}))$.
 Then we have 
 \[
-W_{2,L^2(X)}(\tl{f}\given\v{y}, f\given\v{y}) \leq C_1 W_{2,C(X)}(\tl{f},f)
+W_{2,L^2(X)}(\tilde{f}\given\v{y}, f\given\v{y}) \leq C_1 W_{2,C^0(X)}(\tilde{f},f)
 \]
-where $C_1 = \del{2\f{vol}(X)\del{1 + \norm{k}^2_{C(X\x X)} \norm{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1}}}^{1/2}$.
+where $C_1 = \del{2\f{vol}(X)\del{1 + \norm{k}^2_{C^0(X \x X)} \norm{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1}}}^{1/2}$.
 \end{proposition}
 
 \begin{proof}
 The idea is to first use the pathwise update to prove a pointwise bound, then take expectations with respect to a minimizing coupling to obtain a Wasserstein bound.
 Using Hölder's inequality with $p=1$ and $q=\infty$, write 
 \[
-&\abs[1]{(\tl{f}\given\v{y})(\.) - (f\given\v{y})(\.)}^2 
+&\abs[1]{(\tilde{f}\given\v{y})(\.) - (f\given\v{y})(\.)}^2 
 \\
-&\qquad\leq 2 \abs[1]{\tl{f}(\.) - f(\.)}^2 + 2 \abs[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1} (\tl{f}(\v{x}) - f(\v{x}))}^2
+&\qquad\leq 2 \abs[1]{\tilde{f}(\.) - f(\.)}^2 + 2 \abs[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1} (\tilde{f}(\v{x}) - f(\v{x}))}^2
 \\
-&\qquad\leq 2\norm[1]{\tl{f} - f}^2_{L^\infty(X)} + 2 \norm[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1}}^2_{\ell^1} \norm[1]{\tl{f}(\v{x}) - f(\v{x})}^2_{\ell^\infty}
+&\qquad\leq 2\norm[1]{\tilde{f} - f}^2_{L^\infty(X)} + 2 \norm[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1}}^2_{\ell^1} \norm[1]{\tilde{f}(\v{x}) - f(\v{x})}^2_{\ell^\infty}
 \\ 
-&\qquad\leq 2 \del{1 + \norm[1]{\m{K}_{(\.)\v{x}}}^2_{\ell^\infty} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)}} \norm[1]{\tl{f} - f}^2_{L^\infty(X)}
+&\qquad\leq 2 \del{1 + \norm[1]{\m{K}_{(\.)\v{x}}}^2_{\ell^\infty} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)}} \norm[1]{\tilde{f} - f}^2_{L^\infty(X)}
 \\ 
-&\qquad\leq \ubr{2 \del{1 + \norm[1]{k}^2_{C(X\x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)}}}_{C_0} \norm[1]{\tl{f} - f}^2_{C(X)}
+&\qquad\leq \ubr{2 \del{1 + \norm[1]{k}^2_{C^0(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)}}}_{C_0} \norm[1]{\tilde{f} - f}^2_{C^0(X)}
 \]
-where $\norm{\.}_{L(A;B)}$ is the operator norm between $A$ and $B$, and where we have used almost sure continuity of sample paths to replace $\norm{\.}_{L^\infty(X)}$ with $\norm{\.}_{C(X)}$.
-We now lift this bound to a bound on the Wasserstein distance by integrating both sides with respect to an optimal coupling $\gamma\in\Gamma(\tl\pi,\pi)$, where $\tl\pi$ and $\pi$ are the distributions of $\tl{f}$ and $f$, respectively.
+where $\norm{\.}_{L(A;B)}$ is the operator norm between $A$ and $B$, and where we have used almost sure continuity of sample paths to replace $\norm{\.}_{L^\infty(X)}$ with $\norm{\.}_{C^0(X)}$.
+We now lift this bound to a bound on the Wasserstein distance by integrating both sides with respect to an optimal coupling $\gamma\in\Gamma(\tilde\pi,\pi)$, where $\tilde\pi$ and $\pi$ are the distributions of $\tilde{f}$ and $f$, respectively.
 Writing
 \[
-W_{2,L^2(X)}(\tl{f}\given\v{y}, f\given\v{y})^2 &= \inf_{\gamma\in\Gamma(\tl\pi, \pi)} \E_\gamma \norm[1]{(\tl{f}\given\v{y}) - (f\given\v{y})}^2_{L^2(X)}
+W_{2,L^2(X)}(\tilde{f}\given\v{y}, f\given\v{y})^2 &= \inf_{\gamma\in\Gamma(\tilde\pi, \pi)} \E_\gamma \norm[1]{(\tilde{f}\given\v{y}) - (f\given\v{y})}^2_{L^2(X)}
 \\
-&\leq C_0 \vol(X) \inf_{\gamma\in\Gamma(\tl\pi, \pi)} \E_\gamma \norm[1]{\tl{f} - f}_{C(X)}
+&\leq C_0 \vol(X) \inf_{\gamma\in\Gamma(\tilde\pi, \pi)} \E_\gamma \norm[1]{\tilde{f} - f}_{C^0(X)}
 \\
-&\leq C_1^2 W_{2,C(X)}(\tl{f},f)^2
+&\leq C_1^2 W_{2,C^0(X)}(\tilde{f},f)^2
 \]
-and noting that $C(X)$ is a separable metric space, which ensures that the Wasserstein distance over it is well-defined, gives the claim.
+and noting that $C^0(X)$ is a separable metric space, which ensures that the Wasserstein distance over it is well-defined, gives the claim.
 \end{proof}
 
 \begin{proposition}[Pathwise posterior kernel error bound]
 \label{prop:kernel_bound}
-Under the same assumptions as \Cref{prop:wasserstein-bound}, letting $k^{(f\given\v{y})}$, $k^{(\tl{f}\given\v{y})}$, and $k^{(\tl{f})}$ be the covariance kernel of these respective processes, we have
+Under the same assumptions as \Cref{prop:wasserstein-bound}, letting $k^{(f\given\v{y})}$, $k^{(\tilde{f}\given\v{y})}$, and $k^{(\tilde{f})}$ be the covariance kernel of these respective processes, we have
 \[
-\norm[1]{k^{(\tl{f}\given\v{y})} - k^{(f\given\v{y})}}_{C(X\x X)} \leq C_2 \norm[1]{k^{(\tl{f})} - k}_{C(X\x X)}
+\norm[1]{k^{(\tilde{f}\given\v{y})} - k^{(f\given\v{y})}}_{C^0(X \x X)} \leq C_2 \norm[1]{k^{(\tilde{f})} - k}_{C^0(X \x X)}
 \]
-where $C_2 = n\del{1 + \norm[1]{k}_{C(X\x X)} \norm[1]{\m{K}_{\v{x}\v{x}}}_{L(\ell^\infty;\ell^1)}}^2$.
+where $C_2 = n\del{1 + \norm[1]{k}_{C^0(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}}_{L(\ell^\infty;\ell^1)}}^2$.
 \end{proposition}
 
 \begin{proof}
 The idea is again to apply standard function-analytic inequalities to the pathwise update.
-For a kernel $k$, define the linear operator $M_k : C(X \x X) \-> C(X \x X)$ by
+For a kernel $k$, define the linear operator $M_k : C^0(X \x X) \-> C^0(X \x X)$ by
 \[
 (M_k c)(\.,\.') &= c(\.,\.') - c(\.,\v{x})\m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)} - \m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1}c(\v{x},\.)
 \\
@@ -2528,53 +2529,53 @@ By construction, we have that
 \[
 k^{(f\given\v{y})} &= M_k k
 &
-k^{(\tl{f}\given\v{y})} &= M_k k^{(\tl{f})}
+k^{(\tilde{f}\given\v{y})} &= M_k k^{(\tilde{f})}
 .
 \]
 Thus, it suffices to prove that $M_k$ is bounded and calculate its operator norm.
 To do so, write 
 \[
-\norm[1]{M_k c}_{C(X \x X)} &\leq \norm[1]{c}_{C(X \x X)} + 2 \norm[1]{c(\.,\v{x})\m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C(X \x X)}
+\norm[1]{M_k c}_{C^0(X \x X)} &\leq \norm[1]{c}_{C^0(X \x X)} + 2 \norm[1]{c(\.,\v{x})\m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C^0(X \x X)}
 \\
-&\qquad+ \norm[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C(X \x X)}
+&\qquad+ \norm[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C^0(X \x X)}
 .
 \]
 We bound these term-by-term.
 For the second term, using Hölder's inequality with $p=1$ and $q=\infty$, write 
 \[
-&\norm[1]{c(\.,\v{x})\m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C(X \x X)}
+&\norm[1]{c(\.,\v{x})\m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C^0(X \x X)}
 \\
 &\qquad= \sup_{\v{x}',\v{x}'' \in X} c(\v{x}',\v{x})\m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}\v{x}''}
 \\
 &\qquad\leq \sup_{\v{x}',\v{x}'' \in X} \norm[1]{c(\v{x}',\v{x})}_{\ell^\infty} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{\m{K}_{\v{x}\v{x}''}}_{\ell^\infty}
 \\
-&\qquad\leq \norm[1]{c}_{C(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{k}_{C(X \x X)}
+&\qquad\leq \norm[1]{c}_{C^0(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{k}_{C^0(X \x X)}
 \]
 where we have used continuity of $k$ to obtain the last inequality.
 For the third term, similarly, write 
 \[
-&\norm[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C(X \x X)}
+&\norm[1]{\m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1}\m{K}_{\v{x}(\.)}}_{C^0(X \x X)}
 \\
 &\qquad= \sup_{\v{x}',\v{x}'' \in X} c(\v{x}',\v{x}) \m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}'')
 \\
-&\qquad \leq \norm[1]{k}^2_{C(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)}
+&\qquad \leq \norm[1]{k}^2_{C^0(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1} c(\v{x},\v{x}) \m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)}
 \\
-&\qquad \leq n \norm[1]{k}^2_{C(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)} \norm{c}_{C(X \x X)}
+&\qquad \leq n \norm[1]{k}^2_{C^0(X \x X)} \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)} \norm{c}_{C^0(X \x X)}
 \]
 where $n$ factor appears due to use of $\norm[1]{\.}_{L(\ell^\infty;\ell^1)}$.
 Putting these inequalities together gives 
 \[
-&\frac{\norm[1]{M_k c}_{C(X \x X)}}{\norm{c}_{C(X \x X)}}
+\frac{\norm[1]{M_k c}_{C^0(X \x X)}}{\norm{c}_{C^0(X \x X)}} &\leq \Big(1 + 2 \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{k}_{C^0(X \x X)} 
 \\
-&\quad\leq \del{1 + 2 \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{k}_{C(X \x X)} + n \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)} \norm[1]{k}^2_{C(X \x X)}} 
+&\qquad+ n \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)} \norm[1]{k}^2_{C^0(X \x X)}\Big) 
 \\
-&\quad\leq n \del{1 + \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{k}_{C(X \x X)}}^2
+&\leq n \del{1 + \norm[1]{\m{K}_{\v{x}\v{x}}^{-1}}_{L(\ell^\infty;\ell^1)} \norm[1]{k}_{C^0(X \x X)}}^2
 \]
 and so the claim follows.
 \end{proof}
 
 The above arguments shows that, for a given dataset size, posterior approximation error is controlled by prior approximation error.
-Thus, if we increase approximation accuracy in the prior, we are guaranteed to also increase approximation accuracy in the posterior, both in the limit and outside it.
+Thus, if we increase approximation accuracy in the prior, we are guaranteed to also increase approximation accuracy in the posterior.
 
 The key idea in the above arguments was to analyze the pathwise approximation by applying standard function-analytic inequalities to the pathwise representation itself.
 By varying the resulting norms, a wide set of similar inequalities follow: we make no attempt to optimize bounds, and instead focus on presenting the technique in the simplest manner.
@@ -2700,7 +2701,7 @@ Understanding how to organize different approximations, which may possess differ
 
 Gaussian processes have been applied in many settings, ranging from areas such as spatial statistics where they are mostly used by humans, to areas such as Bayesian optimization and model-based reinforcement learning where they are mostly used by computers.
 We hope that the contributions presented here improve their ease of use, broaden their applicability, and enable new applications not yet considered.
-We now proceed to study a different avenue for expanding the set of settings Gaussian processes can be applied in.
+We now proceed to study a different route for expanding the set of settings Gaussian processes can be applied in.
 
 
 
