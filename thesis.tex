@@ -23,6 +23,7 @@
 \author{Alexander Terenin}
 \date{September 2021}
 
+
 \begin{document}
 
 \begin{titlepage}
@@ -835,16 +836,15 @@ of the random observed data achieves linear regret.
 \end{proposition}
 
 \begin{proof}
-For an event $S$, we may write
+We first show that it suffices to exhibit a bandit along with an event $S$, which we call the \emph{stuck event}, which occurs with constant probability and induces linear regret.
+To see this, for an event $S$, write
 \[
 \E(R(\.,T)) &= \E(R(\.,T) \given S) \P(S) + \E(R(\.,T) \given S^c) \P(S^c) 
 \\
 &\geq \E(R(\.,T) \given S) \P(S)
 .
 \]
-So, it suffices to exhibit a bandit along with an event $S$, which we call the \emph{stuck event}, which occurs with constant probability and induces linear regret.
-
-Let $S$ be the event that during the initial first arm pulls, the optimal arm yields zero reward, while some other arm yields a reward: clearly $\P(S) > 0$.
+Now, take $S$ to be the event that during the initial first arm pulls, the optimal arm yields zero reward, while some other arm yields a reward: clearly $\P(S) > 0$.
 On the other hand, $\E(R(\.,T) \given S) = \c{O}(T)$, because the optimal arm conditional on $S$ has empirical mean zero, which is always smaller than some alternative, and will never be selected again.
 The claim follows.
 \end{proof}
@@ -1976,7 +1976,7 @@ We answer this affirmatively below.
 \label{cor:gp-pw}
 For $\v{y}\given f$, $f$, and $\v{f}$ defined in \Cref{prop:gp-cond}, we have
 \[
-(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - f(\omega,\v{x}) - \v\eps(\omega))
+(f \given\v{y})(\omega,\v\gamma) = f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - f(\omega,\v{x}) - \v\eps(\omega))
 \]
 where $\v\eps \~[N](\v{0},\m\Sigma)$.
 \end{corollary}
@@ -2000,7 +2000,7 @@ This view of conditioning is termed \emph{pathwise}, since it is defined directl
 \end{figure}
 
 Note that in this expression, the prior is evaluated jointly at all locations---the random variables $f(\omega,\.)$ and $f(\omega,\v{x})$ are \emph{dependent}.
-Similarly, equality can clearly only hold in distribution because the random variable $(f\given\v{y})(\.,\v\gamma)$ is only defined in distribution to begin with.
+Similarly, equality holds in distribution, because the random variable $(f\given\v{y})(\.,\v\gamma)$ is only defined in distribution to begin with.
 
 \Cref{cor:gp-pw} gives an alternative way of representing posterior Gaussian processes: (i) sample the prior and all auxillary random variables, such as the noise term $\v\eps$, and (ii) transform the sampled function to form the posterior as a random function.
 This is illustrated in Figure \ref{fig:gp-pw-cond}.
@@ -2013,16 +2013,16 @@ At this stage, then, we have seemingly only gained numerical stability.
 \Cref{cor:gp-pw}, however, is not merely a computational result: it gives us a powerful way of thinking about posterior Gaussian processes. 
 In particular, we can use the point of view it offers to construct posterior approximations.
 Observe that the cubic costs $\c{O}(n_*^3)$ occur entirely due to the need to jointly sample the prior at all evaluation locations.
-Suppose, then, that we can approximately express the prior as 
+Suppose that we can approximately express the prior using a set of \emph{finite basis functions} as 
 \[
-f(\omega,\.) &\approx \tilde{f}(\omega,\.) = \sum_{i=1}^\ell w_i(\omega)\phi_i(\.)
+f(\omega,\.) &\approx \tilde{f}(\omega,\.) = \ubr{\sum_{i=1}^\ell w_i(\omega)\phi_i(\.)}_{\t{finite basis functions}}
 &
 w_j &\~[N](0,1)
 .
 \]
 We can substitute this approximation into \Cref{cor:gp-pw} to obtain
 \[
-(f \given\v{y})(\omega,\v\gamma) \overset{\d}{\approx} \tilde{f}(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \tilde{f}(\omega,\v{x}) - \v\eps(\omega))
+(f \given\v{y})(\omega,\v\gamma) \approx \tilde{f}(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \tilde{f}(\omega,\v{x}) - \v\eps(\omega))
 .
 \]
 We illustrate this idea in Figure \ref{fig:pw-cond-gp-rff}.
@@ -2039,14 +2039,14 @@ We show in the sequel that for appropriate choices of $\tilde{f}$, such approxim
 We now examine a different aspect of the pathwise representation of posterior Gaussian processes: the role of the data.
 By re-expressing the matrix-vector product of the kernel matrix term $\m{K}_{(\.)\v{x}}$ as a sum, we obtain
 \[
-(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \sum_{j=1}^n v_j(\omega) k(x_j,\.)
+(f \given\v{y})(\omega,\v\gamma) = f(\omega,\.) + \ubr{\sum_{j=1}^n v_j(\omega) k(x_j,\.)}_{\t{canonical basis functions}}
 \]
 where $\v{v} = (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - f(\omega,\v{x}) - \v\eps(\omega))$.
 This identifies the effect of the data in a posterior Gaussian process as the addition of \emph{canonical basis functions} $k(x_i,\.)$ to the prior.
 We explore this interpretation further in the sequel.
 From this viewpoint, our approximate posterior is
 \[
-(f \given\v{y})(\omega,\v\gamma) \overset{\d}{\approx} \sum_{i=1}^\ell w_i(\omega)\phi_i(\.) + \sum_{j=1}^n v_j(\omega) k(x_j,\.)
+(f \given\v{y})(\omega,\v\gamma) \approx \sum_{i=1}^\ell w_i(\omega)\phi_i(\.) + \sum_{j=1}^n v_j(\omega) k(x_j,\.)
 \]
 which shows that our proposed approximation involves writing the posterior Gaussian process of interest as a sum of \emph{two} finite sets of basis functions---one for the prior, another for the data.
 We illustrate this in \Cref{fig:pw-cond-gp-rff}.
@@ -2186,13 +2186,17 @@ k(\v{x} - \v{x}') &= \sigma^2 \int_{\R^d} e^{2\pi i \v\varpi^T (\v{x} - \v{x}')}
 \\
 &= \v\phi(\xi,\v{x})^T\v\phi(\xi,\v{x}')
 \]
-where
+where $\conj{\,\.\,}$ denotes complex conjugation, and
 \[
-\phi_i(\xi,\v{x}) = \begin{cases}
-\dfrac{\sigma}{\sqrt{\ell}} \cos(2\pi \v\varpi_i(\xi)^T \v{x}), & i \t{odd}
-\\[2ex]
-\dfrac{\sigma}{\sqrt{\ell}} \sin(2\pi \v\varpi_{i-1}(\xi)^T \v{x}), & i \t{even}
-\end{cases}
+\phi_i(\xi,\v{x}) = \lbr{\begin{aligned}
+&\frac{\sigma}{\sqrt{\ell}} \cos(2\pi \v\varpi_i(\xi)^T \v{x}), 
+&
+&i \t{odd}
+\\
+&\frac{\sigma}{\sqrt{\ell}} \sin(2\pi \v\varpi_{i-1}(\xi)^T \v{x}), 
+&
+& i \t{even}
+\end{aligned}}
 \]
 which, for $\ell$ even, gives our approximate prior as
 \[
@@ -2352,7 +2356,7 @@ This enabled us to construct approximate pathwise representations of posterior G
 We now consider the other computational costs in the formula: $\c{O}(n^3)$, where $n$ is the size of the training data.
 These costs arise because computing
 \[
-(f \given\v{y})(\omega,\v\gamma) \overset{\d}{=} f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - f(\omega,\v{x}) - \v\eps(\omega))
+(f \given\v{y})(\omega,\v\gamma) = f(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - f(\omega,\v{x}) - \v\eps(\omega))
 \]
 requires us to invert the $n\x n$ matrix $\m{K}_{\v{x}\v{x}} + \m\Sigma$.
 We now ask: from a pathwise perspective, what techniques are available for reducing these costs?
@@ -2369,7 +2373,7 @@ where $f\given\v{u}$ is the posterior under the modified likelihood employing th
 For $\v{z}$, as with $\v{x}$, we also use bold italics to denotes product structure.
 This approximation has a particularly simple interpretation: we can re-write it as
 \[
-(f \given\v{u})(\omega,\v\mu) = f(\omega,\.) + \sum_{j=1}^m v_j(\omega) k(z_j,\.)
+(f \given\v{u})(\omega,\v\mu) = f(\omega,\.) + \ubr{\sum_{j=1}^m v_j(\omega) k(z_j,\.)}_{\t{sparse basis functions}}
 \]
 where $\v{v}(\omega) = (\m{K}_{\v{z}\v{z}} + \m\Lambda)^{-1}(\v\mu - f(\omega,\v{z}) - \v\epsilon(\omega))$.
 Thus, we see that all we have done is replaced a large sum of data-dependent functions $k(x_j,\.)$ with $j=1,..,n$ induced by the kernel with a much smaller sum involving a sparsified set of functions $k(z_j,\.)$ with $j=1,..,m$ and $m \ll n$.
@@ -2524,7 +2528,7 @@ Then we have
 \[
 W_{2,L^2(X)}(\tilde{f}\given\v{y}, f\given\v{y}) \leq C_1 W_{2,C^0(X)}(\tilde{f},f)
 \]
-where $C_1 = \del{2\f{vol}(X)\del{1 + \norm{k}^2_{C^0(X \x X)} \norm{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1}}}^{1/2}$.
+where $C_1 = \del{2\f{vol}(X)\del{1 + \norm{k}^2_{C^0(X \x X)} \norm{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)}}}^{1/2}$.
 \end{proposition}
 
 \begin{proof}

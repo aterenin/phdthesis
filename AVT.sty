@@ -101,6 +101,9 @@
 \DeclarePairedDelimiterX{\dualproddelim}[3]{\langle}{\rangle}{#1\;\delimsize|\;\mathopen{}#2}
 \RegisterPairedDelimiter[2]{\dualprod}{\dualproddelim}
 
+\DeclarePairedDelimiter{\lbrdelim}{[\,}{.}
+\RegisterPairedDelimiter{\lbr}{\lbrdelim}
+
 \DeclarePairedDelimiter{\evaldelim}{.}{|}
 \RegisterPairedDelimiter{\evalpaired}{\evaldelim}
 
@@ -182,8 +185,8 @@
 \DeclareMathOperator*{\argmin}{\arg\min} % argmin
 \DeclareMathOperator*{\argmax}{\arg\max} % argmax
 
-\newcommand{\ubr}[1]{\underbracket[0.1ex]{#1}} % underbracket
-\newcommand{\obr}[1]{\overbracket[0.1ex]{#1}} % overbracket
+\newcommandPIE{\ubr}[1]{\underbracket[0.1ex]{#1}_{\vphantom{|}\mathclap{\GetIndex{#3}}\vphantom{|}}} % underbracket
+\newcommandPIE{\obr}[1]{\overbracket[0.1ex]{#1}_{\vphantom{|}\mathclap{\GetIndex{#3}}\vphantom{|}}} % overbracket
 
 \DeclareMathOperator{\id}{id} % identity
 \DeclareMathOperator{\im}{im} % image
@@ -274,6 +277,15 @@
         {\bibstring{backrefpages}\ppspace}
         {\bibstring{backrefpage}\ppspace}%
       \printlist[pageref][-\value{listtotal}]{pageref}}}}
+
+% print postnotes outside brackets
+\renewbibmacro*{postnote}{%
+  \ifbool{cbx:parens}
+    {\bibclosebracket\global\boolfalse{cbx:parens}}
+    {}%
+  \iffieldundef{postnote}
+    {}
+    {\setunit{\printdelim{postnotedelim}}\printfield{postnote}}}
 
 % change authoryear format
 \ifAVT@citations@authoryear
