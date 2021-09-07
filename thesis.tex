@@ -2040,25 +2040,25 @@ One of the most popular classes of kernels is the class of stationary kernels de
 For such kernels, random feature methods can be used to construct approximate priors whose properties make them a particularly attractive choice.
 We examine these now.
 
-To construct a basis function expansion, our strategy will be to find a \emph{feature map} $\varphi : \c{X} \-> \c{H}_k$ that maps states into vectors in the \emph{reproducing kernel Hilbert space} induced by $k$.
+To construct a basis function expansion, our strategy will be to find a \emph{feature map} $\varphi : \c{X} \-> H_k$ that maps states into vectors in the \emph{reproducing kernel Hilbert space} induced by $k$.
 This is defined as follows.
 
 \begin{definition}[Reproducing kernel Hilbert space]
-Let $X$ be a set, and let $\c{H} \subseteq \R^X$ be a Hilbert space of functions. 
-We say that $\c{H}$ is a \emph{reproducing kernel Hilbert space} if, for any $x\in X$, we have $\f{ev}_x \in \c{H}^*$ where $\f{ev}_x : \c{H} \-> \R$ is called the \emph{evaluation map} and is defined by $\f{ev}_x f = f(x)$.
+Let $X$ be a set, and let $H \subseteq \R^X$ be a Hilbert space of functions. 
+We say that $H$ is a \emph{reproducing kernel Hilbert space} if, for any $x\in X$, we have $\f{ev}_x \in H^*$ where $\f{ev}_x : H \-> \R$ is called the \emph{evaluation map} and is defined by $\f{ev}_x f = f(x)$.
 \end{definition}
 
-Note that in this definition, the statement $\f{ev}_x \in \c{H}^*$ means that $\f{ev}_x$ is a bounded linear functional.
+Note that in this definition, the statement $\f{ev}_x \in H^*$ means that $\f{ev}_x$ is a bounded linear functional.
 Reproducing kernel Hilbert spaces therefore impose continuity requirements on their pointwise evaluational functionals.
 
 Ostensibly, this definition has nothing to do with kernels, and it is unclear what a reproducing kernel Hilbert space \emph{induced by} $k$ actually means.
-A consequence of the above definition is that given a reproducing kernel Hilbert space $\c{H}$, we can define the function $k_{\c{H}}(x,x') = \innerprod[1]{\Psi_{\c{H}}^{-1}\f{ev}_x}{\Psi^{-1}_{\c{H}}\f{ev}_{x'}}$, called the \emphmarginnote{reproducing kernel}, where $\Psi_{\c{H}} : \c{H} \-> \c{H}^*$ is the bijective linear isometry given by the Riesz Representation Theorem.
-It is easy to see that $k_{\c{H}}$ is positive semi-definite.
+A consequence of the above definition is that given a reproducing kernel Hilbert space $H$, we can define the function $k_{H}(x,x') = \innerprod[1]{\Psi_{H}^{-1}\f{ev}_x}{\Psi^{-1}_{H}\f{ev}_{x'}}$, called the \emphmarginnote{reproducing kernel}, where $\Psi_{H} : H \-> H^*$ is the bijective linear isometry given by the Riesz Representation Theorem.
+It is easy to see that $k_{H}$ is positive semi-definite.
 It turns out a converse statement also holds.
 
 \begin{result}[Moore--Aronszajn Theorem]
 Let $k : X \x X \-> \R$ be a symmetric positive semi-definite kernel.
-Then there is a unique Hilbert space $\c{H}_k \subseteq \R^X$ for which $k$ is the reproducing kernel.
+Then there is a unique Hilbert space $H_k \subseteq \R^X$ for which $k$ is the reproducing kernel.
 \end{result}
 
 \begin{proof}
@@ -2067,7 +2067,7 @@ Then there is a unique Hilbert space $\c{H}_k \subseteq \R^X$ for which $k$ is t
 
 This gives another point of view from which one can study and understand kernels.
 We will need one final notion.
-We say that a function $\varphi : X \-> \c{H}_k$ is a \emphmarginnote{feature map} if $k(x,x') = \innerprod{\phi(x)}{\phi(x')}$.
+We say that a function $\varphi : X \-> H_k$ is a \emphmarginnote{feature map} if $k(x,x') = \innerprod{\phi(x)}{\phi(x')}$.
 Now, we introduce the key idea for constructing our approximate Gaussian prior: suppose we have a \emph{finite-dimensional} approximation for such a feature map, namely a vector-valued function $\v\phi : X \-> \R^\ell$ such that $\v\phi(x)^T \v\phi(x') \approx \innerprod{\varphi(x)}{\varphi(x')}$.
 Then
 \[
@@ -2426,7 +2426,7 @@ With the given hyperparameter choices, $n=10$ data points is enough to exhibit c
 \label{fig:variance-starvation}
 \end{figure}
 
-The result is that if the true posterior takes on a difficult-to-represent shape---which will often be the case if $n$ is large enough, but can also occur even if it is not---then performance degrades disastrously.
+The result is that if the true posterior takes on a difficult-to-represent shape---which will often be the case if $n$ is large enough, but might also occur even if it is not---then performance can degrade disastrously.
 This can be seen in \Cref{fig:variance-starvation}.
 This phenomenon has been called \emph{variance starvation} in the literature, due to its ability to produce error bars that are too narrow as a result of lack of representational capacity---we note this name is misleading because it is also capable of producing error bars which are far too large.
 
@@ -2741,7 +2741,7 @@ Thus, a \emph{manifold} is a \emph{space with many views into it}, which I find 
 These are sets equipped with additional structure encoding their geometric shape.
 
 A \emphmarginnote{topological space} is a set $X$ together with a \emph{topology}, which is a collection of subsets $\c{O}_X \subseteq 2^X$ called the \emph{open sets}---these include the empty set, the space itself, and are closed under pairwise intersections and arbitrary unions.
-A given set generally admits many topologies.
+A given set can admit many topologies.
 Topological spaces admit notions of \emph{locality}, \emph{convergence}, \emph{continuity}, \emph{compactness}, \emph{paracompactness}, \emph{denseness}, and many others.
 The \emph{Hausdorff} property implies that limits are unique.
 
@@ -2766,17 +2766,18 @@ This set can be equipped with the structure of a smooth manifold, arising canoni
 
 A map $f : X \-> TX$ satisfying $\proj_X \after f = \id_X$ is called a \emphmarginnote{vector field}.
 Note that this is \emph{not the same} as a map $X \-> \R^d$ and often cannot usefully be expressed in this way: we expand on this in the sequel.
-If $f$ is smooth, we write $f \in \Gamma(TX)$.
+If $f$ is smooth as a map between manifolds, we write $f \in \Gamma(TX)$.
 We also say that $f$ is a \emph{cross-section}, or simply a \emphmarginnote{section}, of the tangent bundle.
 Functions can multiply against vector fields by scaling them pointwise.
 
 Analogously, we can define the \emphmarginnote{cotangent bundle} $T^* X = \U_{x\in X} \{(x,\phi) : \phi \in T_x X^*\}$ where, compared to the tangent bundle, we have replaced the vector space $T_x X$ with its topological dual $T_x X^*$.
-A smooth sections of this bundle is called a \emphmarginnote{covector field}.
+A section of this bundle is called a \emphmarginnote{covector field}.
 We can similarly define a number of other bundles, each equipped with a projection map onto the base space.
 Introducing sections of such bundles gives rise to the notion of a \emphmarginnote{tensor field} and other generalizations.
+All such maps are called smooth if they are smooth maps between manifolds.
 
 \parmarginnote{Interior product}
-Vector fields can be inserted into covector fields by pairing vectors in each tangent space: this defines the \emph{interior product} $\mathbin{\lrcorner}$, which extends to tensor fields as long as the pairing being considered makes logical sense.
+Vector fields can be inserted into covector fields by pairing vectors in each tangent space: this defines the \emph{interior product} $\mathbin{\lrcorner}$, which extends to tensor fields as long as the pairing being considered makes sense.
 We say that a totally antisymmetric $(0,k)$-tensor field is a $k$-form, and that a smooth function is a $0$-form.
 The \emphmarginnote{exterior derivative}, denoted by $\d$, maps $k$-forms into $(k+1)$-forms.
 Interior products preserve antisymmetry.
@@ -2787,14 +2788,14 @@ For example, a nowhere-vanishing $d$-form is called a \emph{volume form}---such 
 On a general smooth manifold, the choice of a volume form is heavily non-unique.
 
 A \emphmarginnote{Riemannian manifold} is a quadruple $(X,\c{O}_X,\c{A}_X,g)$, usually written $(X,g)$, where $X$ is a smooth manifold and $g$ is the \emph{metric tensor}, which is a smooth non-degenerate symmetric positive definite $(0,2)$-tensor field.
-The metric tensor can be thought of as an algebraic object encoding the manifold's quantitative shape, and \emph{canonically} give rise to notions such as \emph{volume}, \emph{integration}, and \emph{geodesics}.
+The metric tensor can be thought of as an algebraic object encoding the manifold's quantitative shape, and canonically gives rise to notions such as \emph{volume}, \emph{integration}, and \emph{geodesics}.
 In particular, we denote both the volume measure and volume density induced by the metric tensor as $\vol_g$.
 
 \parmarginnote{Nash Embedding}
 Riemannian manifolds are, by definition, topological spaces with additional structure.
 By Nash's Embedding Theorem, every Riemannian manifold can be isometrically embedded within a $(2d+1)$-dimensional Euclidean space.
 This identifies Riemannian manifolds as geometric shapes located within Euclidean spaces.
-This perspective is often avoided for both technical and conceptual reasons: if the spacetime of the universe is a manifold, can an ambient space actually have physical meaning?
+This perspective is often avoided for both technical and conceptual reasons: if the spacetime of the universe is a manifold, can an ambient Euclidean space actually have physical meaning?
 
 \begin{figure}
 \vspace*{10ex}
@@ -2848,8 +2849,7 @@ Then the operator $-\lap_g : C^\infty(X) \-> C^\infty(X)$ extends uniquely to a 
 \end{result}
 
 \begin{proof}
-Note first that by compactness and lack of boundary, we have an injection $C^\infty(X) = C^\infty_c(X) \embeds L^2(X)$, enabling us to reinterpret the classical Laplace--Beltrami operator as a map $-\lap_g : C^\infty(X) \-> L^2(X)$.
-The remaining claim follows from \textcite[Theorem 2.4]{strichartz83}.
+\textcite[Theorem 2.4]{strichartz83}.
 \end{proof}
 
 Viewed in this way, the range of the Laplace--Beltrami operator is a Hilbert space, enabling us to use ideas from spectral theory to better understand its behavior.
@@ -2942,15 +2942,15 @@ Complete Riemannian manifolds are geodesic spaces, but the former result is shar
 
 These results are an absolute disaster for the geodesic squared exponential kernel, and give good reason to completely abandon this approach.
 The fundamental issue is that there are few useful tools for proving positive-semi-definiteness of geodesic kernels, and, in light of the above results, it isn't obvious which functions are going to be positive semi-definite in the first place and which are not.
-We therefore explore the alternative, differential-equation-based approach briefly mentioned in the preceding section.
+We therefore explore the alternative, differential-equation-based approach mentioned in the preceding section.
 
 \subsection{Stochastic partial differential equations}
 
 We now develop an appropriate formalism for defining Gaussian processes on Riemannian manifolds.
-Rather than building such processes by defining kernels, loosely speaking, we construct them directly as affine maps of white noise measures, which we think of as infinite-dimensional standard Gaussians.
+Rather than building such processes by defining kernels, loosely speaking, we construct them directly as affine maps of white noise processes, which we think of as infinite-dimensional standard Gaussians.
 This yields positive semi-definite kernels implicitly defined as covariances of said processes.
 
-We begin by recalling key notions of abstract Gaussian processes defined on general vector spaces.
+We begin by discussing key notions of abstract Gaussian processes defined on general vector spaces.
 Specifically, we work with Gaussian processes in the sense of duality whose space of test functionals is given by a Hilbert space.
 
 \begin{definition}[Generalized Gaussian~field]
@@ -2964,8 +2964,8 @@ for all $h,h' \in H$.
 \0 
 \end{definition}
 
-We will take the right-hand-sides of our stochastic partial differential equations to be such stochastic processes. 
-Before continuing, we prove that in the case that $H$ is a reproducing kernel Hilbert space, then generalized Gaussian fields can be reinterpreted as Gaussian processes in the classical sense.
+We take the right-hand-sides of our stochastic partial differential equations to be such stochastic processes. 
+Before continuing, we prove that if $H$ is a reproducing kernel Hilbert space, then generalized Gaussian fields can be reinterpreted as Gaussian processes in the classical sense.
 
 \begin{proposition}
 Let $f : \Omega \x H \-> \R$ be a centered generalized Gaussian field defined over a reproducing kernel Hilbert space $H$ with identity covariance operator.
@@ -3001,12 +3001,12 @@ This clarifies how this general notion relates to Gaussian processes in the stan
 To continue, we introduce the notion of a \emph{solution} of a stochastic partial differential equation.
 
 \begin{definition}[Stochastic partial differential equation]
-Let $H$ be a Hilbert space, let $\c{L} : H \-> H'$ be a bounded linear operator, and let $\c{W}$ be a centered generalized Gaussian field on $H'$.
-Then the zero-mean generalized Gaussian field $f$ over $H$ is a solution of the abstract stochastic partial differential equation 
+Let $H$ be a Hilbert space, let $\c{L} : F \-> H$ be a bounded linear operator, and let $\c{W}$ be a centered generalized Gaussian field on $H$.
+Then the zero-mean generalized Gaussian field $f$ over $F$ is a solution of the abstract stochastic partial differential equation 
 \[
 \c{L} f = \c{W}    
 \]
-if for every $h\in H'$ we have that 
+if for every $h\in H$ we have that 
 \[
 f(\omega,\c{L}^* h) = \c{W}(\omega,h)
 \]
@@ -3033,17 +3033,16 @@ is the unique solution to $\c{L}f = \c{W}$.
 \textcite[Theorem 4.2.2.]{lototsky17}.
 \end{proof}
 
-It is rather remarkable that such a minimalist solution theory, which relies very fundamentally on the fact that Gaussian processes are uniquely determined by their associated reproducing kernel Hilbert spaces or generalizations thereof, gives a description concrete enough for our purposes.
+It is remarkable that such a minimalist solution theory, which relies very fundamentally on the fact that Gaussian processes are uniquely determined by their associated reproducing kernel Hilbert spaces or generalizations thereof, gives a description concrete enough for our purposes.
 Indeed, this result generally determines but does not reveal what function space $f$ lies in as a random variable, along with its regularity properties such as continuity---however, for Bayesian learning, we don't actually need these.
 
-
-For this construction to yield a Gaussian process in the classical sense, we should choose $H$ to be a reproducing kernel Hilbert space, since this lets us build the Gaussian processes of interest from pointwise evaluation functionals as described previously.
-The main challenge, then, is finding appropriate spaces and operators in order to apply the above results.
+For this construction to yield a Gaussian process in the classical sense, we should ensure the space $f$ lies in to be a reproducing kernel Hilbert space, since this lets us build the Gaussian processes of interest from pointwise evaluation functionals as described previously.
+The main challenge, then, is finding appropriate spaces and operators in order to apply the preceding ideas.
 
 \subsection{The Riemannian Matérn kernel}
 
 We now use the above results to define Riemannian Gaussian processes directly, and, following this, calculate their kernels in order to obtain workable numerical expressions.
-To proceed, we need to make concrete choices for which Hilbert spaces for $H$, and which operators to use for $\c{L}$.
+To proceed, we need to make concrete choices for which Hilbert spaces and operators to use.
 To do so, we study the class of equations considered by \textcite{whittle63} and \textcite{lindgren11}, which we now review.
 
 Suppose temporarily that $X = \R^d$ is Euclidean.
@@ -3104,7 +3103,7 @@ Then $H^s(X)$ with $s > \frac{d}{4}$ and $\c{H}^s(X)$ with $s > 0$ are reproduci
 \end{proof}
 
 This gives the key technical pillar upon which our calculations rest.
-It both provides appropriate Hilbert spaces to use within the solution theory, and, by virtue of admitting reproducing kernels, guarantees that they are spaces of \emph{actual functions} $f : X \-> \R$ on the Riemannian manifold.
+It both provides appropriate Hilbert spaces to use within the solution theory, and, by virtue of admitting reproducing kernels, guarantees that they are spaces of actual functions $f : X \-> \R$ on the Riemannian manifold.
 This enables us to plug pointwise evaluation functionals into the obtained generalized Gaussian field, yielding Riemannian Gaussian processes in the classical sense---the objects we sought to construct in the first place.
 
 \parmarginnote{Riemannian squared exponential kernel}
@@ -3235,7 +3234,7 @@ On the mesh, discrete analogs of all of the differential-geometric notions we re
 We obtain $500$ discretized Laplace--Beltrami eigenpairs numerically in finite element space using the \emph{Firedrake} partial differental equation package \cite{rathgeber16}.
 These, in turn, gives expressions for evaluating the kernel and sampling the prior at any points on the manifold.
 
-To generate training data, we define a group truth function given by the sine of the geodesic distance from a distinguished point, chosen to be the first vertex on the mesh, which is located at the end of the dragon's snout.
+To generate training data, we define a ground truth function given by the sine of the geodesic distance from a distinguished point, chosen to be the first vertex on the mesh, which is located at the end of the dragon's snout.
 We observe this function at a total of $52$ points chosen from the mesh's vertices.
 We train a Matérn prior with smoothness $\nu = 3/2$ on this data using gradient descent, obtaining learned variance and length scale hyperparameters.
 Finally, we obtain the posterior samples over the entire mesh using pathwise sampling.
@@ -3272,7 +3271,7 @@ A weighted undirected graph consists of a finite set of \emph{nodes}, each of wh
 Graphs with unit weights can be visualized by drawing a set of points on a two-dimensional plane or in three-dimensional space, representing the nodes, and drawing lines between the points, representing the edges.
 
 \parmarginnote{Graphs and matrices}
-A broad theme in graph theory is that geometric properties of graphs can be encoded as finite-dimensional vectors and matrices by picking an arbitrary ordering of nodes, and associate numerical properties to, say, with rows and columns of a matrix.
+A broad theme in graph theory is that geometric properties of graphs can be encoded as finite-dimensional vectors and matrices by picking an arbitrary ordering of nodes, and associating nodes with rows and columns of a matrix.
 Define the \emph{weighted }\emphmarginnote{adjacency matrix} $\m{W}$ by letting the matrix entry corresponding to two nodes be their respective edge weight.
 Similarly, define the diagonal \emphmarginnote{degree matrix} $\m{D}$ by $D_{ii} = \sum_j W_{ij}$---for graphs with unit weights, this counts how many neighbors each node has.
 
@@ -3284,7 +3283,7 @@ When doing so, we must take care that the functions constructed do not depend on
 \parmarginnote{Discretizations of manifolds}
 Graphs often arise as discretizations of manifolds: there are many ways of making this idea precise.
 For example, one can consider an infinite sequence of nested finite subsets of the manifold converging monotonically to a countable dense subset thereof.
-This defines a sequence of graphs by taking nodes to be the elements of each sets, and connecting neighboring edges.
+This defines a sequence of graphs by taking nodes to be the elements of each sets, and connecting neighboring nodes.
 Such sequences give rise to vector spaces of functions converging monotonically to an appropriate function space on the manifold.
 
 \subsection{The graph Laplacian}
@@ -3387,7 +3386,7 @@ In particular, each node's variance is not simply a function of its degree, and 
 This can be seen in \Cref{fig:graph-variance}.
 Similar phenomena occur in random walk kernels studied by \textcite{urry13}---in that setting, variance is determined by the return time of a certain random walk defined on the graph.
 
-It's also possible to use the \emphmarginnote{Symmetric normalized graph Laplacian}, which is defined as $\m{D}^{-1/2}\m\lap\m{D}^{-1/2}$, to define analogous to the ones above, by using this matrix in place of the graph Laplacian.
+It's also possible to use the \emphmarginnote{Symmetric normalized graph Laplacian}, which is defined as $\m{D}^{-1/2}\m\lap\m{D}^{-1/2}$, to define analogous kernels to the ones above, by using this matrix in place of the graph Laplacian.
 This yields the \emph{symmetric normalized graph Matérn} and \emph{symmetric normalized graph sqaured exponential} Gaussian processes.
 These can be preferrable in domains where symmetric normalized Laplacians are customarily used.
 
@@ -3409,14 +3408,14 @@ Mirroring all other settings considered, graph Matérn kernels converge to graph
 This is essentially immediate, since their eigenvectors coincide, and eigenvalues converge.
 Graph squared exponential kernels also arise as a limit of the \emph{random walk kernel} of \textcite{smola03}, which is defined as
 \[
-(\m{I} - (1-\alpha)\m{D}^{-1/2}\m\lap\m{D}^{-1/2})^k
+(\m{I} - (1-\alpha)\m{D}^{-1/2}\m\lap\m{D}^{-1/2})^s
 .
 \]
-This kernel arises from symmetrizing the $k$-step transition matrix of a certain lazy random walk on a graph.
-Though it looks similar to the graph Matérn kernel, its structure is very different: $k > 0$ is positive rather than negative, $\alpha\in[0,1)$ is interpreted as the laziness parameter of the underlying random walk, and the Laplacian is subtracted rather than added.
+This kernel arises from symmetrizing the $s$-step transition matrix of a certain lazy random walk on a graph.
+Though it looks similar to the graph Matérn kernel, its structure is very different: $s > 0$ is positive rather than negative, $\alpha\in[0,1)$ is interpreted as the laziness parameter of the underlying random walk, and the Laplacian is subtracted rather than added.
 Still, this kernel converges to the graph squared exponential kernel: if we set $\alpha = 1 - \frac{\kappa^2}{2k}$ with $\kappa$ a fixed constant, we have 
 \[
-\lim_{k\->\infty} (\m{I} - (1-\alpha)\m{D}^{-1/2}\m\lap\m{D}^{-1/2})^k = e^{-\frac{\kappa^2}{2} \m{D}^{-1/2}\m\lap\m{D}^{-1/2}}
+\lim_{s\->\infty} (\m{I} - (1-\alpha)\m{D}^{-1/2}\m\lap\m{D}^{-1/2})^s = e^{-\frac{\kappa^2}{2} \m{D}^{-1/2}\m\lap\m{D}^{-1/2}}
 .
 \]
 This provides another view of the connection between the graph squared exponential kernel and random walk models.
@@ -3436,10 +3435,10 @@ We now illustrate a few possibilities.
 
 \subsection{Illustrated examples}
 
-To illustrate the graph Matérn Gaussian processes, we demonstrate their use in a setting which departs considerably from the Euclidean and Riemannian settings considered previously.
+To illustrate the graph Matérn Gaussian processes, we demonstrate their use in a setting which departs considerably from the Euclidean and Riemannian settings considered before.
 Our goal is to show how such models may enable applications that are very different from those in which Gaussian processes have been traditionally used.
 
-Specifically, we consider probabilistic interpolation of traffic data along a road network consisting of highways in the city of San Jose, California, obtained from OpenStreetMap \cite{osm17}.
+To do so, we consider probabilistic interpolation of traffic data along a road network consisting of highways in the city of San Jose, California, obtained from OpenStreetMap \cite{osm17}.
 In this graph, nodes are traffic sensors, and edges are roads between sensors, one for each side of the street.
 Edges are weighted by inverse distance.
 We work with the largest connected component of the graph, which has $1016$ nodes and $1173$ edges.
@@ -3498,7 +3497,7 @@ This requirement is very intuitive: it says that for any point $x$, the tangent 
 Vector fields on manifolds exhibit certain mathematical behaviors not present in the Euclidean case---we illustrate one of the most important kinds below.
 
 \begin{result}[Hairy Ball Theorem]
-There does not exist a nowhere-vanishing smooth section on any even-dimensional sphere whose dimension is at least two.
+There does not exist a nowhere-vanishing smooth section on any even-dimensional sphere of dimension is at least two.
 \end{result}
 
 \begin{proof}
@@ -3639,7 +3638,7 @@ k_{x_1,..,x_n}(\alpha, \beta) &= \sum_{i=1}^n \sum_{j=1}^n k(\alpha_{x_i}, \beta
 Let $\pi_{x_1,..,x_n} \~[N](\mu_{x_1,..,x_n}, k_{x_1,..,x_n})$ be defined in the sense of duality.
 These are our finite-dimensional marginals: by Gaussianity, it is clear these are uniquely determined by the mean and kernel.
 Taking $X$ to be the index set, and $(T_x X)_{x\in X}$ with standard topology and Borel $\sigma$-algebra to be our measurable spaces, we claim that the family of measures $(\pi_{x_1,..,x_n})_{\{x_1,..,x_n\} \subseteq X}$ satisfies the requirements of Kolmogorov's Extension Theorem.
-First, for any $\{x_1,..,x_n\} \subseteq \{x_1,..,x_n\}$, by direct calculation we have 
+First, for any $\{x_1,..,x_m\} \subseteq \{x_1,..,x_n\}$, by direct calculation we have 
 \[
 (\proj_{x_1,..,x_m})_* \pi_{x_1,..,x_n} = \pi_{x_1,..,x_m}
 \]
@@ -3648,17 +3647,17 @@ Next, note that each $\pi_{x_1,..,x_n}$ is a probability measure on a finite-dim
 Thus, it follows that there exists a unique measure on the infinite product space $\prod_{x\in X} T_x X$.
 This is a topological measure space: if we equip it with the obvious linear structure, and define the linear operator 
 \[
-\c{I} : \prod_{x\in X} T_x X &\-> \Gamma_{\f{ns}}(TX)
+\c{I} : \prod_{x\in X} T_x X &\-> \Gamma_{\f{nns}}(TX)
 &
 (\c{I}s)(x) &= (x, \proj_x s)
 \]
-where $\Gamma_{\f{alg}}(TX)$ is the space of not necessarily smooth sections, equipped with the pushforward $\sigma$-algebra, we obtain by pushforward the probability distribution of our desired process.
+where $\Gamma_{\f{nns}}(TX)$ is the space of not necessarily smooth sections, equipped with the pushforward $\sigma$-algebra, we obtain by pushforward the probability distribution of our desired process.
 The claim follows.
 \end{proof}
 
 \subsection{Coordinate representations and gauge equivariance}
 
-Using the preceding recipe, we now understand what needs to be defined in order to construct a vector-valued Gaussian processes on manifolds. 
+Using the preceding recipe, we now understand what needs to be defined in order to construct vector-valued Gaussian processes on manifolds. 
 To make this construction concrete, we proceed to develop the calculations needed to implement such processes numerically.
 The first step is to understand how to represent vector fields in coordinates---we do so using bases in each tangent space.
 
@@ -3680,31 +3679,31 @@ k(e^d(x), e^1(x')) & \dots  & k(e^d(x), e^d(x'))
 which is a matrix-valued kernel in the usual sense.
 This expression is frame-dependent: to see how it transforms upon a change of frame, introduce a frame $\tl{F}$, and consider a function
 \[
-f(x) &= \sum_{i=1}^d f^i(x) e_i(x) = \sum_{i=1}^d \tl{f}^i(x) \tl{e}_i(x)
+f(x) &= \sum_{i=1}^d f^i(x) e_i(x) = \sum_{i=1}^d \tilde{f}^i(x) \tilde{e}_i(x)
 \]
-expressed with respect to $F$ and $\tl{F}$, where $\tl{f}^i$ and $g^i$ are scalar-valued functions.
+expressed with respect to $F$ and $\tl{F}$, where $\tilde{f}^i$ and $g^i$ are scalar-valued functions.
 We say that $\tl{F}$ is obtained from $F$ by a \emphmarginnote{gauge transformation} if there is a matrix-valued function $\m{A} : X \-> \R^{d \x d}$ such that 
 \[
 \v{\tilde{f}}(x) = \m{A}(x) \v{f}(x)
 \]
 for all $x$.
-Since $e_i$ and $\tl{e}_i$ are bases, such a function always exists.
+Since $e_i$ and $\tilde{e}_i$ are bases, such a function always exists.
 By direct calculation, $\m{K}_F$ can be re-expressed as 
 \[
 \m{K}_{\tl{F}}(x,x') = \m{A}(x)\m{K}_F(x,x')\m{A}(x)^T
 \]
 with respect to $\tl{F}$.
 This condition is called \emphmarginnote{gauge equivariance}.
-At this point, it is clear why we did not even attempt to generalize matrix-valued kernels directly by guessing the required formulas: for an arbirary manifold, there is very little hope of guessing an expression that is positive semi-definite and gauge-equivariant simultaneously.
+At this point, it is clear why we did not even attempt to generalize matrix-valued kernels directly by guessing the required formulas: for an arbirary manifold, there is very little hope of simply guessing an expression that is positive semi-definite and gauge-equivariant simultaneously.
 
 \subsection{Projected kernels}
 
-Now that we understand how to write kernels of Gaussian vector fields in coordinates, we are ready to consider techniques for constructnig such kernels and calculating them numerically. 
+Now that we understand how to write kernels of Gaussian vector fields in coordinates, we are ready to consider techniques for constructing such kernels and calculating them numerically. 
 With our preparation complete, the construction we present is extremely simple, consiting of two steps.
 \1 Embed a set of $p$ scalar-valued Riemannian Gaussian processes from $X$ into $i(X) \subseteq \R^p$, and use them to assemble a vector-valued Gaussian process defined on on $i(X)$.
 \2 Project the tangent vectors onto each tangent space, obtaining a tangential vector field in the embedded space, and therefore a vector field on $X$.
 \0 
-We now proceed to make this precisel.
+We now proceed to make this precise.
 Suppose that we have an embedding
 \[
 i : X &\-> \R^p
@@ -3741,7 +3740,7 @@ f(\omega, x) = \m{P}(x) \v{f}(\omega, i(x))
 We call the cross-covariance kernel of a process constructed this way a \emph{projected kernel}.
 \end{definition}
 
-It that if $\v\kappa : X \x X \-> \R^{p \x p}$ is the cross-covariance kernel of $\v{f}$, then the cross-covariance kernel of our Gaussian vector field is given by 
+It follows that if $\v\kappa : X \x X \-> \R^{p \x p}$ is the cross-covariance kernel of $\v{f}$, then the cross-covariance kernel of our Gaussian vector field is given by 
 \[
 \m{K}_F(x,x') = \m{P}(x) \v\kappa(x,x') \m{P}(x)^T
 .    
@@ -3848,9 +3847,9 @@ These enabled us to apply Matérn Gaussian processes to model phenomena in purel
 
 Finally, we returned to the manifold setting, this time studying formalism for defining \emph{Gaussian vector fields}.
 This setting is non-trivial from the point of conceptualization: a vector-valued Gaussian is only \emph{locally} a vector-valued random function, and instead should be formulated using the differential-geometric formalism of \emph{random sections}.
-We therefore began by clarifying what the appropriate notion of a \emph{cross-covarince kernel} should be, and how to work with this notion numerically.
+We therefore began by clarifying what the appropriate notion of a \emph{Gaussian vector field}  and \emph{cross-covarince kernel} should be, and how to work with this notion numerically.
 
-Having clarified what a the notion of a \emph{Gaussian vector field} ought to be, we introduced a wide class of cross-covarince kernels for defining such processes called \emph{projected kernels}.
+Having done so, we introduced a wide class of cross-covarince kernels for defining such processes called \emph{projected kernels}.
 These kernels can be built from the Riemannian Gaussian process models already defined, together with an embedding of the manifold into an ambient Euclidean space, and produce covariances that reflect the manifold's geometry.
 This construction enabled us to implement Bayesian learning of vector-valued data on the sphere.
 
