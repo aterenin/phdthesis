@@ -1094,13 +1094,60 @@ This is the next-simplest setting and the first one we explore in detail.
 \3 Choosing $V = \R^d$ yields the setting of \emph{Gaussian random vectors}, whose components are multivariate Gaussian---or, equivalently, whose \emph{dot products} are scalar-valued Gaussian.
 \4 Choosing $V$ to be a space of functions $f : X \-> \R$ yields the setting of Gaussian processes, whose finite-dimensional marginals are multivariate Gaussian.
 This setting is well-studied when $X$ is itself a Euclidean space: in \Cref{ch:noneuclidean}, we will examine cases where $X$ instead possesses various kinds of geometric structure.
-\5 Finally, choosing $V$ to be a possibly infinite-dimensional vector space, such as a Banach of Hilbert space---this yields the most general setting we examine.
+\5 Finally, choosing $V$ to be a possibly infinite-dimensional topological vector space yields the most general setting we examine.
 This level of generality will be important for two reasons: (i) to provide a formalism for studying stochastic partial differential equations, and (ii) to develop a coordinate-free notion of Gaussian random vectors that will be useful in differential-geometric settings.
 \0 
 
 In what follows, our goal will be to lay the groundwork for subsequent development.
 Thus, we will not discuss Bayesian learning with Gaussian processes, which will instead be presented in \Cref{ch:pathwise}.
 We proceed to examine the scalar case.
+
+\subsection{Review of vector spaces}
+Since Gaussian processes are closely connected to vector spaces and related mathematical structures, here we review ideas from functional analysis that are useful in understanding them.
+
+\parmarginnote{Topological vector space}
+A set equipped with a notion of addition and multiplications by scalars taking values in an underlying field is called a \emph{vector space}.
+We work exclusively with vector spaces where the underlying field is the real numbers.
+A \emph{topological vector space} is a vector space equipped with a \emph{topology} under which the vector operations are continuous---the topology gives rise to notions of \emph{convergence}, \emph{continuity}, \emph{compactness}, and many others.
+Many different kinds of interesting spaces of functions, and generalizations thereof, are topological vector spaces.
+
+A \emphmarginnote{Banach space} is a topological vector space equipped with a \emph{norm}, which assigns a notion of size to all vectors, and induces a notion of distance given by a complete metric, which in turn induces the space's topology.
+A \emphmarginnote{Hilbert space}, similarly, is a topological vector space equipped with an \emph{inner product} which induces a complete norm.
+Many, but not all, useful spaces of functions are Banach or Hilbert spaces.
+Similarly, many, but not all, useful notions of convergence come from norms or inner products.
+
+\parmarginnote{Basis}
+Every vector space admits a \emph{Hamel basis}, which allows arbitrary vectors to be decomposed into linear combinations of linearly independent elementary vectors in the basis.
+Bases are generally highly non-unique.
+The \emphmarginnote{dimension} of a vector space is the cardinality of such a basis, which does not depend on which basis is chosen.
+Hamel bases of infinite-dimensional vector spaces are often poorly-behaved, and alternative notions, such as that of \emph{Schauder basis} of a Banach space, are often used instead.
+
+\parmarginnote{Linear operator}
+Maps between vector spaces are called \emph{linear operators} if they preserve the vector operations.
+By linearity, continuous maps between Banach spaces are automatically bounded, and vice versa, so in this context we refer to bounded linear operators and continuous linear maps interchangeably.
+Given two respective bases, linear maps between finite-dimensional vector spaces can be viewed as matrices via their action on a vector's basis coefficients.
+In doing so, composition of linear maps becomes matrix multiplication.
+
+\parmarginnote{Dual space}
+For a topological vector space $V$, the space of continuous linear maps $\phi : V \-> \R$ into the underlying scalar field is called the \emph{dual space}.
+The dual space can be made into a vector space: for many topological vector spaces, including Banach and Hilbert spaces, it can canonically be assigned a topology making it into a topological vector space.
+
+\parmarginnote{Space of continuous functions}
+We now describe some particularly important function spaces.
+The space of \emph{continuous functions} is denoted $C^0(X;\R)$: if $X$ is a closed compact set, this space can be equipped with the supremum norm to make it into a Banach space.
+This is not the only useful topology on this space: in many settings, for instance, the topology of pointwise convergence is also used.
+The space of infinitely differentiable functions is denoted by $C^\infty(X;\R)$: this space, in contrast, is generally not a Banach space.
+
+For a measure space $X$, the \emphmarginnote{Lebesgue space} $L^p(X;\R)$, defined for $1 \leq p < \infty$, is the Banach space of equivalence classes of measurable functions $f : X \-> \R$, identified up to almost sure equality, whose norm, given by integration of absolute $p$th powers, is finite.
+Of these spaces, only $L^2(X;\R)$ is a Hilbert space.
+The space $L^\infty(X;\R)$ is the Banach space of essentially bounded equivalence classes of functions equipped with the essential supremum norm.
+
+\parmarginnote{Space of distributions}
+Many useful topological vector spaces are not spaces of functions.
+The \emph{space of distributions} $D'(X)$ is defined as the dual of the space $D(X)$ of infinitely differentiable functions with compact support, equipped with the topology of pointwise convergence on compact sets.
+Since $D(X)$ embeds into $D'(X)$, we can view $D'(X)$ as a space of generalized functions, containing both functions and other, less regular elements.
+In particular, the Dirac delta function, which is not a classical function, can be formalized as an element of $D'(X)$.
+
 
 \subsection{Gaussian random variables}
 
@@ -2040,7 +2087,7 @@ One of the most popular classes of kernels is the class of stationary kernels de
 For such kernels, random feature methods can be used to construct approximate priors whose properties make them a particularly attractive choice.
 We examine these now.
 
-To construct a basis function expansion, our strategy will be to find a \emph{feature map} $\varphi : \c{X} \-> H_k$ that maps states into vectors in the \emph{reproducing kernel Hilbert space} induced by $k$.
+To construct a basis function expansion, our strategy will be to find a \emph{feature map} $\varphi : X \-> H_k$ that maps states into vectors in the \emph{reproducing kernel Hilbert space} induced by $k$.
 This is defined as follows.
 
 \begin{definition}[Reproducing kernel Hilbert space]
@@ -2168,14 +2215,14 @@ Among all techniques for constructing approximate priors, different techniques w
 One can then ask: is there an optimal choice?
 Of course, the answer to this question will depend on what one actually means by the word \emph{optimal}.
 
-If we take $X \subset \R^d$ to be closed and compact, and we use expected mean squared error---which we recall is equivalent to the $L^1(\Omega;L^2(X;\R))$ norm---as our notion of optimality, one can affirmatively answer the above question.
+If we take $X \subset \R^d$ to be closed and compact, and we use expected mean squared error---which we recall is equivalent to the $L^2(\Omega;L^2(X;\R))$ norm---as our notion of optimality, one can affirmatively answer the above question.
 Recall that a continuous kernel $k : X \x X \-> \R$ induces a covariance operator
 \[
 \c{K} : L^2(X;\R) &\-> L^2(X;\R)
 &
 \c{K} : \phi &\|> \int_X \phi(x) k(x,\.) \d x
 \]
-where by writing $\norm{\c{K} \phi}_{L^1(X;\R)} \leq \vol(X) \norm{k}_{C^0(X\x X;\R)} \norm{\phi}_{L^2(X;\R)}$ using compactness and boundedness of $k$ we affirm correctness of the operator's domain and range.
+where by writing $\norm{\c{K} \phi}_{L^2(X;\R)} \leq \vol(X) \norm{k}_{C^0(X\x X;\R)} \norm{\phi}_{L^2(X;\R)}$ using compactness and boundedness of $k$ we affirm correctness of the operator's domain and range.
 By compactness, $\c{K}$ will admit a countable set of eigenvalues and eigenfunctions.
 It turns out, that, by the Karhunen--Loève Theorem, the Gaussian process itself can be written in terms of the same eigenvalues and eigenfunctions as well.
 
@@ -2188,11 +2235,11 @@ f(\omega,\.) &= \sum_{i=1}^\infty w_i(\omega) \phi_i(\.)
 w_i &\~[N](0,1)
 \]
 where convergence holds almost surely, and $\phi_i$ are an orthogonal basis on $L^2(X;\R)$ given by rescaled eigenfunctions of the covariance operator.
-Moreover, for every $\ell\in \N$, truncating this series yields an $L^1(\Omega;L^2(X;\R))$-optimal approximation among all $\ell$-term sums of $L^2(X;\R)$-orthogonal functions.
+Moreover, for every $\ell\in \N$, truncating this series yields an $L^2(\Omega;L^2(X;\R))$-optimal approximation among all $\ell$-term sums of $L^2(X;\R)$-orthogonal functions.
 \end{result}
 
 \begin{proof}
-\textcite[Theorem 5.28]{lord14}.
+\textcite[Theorem 5.28]{lord14}, as well as \textcite[Section 2.3.2]{ghanem91}.
 \end{proof}
 
 More generally, an analogous result, albeit with a weaker form of convergence, also holds for general \emph{square-integrable} stochastic processes which may be non-Gaussian.
@@ -3110,10 +3157,17 @@ This enables us to plug pointwise evaluation functionals into the obtained gener
 Note that the operators $e^{\frac{s}{2}\lap_g}$ can be viewed as limits of appropriately rescaled versions of the operators $(1 - \lap_g)^{-s/2}$. 
 Given that the Euclidean Matérn kernel converges to the Euclidean squared exponential kernel as $\nu\->\infty$, we therefore view stochastic partial differential equations induced by $e^{\frac{s}{2}\lap_g}$ as giving rise to the \emph{Riemannian squared exponential kernel}---we make this perspective precise shortly.
 
+\parmarginnote{Generalized spectral measure}
+Our strategy will be to represent the kernels of interest as infinite sums of Laplace--Beltrami eigenfunctions.
+Here, compactness of $X$ is key: this ensures that the total number of eigenfunctions is countable, so that summing eigenfunctions makes sense.
+The coefficients in the sum can be viewed as a kind of \emph{generalized spectral measure}, which, in our case, owing to compactness, is supported on the non-negative integers rather than on $\R^d$.
+This shows one way in which geometry of spaces is reflected in properties of kernels.
+
 To carry the necessary calculations out and compute the kernels of the Gaussian processes defined by our stochastic partial differential equations, we need to relate the Sobolev and diffusion spaces of \textcite{devito20} with the equations studied by \textcite{whittle63} and \textcite{lindgren11}.
 To do so, we state and prove the main result.
 
 \begin{theorem}[Riemannian Matérn and squared exponential kernels]
+Let $X$ be a compacy Riemannian manifold.
 For $\nu > 0$ and $\kappa > 0$, define the stochastic partial differential equations 
 \[
 \del{\frac{2\nu}{\kappa^2} - \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} f &= \c{W}_g
