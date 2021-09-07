@@ -93,17 +93,16 @@ To this end, the development of mathematical formalisms rich enough to capture t
 
 One such formalism is the \emph{Bayesian} view of learning.
 The idea behind Bayesian learning is to represent the information known about the quantity of interest using probability.
-The relationship between the quantity of interest and the data is formalized as a joint probability distribution.
+To do so, the relationship between the quantity of interest and the data is formalized as a joint probability distribution.
 This gives rise to a conditional probability distribution describing what was learned about the quantity of interest by observing the data.
-
 
 Bayesian learning fits naturally within a theory of \emph{decision}, which describes how an abstract decision system should select actions in pursuit of a goal.
 This is done by learning how different actions affect pursuit of the goal, and selecting optimal actions consistent with what was learned.
-By virtue of being probabilistic, such decisions systems assess and propagate uncertainty, enabling them to balance what is already known with what could be learned by taking actions---a concept known as the \emph{explore-exploit~tradeoff}.
+By virtue of being probabilistic, such decisions systems assess and propagate uncertainty, enabling them to balance what is already known with what could be learned by taking actions---a concept known as the \emph{explore-exploit tradeoff}.
 
 The performance of a decision system can be evaluated by examining how quickly its decisions improve and become optimal.
 A decision system's \emph{regret} is the reduction in its quality of decisions by virtue of not knowing the quantity of interest in advance.
-In most non-trivial settings, one can show that some regret is inevitable: a decision-making system must make some mistakes in order to learn.
+In most non-trivial settings, one can show that some regret is inevitable: a decision-making system must make some degree of mistakes in order to learn.
 A decision system is considered \emph{optimal} if its regret is within a constant factor of the best possible regret.
 
 Decisions systems with optimal or close-to-optimal regret require less data in order to solve their respective tasks, and are called \emph{data-efficient}.
@@ -147,7 +146,7 @@ Learning entails calculating how the distribution of the quantity of interest ch
 
 One of the key strengths of Bayesian theory is that it applies in wide generality, owing to the substantial scope of probability theory. 
 In particular, one can study learning of quantities of interest that are function-valued using observed data consisting of pointwise function evaluations.
-This, however, requires a non-elementary treatment, as one cannot rely on probability densities to define what conditional distributions are.
+This, however, requires a non-elementary treatment, as one cannot rely solely on probability densities to define what conditional distributions are.
 We therefore begin by recalling the necessary mathematical formalism.
 
 \subsection{Review of probability theory}
@@ -165,7 +164,9 @@ Given two measurable spaces $(Y,\c{Y})$ and $(\Theta,\mathit\Theta)$, if we form
 \marginnote{Measurable subspace}
 For a measurable subset $Y' \subseteq Y$, we can define $\c{Y}' = \{A_y \^ Y' : A_y \in\c{Y}\}$, which is also a $\sigma$-algebra, thereby making $(Y',\c{Y}')$ into a measurable space. 
 We call $\c{Y}'$ the \emph{subset $\sigma$-algebra}.
+
 If $Y$ is a topological space, the \emphmarginnote{Borel $\sigma$-algebra} $\c{B}(Y)$ is defined as the smallest $\sigma$-algebra containing the open sets.
+Topological spaces, in turn, are sets equipped with additional structure enabling them to admit notions such as locality and convergence---we review these spaces in \Cref{ch:noneuclidean}.
 
 \parmarginnote{Measurable function}
 A map $f : Y \-> Y'$ between measurable spaces $(Y,\c{Y})$ and $(Y',\c{Y}')$ is said to be \emph{measurable} if its preimage defines a map $f^{-1} : \c{Y}' \-> \c{Y}$ between the respective $\sigma$-algebras.
@@ -175,7 +176,7 @@ On product spaces, a map $f : Y \-> \Theta \x \Theta'$ is measurable if its comp
 A \emphmarginnote{probability measure} is a non-negative countably additive map $\pi_y : \c{Y} \-> \R$ satisfying $\pi_Y(Y) = 1$. 
 This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is according to the measure---in this view, probability measures describe uncertainty.
 A \emphmarginnote{probability space} $(\Omega,\c{F},\P)$ consists of a measurable space and probability measure.
-The set $\Omega$ can be viewed as a space of abstract random numbers, with a random number generator described by $\P$.
+The set $\Omega$ can be thought of as a space of abstract random numbers, with a random number generator described by $\P$.
 
 Given a probability space, we say that a \emphmarginnote{random variable} is a measurable map $y : \Omega \-> Y$.
 A random variable, then, maps random numbers $\omega\in\Omega$ into the space $Y$.
@@ -196,7 +197,7 @@ We say that $y = y'$ \emph{in distribution} if $y_* \P = y'_* \P$, meaning their
 \parmarginnote{Existence of a random variable with given distribution}
 For a given probability space $(\Omega,\c{F},\P)$, a random variable $y : \Omega \-> Y$ with distribution $\pi_y$ need not exist.
 However, if it does not, there always exists another probability space $(\Omega',\c{F}',\P')$ and a measurable map $i : \Omega' \-> \Omega$ such that $\P = i_* \P'$, and for which a $\pi_y$-distributed random variable $y : \Omega' \-> Y$ \emph{does} exist.
-We will thus implicitly assume all probability spaces are large enough to ensure all random variables with prescribed distributions exist.
+We thus implicitly assume all probability spaces are large enough to ensure all random variables with prescribed distributions exist.
 
 \parmarginnote{Probability kernel}
 We will be interested in probability measures extended to allow them to be parameterized by other quantities.
@@ -282,7 +283,9 @@ More specifically, the likelihood describes how $y$ would be distributed if $\th
 The condition that the pushforward of the composition of the prior and likelihood needs to be taken with respect to the product measure $\P\x\P$ should be interpreted as a kind of \emph{non-duplicate dependence} condition which ensures that $y\given\theta$ depends on $\theta$ only through its second argument, and not through the abstract random numbers $\omega$.
 
 Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution---note that this is meant in a \emph{distributional} sense, not a random-variable-based sense.
-The formulation is given as follows.
+The formulation we use requires topological assumptions: we say that a topological space is \emph{Polish} if it is homeomorphic to a complete separable metric space.
+Note that any two uncountable Polish spaces are Borel-isomorphic: see \textcite[p.5]{villani08} for discussion.
+The key result is given as follows.
 
 \begin{figure}
 \vspace*{10ex}
@@ -292,7 +295,7 @@ The formulation is given as follows.
 \end{figure}
 
 \begin{result}[Bayes' Rule]
-Suppose that $\Theta$ and $Y$ are second-countable topological spaces, and let $\pi_y = \pi_{\theta,y}(\Theta\x\.)$.
+Suppose that $\Theta$ is a Polish topological space, and let $\pi_y = \pi_{\theta,y}(\Theta\x\.)$.
 Then for every Bayesian model $\pi_{\theta,y}$ there is a $\pi_y\ae[-]$ unique probability kernel $\pi_{\theta\given y}$ satisfying
 \[
 \pi_{\theta,y}(A_\theta \x A_y) = \int_{A_y} \pi_{\theta\given y}(A_\theta \given y) \d\pi_y(y)
@@ -301,7 +304,8 @@ which we call the \emph{posterior distribution}.
 \end{result}
 
 \begin{proof}
-Apply the Disintegration Theorem.
+The claim follows directly from \textcite[Corollary 10.4.15]{bogachev07b}.
+See also \textcite[Theorem 5.3 and Theorem 5.4]{kallenberg06}, \textcite[Theorem 5.3.1]{ambrosio08}, and \textcite{chang97} for variations of this result.
 \end{proof}
 
 This result shows that given a Bayesian model, the posterior distribution \emph{exists}.
@@ -310,7 +314,7 @@ Moreover, the null sets can be problematic: to ensure that $\pi_{\theta\given y}
 Fortunately, in many settings these issues are resolved by virtue of additional structure.
 
 The simplest such structure occurs when $\pi_{\theta,y}$ admits a density with respect to a product measure $\lambda$.
-In this case, it follows \Cref{lem:ref-density} that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
+In this case, it follows from \Cref{lem:ref-density} that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
 Define a \emph{conditional density} as the ratio of joint and marginal densities, for instance $f_{\theta\given y} = \frac{f_{\theta,y}}{f_y}$, and let $\propto$ denote equality up to a multiplicative proportionality constant.
 Then, we have the following.
 
@@ -335,6 +339,7 @@ which, when combined, give the result.
 
 Sometimes, the knowledge of $f_{\theta\given y}$ up to proportionality is enough to fully deduce its form.
 For example, if the likelihood is Gaussian with unknown mean and known variance, and the prior is Gaussian, then posterior is also Gaussian.
+\marginnote{Conjugacy}
 In cases such as this, where the prior and posterior land in the same parameterized class of distributions, the pair $(\pi_{y\given\theta}, \pi_\theta)$ are called \emph{conjugate}.
 
 Bayes' Rule for densities is remarkable in its generality yet restrictiveness.
@@ -404,10 +409,10 @@ For any given dataset, this result shows that  Bayes' Rule can be viewed in \emp
 It's also possible to prove the result in a different way using the calculus of variations, with variations taken in the Banach space of signed measures under the total variation norm.
 That argument also employs Bayes' Rule for densities for its key step, making it largely similar in spirit.
 
-The result also suggests a way to approximately compute posterior distributions: restrict the optimization problem to a suitably chosen subspace of the space of all probability measures $\c{M}_1(\Theta)$.
+The result suggests a way to approximately compute posterior distributions: restrict the optimization problem to a suitably chosen subspace of the space of all probability measures $\c{M}_1(\Theta)$.
 This strategy will be particularly fruitful in the later-described setting of Gaussian processes, where techniques for constructing such approximations with well-understood and favorable accuracy will be considered.
 
-We will \emph{always} view variational approximations as minimization of Kullback--Leibler divergences, as this is mathematically sound.
+We \emph{always} view variational approximations as minimization of Kullback--Leibler divergences, as this is mathematically sound.
 We will eschew standard presentations involving \emph{evidence lower bounds}: the only mathematical explanations for why maximizing these bounds should improve model performance that I am aware of appeal to Kullback--Leibler divergences---so, then, why talk about evidence lower bounds in the first place?
 
 Once a posterior is calculated, the next step is to extract the relevant quantities from it.
@@ -528,7 +533,7 @@ For instance, one can consider continuous-time, purely deterministic, and partia
 \begin{figure}
 \tikzset{external/export next=false}
 \begin{tikzpicture}
-\begin{scope}[shift={(-5.75,2.125)}, scale=0.0085, thick]
+\begin{scope}[shift={(-1.5,2.125)}, xscale=-0.0085, yscale=0.0085, thick]
 \clip[preaction = {draw,ultra thick}] (300, -395) -- (285, -355) .. controls (285, -355) and (269.142, -342.071) .. (255, -335) .. controls (245, -330) and (227.237, -322.04) .. (215, -320) .. controls (185, -315) and (175, -295) .. (175, -295) .. controls (175, -295) and (150, -295) .. (135, -285) .. controls (129.117, -281.078) and (100, -250) .. (100, -235) .. controls (100, -215) and (105, -205) .. (115, -195) .. controls (135.274, -174.726) and (144.617, -159.069) .. (186.751, -142.257) .. controls (230, -125) and (245, -125.009) .. (255, -125) .. controls (270.117, -124.987) and (289.478, -127.154) .. (305.786, -129.965) .. controls (335, -135) and (347.49, -144.511) .. (364.446, -158.01) .. controls (378.439, -169.15) and (389.863, -183.998) .. (397.853, -200) .. controls (405.048, -214.411) and (409.778, -230.664) .. (410, -246.769) .. controls (410.144, -257.217) and (410.264, -270.263) .. (402.959, -277.316) .. controls (395, -285) and (385, -290) .. (385, -290) .. controls (385, -290) and (377.69, -310.274) .. (375.386, -315.536) .. controls (371.018, -325.511) and (360.595, -330.936) .. (350.937, -334.628) .. controls (340.799, -338.503) and (318.451, -336.817) .. (318.451, -336.817) -- (326.08, -380.928) -- cycle;
 \draw (300, -400) -- (300, -275);
 \draw (275, -350) -- (275, -250) -- (225, -250);
@@ -625,12 +630,15 @@ For instance, one can consider continuous-time, purely deterministic, and partia
 \draw[-latex,very thick] (e) to[bend left=22.5] node[midway, below] {reward, next state} (a);
 \end{tikzpicture}
 \caption{Illustration of the feedback loop induced by a Markov decision process. Here, the agent chooses an action, which results in the environment changing to a new state. The agent observes the new state, as well as the reward given by the previous state and action. The agent's goal is to select actions to maximize long-term rewards.}
+\label{fig:mdp}
 \end{figure}
 
 The idea behind this definition is that, at every point in time, the agent observes the current state, chooses an action $a \in A$, and obtains another state $s' \~ p(s\given a)$.
+\Cref{fig:mdp} illustrates this.
 Note that \emph{time} can, and often will, be part of the state $s$.
-The agent's goal is to choose each action so as to control the entire trajectory of states in order to obtain maximum rewards.
-The choice of actions in every state is called a \emph{policy}, and is formalized as follows.
+The agent's goal is to choose actions so as to control the full trajectory of states in order to obtain maximum rewards.
+The choice of action in every state is called a \emph{policy}, and is formalized as follows.
+
 
 \begin{definition}[Policy]
 Define the following.
@@ -640,16 +648,17 @@ Define the following.
 \end{definition}
 
 Markov policies include deterministic policies as a special case, by taking the conditional distributions to be Dirac and re-interpreting the given expressions appropriately.
-As with Markov decision processes, here one can also consider even more general policies, but we do not do so here.
+As with Markov decision processes, here one can also consider more general classes of policies, but we do not do so here.
 
 Different policies yield different state trajectories, and therefore different rewards.
-Of these, some obtain more rewards than others: 
+Of these, some obtain more rewards than others.
+We therefore introduce notions for distinguishing between policies according to the rewards they obtain.
 
 \begin{definition}[Optimal policy]
 Let $T \in \N$ be the \emph{time horizon}.
 A policy is called \emph{optimal} if it maximizes the \emph{value function} 
 \[
-V^{(\pi)}(x_0) = \E \sum_{t=0}^T r_t
+V^{(\pi)}(s_0) = \E \sum_{t=0}^T r_t
 \]
 where $r_t \given s_t,a_t \~ r(s_t,a_t)$, $a_t \given s_t \~ \pi(s_t)$, and $s_{t+1} \given s_t,a_t \~ p(s_t, a_t)$.
 \end{definition}
@@ -664,7 +673,7 @@ The most important distinction between different decision problems for finding o
 
 These classes differ fundamentally from one another. 
 Optimal control problems can be viewed as a class of structured optimization problems, where the goal is to compute $\pi$ by evaluating $r$ and $p$ as necessary.
-Here, one generally proceeds by proving that $V^{(\pi)}$ and $\pi$ satisfy certain recursive equations, and developing schemes for solving them.
+Here, one generally proceeds by proving that $V^{(\pi)}$ and $\pi$ satisfy certain recursive equations, and developing schemes for solving them directly.
 
 Reinforcement learning problems are more complex.
 Due to the rewards or dynamics being \emph{unknown}, they cannot simply be maximized and their expectation must be \emph{learned}.
@@ -674,7 +683,7 @@ For such settings, we need an appropriate solution concept---to obtain one, defi
 \begin{definition}[Regret]
 The \emph{regret} of a policy $\pi$ is defined as 
 \[
-R^{(\pi)}(x_0) = V^*(x_0) - V^{(\pi)}(x_0)
+R^{(\pi)}(s_0) = V^*(s_0) - V^{(\pi)}(s_0)
 \]
 provided that the value function $V^*$ with respect to an optimal policy exists.
 \end{definition}
@@ -695,21 +704,21 @@ Finding such algorithms is of key interest.
 One way to construct algorithms for solving decision problems is to employ a \emph{model-based} approach, which loosely speaking works as follows.
 
 \1 Learn the unknown transitions and/or rewards from observed data using a supervised learning approach.
-\2 Use the learned model(s) to find policy satisfying some criteria.
+\2 Use the learned model(s) to find a policy satisfying some criteria.
 \0 
 
-The details of such approaches depends on the setting.
+The details of such approaches depend on the setting.
 We distinguish between two key kinds of reinforcement learning problems.
 
-\1 If $|S| = 1$, it is known as a \emphmarginnote{multi-armed bandit} problem.
-\2 Otherwise, it is known as a general reinforcement learning problem.
+\1 If $|S| = 1$, we say we have a \emphmarginnote{multi-armed bandit} problem.
+\2 Otherwise, we say we have a general reinforcement learning problem.
 \0 
 
-Multi-armed bandits possess no variable state, and thus only require one to learn the rewards and determine which actions are optimal.
+Multi-armed bandits possess no variable state, and thus only require one to learn the rewards to determine which actions are optimal.
 In general reinforcement learning, actions can influence transitions between states---these problems require long-term planning, making them much more general, difficult, and important.
 I believe that as a mathematical theory, reinforcement learning is powerful enough to describe many aspects of human and animal intelligence, making it fundamentally interesting to study and develop.
 
-We now restrict ourselves to the bandit setting, which is substantially easier to study and so can be understood much more deeply.
+We now restrict ourselves to the bandit setting, which is substantially easier to study and so can be understood more deeply.
 Here, even when $A$ is a finite set and the rewards are Gaussian, the model-based approach consisting of (i) estimating rewards using empirical risk minimization and (ii) choosing the policy which maximizes rewards is known to be non-optimal.
 This approach fails to explore, and can get stuck chasing sub-optimal rewards.
 
@@ -747,9 +756,9 @@ Each arm's regret is given by its expected decrease in reward compared to the op
 \end{figure}
 
 \begin{definition}[Multi-armed bandit]
-Let $f : X \-> \R$ be bounded above function, let $\eps : \Omega \x X \-> \R$ be a stochastic process such that $\E(\eps(x)) = 0$, and let $y(\omega,x) = f(x) + \eps(\omega,x)$.
+Let $f : X \-> \R$ be bounded above measurable function, let $\eps : \Omega \x X \-> \R$ be a jointly measurable stochastic process such that $\E(\eps(x)) = 0$ for all $x$, and let $y(\omega,x) = f(x) + \eps(\omega,x)$.
 Define the following.
-\1 We say that the Markov decision process $(\{1\},X,y_*\P,\delta_{1})$, with $\delta_1$ defined below, is a \emph{multi-armed bandit}.
+\1 We say that the Markov decision process $(\{1\},X,y_*\P,\delta_{1})$, fully defined below, is a \emph{multi-armed bandit}.
 \2 We say that a probability kernel  $\pi : \c{X} \x \bigoplus_{n=1}^\infty (X \x \R)^n \-> \R$ is a \emph{multi-armed bandit algorithm}.
 \0
 Here, $\delta_1$ is the Dirac measure centered at $1$ for all actions $x\in X$, which is the only possible conditional probability distribution over a one-element set, and $\bigoplus$ denotes the disjoint union of measurable spaces.
@@ -761,7 +770,7 @@ Some algorithms maximize $f$ faster than others---we consider this next.
 
 
 \begin{definition}[Regret]
-For a given multi-armed bandit, let $f(x^*)$ be the global maxima of $f$. 
+For a given multi-armed bandit, let $f(x^*)$ be the global maxima of $f$, which we assume to exist. 
 Define the \emph{regret} of an algorithm $\pi$ at time $T$ to be
 \[
 R(\omega,T) = \sum_{t=1}^T f(x^*) - f(x_t(\omega))
@@ -793,7 +802,7 @@ where $n_T(\omega,x) = \sum_{t=1}^T \1_{x_t(\omega) = x}$ and $\Delta(x) = f(x^*
 \end{lemma}
 
 \begin{proof}
-Follows directly from definition by grouping terms in the sum.
+The claim follows directly from the definitions of $R$ and $n_T$ by grouping terms in the sum.
 \end{proof}
 
 What kind of performance is possible on such a problem?
@@ -808,8 +817,7 @@ For any algorithm defined over a class of $K$-armed bandits there is an $f$ such
 \end{theorem}
 
 \begin{proof}
-We prove there is a class of random functions $f$ over which every algorithm achieves high regret in expectation, and hence a high-regret $f$ must exist.
-TODO.
+\textcite[Theorem 2.11]{slivkins19}.
 \end{proof}
 
 This tells us that regret is necessarily incurred as consequence of not knowing the expected rewards of each arm given by $f$.
@@ -835,18 +843,19 @@ For an event $S$, we may write
 .
 \]
 So, it suffices to exhibit a bandit along with an event $S$, which we call the \emph{stuck event}, which occurs with constant probability and induces linear regret.
+
 Let $S$ be the event that during the initial first arm pulls, the optimal arm yields zero reward, while some other arm yields a reward: clearly $\P(S) > 0$.
-On the other hand, $\E(R(\.,T) \given S) = \c{O}(T)$, because the optimal arm conditional on $S$ has empirical mean zero, which is always smaller than the alternative, and will never be selected again.
+On the other hand, $\E(R(\.,T) \given S) = \c{O}(T)$, because the optimal arm conditional on $S$ has empirical mean zero, which is always smaller than some alternative, and will never be selected again.
 The claim follows.
 \end{proof}
 
-This algorithm therefore fails to resolve the explore-exploit tradeoff, and gets stuck with suboptimal choices.
-While the setup is obviously contrived---for instance, giving each arm some non-zero selection probability even if it previously gave bad rewards would seemingly break our lower bound---it also illustrates an important principle: the algorithm must explore.
+This algorithm fails to resolve the explore-exploit tradeoff, and gets stuck with suboptimal choices.
+While the setup is obviously contrived---for instance, giving each arm some non-zero selection probability even if it previously gave bad rewards would seemingly break the lower bound---it also illustrates an important principle: the algorithm must explore.
 The question, then, is how should it explore?
 As an alternative, consider a conjugate model with a simple uncertainty-based decision rule for selecting arms.
 
 \begin{definition}[Hoeffding--UCB algorithm]
-Define the \emph{Hoeffding upper confidence bound} algorithm which tries each arm once, and then, for a total of $T$ rounds, selects actions by
+Define the \emph{Hoeffding upper confidence bound} algorithm for Bernoulli bandits, which tries each arm once, and then, for a total of $T$ rounds, selects actions by
 \[
 x_{t+1} &= \argmax_{x\in X} f^+_t(x) 
 &
@@ -855,79 +864,80 @@ f^+_t(x) &= \mu_t(x) + c_t\sigma_t(x)
 where $\mu_t$ are the empirical means, $\sigma_t(x) = \sqrt{\frac{1}{n_t(x)}}$, and $c_t = \sqrt{2\ln(T)}$.
 \end{definition}
 
-Note that here, again, no $\omega$-arguments are present in the notation because randomness only enters through the observed data.
 We now consider this algorithm's regret.
 It turns out this simple modification, consisting of adding a set of error bars with a threshold growing in time and decreasing with data, is enough to result in different regret behavior.
 
 \begin{theorem}
 Hoeffding--UCB achieves an expected regret of
 \[
-\E(R(T)) \leq \tl{\c{O}}\del{\sqrt{KT}}
+\E(R(\.,T)) \leq \tl{\c{O}}(\sqrt{KT})
 \]
 uniformly for all $f$, where $\tl{\c{O}}$ denotes asymptotics up to logarithmic factors.
 \end{theorem}
 
 \begin{proof}
-First, let $B$ denote the event that the \emph{bound holds}, namely $f^-_t(x) \leq f(x) \leq f^+_t(x)$ for all $x\in X$ and all $t \leq T$, where $f^-_t(x) = \mu_t(x) - c_t \sigma_t(x)$. 
+First, let $B$ denote the event that the \emph{bound holds}, namely $f^-_t(\.,x) \leq f(x) \leq f^+_t(\.,x)$ for all $x\in X$ and all $t \leq T$, where $f^-_t(\.,x) = \mu_t(\.,x) - c_t \sigma_t(\.,x)$, where all stochasticity is defined with respect to the data.
 Under this event, the upper confidence bound is a true bound on the rewards.
 Then 
 \[
-\E(R(T)) &= \E(R(T) \given B) \P(B) + \E(R(T) \given B^c) \P(B^c)
+\E(R(\.,T)) &= \E(R(\.,T) \given B) \P(B) + \E(R(\.,T) \given B^c) \P(B^c)
 \\
-&\leq \E(R(T) \given B) + T \P(B^c)
+&\leq \E(R(\.,T) \given B) + T \P(B^c)
 \]
-since $\P(B) \leq 1$, and a regret of $T$ is the maximum possible value as there are $T$ rounds and rewards are in $[0,1]$.
-Our strategy will be to bound $\E(R(T) \given B)$, while choosing the scaling factor $c_t$ in the width of the upper confidence bound to ensure that $\P(B^c)$ decays fast enough that the latter term is negligible.
+since $\P(B) \leq 1$, and a regret of $T$ is the maximum possible value as there are $T$ rounds and rewards are in $\{0,1\}$.
+Our strategy will be to bound $\E(R(\.,T) \given B)$, while choosing the scaling factor $c_t$ in the width of the upper confidence bound to ensure that $\P(B^c)$ decays fast enough that the latter term is negligible.
 We begin with the latter.
 By the union bound, we have
 \[
-\P(B^c) &\leq \sum_{t=1}^T \sum_{x\in X} \P(p_x \leq f^-_t(x)) + \P(p_x \geq f^+_t(x))
+\P(B^c) &\leq \sum_{t=1}^T \sum_{x\in X} \P(p_x \leq f^-_t(\.,x)) + \P(p_x \geq f^+_t(\.,x))
 \\
-&= 2KT \max_{\substack{x\in X\\1 \leq t \leq T}} \P(p_x \geq f^+_t(x))
+&= 2KT \max_{\substack{x\in X\\1 \leq t \leq T}} \P(p_x \geq f^+_t(\.,x))
 \]
-where $p_x$ is the Bernoulli parameter for arm $x$, and we have used symmetry of our error bars, which we recall are defined using the standard deviation, to combine terms.
-For each $n > 0$, the probability we want to bound is
+where $p_x$ is the Bernoulli parameter for arm $x$, and we have used symmetry of the error bars to combine terms.
+For each $n > 0$, if $y$ is a sum of independent Bernoulli random variables, the probability we want to bound is
 \[
-\P\del{p_x \geq \frac{y}{n} + \sqrt{\frac{2\ln(T)}{n}}} \leq \exp\del{-2 \del{\sqrt{\frac{2\ln(T)}{n}}}^2 n} = \frac{1}{T^4}
+\P\del{p_x \geq \frac{y(\.)}{n} + \sqrt{\frac{2\ln(T)}{n}}} \leq \exp\del{-2 \del{\sqrt{\frac{2\ln(T)}{n}}}^2 n} = \frac{1}{T^4}
 \]
 using Hoeffding's inequality.
 Since holds uniformly in $n$, it follows that
 \[
-\P(p_x \geq f^+_t(x)) = \P\del{p_x \geq \frac{y}{n_t(x)} + \sqrt{\frac{2\ln(T)}{n_t(x)}}} \leq \frac{1}{T^4}
+\P(p_x \geq f^+_t(\.,x)) = \P\del{p_x \geq \frac{\sum_{x_t = x} y_t(\.)}{n_t(\.,x)} + \sqrt{\frac{2\ln(T)}{n_t(\.,x)}}} \leq \frac{1}{T^4}
+.
 \]
 We therefore conclude that 
 \[
 T\P(B^c) \leq \frac{2KT}{T^4} = \c{O}(1)
 \]
 which shows that the upper confidence bounds are exceeded sufficiently rarely that this possibility incurs no regret in the asymptotic limit, and completes this part of the argument.
-We now proceed to analyze the $\E(R(T) \given B)$ term---assume henceforth that $B$ holds.
+We now proceed to analyze the $\E(R(\.,T) \given B)$ term---assume henceforth that $B$ holds.
 We have that 
 \[
-\Delta(x_t) &= f(x^*) - f(x_t)
+\Delta(x_t(\omega)) &= f(x^*) - f(x_t(\omega))
 \\
-&\leq f^+_t(x^*) - f^-_t(x_t)
+&\leq f^+_t(\omega,x^*) - f^-_t(\omega,x_t(\omega))
 \\
-&\leq f^+_t(x_t) - f^-_t(x_t)
+&\leq f^+_t(\omega,x_t(\omega)) - f^-_t(\omega,x_t(\omega))
 \\
-&= 2\sigma_t(x_t)
+&= 2\sigma_t(\omega,x_t(\omega))
 \]
 using the definition of the event $B$.
-Now, if we consider the rescaled error bar width $c_t\sigma_t(x_t)$ of the arm chosen at time $t$, this is
+Now, if we consider the rescaled error bar width $c_t\sigma_t(\omega,x_t(\omega))$ of the arm chosen at time $t$, this is
 \[
-\Delta(x_t) \leq \c{O}(c_t\sigma_t(x_t)) = \tl{\c{O}}\del{\frac{1}{\sqrt{n_t}}}
+\Delta(x_t(\omega)) \leq \c{O}(c_t\sigma_t(\omega,x_t(\omega))) = \tl{\c{O}}\del{\frac{1}{\sqrt{n_t}}}
 .
 \]
 By \Cref{lem:regret-arms}---which we note still holds conditional on $B$ via the exact same argument---we have
 \[
-\E(R(T)\given B) &= \sum_{x=1}^K \Delta(x) n_T(x) 
+\E(R(\.,T)\given B) &= \sum_{x=1}^K \Delta(x) n_T(\.,x) 
 \\
 &\leq \sum_{x=1}^K \tl{\c{O}}\del{\sqrt{n_T(x)}}
 \\
 &\leq \tl{\c{O}}\del{\sqrt{K} \sqrt{\sum_{x\in X} n_T(X)}}
 \\
-&= \tl{\c{O}}\del{\sqrt{KT}}
+&= \tl{\c{O}}(\sqrt{KT})
 \]
-which completes the argument.
+using that by definition, every $x$ for which $n_T(\omega, x) > 0$ is equal to $x_t(\omega)$ for some $t$, enabling us to apply the preceding inequality.
+The claim follows.
 \end{proof}
 
 This shows that the proposed algorithm, which uncertainty built via the error bars, effectively balances exploration and exploitation in this setting.
@@ -950,7 +960,7 @@ Even more generally, one can select arms by optimizing a function $\alpha : X \-
 Many different acquisition functions have been proposed.
 
 We have made no attempt to optimize the bound, and significant improvements are possible, particularly when considering variations of the UCB algorithm.
-Of these, algorithms built using \emph{confidence sets} rather than posterior distributions, such as the closely-related Hoeffding--UCB algorithm, are particularly important in the $K$-armed bandit setting.
+Of these, algorithms built using \emph{confidence sets} rather than posterior distributions, such as the Hoeffding--UCB algorithm presented previously, are particularly important in the $K$-armed bandit setting.
 We focus on the Bayesian view because it generalizes well to more complex settings.
 
 \begin{figure}
@@ -986,8 +996,7 @@ f : X \-> \R
 which is assumed continuous, and defined on a closed compact set $X \subseteq \R^d$.
 Such a function is automatically bounded.
 Our goal is to minimize $f$ with as few evaluations as possible.
-
-To measure performance, we will again introduce a notion of regret.
+To measure performance, we again introduce a notion of regret.
 Define
 \[
 R(T) = \sum_{t=1}^T f(x_t) - f(x^*)    
@@ -1003,7 +1012,7 @@ y_t(\omega) &= f(x_t) + \eps_t(\omega)
 \eps_t &\~[N](0,\sigma^2)
 .
 \]
-Here, the space of observed values is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which we view as an element of an infinite-dimensional vector space, say, for instance, the space of continuous functions $C^0(X;\R)$.
+Here, the space of observed values is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which we view as an element of a space of functions, such as for instance the Banach space of continuous functions $C^0(X;\R)$.
 
 
 \begin{figure}
@@ -1051,7 +1060,7 @@ x_{t+1} = \argmax_{x\in X} \E \max(0,f_t(\.,x) - f(x^*_t))
 where $f_t = f \given y_1,..,y_t$ is the posterior, and $x^*_t = \argmin_{t \in \{1,..,t\}} f(x_t)$ is the smallest value observed so far.
 Many other effective acquisition functions, including \emph{probability of improvement}, \emph{predictive entropy search}, and \emph{information directed sampling}, are also possible.
 
-Regret analysis for all of these choices is possible, and will in general depend on the detailed properties on the model, acquisition function, and the unknown function $f$.
+Regret analysis for all of these choices can be performed, and will in general depend on the detailed properties on the model, acquisition function, and the unknown function $f$.
 In particular, regularity and smoothness properties may play a role, as well as structure present in the domain $X$.
 In settings where the function $f$ is unknown, it's also possible to analyze the expression 
 \[
@@ -1069,14 +1078,14 @@ In the preceding section, considerations arising from Bayesian decision-making a
 Gaussian processes are a broad class of random functions capable of this: to develop them, however, we will need to start with simpler notions and gradually work towards increasing levels of generality.
 Such processes are defined by the key property that no matter what angle one views them from, they yield Gaussian marginal distributions.
 
-The notion of a Gaussian process as a random function will turn out to be too restrictive for our settings of interest: it is not possible to view certain random variables, which do deserve to be called Gaussian processes, in this way.
+The notion of a Gaussian process as a random function will turn out to be too restrictive for all of our settings of interest: it is not possible to view certain random variables, which do deserve to be called Gaussian processes, in this way.
 The obstructions can be geometric or analytic in nature.
 For example, a vector field on a manifold is not a vector-valued continuous function, it is a section of a vector bundle: what, then, should the term \emph{Gaussian} actually mean?
 Difficulties also occur when considering white noise processes.
 
-To handle these issues, we will develop the notion of a Gaussian process $f : \Omega \-> V$ where $V$ is a real vector space equipped with additional structure arising from the setting at hand.
+To handle these issues, we work with the notion of a Gaussian process $f : \Omega \-> V$ where $V$ is a real vector space equipped with additional structure arising from the setting at hand.
 Gaussian process are fundamentally \emph{linear} objects which reflect this structure.
-The simplest settings arise when $V$ is smallest.
+The simplest possible settings one can study arise when $V$ is smallest.
 
 \1  Choosing $V = \{0\}$ to be the trivial vector space, there is exactly one $V$-valued random variable, whose distribution is the Dirac measure centered at $0$, which can trivially be called Gaussian.
 This random variable is not very interesting, so we do not consider it further.
@@ -1086,7 +1095,7 @@ This is the next-simplest setting and the first one we explore in detail.
 \4 Choosing $V$ to be a space of functions $f : X \-> \R$ yields the setting of Gaussian processes, whose finite-dimensional marginals are multivariate Gaussian.
 This setting is well-studied when $X$ is itself a Euclidean space: in \Cref{ch:noneuclidean}, we will examine cases where $X$ instead possesses various kinds of geometric structure.
 \5 Finally, choosing $V$ to be a possibly infinite-dimensional vector space, such as a Banach of Hilbert space---this yields the most general setting we examine.
-This level of generality will be important for two reasons: (i) to provide a formalism for studying stochastic partial differential equations, and (ii) to develop a coordinate-free notion of Gaussian random vectors that will be useful in the differential-geometric setting.
+This level of generality will be important for two reasons: (i) to provide a formalism for studying stochastic partial differential equations, and (ii) to develop a coordinate-free notion of Gaussian random vectors that will be useful in differential-geometric settings.
 \0 
 
 In what follows, our goal will be to lay the groundwork for subsequent development.
@@ -1277,7 +1286,7 @@ We develop these ideas in the sequel, but first consider a simpler setting.
 \subsection{Gaussian random functions}
 
 We now consider Gaussian random functions, which are the first notion of a Gaussian random variable that is generally called a \emph{Gaussian process}.
-Here, we will adopt a \emph{bottom-up} view which, from a technical perspective, departs somewhat from the notions introduced so far.
+Here, we will adopt a \emph{bottom-up} view which, from a technical perspective, departs slightly from the notions introduced so far.
 
 Recall that for a set $X$, an $\R$-valued \emphmarginnote{stochastic process} is a map $f : \Omega \x X \-> \R$ measurable in its first argument.
 If we have a set of points $x_1,..,x_n \in X$, we can plug them into $f$ to obtain a map $(f(\.,x_1),..,f(\.,x_n)) : \Omega \-> \R^n$, which, by virtue of being a product of measurable maps, is a random variable.
@@ -1317,7 +1326,7 @@ Thus, Gaussian processes exist so long as a family of multivariate Gaussians sat
 
 The same results also allow us to reinterpret Gaussian processes as \emph{function-valued random variables}, which, in many ways, are a much more natural point of view to take.
 Define $\R^X = \{f : X \-> \R\}$ equip it with the cylindrical $\sigma$-algebra to make it into a measurable space. 
-Let $V \subseteq \R^X$, and let $\c{V}$ be the subset $\sigma$-algebra.\footnote{TODO: check me}
+Let $V \subseteq \R^X$, and let $\c{V}$ be the subset $\sigma$-algebra.
 
 \begin{definition}[Gaussian process (random function)]
 Let $X$ be a set. 
@@ -1349,7 +1358,7 @@ is positive semi-definite.
 We can recover such a kernel from a given Gaussian process.
 
 \begin{definition}[Covariance kernel]
-The \emph{covariance kernel} of a Gaussian process is defined by
+Define the \emph{covariance kernel} of a Gaussian process to be
 \[
 k(x,x') = \Cov(f(\.,x),f(\.,x'))    
 .
@@ -1366,16 +1375,23 @@ Since $V \subseteq \R^X$ is a space of functions, we can define addition and sca
 If we do so, then, as before, affine maps preserve Gaussianity.
 
 \begin{proposition}[Affine maps between Gaussian processes]
-Let $f\~[GP](\mu, k)$, and let $W \subseteq \R^X$ be a vector space.
-If $\c{A} : V \-> W$ is a measurable linear map, and $b \in W$, then $\c{A} f + b$ is a Gaussian process.
+Let $f\~[GP](\mu, k)$, and equip $V$ and $W \subseteq \R^X$ with the topology of pointwise convergence.
+Suppose that $f$ can be written as an infinite sum of deterministic basis functions as $f(\omega,x) = \sum_{n=0}^\infty w_i(\omega) f_i(x)$ where $w_i$ are independent Gaussian random variables.
+If $\c{A} : V \-> W$ is a continuous linear map, and $b \in W$, then $\c{A} f + b$ is a Gaussian process.
 \end{proposition}
 
 \begin{proof}
-The corresponding statement holds for all finite-dimensional marginals, where linear maps become matrices. Hence, the claim follows.
+It is clear by considering a set of finite-dimensional marginal distributions that adding $b$ preserves Gaussianity. 
+Writing 
+\[
+(\c{A}f)(x) = \c{A} \del{\sum_{i=0}^\infty w_i(\omega) f_i(\.)}(x) = \sum_{i=0}^\infty w_i(\omega) (\c{A}f_i)(x)
+\]
+gives the statement for all finite-dimensional marginals, since sums and limits of Gaussian random variables are Gaussian. 
+The claim follows.
 \end{proof}
 
 This is a substantially weaker assertion than previously: though we can conclude that affine maps of Gaussian processes are Gaussian, for a generic affine map we cannot immediately determine the form of the resulting kernel.
-Moreover, the condition $W \subseteq \R^X$ is unnatural: by supposing it, we have more-or-less \emph{assumed} the resulting kernel to exist.
+Moreover, the conditions are unnatural: by supposing them, we have more-or-less \emph{assumed} the resulting kernel to exist.
 The problem here is that the notion of a \emph{kernel} is too rigid to permit a broad statement---an analogous property will hold if this is replaced with a different notion of covariance.
 
 The situation for the other properties considered previously is even worse.
@@ -1394,7 +1410,7 @@ We therefore proceed to adopt a function-analytic perspective which is more tech
 
 In the preceding section, we established a notion of a \emph{Gaussian process}, generalizing the notion of Gaussianity to random functions.
 In developing this viewpoint, some of the appeal of Gaussianity was lost: in particular, unlike in the finite-dimensional setting, no simple covariance kernel transformation rule was available.
-Here, we consider an alternative function-analytic view which avoids these difficulties at cost of a higher degree of abstraction.
+Here, we consider an alternative function-analytic view which avoids these limitations at cost of a higher degree of abstraction.
 
 
 \begin{definition}[Gaussian process (duality)]
@@ -1475,7 +1491,7 @@ Immediate by definition.
 \end{proof}
 
 Suppose now that $V$ is a locally convex topological vector space, and $W = V^*$ its topological dual.
-Since the covariance form is a map $k : V^* \x V^* \-> \R$, it gives rise to an operator $\c{K} : V^* \-> V^{**}$, called the \emphmarginnote{covariance operator}, which in the case that $V$ is reflexive becomes an operator $\c{K} : V^* \-> V$.
+Since the covariance form is a map $k : V^* \x V^* \-> \R$, it gives rise to an operator $\c{K} : V^* \-> V^{**}$, called the \emphmarginnote{covariance operator}, which in the case that $V$ is reflexive becomes an operator $\c{K} : V^* \-> V$ via composition with the isomorphism given by reflexivity.
 For our running example, this operator is given by 
 \[
 \phi \|> \int_X \phi(x)k(x,\.) \d x
@@ -1491,8 +1507,8 @@ Nonetheless, this notion is important, because in certain cases these operators 
 We now move to the final concept we consider at this level of generality: that of a \emph{standard Gaussian}.
 
 \begin{definition}[Gaussian white noise]
-Let $W$ be a Hilbert space.
-We say that $\c{W} : \Omega \-> V$ is a Gaussian white noise process if its covariance form is given by the inner product.
+Let $W \subseteq H$ where $H$ is a Hilbert space.
+We say that $\c{W} : \Omega \-> V$ is a \emph{Gaussian white noise} process if its covariance form coincides with the inner product in all cases where the former is defined.
 \end{definition}
 
 In cases where $\c{K}$ admits a sufficiently rich spectral theory, this can potentially provide a suitable notion of an \emph{operator square root} which relates Gaussian white noise to other Gaussian processes.
@@ -1514,7 +1530,7 @@ The issue here is that the Gaussian process \emph{cannot} be understood as a rea
 Finite-dimensional Gaussians in the sense of duality end up being the right tool for this setting.
 
 For this, we prove a general existence theorem on Gaussians in the sense of duality in finite-dimensional settings.
-Aside from giving an intrinsic reinterpretation of the multivariate Gaussians described previously, this ensures our technical tool is suited for its purpose in the coordinate-free setting.
+Aside from giving an intrinsic reinterpretation of the multivariate Gaussians described previously, this ensures our technical framework is suited for its desired purpose in the coordinate-free setting.
 
 \begin{proposition}
 Let $V$ be a finite-dimensional real topological vector space, and let $W = V^*$ be its topological dual.
@@ -1552,10 +1568,10 @@ Here, finite-dimensionality suffices to ensure existence: the story in infinite-
 
 To conclude, we reflect on the introduced ideas. 
 We began by studying Gaussian random variables and random vectors, before generalizing these to Gaussian random functions, which offered a concrete framework where certain aspects of Gaussianity were seemingly lost.
-Adopting a function-analytic view sufficed to restore these aspects, at cost of increased abstraction.
-This view also provides a coordinate-free way to reinterpret the preceding multivariate constructions.
+Adopting a function-analytic view restored these aspects, at cost of increased abstraction.
+This view also gave a coordinate-free way to reinterpret the preceding multivariate constructions.
 
-While much of the technical power of this framework is extraneous for our purposes, studying it nonetheless helps provide a unified conceptual framework from which to interpret our developments.
+While much of the technical power of the duality framework is extraneous for our purposes, studying it nonetheless helps provide a unified conceptual perspective from which to interpret our developments.
 By considering these notions, it becomes much clearer how one should understand the constructions encountered later, which might otherwise appear as if they arise out of thin air.
 This completes our study of Gaussianity for its own sake, independent of Bayesian learning and other machine-learning-related considerations.
 
@@ -1570,14 +1586,14 @@ By working in an abstract measure-theoretic setting, we obtained a formalism sui
 
 We then took a step back, examining how to formalize the notion of an agent selecting actions in an unknown environment on basis of interactions, obtaining the key concept of a \emph{Markov decision process}.
 We then immediately restricted to the simpler setting of \emph{multi-armed bandits}.
-We saw that model-based algorithms built atop Bayesian learning yielded decision systems that perform provably well.
-Using these notions, we described how to efficiently solve global optimization problems using \emph{Bayesian optimization}.
+We saw that model-based algorithms built atop Bayesian learning yielded decision systems that perform effectively.
+With these notions, we described how to efficiently solve global optimization problems using \emph{Bayesian optimization}.
 
 To transform the preceding ideas into a workable class of methods, we proceeded to study \emph{Gaussian process} models in depth.
-We developed them in sequence, starting from the simplest settings, and ending with the highest generality.
-These preliminary developments provide us with the key tools in order to use Gaussian processes for the purpose of interest: namely, to build Bayesian models, and high-performance decision systems atop those models.
+We developed these models in sequence, starting from the simplest settings, and ending with the highest generality.
+These ideas provide us with key tools for understanding Gaussian processes, so that we can use them as building blocks of Bayesian models and high-performance decision systems atop those models.
 
-It is worth pausing to reflect on the relative merits of the choices made thus far.
+It is worth pausing to reflect on the merits of the setting chosen, within a broader context of artificial intelligence.
 In choosing to work with Bayesian learning, we opted to represent uncertainty using probability---a powerful but computationally limiting choice.
 This choice was counterbalanced by working with simple models in bandit-like settings, and is most effective when the decisions of interest must be made in a data-efficient manner that only algorithms with near-asymptotically-optimal regret can achieve.
 
@@ -1586,7 +1602,7 @@ In many reinforcement learning problems of interest in robotics, the complexity 
 Gaussian processes are largely not expressive enough to represent multi-object collision dynamics and related phenomena.
 We have also not addressed partial observations---another key difficulty in that setting.
 
-On the other hand, no other currently known theoretical framework comes close to understanding decision to the degree of command we have obtained.
+On the other hand, no other currently known theoretical framework comes close to understanding decision to the degree of command one can obtain from the notions we have described.
 In the absence of a probabilistic framework, it is highly non-trivial how to assess, represent, and propagate uncertainty in a manner that resolves explore-exploit tradeoffs to achieve optimal regret in non-trivial settings.
 Thus, in settings where probabilistic methods can be used, they absolutely should be.
 
