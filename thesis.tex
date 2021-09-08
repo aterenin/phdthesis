@@ -292,7 +292,8 @@ The key result is given as follows.
 \vspace*{10ex}
 [Bayes' Rule 3D Visual]
 \vspace*{10ex}
-\caption{TODO.}
+\caption{Here, we illustrate individual components of a Bayesian model. For all possible values of the quantity of interest, the likelihood describes the respective distribution of the data, shown on the left. This is combined with the prior, also shown on the left, to form a joint distribution, shown on the right. From this, the posterior distribution, also shown on the right, is obtained by conditioning. Note that the joint and posterior live on different spaces, and hence are normalized differently.}
+\label{fig:bayes-rule}
 \end{figure}
 
 \begin{result}[Bayes' Rule]
@@ -309,7 +310,7 @@ The claim follows directly from \textcite[Corollary 10.4.15]{bogachev07b}.
 See also \textcite[Theorem 5.3 and Theorem 5.4]{kallenberg06}, \textcite[Theorem 5.3.1]{ambrosio08}, and \textcite{chang97} for variations of this result.
 \end{proof}
 
-This result shows that given a Bayesian model, the posterior distribution \emph{exists}.
+This result is illustrated in \Cref{fig:bayes-rule}, and shows that given a Bayesian model, the posterior distribution describing what was learned from the data exists.
 In its full abstract formulation, however, Bayes' Rule is \emph{non-constructive}, and it is not at all clear how to calculate any kind of useful formula from it.
 Moreover, the null sets can be problematic: to ensure that $\pi_{\theta\given y}$ is defined pointwise, one needs further properties such as continuity.
 Fortunately, in many settings these issues are resolved by virtue of additional structure.
@@ -750,10 +751,8 @@ We thus begin by introducing formalism and notation better suited to the given s
 \input{figures/tex/mab-regret.tex}
 \caption{Regret}
 \end{subfigure}
-\caption{Here, we illustrate a simple three-armed bandit. 
-Each of the three arms has its own reward distribution, shown on the left.
-These are unknown to the agent, which only sees the rewards obtained by actions it takes, shown in the center, and must the obtained information to decide which arm to pick.
-Each arm's regret is given by its expected decrease in reward compared to the optimal arm, shown on the right.}
+\caption{Here, we illustrate a simple three-armed bandit. Each of the three arms has its own reward distribution, shown on the left. These are unknown to the agent, which only sees the rewards obtained by actions it takes, shown in the center, and must the obtained information to decide which arm to pick. Each arm's regret is given by its expected decrease in reward compared to the optimal arm, shown on the right.}
+\label{fig:mab}
 \end{figure}
 
 \begin{definition}[Multi-armed bandit]
@@ -779,7 +778,7 @@ R(\omega,T) = \sum_{t=1}^T f(x^*) - f(x_t(\omega))
 where $x_t \~ \pi(y_0,..,y_{t-1})$, $y_t(\omega) = f(x_t) + \eps_t(\omega)$, and $\eps_t \~ \eps(\.,x_t)$.
 \end{definition}
 
-Regret thus counts the total reward lost by virtue of not knowing the optimal arm in advance.
+Regret thus counts the total reward lost by virtue of not knowing the optimal arm in advance---this is illustrated in \Cref{fig:mab}.
 Algorithms which achieve small regret therefore learn the optimal rewards effectively, and avoid getting stuck pulling bad arms.
 
 Regret behavior in multi-armed bandit problems is strongly dependent on properties of the underlying function $f$, and in particular its domain $X$.
@@ -955,7 +954,7 @@ f^+_t(x) &= \mu_t(x) + c_t \sigma_t(x)
 where $(\mu_t, \sigma_t)$ are the mean and standard deviation of the posterior distribution $\mu\given\gamma(x_1) = y_1, .., \gamma(x_t) = y_t$. and $c_t$ is defined as previously.
 \end{definition}
 
-One can show this algorithm achieves the same regret as Hoeffding--UCB: the proof is similar, but instead uses the empirical Bernstein inequality, and is significantly more messy owing to the complicated form of the posterior mean and standard deviation.
+One can show this algorithm, illustrated in \Cref{fig:bb-ucb}, achieves the same regret as Hoeffding--UCB: the proof is similar, but instead uses the empirical Bernstein inequality, and is significantly more messy owing to the complicated form of the posterior mean and standard deviation.
 Even more generally, one can select arms by optimizing a function $\alpha : X \-> \R$, called an \emph{acquition function}, built from a posterior distribution, confidence set, or other appropriate construction.
 Many different acquisition functions have been proposed.
 
@@ -980,6 +979,7 @@ We focus on the Bayesian view because it generalizes well to more complex settin
 Here, we construct these using the posterior distribution under a Gaussian prior and likelihood.
 The next arm is chosen as the maximum of the quantile-based error bars.
 This process is repeated iteratively as additional data is obtained, with the quantile becoming more strict over time, ensuring the bounds hold increasingly often.}
+\label{fig:bb-ucb}
 \end{figure}
 
 We now proceed to explore a more general setting which will enable us to employ the ideas developed so far to develop efficient black-box optimization algorithms.
@@ -1036,6 +1036,7 @@ Here, the space of observed values is $Y = \R^n$, and our quantity of interest i
 Here, we sample a random function from the posterior distribution over possible functions, and choose the next evaluation point to be the minima of the sampled random function. 
 As additional data is obtained, the posterior distribution concentrates around the true function. 
 Unlike the upper confidence bound acquisition function considered previously, Thompson sampling makes use of a full probability distribution, rather than just a set of error bars.}
+\label{fig:ts}
 \end{figure}
 
 
@@ -1047,13 +1048,15 @@ f \given y_1,..,y_t
 \]
 which is now a probability measure supported on $C^0(X;\R)$.
 To determine the next point to query, we introduce and maximize an acquisition function.
-Typical acquisition functions include the \emph{upper confidence bound} acquisition function considered previously, as well as \emph{Thompson sampling}
+Typical acquisition functions include the \emph{upper confidence bound} acquisition function considered previously, as well as \emph{Thompson sampling}, defined as
 \[
 x_{t+1}(\omega) &= \argmin_{x\in X} \phi_t(\omega,x)
 &
 \phi_t&\~ f \given y_1,..,y_t
 \]
-which is a \emph{random} acquisition function, and \emph{expected improvement}
+which is a \emph{random} acquisition function.
+We show an example of Bayesian optimization using Thompson sampling in \Cref{fig:ts}.
+Another typical choice is given by \emph{expected improvement}, which is defined as
 \[
 x_{t+1} = \argmax_{x\in X} \E \max(0,f_t(\.,x) - f(x^*_t))
 \]
@@ -1176,6 +1179,7 @@ y = \sigma z + \mu
 \begin{figure}
 \input{figures/tex/norm-dist.tex}
 \caption{Probability density functions for a set of Gaussian random variables, each with different mean and standard deviation parameters. All of these can be obtained by shifting and rescaling any of the others via affine transformations.}
+\label{fig:norm}
 \end{figure}
 
 Note that we do \emph{not} require $\sigma \geq 0$: hence, every Gaussian random variable is determined uniquely in 
@@ -1196,6 +1200,7 @@ The density of a Gaussian random variable, if it exists, takes on a form analogo
 f(y) = \frac{1}{\sqrt{2\pi}\sigma} \exp\del{-\frac{(y-\mu)^2}{2\sigma^2}}
 .
 \]
+This density is visualized in \Cref{fig:norm}.
 Note that the density will not exist if $\sigma^2 = 0$: the distributions of such Gaussians are Dirac measures centered at $\mu$.
 By examining this density, one sees that Gaussian random variables respect the additive and multiplicative structures of the reals.
 
@@ -1241,18 +1246,20 @@ A random variable $\v{y} : \Omega\->\R^d$ is called \emph{multivariate Gaussian}
 [Multivariate Gaussian 3D Visual]
 \vspace*{10ex}
 \caption{Two multivariate Gaussian densities, in dimension two, with unit variances and different correlation coefficients $\rho$. As $|\rho| \to 1$, the individual components of the multivariate Gaussian become more and more dependent.}
+\label{fig:mvn-density}
 \end{figure}
 
 Every multivariate Gaussian is determined by its \emph{mean vector} $\v\mu$ and positive semi-definite \emph{covariance matrix} $\m\Sigma = \m{L}\m{L}^T$, and, as before, is called \emph{centered} if $\v\mu = \v{0}$.
 We write $\v{y}\~[N](\v\mu,\m\Sigma)$.
 We can obtain a centered multivariate Gaussian with a given distribution by calculating a \emph{matrix square root} of $\m\Sigma$, multiplying it with a standard Gaussian.
-Just as before, we have
+The mean and covariance are
 \[
 \E(\v{y}) &= \v\mu    
 &
 \Cov(\v{y}) &= \E\del{(\v{y}-\v\mu)(\v{y}-\v\mu)^T} = \m\Sigma
 \]
-and, if the determinant $|\m\Sigma|$ is non-zero,
+which mirror the previous situation.
+If the determinant $|\m\Sigma|$ is non-zero, the density, displayed in two different ways in \Cref{fig:mvn-density,fig:mvn-contour}, is
 \[
 f(\v{y}) = \frac{1}{\sqrt{(2\pi)^d|\m\Sigma|}} \exp\del{-\frac{1}{2}(\v{y}-\v\mu)^T\m\Sigma^{-1}(\v{y}-\v\mu)}
 \]
@@ -1297,6 +1304,7 @@ This expression therefore defines a standard Gaussian with respect to the given 
 \caption{$\rho = -0.9$}
 \end{subfigure}
 \caption{Quantile ellipsoids for two multivariate Gaussian densities in dimension two with unit variances, different correlation coefficients $\rho$, and quantile levels equal to $0.8$, $0.95$, and $0.99$.}
+\label{fig:mvn-contour}
 \end{figure}
 
 Subtle difference such as the ones considered become increasingly important in the sequel.
@@ -1363,6 +1371,7 @@ A random process $f: \Omega \x X \-> \R$ is called a \emph{Gaussian process} if,
 \caption{Squared exponential}
 \end{subfigure}
 \caption{Random functions generated from Gaussian processes with four different covariance kernels, which differ in particular according to their regularity, ranging from nowhere-differentiable in the exponential case to infinitely-differentiable in the squared exponential case.}
+\label{fig:gp-smoothness}
 \end{figure}
 
 Immediately upon writing this definition, one is left to wonder: does it actually make sense?
@@ -1382,6 +1391,7 @@ A random variable $f: \Omega \-> V \subseteq \R^X$ is called a \emph{Gaussian pr
 
 It is clear that every Gaussian process in the random process sense induces a Gaussian process in the random variable sense, and vice versa.
 Thus, these two notions are simply two different ways of viewing the same object.
+We visualize a few examples of such processes in \Cref{fig:gp-smoothness}.
 
 We can then ask, what properties of multivariate Gaussians are still true in this setting?
 Since a Gaussian process is uniquely determined by its finite-dimensional marginals, we need to find functions that generate a family of mean vectors and covariance matrices which are positive semi-definite.
@@ -1734,7 +1744,7 @@ By non-singularity, $(\v\theta,\v{y})$ admits a Lebesgue density, and the claim 
 \caption{Draw samples}
 \end{subfigure}
 \caption{Illustration of distributional conditioning of a bivariate Gaussian. Here, we form the joint distribution, calculate the conditional distribution, and then draw samples from it. Note that all steps except the very last one are \emph{distributional} in nature and do not involve the use of random variables, which only appear at the very end of the process.}
-\label{fig:mvn-dist-cond}
+\label{fig:mvn-cond}
 \end{figure}
 
 The non-singularity requirement is more-or-less necessary: otherwise, the marginal distribution of $\v{y}$ may admit too many null sets, rendering the desired conditional distribution non-unique, except in regions where one can apply a linear map to recover a suitable Lebesgue density and apply the above argument on the obtained subspace.
@@ -1747,6 +1757,7 @@ In particular, one can generate conditional sample via the expression
 \v{z} &\~[N](\v{0},\m{I})
 \]
 where $\v\mu_{\v\theta\given\v{y}}$ is the conditional mean, and $\m{L}_{\v\theta\given\v{y}}$ is a Cholesky factor of the conditional covariance, or any other matrix square root obtained numerically.
+We illustrate this procedure in \Cref{fig:mvn-cond}.
 This enables one to calculate any quantity of interest depending on the conditional distribution numerically via the Monte Carlo method.
 The computational costs will in general be cubic in the dimension of both $\v\theta$ and $\v{y}$, owing to the need to compute $\m{L}_{\v\theta\given\v{y}}$ and invert $\m\Sigma_{\v{y}\v{y}}$, respectively.
 
@@ -1839,7 +1850,7 @@ With these preparations, we are ready to revisit \Cref{thm:mvn-pw}.
 \end{subfigure}
 \caption{Illustration of pathwise conditioning of a bivariate Gaussian. Here, we first sample a random vector from the joint distribution, then transform it into a sample from the conditional distribution.
 These steps are called \emph{pathwise} because they are defined directly using random variables, rather than indirectly through probability distributions.}
-\label{fig:mvn-pw-cond}
+\label{fig:mvn-pw}
 \end{figure}
 
 \thmmvnpw*
@@ -1862,7 +1873,7 @@ The claim follows.
 
 From \Cref{thm:mvn-pw}, we obtain a second way of representing multivariate Gaussian conditionals.
 This entails two steps: (i) sample $\v\theta,\v{y}$ jointly, and (ii) transform $\v\theta,\v{y}$ into $\v\theta\given\v{y}=\v\gamma$ by employing the given expression.
-This procedure is illustrated in \Cref{fig:mvn-pw-cond}.
+This procedure is presented in \Cref{fig:mvn-pw}.
 
 Remarkably, this result is missing from every machine learning textbook on Gaussian processes that I am aware of, and appears almost entirely unknown within the field.
 It's possible this is because the expression's computational costs are cubic in the combined dimension, which is more expensive than the previous costs.
@@ -1932,10 +1943,10 @@ Apply \Cref{prop:mvn-cond} to a set of finite-dimensional marginals.
 \caption{Draw samples}
 \end{subfigure}
 \caption{Illustration of distributional conditioning of a Gaussian process. Here, we calculate the conditional distribution at a finite set of locations, and then draw samples from a multivariate Gaussian. This view of conditioning is called \emph{distributional}, since random variables appear only at the end of the process.}
-\label{fig:gp-dist-cond}
+\label{fig:gp-cond}
 \end{figure}
 
-This result gives us a way of carrying out Bayesian learning using Gaussian processes, given a finite set of data.
+This result, illustrated in \Cref{fig:gp-cond}, gives us a way of carrying out Bayesian learning using Gaussian processes, given a finite set of data.
 Note the \emph{bottom-up} nature of this perspective: we describe the posterior Gaussian process---which is an actual \emph{process} defined everywhere---using its posterior finite-dimensional marginals.
 
 We now consider computational costs of the above formula.
@@ -1996,14 +2007,14 @@ Apply \Cref{thm:mvn-pw} to a set of finite-dimensional marginals.
 \end{subfigure}
 \caption{Illustration of pathwise conditioning of a Gaussian process. Here, we first sample a random function from the prior, along with random noise variables at each of the data locations, then transform these into a sample from the posterior distribution.
 This view of conditioning is termed \emph{pathwise}, since it is defined directly at the level of random functions.}
-\label{fig:gp-pw-cond}
+\label{fig:gp-pw}
 \end{figure}
 
 Note that in this expression, the prior is evaluated jointly at all locations---the random variables $f(\omega,\.)$ and $f(\omega,\v{x})$ are \emph{dependent}.
 Similarly, equality holds in distribution, because the random variable $(f\given\v{y})(\.,\v\gamma)$ is only defined in distribution to begin with.
 
 \Cref{cor:gp-pw} gives an alternative way of representing posterior Gaussian processes: (i) sample the prior and all auxillary random variables, such as the noise term $\v\eps$, and (ii) transform the sampled function to form the posterior as a random function.
-This is illustrated in Figure \ref{fig:gp-pw-cond}.
+This is shown in \Cref{fig:gp-pw}.
 
 This strategy can be carried out if we know the locations we wish to evaluate the posterior at.
 In this case, we sample the prior at the data and evaluation locations jointly, and transform the resulting samples into posterior samples.
@@ -2025,7 +2036,6 @@ We can substitute this approximation into \Cref{cor:gp-pw} to obtain
 (f \given\v{y})(\omega,\v\gamma) \approx \tilde{f}(\omega,\.) + \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}(\v\gamma - \tilde{f}(\omega,\v{x}) - \v\eps(\omega))
 .
 \]
-We illustrate this idea in Figure \ref{fig:pw-cond-gp-rff}.
 Once the random weights $\v{w}$ are sampled, the posterior becomes a deterministic function, which can be evaluated at $\c{O}(n_*)$ costs.
 Thus, under this approximations, our cubic costs with respect to the number of evaluation locations become \emph{linear}.
 We show in the sequel that for appropriate choices of $\tilde{f}$, such approximations can achieve excellent error control, ensuring they perform effectively in practice.
@@ -2033,7 +2043,7 @@ We show in the sequel that for appropriate choices of $\tilde{f}$, such approxim
 \begin{figure*}
 \input{figures/tex/gp-cond.tex}
 \caption{Approximate pathwise conditioning, with bases on bottom row.}
-\label{fig:pw-cond-gp-rff}
+\label{fig:gp-pw-approx}
 \end{figure*}
 
 We now examine a different aspect of the pathwise representation of posterior Gaussian processes: the role of the data.
@@ -2049,7 +2059,7 @@ From this viewpoint, our approximate posterior is
 (f \given\v{y})(\omega,\v\gamma) \approx \sum_{i=1}^\ell w_i(\omega)\phi_i(\.) + \sum_{j=1}^n v_j(\omega) k(x_j,\.)
 \]
 which shows that our proposed approximation involves writing the posterior Gaussian process of interest as a sum of \emph{two} finite sets of basis functions---one for the prior, another for the data.
-We illustrate this in \Cref{fig:pw-cond-gp-rff}.
+We illustrate this in \Cref{fig:gp-pw-approx}.
 The basis coefficients $w_i$ and $v_j$ here are dependent random variables.
 Summarizing, pathwise representations of posterior Gaussian processes provide a useful framework for constructing posterior approximations.
 
@@ -2096,7 +2106,7 @@ We say that $H$ is a \emph{reproducing kernel Hilbert space} if, for any $x\in X
 \end{definition}
 
 Note that in this definition, the statement $\f{ev}_x \in H^*$ means that $\f{ev}_x$ is a bounded linear functional.
-Reproducing kernel Hilbert spaces therefore impose continuity requirements on their pointwise evaluational functionals.
+Reproducing kernel Hilbert spaces therefore impose continuity requirements on their pointwise evaluation functionals.
 
 Ostensibly, this definition has nothing to do with kernels, and it is unclear what a reproducing kernel Hilbert space \emph{induced by} $k$ actually means.
 A consequence of the above definition is that given a reproducing kernel Hilbert space $H$, we can define the function $k_{H}(x,x') = \innerprod[1]{\Psi_{H}^{-1}\f{ev}_x}{\Psi^{-1}_{H}\f{ev}_{x'}}$, called the \emphmarginnote{reproducing kernel}, where $\Psi_{H} : H \-> H^*$ is the bijective linear isometry given by the Riesz Representation Theorem.
@@ -2165,7 +2175,7 @@ We do briefly note, however, that this means that spectral measures of kernels o
 \caption{Approximate prior samples}
 \end{subfigure}
 \caption{Illustration of random Fourier feature methods for sampling from approximate priors. Here, we show a small subset of randomly sampled Fourier basis functions, along with approximate prior samples constructed using the random Fourier basis functions.}
-\label{fig:gp-rff-prior}
+\label{fig:gp-rff}
 \end{figure}
 
 From here, it is clear that the feature map we seek can be constructed by Monte Carlo approximation of the integral representation given by Bochner's Theorem.
@@ -2198,7 +2208,7 @@ where $\conj{\,\.\,}$ denotes complex conjugation, and
 & i \t{even}
 \end{aligned}}
 \]
-which, for $\ell$ even, gives our approximate prior as
+which, for $\ell$ even, gives our approximate prior, shown in \Cref{fig:gp-rff} as
 \[
 \tilde{f}(\.) &= \sum_{i=1}^\ell w_i(\omega) \phi_i(\xi,\.)
 &
@@ -2261,12 +2271,13 @@ Since we will not consider such processes, we do not pursue this direction here.
 \caption{Illustration of a Karhunen--Loève expansion for a boundary-constrained squared exponential kernel in the sense of \textcite{solin19} on the unit interval.
 For this kernel, the basis functions coincide with the eigenfunctions of the Dirichlet Laplacian.
 We show the first four eigenfunctions, along with approximate prior samples using the first 87 terms in the expansion. This truncation was chosen because the remaining terms are zero in floating-point arithmetic, highlighting the approximation's efficiency.}
-\label{fig:gp-kl-prior}
+\label{fig:gp-kl}
 \end{figure}
 
 For a general kernel, finding the eigenfunctions of the covariance operator may be difficult.
 For certain classes of Gaussian processes constructed to satisfy appropriate boundary constraints, however, the eigenfunctions of the covariance operator will coincide with the eigenfunctions of a boundary-constrained Laplacian.
 These can be obtained numerically, giving a suitable way for sampling from priors in the boundary-constrained setting.
+An example of such basis functions and approximate prior samples is given in \Cref{fig:gp-kl}.
 
 Kernels induced by eigenvalues and eigenfunctions of appropriately-defined Laplace operators are also a common tool in non-Euclidean settings, and we explore them further in \Cref{ch:noneuclidean}.
 For the moment, however, we consider a third class of approximations.
@@ -2321,9 +2332,9 @@ Our approximate prior can therefore be written
 \v{w} &\~[N](\v{0},\m{A}^{-1}\m{M}\m{A}^{-T})\
 .
 \]
-What is particularly powerful about this technique is that it gives us a significant degree of freedom for what kinds of finite sets of basis functions we can choose for $\phi$ and $\psi$.
-A fruitful choice, provided the operator $\c{L}$ is a differential operator of sufficiently low order that this makes sense, is to take $\phi_i$ to be compactly supported piecewise linear functions, since this will cause the matrices $\m{A}$ and $\m{M}$ to be sparse.
-This can enable one to use a much larger set of basis functions compared to alternative methods.
+What is particularly powerful about this technique is that it gives a significant degree of freedom for what kinds of finite sets of basis functions we can choose for $\phi_i$ and $\psi_j$.
+If $\c{L}$ is a differential operator of sufficiently low order, a fruitful choice, shown in \Cref{fig:gp-fe}, is to take $\phi_i$ to be compactly supported piecewise linear functions, since this will cause the matrices $\m{A}$ and $\m{M}$ to be sparse.
+This can enable one to use a much larger number of basis functions compared to alternative methods.
 
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}
@@ -2338,7 +2349,7 @@ This can enable one to use a much larger set of basis functions compared to alte
 In one dimension, following \textcite{lindgren11}, the bilinear form for this kernel is $a(f,h) = \int_X \frac{3}{\kappa^2} f(x)h(x) + \grad f(x) \. \grad h(x) \d x$. 
 Since this bilinear form is of first order in both arguments, we employ a piecewise linear finite element basis consisting of compactly supported triangle-shaped functions, using it to represent both $f$ and $h$.
 This results in matrices $\m{A}$ and $\m{M}$ which are symmetric tridiagonal.}
-\label{fig:gp-fe-prior}
+\label{fig:gp-fe}
 \end{figure}
 
 The main issue with finite element methods is that they typically demand more from practitioners compared to alternatives.
@@ -2377,6 +2388,7 @@ This approximation has a particularly simple interpretation: we can re-write it 
 \]
 where $\v{v}(\omega) = (\m{K}_{\v{z}\v{z}} + \m\Lambda)^{-1}(\v\mu - f(\omega,\v{z}) - \v\epsilon(\omega))$.
 Thus, we see that all we have done is replaced a large sum of data-dependent functions $k(x_j,\.)$ with $j=1,..,n$ induced by the kernel with a much smaller sum involving a sparsified set of functions $k(z_j,\.)$ with $j=1,..,m$ and $m \ll n$.
+This interpretation applies to most variational approximations, including the classical framework of \textcite{titsias09}, which can be seen in \Cref{fig:gp-ip-approx,fig:gp-ip}.
 
 Given such an approximate posterior, how should we select the introduced hyperparameters $\v{z},\v\mu,\m\Lambda$ to ensure quality?
 At minimum, we should attempt to guarantee consistency of the approximation, in the sense that if $m = n$ then one can choose $\v{z} = \v{x}$, $\v\mu = \v\gamma$, and $\m\Lambda = \m\Sigma$ to recover the desired posterior.
@@ -2397,7 +2409,7 @@ By the chain rule for Kullback--Leibler divergences, $D_{\f{KL}}(\bb{q}_f \from 
 It follows that the optimization objective of the variational approximation is finite.
 
 We thus see that the \emph{inducing point} approximation of \textcite{opper09}, when re-interpreted using the variational inference framework of \textcite{titsias09}, coincides with the pathwise variational approximation constructed here.
-The same is true for other classes of inducing points, including the family where $\v{u}$ is randomized which was originally proposed by \textcite{titsias09}.
+The same is true for other classes of inducing points, including the variational family shown in \Cref{fig:gp-ip,fig:gp-ip-approx} where $\v{u}$ is randomized, which was originally proposed by \textcite{titsias09}.
 
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}
@@ -2408,9 +2420,9 @@ The same is true for other classes of inducing points, including the family wher
 \input{figures/tex/gp-ip-cond.tex}
 \caption{Variational approximation}
 \end{subfigure}
-\caption{Inducing point approximation using the variation family of \textcite{titsias09}. Here, we use seven inducing points to represent the posterior distribution under thirty-one data points. 
+\caption{Inducing point approximation using a variation family built using randomized process values. Here, we use seven inducing points to represent the posterior distribution under thirty-one data points. 
 The inducing approximation approximates the posterior as accurately as possible, using a sparsified Gaussian process as the variational approximation.}
-\label{fig:gp-inducing}
+\label{fig:gp-ip-approx}
 \end{figure}
 
 
@@ -2425,7 +2437,7 @@ The inducing approximation approximates the posterior as accurately as possible,
 \end{subfigure}
 \caption{The type of approximation made using inducing points can be understood in a pathwise manner: the inducing approximation employs the seven displayed canonical basis functions, rather than the thirty-one used in the true posterior, which possess significantly more overlap.
 The update term fades to zero as we move away from the data, highlighting the role of the prior in representing uncertainty.}
-\label{fig:gp-inducing-basis}
+\label{fig:gp-ip}
 \end{figure}
 
 Better yet, the constructions above are straightforward, principled, and mathematically sound.
@@ -2474,11 +2486,11 @@ This is to be contrasted with the approximate pathwise update, for which the rep
 We see two problems: the mean spuriously oscillates and the error bars grow too slowly away from the data.
 This can cause the UCB acquisition, which is global minima of the error bars, to appear in the completely wrong location.
 With the given hyperparameter choices, $n=10$ data points is enough to exhibit considerable approximation error.}
-\label{fig:variance-starvation}
+\label{fig:gp-vs}
 \end{figure}
 
 The result is that if the true posterior takes on a difficult-to-represent shape---which will often be the case if $n$ is large enough, but might also occur even if it is not---then performance can degrade disastrously.
-This can be seen in \Cref{fig:variance-starvation}.
+This can be seen in \Cref{fig:gp-vs}.
 This phenomenon has been called \emph{variance starvation} in the literature, due to its ability to produce error bars that are too narrow as a result of lack of representational capacity---we note this name is misleading because it is also capable of producing error bars which are far too large.
 
 A number of ways of alleviating variance starvation have been proposed in the literature.
@@ -2674,7 +2686,7 @@ We now describe these in more detail.
 \begin{figure*}[p!]
 \input{figures/tex/ts.tex}
 \caption{Parallel Thompson sampling benchmark results.}
-\label{fig:results-ts}
+\label{fig:parallel-ts}
 \end{figure*}
 
 The Cholesky grid-based approach works by (i) drawing a set with $250,000$ points uniformly at random, (ii) sampling a vector of independent Gaussians whose mean and variance are equal to the posterior predictive distribution at those points, (iii) choosing the $2048$ smallest elements, (iv) sampling the posterior Gaussian process jointly at the chosen locations, and (v) choosing the smallest value.
@@ -2689,7 +2701,7 @@ To understand the effect of posterior approximation, we examine both basis-funct
 For the pathwise approximate posterior, this is the sum of both the number of basis functions used for the prior with the number of canonical basis functions---this choice helps avoid unfairly penalizing the random fourier Feature model.
 We use random-phase-based Fourier features in both approximate posteriors.
 
-Results can be seen in \Cref{fig:results-ts}, where we plot regret curves 
+Results can be seen in \Cref{fig:parallel-ts}, where we plot regret curves 
 Immediately, we see that the effect of the strategy used for computing the acqusition function varies according to dimension.
 
 In the two-dimensional setting, all Gaussian process methods perform comparably, outperforming the random search and dividing rectangles baselines.
@@ -2780,7 +2792,7 @@ Our guiding theme will be: how can we make Gaussian processes on Riemannian mani
 We now proceed to introduce, develop, and explore this topic.
 
 
-\section{Riemannian Matérn Gaussian Processes}
+\section{Riemannian Matérn Gaussian processes}
 
 We begin with a key question: how should one generalize the most widely-used class of Gaussian process models to the Riemannian manifold setting?
 There are multiple potential definitions one can introduce, some of which will turn out to be much better-behaved mathematically than others.
@@ -2790,6 +2802,7 @@ In order to pursue these questions, we begin by introducing and reviewing the se
 We now briefly review the notions needed to define and understand manifolds.\footnote{The Russian word for \emph{manifold} is \emph{mnogoobrazie} (mn\rotatebox[origin=c]{180}{e}g\rotatebox[origin=c]{180}{aa}br{\textquotesingle}az\textsuperscript{j}\textsc{i}j\rotatebox[origin=c]{180}{e}). The word \emph{mnogo} means \emph{many}, and the word \emph{obraz} roughly means \emph{form}, \emph{view}, or \emph{image}. 
 Thus, a \emph{manifold} is a \emph{space with many views into it}, which I find to be well-chosen and evocative.}
 These are sets equipped with additional structure encoding their geometric shape.
+Many geometric shapes, in turn, can be realized as manifolds: two examples are shown in \Cref{fig:common-manifolds}.
 
 A \emphmarginnote{topological space} is a set $X$ together with a \emph{topology}, which is a collection of subsets $\c{O}_X \subseteq 2^X$ called the \emph{open sets}---these include the empty set, the space itself, and are closed under pairwise intersections and arbitrary unions.
 A given set can admit many topologies.
@@ -2852,7 +2865,8 @@ This perspective is often avoided for both technical and conceptual reasons: if 
 \vspace*{10ex}
 [Common Manifolds 3D Visual]
 \vspace*{10ex}
-\caption{TODO.}
+\caption{Two common manifolds: the sphere $\mathbb{S}^2$ and torus $\mathbb{T}^2$.}
+\label{fig:common-manifolds}
 \end{figure}
 
 \subsection{The Laplace--Beltrami operator}
@@ -2889,6 +2903,14 @@ Define the \emph{Laplace--Beltrami operator} to be
 \]
 \end{definition}
 
+\begin{figure}
+\vspace*{10ex}
+[Eigenfunctions 3D Visual]
+\vspace*{10ex}
+\caption{Eigenfunctions of the Laplace--Beltrami operator on a circle and torus.}
+\label{fig:eig-s1-t2}
+\end{figure}
+
 The Laplace--Beltrami operator, then, maps functions into the divergence of their gradient at every point.
 There are multiple equivalent ways of defining the Laplace--Beltrami operator: an alternative is to define is as the trace of the Riemannian Hessian, and another is to define it in coordinates.
 The latter expression illustrates that a Laplace--Beltrami operator maps functions into their locally averaged analogs, in a sense.
@@ -2917,12 +2939,12 @@ which converges unconditionally in $L^2(X)$ for all $f \in D(\lap_g)$.
 \end{result}
 
 \begin{proof}
-See \textcite[page 139]{chavel84} or \textcite[Theorem 44]{canzani13}.\footnote{TODO: fix this awful in-text citation format}.
+See \textcite[page 139]{chavel84} or \textcite[Theorem 44]{canzani13}.
 \end{proof}
 
-This is a powerful result for many reasons: the eigenfunctions $f_n$ can be viewed as analogs of the Fourier basis adapted to the manifold's geometry.
-By expanding a function within the basis of eigenfunctions, we obtain an infinite sequence of basis coefficients---just like representing a periodic function $L^2([-\pi,\pi];\R)$ by an infinite sum of complex exponentials.
-One reason of particular interest for our purposes is that the Sturm--Liouvile decomposition gives rise to a notion of \emph{functional calculus}, which we now introduce.
+This is a powerful result: the eigenfunctions $f_n$, shown in \Cref{fig:eig-s1-t2,fig:eig-s2-dr}, can be viewed as analogs of the Fourier basis adapted to the manifold's geometry.
+By expanding a function within the basis of eigenfunctions, we obtain an infinite sequence of basis coefficients---just like representing a periodic function in $L^2([-\pi,\pi];\R)$ by an infinite sum of complex exponentials.
+The Sturm--Liouvile decomposition gives rise to a notion of \emph{functional calculus}, which is key for our purposes, and which we now introduce.
 
 
 \begin{figure}
@@ -2930,6 +2952,7 @@ One reason of particular interest for our purposes is that the Sturm--Liouvile d
 [Eigenfunction 3D Visual]
 \vspace*{10ex}
 \caption{Eigenfunctions of the Laplace--Beltrami operator on a sphere and dragon manifold.}
+\label{fig:eig-s2-dr}
 \end{figure}
 
 \begin{definition}[Functional calculus]
@@ -3092,6 +3115,14 @@ The main challenge, then, is finding appropriate spaces and operators in order t
 
 \subsection{The Riemannian Matérn kernel}
 
+\begin{figure}
+\vspace*{10ex}
+[Kernel 3D Visual]
+\vspace*{10ex}
+\caption{The Matérn-1/2 kernel $k_{1/2}(x,\.)$ defined on a circle and torus, where the point $x$ is marked by a black dot.}
+\label{fig:ker-s1-t2}
+\end{figure}
+
 We now use the above results to define Riemannian Gaussian processes directly, and, following this, calculate their kernels in order to obtain workable numerical expressions.
 To proceed, we need to make concrete choices for which Hilbert spaces and operators to use.
 To do so, we study the class of equations considered by \textcite{whittle63} and \textcite{lindgren11}, which we now review.
@@ -3114,11 +3145,12 @@ Building on this idea, \textcite{lindgren11} proposed a formalism based on Galer
 \vspace*{10ex}
 [Kernel 3D Visual]
 \vspace*{10ex}
-\caption{The Matérn-1/2 kernel $k_{1/2}(x,\.)$ defined on a sphere and dragon manifold, where the point $x$ is marked by a red dot.}
+\caption{The Matérn-1/2 kernel $k_{1/2}(x,\.)$ defined on a sphere and dragon manifold, where the point $x$ is marked by a black dot.}
+\label{fig:ker-s2-dr}
 \end{figure}
 
 In particular, \textcite{lindgren11} define the \emphmarginnote{Riemannian Matérn kernel} to be the covariance kernel of the solutions of analogs of the above stochastic partial differential equation, where $\R^d$ is replaced with a Riemannian manifold $X$, and the Euclidean Laplacian $\lap$ is replaced by the Laplace--Beltrami operator $\lap_g$.
-The resulting kernel is well-defined, but its definition is implicit: \textcite{lindgren11} provide techniques for training the resulting Gaussian processes via solving the stochastic partial differential equation numerically.
+The resulting kernel, shown in \Cref{fig:ker-s1-t2,fig:ker-s2-dr} is well-defined, but implicit: \textcite{lindgren11} provide techniques for training the resulting processes by solving the stochastic partial differential equation numerically.
 
 We develop an alternative, more constructive formalism.
 This is done by improving on the above prior results in two ways: (1) we bypass finite element analysis by instead working with the previously-introduced theory of Gaussian stochastic partial differential equations described by \textcite{lototsky17}, and (2) we deduce numerical expressions for calculating the kernels of the resulting processes, enabling them to be trained using standard methods.
@@ -3316,7 +3348,7 @@ In particular, the discrete analogs of the Laplace--Beltrami operator used withi
 This leads one to ask: are there interesting analogs of Matérn models in useful classes of discrete spaces?
 We now proceed to develop one such analog.
 
-\section{Graph Matérn Gaussian Processes}
+\section{Graph Matérn Gaussian processes}
 
 A general maxim of geometry is that anything one can do with a manifold, one can do with a graph, given a bit of thinking---but, the details and behavior might be slightly different.
 In the preceding section, we built Gaussian processes using spectral properties of the Riemannian Laplace--Beltrami operator.
@@ -3433,7 +3465,7 @@ Alternatively, Krylov subspace methods for sparse linear systems can be applied,
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gk-ba.tex}
-\caption{Barabasi--Albert random graph}
+\caption{Barabási--Albert random graph}
 \end{subfigure}
 \caption{Here, we show the prior variance of a graph Gaussian process at each node for a number of different graphs. Variances for each graphs are plotted using a common scale. In general, this prior variance is non-uniform and instead reflects the structure of the graph.}
 \label{fig:graph-variance}
@@ -3478,6 +3510,14 @@ Still, this kernel converges to the graph squared exponential kernel: if we set 
 \]
 This provides another view of the connection between the graph squared exponential kernel and random walk models.
 
+\begin{figure}
+\vspace*{10ex}
+[Graph Convergence 3D Visual]
+\vspace*{10ex}
+\caption{Illustration of a sequence of graph Matérn-1/2 kernels, each defined on an icosahedral graph. For every icosahedron, such a graph is defined by letting each face corresponds to a node on the graph, and neighboring faces correspond to edges on the graph. The limiting kernel for this sequence of graphs is a Riemannian Matérn-1/2 kernel on the sphere.}
+\label{fig:graph-limit}
+\end{figure}
+
 Finally, the introduced graph kernels also converge to \emphmarginnote{Riemannian limits}, provided these are understood appropriately.
 One way to formalize this is to embed the graph within a Euclidean space, and study vector spaces of piecewise-linear functions between neighboring nodes.
 Sequences of such graphs arise as \emph{finite element} discretizations of function spaces, which were considered previously in \Cref{ch:pathwise}.
@@ -3486,6 +3526,7 @@ Here, \textcite{lindgren11} show that certain graph Matérn Gaussian processes c
 For graph Matérn kernels that do not arise in this manner, a number of other formulations are available.
 One can show that for appropriately defined and sufficiently regular sequences of graphs, the eigenvalues and eigenvectors of the graph Laplacian converge to the eigenvalues and eigenfunctions of the Laplace--Beltrami operator \cite{belkin07,burago14}.
 Using this, \textcite{sanzalonso20} provide a framework for studying limits of graph Matérn kernels.
+One example of such a limit is shown in \Cref{fig:graph-limit}.
 
 In total, these results illustrate that graph Matérn and graph squared exponential kernels are closely-connected with their Riemannian analogs, which justifies both the names they are given, and the choice of defining them using the graph Laplacian in the first place.
 In spite of their similarity, however, these models can be used in settings which are very different from the manifold setting that inspired them.
@@ -3528,11 +3569,12 @@ We compute the kernel approximately using $500$ Laplace--Beltrami eigenpairs, an
 \caption{Standard deviation}
 \end{subfigure}
 \caption{View of a zoomed-in portion of the posterior means and standard deviations of the probabilistic graph interpolation task on the road network. Note the small-scale variation present within the error bars.}
+\label{fig:graph-posterior-zoom}
 \end{figure}
 
 
 
-Results can be seen in \Cref{fig:graph-posterior}.
+Results can be seen in \Cref{fig:graph-posterior,fig:graph-posterior-zoom}.
 Here, we see that in spite of the heavily non-manifold-like geometry present in this graph, the Gaussian process still reflects the graph's geometric structure.
 In particular, the width of the error bars given by the posterior standard deviation increases as we move away from nodes where there is data.
 We conclude that, like in the manifold case, the Gaussian process produces uncertainty estimates which reflect the graph's structure given by the connectivity of nodes.
@@ -3541,7 +3583,7 @@ While this example is not particularly realistic, since we have not considered t
 We hope these illustrations prompt others to imagine new and unexpected use cases for Gaussian processes.
 We thus end our detour and return to the manifold setting.
 
-\section{Gaussian Vector Fields on Riemannian Manifolds}
+\section{Gaussian vector fields on Riemannian manifolds}
 
 In the preceding sections, we studied Gaussian processes in two different non-Euclidean settings, namely those of graphs and manifolds.
 In both cases, the models obtained were scalar-valued.
@@ -3586,6 +3628,7 @@ We proceed as follows.
 [Frame 3D Visual]
 \vspace*{10ex}
 \caption{A vector field can be represented by specifying its values in any frame. Here, we illustrate the same vector field on the sphere represented using two different frames.}
+\label{fig:frame}
 \end{figure}
 
 \begin{definition}[Gaussian vector field]
@@ -3725,6 +3768,7 @@ Given a frame, define the \emph{coframe} $F^*$ to be the collection of sections 
 \end{definition}
 
 The key words in the above definition are \emph{not necessarily smooth}: recall again that for many manifolds, choosing a frame which varies smoothly in space is impossible---a single component of such a frame would yield a non-vanishing vector field, and such a vector field might not exist.
+An example of a vector field represented in two different frames can be seen in \Cref{fig:frame}.
 We can use this to calculate the coordinate expression of a cross-covariance kernel with respect to a frame.
 This is given by a function $\m{K}_F : X \x X \-> \R^{d \x d}$ as
 \[
@@ -3787,6 +3831,7 @@ It is now clear how to make our idea precise.
 [Projected Kernel 3D Visual]
 \vspace*{10ex}
 \caption{Here, we show how to construct Gaussian process on the sphere whose cross-covariance kernel is a projected kernel. First, we construct three scalar Gaussian processes on the sphere. Then, embed the sphere in $\R^3$, and the scalar Gaussian processes to form a vector-valued Gaussian process on the embedded sphere. Finally, we project the resulting Gaussian process onto the sphere, yielding the desired tangential vector field.}
+\label{fig:proj-ker}
 \end{figure}
 
 \begin{definition}[Projected kernel]
@@ -3806,6 +3851,7 @@ It follows that if $\v\kappa : X \x X \-> \R^{p \x p}$ is the cross-covariance k
 Note that here, we generally require a Riemannian structure on $X$ in order to define a useful set of scalar-valued processes in order to obtain $\v{f}$ or, equivalently, $\v\kappa$, to begin with.
 The simplest approach is to make each component in the embedded space independent.
 Particularly in cases where the embedding is isometric, this gives a wide class of easy-to-understand kernels.
+An example can be seen in \Cref{fig:proj-ker}.
 
 It's easy to see that all cross-covariance kernels arise this way: using Nash's Theorem, we can embed an arbitrary Gaussian vector field on a Riemannian manifold into a Euclidean space, glue together the resulting scalar components, and project back to obtain the Gaussian vector field we started with.
 
@@ -3819,7 +3865,7 @@ In particular, our constructions are automatically compatible with standard trai
 \vspace*{10ex}
 [Posterior Vector Field 3D Visual]
 \vspace*{10ex}
-\caption{Posterior mean and trace of posterior covariance for a projected Gaussian vector field constructed using three independent Matérn-3/2 Gaussian processes on the sphere. Training locations are shown in white. We observe that uncertainty increases as we movea way from the training locations.}
+\caption{Posterior mean and trace of posterior covariance for a projected Gaussian vector field constructed using three independent Matérn-3/2 Gaussian processes on the sphere. Training locations are shown in white. We observe that uncertainty increases as we move away from the training locations.}
 \label{fig:posterior-vector-field}
 \end{figure}
 
@@ -3841,7 +3887,7 @@ We also observe that the trained Gaussian process model is smooth, even though t
 While the model used here is, as in the preceding section, not at all realistic owing to the fact that it does not incorporate time or any kind of physical information into its design, we believe that it nonetheless serves as a demonstration that constructing vector-valued Gaussian processes using the ideas developed is practical.
 We hope this motivates further development to apply such models more broadly, both for the sphere and for other manifolds.
 
-\section{Geometry-aware Bayesian Optimization}
+\section{Geometry-aware Bayesian optimization}
 
 We now study the role that geometry plays when working with decision systems built using Gaussian processes.
 To do so, we perform Bayesian optimization of standard benchmark functions on Riemannian manifolds using the Riemannian Matérn and squared exponential Gaussian processes with the numerical techniques developed herein.
@@ -3881,7 +3927,6 @@ Since this acquisition function can be computed from the Gaussian process direct
 
 
 Results can be seen in \Cref{fig:gabo}.
-TODO: interpret.
 
 For manifolds embedded within Euclidean space, geometry-aware Bayesian optimization can be viewed as a form of Bayesian optimization with enforced constraints that require evaluations to lie on the embedded submanifold.
 Techniques such as the ones we have developed are therefore a promising tool for introducing geometric constraints into Bayesian optimization, potentially enabling new applications.
