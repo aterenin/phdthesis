@@ -1,0 +1,26 @@
+\documentclass[tikz,11pt]{standalone}
+\usepackage{lmodern}
+\usepackage{amssymb}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{external}
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{fillbetween}
+\usetikzlibrary{fadings}
+\begin{document}
+\tikzsetnextfilename{s1-e4}
+\begin{tikzpicture}
+\begin{axis}[axis lines={none}, height={4cm}, width={4cm}, xmin={-1.5}, xmax={1.5}, ymin={-1.5}, ymax={1.5}]
+    \node at (-1.5,-1.5) {};
+    \node at (-1.5,1.5) {};
+    \node at (1.5,1.5) {};
+    \node at (1.5,-1.5) {};
+    \addplot[domain={0:2*pi}, smooth cycle, samples={128}, dashed, color={rgb,1:red,0.498;green,0.498;blue,0.498}, very thick]
+        ({cos(deg(x))},{sin(deg(x))})
+        ;
+    \addplot[domain={0:2*pi}, smooth cycle, samples={128}, ultra thick, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}]
+        ({(1 + 0.25 * cos(deg(4*x))) * cos(deg(x))},{(1 + 0.25 * cos(deg(4*x))) * sin(deg(x))})
+        ;
+\end{axis}
+\end{tikzpicture}
+\end{document}
