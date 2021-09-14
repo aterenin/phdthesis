@@ -302,7 +302,7 @@ The condition that the pushforward of the composition of the prior and likelihoo
 
 Given a Bayesian model, we can formalize the notion of what is \emph{learned} about $\theta$ from observing $y$ as its conditional probability distribution---note that this is meant in a \emph{distributional} sense, not a random-variable-based sense.
 The formulation we use requires topological assumptions: we say that a topological space is \emph{Polish} if it is homeomorphic to a complete separable metric space.
-Note that any two uncountable Polish spaces are Borel-isomorphic: see \textcite[p. 5]{villani08}, for discussion.
+Note that any two uncountable Polish spaces are Borel-isomorphic: see \textcite[5]{villani08}, for discussion.
 The key result is given as follows.
 
 \begin{figure}
@@ -532,7 +532,7 @@ where the desired probability density is $f_a(\alpha) = \int_B f_{a,b}(\alpha,\b
 
 We now use the Bayesian formalism to construct a probabilistic theory of decision-making.
 To begin, we formalize the very general concept of an abstract agent making decisions in an environment in pursuit of some goal.
-We use \textcite{sutton18,bertsekas19} as reference.
+We use \textcite{sutton18,bertsekas19} as our references.
 
 \subsection{Markov decision processes}
 A Markov decision process is a stochastic system consisting of a set of states, actions, and transitions between states, together with a rewards that vary depending on states and actions.
@@ -886,9 +886,9 @@ f^+_t(x) &= \mu_t(x) + c_t\sigma_t(x)
 where $\mu_t$ are the empirical means, $\sigma_t(x) = \sqrt{\frac{1}{n_t(x)}}$, and $c_t = \sqrt{2\ln(T)}$.
 \end{definition}
 
-Algorithms within this class date back to \textcite{lai85,agrawal95}: we focus on the variant analyzed by \textcite{auer02}.
-We now consider this algorithm's regret.
-It turns out this simple modification, consisting of adding a set of error bars with a threshold growing in time and decreasing with data, is enough to result in different regret behavior.
+Many algorithms within the upper confidence bound class have been proposed \cite{lai85,agrawal95,auer02}: we focus on the variant analyzed by \textcite{auer02}.
+We study this algorithm's regret, and present a simplified but less sharp analysis compared to the one given in that work.
+It turns out the simple modification, of adding a set of error bars with a threshold growing in time and decreasing with data size is enough to result in favorable regret behavior.
 
 \begin{theorem}
 Hoeffding--UCB achieves an expected regret of
@@ -979,12 +979,12 @@ f^+_t(x) &= \mu_t(x) + c_t \sigma_t(x)
 where $(\mu_t, \sigma_t)$ are the mean and standard deviation of the posterior distribution $\mu\given\gamma(x_1) = y_1, .., \gamma(x_t) = y_t$. and $c_t$ is defined as previously.
 \end{definition}
 
-One can show this algorithm, illustrated in \Cref{fig:bb-ucb}, achieves the same regret as Hoeffding--UCB: the proof is similar, but instead uses the empirical Bernstein inequality, and is significantly more messy owing to the complicated form of the posterior mean and standard deviation.
+One can show this algorithm, illustrated in \Cref{fig:bb-ucb}, achieves the same regret as Hoeffding-based analogue: the proof is similar, but instead uses the empirical Bernstein inequality, and is significantly more messy owing to the complicated form of upper confidence bound.
 Even more generally, one can select arms by optimizing a function $\alpha : X \-> \R$, called an \emph{acquition function}, built from a posterior distribution, confidence set, or other appropriate construction.
 Many different acquisition functions have been proposed.
 
-We have made no attempt to optimize the bound, and significant improvements are possible, particularly when considering variations of the UCB algorithm---see \textcite{lattimore20} for state-of-the-art results.
-Of these, algorithms built using \emph{confidence sets} rather than posterior distributions, such as the Hoeffding--UCB algorithm presented previously, are particularly important in the $K$-armed bandit setting.
+We have made no attempt to optimize the bound, and significant improvements are possible, particularly when considering variations of the upper confidence bound algorithm---see \textcite{lattimore20} for state-of-the-art results.
+Of these, algorithms built using \emph{confidence sets} rather than posterior distributions, such as the variant presented previously, are particularly important in the $K$-armed bandit setting.
 We focus on the Bayesian view because it generalizes well to more complex settings.
 
 \begin{figure}
@@ -996,11 +996,11 @@ We focus on the Bayesian view because it generalizes well to more complex settin
 \input{figures/tex/mab-post.tex}
 \caption{Posterior}
 \end{subfigure}
-\begin{subfigure}{0.3\textwidth}
+\begin{subfigure}{0.35\textwidth}
 \input{figures/tex/mab-ucb.tex}
-\caption{UCB}
+\caption{Upper confidence bound}
 \end{subfigure}
-\caption{The idea behind the UCB algorithm is to use the observed data to construct a set of error bars that reflect what has been learned about the mean rewards.
+\caption{The idea behind the upper confidence bound algorithm is to use the observed data to construct a set of error bars that reflect what has been learned about the mean rewards.
 Here, we construct these using the posterior distribution under a Gaussian prior and likelihood.
 The next arm is chosen as the maximum of the quantile-based error bars.
 This process is repeated iteratively as additional data is obtained, with the quantile becoming more strict over time, ensuring the bounds hold increasingly often.}
@@ -1038,7 +1038,7 @@ y_t(\omega) &= f(x_t) + \eps_t(\omega)
 \eps_t &\~[N](0,\sigma^2)
 .
 \]
-Here, the space of observed values is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which we view as an element of a space of functions, such as for instance the Banach space of continuous functions $C^0(X;\R)$.
+Here, the space of observed values is $Y = \R^n$, and our quantity of interest is the actual \emph{function} $f$, which we at least implicitly view as an element of a space of functions, such as for instance the Banach space of continuous functions $C^0(X;\R)$.
 
 
 \begin{figure}
@@ -1090,7 +1090,7 @@ x_{t+1} = \argmax_{x\in X} \E \max(0,f_t(\.,x) - f(x^*_t))
 where $f_t = f \given y_1,..,y_t$ is the posterior, and $x^*_t = \argmin_{t \in \{1,..,t\}} f(x_t)$ is the smallest value observed so far.
 Many other effective acquisition functions, including \emph{probability of improvement} \cite{kushner64}, \emph{predictive entropy search} \cite{hernandezlobato14} and \emph{information directed sampling} \cite{russo14}, are also possible.
 
-Regret analysis for all of these choices can be performed, and will in general depend on the detailed properties on the model, acquisition function, and the unknown function $f$.
+Regret analysis for all of these choices can be performed, and will in general depend on the detailed properties of the Bayesian model, acquisition function, and unknown function $f$ \cite{srinivas09}.
 In particular, regularity and smoothness properties may play a role, as well as structure present in the domain $X$.
 In settings where the function $f$ is unknown, it's also possible to analyze the expression 
 \[
@@ -1923,7 +1923,7 @@ More recently, \textcite{doucet10} describes the algorithm in a technical report
 This note contains no original material and will never be submitted anywhere for publication. However, it might be of interest to people working with [Gaussian processes] so I am making it publicly available.
 \end{quotation}
 
-Additionally, \Cref{thm:mvn-pw} is reasonably well-known in geostatistics, and has been used or described by \textcite{journel78,defouquet94,emery07,oliver96} in addition to the above authors.
+Additionally, \Cref{thm:mvn-pw} is reasonably well-known in geostatistics \cite{journel78,defouquet94,emery07,oliver96}.
 In parallel, these ideas were rediscovered in the astrophysics community, with \textcite{hoffman91} describing approximations similar in spirit to the ones we study in the sequel.
 
 The present state of affairs therefore seems to be that a small set of technical experts are aware of \Cref{thm:mvn-pw} but believe it to be too trivial to write about, while practitioners working in areas such as Bayesian optimization do not know that it exists.
@@ -2414,10 +2414,10 @@ We now ask: from a pathwise perspective, what techniques are available for reduc
 \subsection{Inducing points}
 
 Consider a simple approach to reducing the above cubic costs: instead of conditioning the Gaussian process on the full data $(x_1,y_1),..,(x_n,y_n)$, find a different data set $(z_1,\mu_1),..,(z_m,\mu_m)$, for which $m \ll  n$ and yet the posterior is approximately the same.
-This idea underlies \emph{inducing point} approximations, including those proposed by \textcite{snelson06,titsias09,opper09,hensman13}, as well as many others.
+This idea underlies \emph{inducing point} approximations \cite{snelson06,titsias09,opper09,hensman13}.
 
-To ensure the approximation is expressive enough, we can either (i) make $\v\mu$ random with a learnable mean and covariance, or (ii) introduce a learned noise covariance $\m\Lambda$ rather than reusing the one from the original model.
-The latter approach gives
+To ensure the approximation is expressive enough, we can either (i) make $\v\mu$ random with a learnable mean and covariance, or, following \textcite{opper09}, (ii) introduce a learned noise covariance $\m\Lambda$ rather than reusing the one from the original model.
+From a pathwise perspective, the latter approach gives
 \[
 (f \given\v{u})(\omega,\v\mu) = f(\omega,\.) + \m{K}_{(\.)\v{z}} (\m{K}_{\v{z}\v{z}} + \m\Lambda)^{-1}(\v\mu - f(\omega,\v{z}) - \v\epsilon(\omega))
 \]
@@ -2532,7 +2532,7 @@ This is to be contrasted with the approximate pathwise update, for which the rep
 \end{subfigure}
 \caption{Example of the \emph{variance starvation} phenomenon in two different random Fourier feature models (solid), compared to the true posterior (dashed).
 We see two problems: the mean spuriously oscillates and the error bars grow too slowly away from the data.
-This can cause the UCB acquisition, which is global minima of the error bars, to appear in the completely wrong location.
+This can cause the upper confidence bound acquisition, which is global minima of the error bars, to appear in the completely wrong location.
 With the given hyperparameter choices, $n=10$ data points is enough to exhibit considerable approximation error.}
 \label{fig:gp-vs}
 \end{figure}
@@ -2997,7 +2997,7 @@ which converges unconditionally in $L^2(X)$ for all $f \in D(\lap_g)$.
 \end{result}
 
 \begin{proof}
-See \textcite[page 139]{chavel84} or \textcite[Theorem 44]{canzani13}.
+\textcite[139]{chavel84}.
 \end{proof}
 
 This is a powerful result: the eigenfunctions $f_n$, shown in \Cref{fig:eig-s1-t2,fig:eig-s2-dr}, can be viewed as analogs of the Fourier basis adapted to the manifold's geometry.
@@ -4057,76 +4057,77 @@ The ideas presented naturally lead to a number of further research directions to
 Perhaps the most promising research direction made possible by pathwise conditioning methods is the design of data-efficient decision systems for tasks beyond optimization.
 \textcite{neiswanger21} propose \emph{Bayesian algorithm execution}, a framework which generalizes Bayesian optimization by allowing for the task to be defined by using a general \emph{underlying algorithm} in place of optimization.
 
-For this, \textcite{neiswanger21} further propose \emph{InfoBAX}, an information-theoretic acquisition function constructed directly from the algorithm being considered.
+For this, \textcite{neiswanger21} introduce \emph{InfoBAX}, an information-theoretic acquisition function constructed directly from the algorithm being considered.
 This enables the introduction of \emph{Bayesian Dijkstra's algorithm} for finding shortest paths in a graph in a data-efficient manner, and other novel decision systems.
 
 Pathwise conditioning methods play a key role in computing the InfoBAX acquisition function.
-Specifically, one runs the underlying algorithm on posterior random functions, producing a set of \emph{execution traces} of points queried by the algorithm.
+Specifically, one runs the underlying algorithm on posterior random functions, producing a set of \emph{execution paths} of points queried by the algorithm.
 InfoBAX is then constructed from the execution trace and output via a set of information-theoretic calculations.
 Approximate pathwise conditiong makes it possible to compute the required execution traces in an efficient, accurate, and convenient manner.
 
 Gaussian processes have not yet been widely considered for tasks not conveniently expressed as maximization of rewards.
-Bayesian algorithm execution enables such methods to be considered for settings beyond Bayesian optimization and model-based reinforcement learning. 
+Bayesian algorithm execution enables such methods to be considered for settings beyond Bayesian optimization and model-based reinforcement learning, which are well-established and whose limitations are largely known.
 Developing this framework to the same degree of detail afforded to those cases is therefore a particularly promising research direction.
 
-From a theoretical point of view, one of the first questions to be addressed in understanding Bayesian algorothm execution is to understand what is the appropriate notion of \emph{regret} for this setting.
+From a theoretical point of view, one of the first steps to be taken in understanding Bayesian algorothm execution is to understand what is the appropriate notion of \emph{regret} for this setting.
 Given there are a number of variations of regret, used for proving different kinds of bounds, it is not immediately clear what this should be.
 Developing techniques for studying regret in this very general setting is a promising first step.
+The analysis of closely-related state-of-the-art bandit algorithms, such as \emph{information-directed sampling} \cite{russo14}, offers hints on how to proceed.
 
 In parallel, it seems fruitful to look for applications where more general data-efficient decision systems beyond optimization are potentially useful, and yet where Gaussian process models are viable. 
-Multi-objective Bayesian optimization, where the goal is finding a Pareto frontier, rather than obtaining a global minima, gives one concrete algorithm class to consider when looking for such applications.
+\emph{Multi-objective Bayesian optimization} \cite{emmerich05,campigotto14,hernandezlobato16,suzuki20}, where the goal is finding a Pareto frontier, rather than obtaining a global minima, gives a concrete algorithm class to consider studying from this point of view.
 
 From the Bayesian algorithm execution framework alone, we see that pathwise conditioning methods enable potential new avenues for constructing decision systems and therefore growing the applicability and scope of Gaussian process methods within machine learning.
 We hope that, in the coming years, more of these avenues are explored, enabling Gaussian processes to have larger role in the machine learning toolbox.
 
-
 \subsection*{Connections to numerical analysis}
 
-Another promising direction is exploring the connections between Gaussian processes and numerical analysis.
-Here, one can study use of iterative solvers, such as the conjugate gradient method, in combination with pathwise conditioning and inducing points.
-Iterative solvers are promising because they can in principle tackle larger linear systems for which Cholesky factorization simply fails, provided they are set up correctly.
+Another promising research direction is exploring the connections between Gaussian processes and numerical analysis.
+Interst in these connections has grown rapidly in the Gaussian process community within machine learning in recent years, as a way to improve performance and usability of software implementations \cite{matthews17,gardner18,vanderwilk20}. 
+Ideas based on pathwise conditioning and stochastic partial differential equations offers new avenues for takind advantage of these connections.
 
-The computational costs of an iterative solver depend on how many iterations are required for convergence.
-This, in turn, varies according to the condition number of the linear system being solved.
+Firstly, one can study use of iterative solvers, such as the conjugate gradient method, in combination with pathwise conditioning and inducing points.
+Iterative solvers are promising because they can in principle tackle larger linear systems for which Cholesky factorization simply fails, provided they are set up correctly.
+A large set of techniques in this class have recently been proposed for Gaussian process models \cite{dong17,gardner18,pleiss18,meanti20,pleiss20}.
+
+The computational costs of an iterative solver depend on how many iterations are required for convergence, which vary according to the condition number of the linear system being solved \cite{saad03}.
 Variational approximations such as the inducing point construction presented in \Cref{ch:pathwise} make it possible to work with linear systems that are substantially better-conditioned than those in the true posterior, due to additional terms added to the diagonal.
 Exploring such combinations is a promising route for improving performance.
 
 Pathwise conditioning makes it possible to avoid computation of matrix square roots when working with itrative solvers.
-Matrix square roots generally require further considerations than simply solving linear systems and are less convenient.
+Matrix square roots generally require further considerations than simply solving linear systems \cite{pleiss20} and can be less convenient.
 This means that the only additional quantities needed, beyond solution of the linear system itself, are generally log-determinant terms.
-Understanding how to efficiently compute such terms accurately is therefore a key issue to address in tackling these questions.
+Techniques for computing these terms have been proposed \cite{dong17}, and are key part in making iterative methods effective.
 
-In the partial differential equation and mathematical physics communities, iterative solvers for linear systems constructed using finite element methods achieve state-of-the-art performance for many problems.
+In the partial differential equation and mathematical physics communities, iterative solvers for linear systems constructed using finite element methods achieve state-of-the-art performance for many problems \cite{evans10,lord14}.
 Connections with stochastic partial differential equations, such as the ones explored here, offer a fruitful avenue for seeking inspiration for improving Gaussian process performance further.
 
-A key lesson from numerical analysis is that, in order to solve a linear, the most important step is often the construction of a \emph{preconditioner} to partially solve the linear system before an iterative method is used.
+A key lesson from numerical analysis is that, in order to solve a linear, the most important step is often the construction of a \emph{preconditioner} to partially solve the linear system before an iterative method is used \cite{saad03,e11,xu17}.
 There, the degree of sophistication used in constructing preconditioners is often at least as large as that used in constructing iterative solvers themselves.
 
-Multi-grid methods provide a broad framework for constructing preconditioners which achieve state-of-the-art performance for many partial differential equations. 
+Multi-grid methods provide a broad framework for constructing preconditioners which achieve state-of-the-art performance for many partial differential equations \cite{e11,xu17}. 
 In essence, such methods provide a framework for resolving long-range effects at a coarse resolution, and short-range effects at a fine resolution, improving computational efficiency in the process.
-Adapting such ideas to the Gaussian process setting is a particularly promising avenue for improvement.
+Adapting such ideas to the Gaussian process setting offers possibilities for improvement.
 
 Numerical analysis can also be a source of inspiration for improving variational inference.
 Inducing points often struggle on datasets where the overall data size is large, but the amount of data points within any given length scale ball is small.
-Multi-scale methods suggest that right kind of approximation for this regime should involve replacing long-range effects with averaged, sparsified versions thereof.
-Understanding how construct such a variational approximation is therefore also a promising avenue for future work.
+Multi-scale methods suggest that right kind of approximation for this regime should involve replacing long-range effects with averaged, sparsified versions thereof \cite{e11,xu17}.
+Understanding how construct such a variational approximation is therefore a promising avenue for future work.
 
 In total, ideas from numerical analysis provide a fruitful source of ideas for improving Gaussian processes further.
 We hope that in the coming years, these ideas come to fruition, and using Gaussian processes in most practical settings become just as easy and seamless as training neural networks on well-understood problem classes has become.
 
-\chapter{Conclusion}
-\label{ch:conclusion}
 
 \subsection*{Improved understanding of kernels on geometric spaces}
 
 The constructions presented in \Cref{ch:noneuclidean} for building non-Euclidean Gaussian process models give general formulas applicable for a wide variety of spaces.
 Many manifolds encountered in practice, particularly those used in physics and engineering, possess additional mathematical structure, which can be used to both construct new kernels and provide avenues for more efficiently computing the Matérn and squared exponential kernels studied previously.
 
-For example, on the sphere, the eigenfunctions of the Laplace--Beltrami operator are the spherical harmonics.
-The spherical harmonics, in turn, can be re-expressed in terms of the \emph{Gegenbauer polynomials}, which are a set of polynomials on $[-1,1]$ which are orthogonal with respect to a certain weight function.
+For example, the eigenfunctions of the Laplace--Beltrami operator on the sphere are the spherical harmonics \cite{chavel84}.
+The spherical harmonics, in turn, can be re-expressed in terms of the \emph{Gegenbauer polynomials}, which are a set of polynomials on $[-1,1]$ which are orthogonal with respect to a certain weight function \cite{gradshteyn14}.
 The Riemannian Matérn and squared exponential kernels can therefore be written in terms of these polynomials, and turn out to only depend on the geodesic distance between two points.
 
-This is a substantial simplification compared to the general case, and one can use it to pre-compute the kernel for various values of the geodesic distance, and interpolate the resulting values, rather than evaluate an infinite series each time the kernel needs to be computed.
+This is a substantial simplification compared to the general case, and one can use it to pre-compute the kernel for various values of the geodesic distance, and interpolate the resulting values, rather than evaluate an infinite series every time the kernel needs to be computed.
 Note that the spherical squared exponential kernel, when expressed using this simplification, is not the squared exponential of the geodesic distance: instead, it is a different, more complicated function of the geodesic distance.
 
 Similar simplifications also occur on the special orthogonal group, suggesting that there may be a general theory that describes them.
@@ -4137,14 +4138,14 @@ Simplifications may also occur due to other structures beyond symmetries.
 Lie groups are particularly important in many areas, including robotics, computer vision, physics, and many engineering disciplines.
 Due to their prominence, it therefore seems fruitful to study potential methods for computing kernels on Lie groups, provided they are equipped with a Riemannian metric compatible with the group structure.
 
-Since some Lie groups are non-compact, studying kernels on Lie groups and related spaces such as certain matrix manifolds is a promising avenue towards developing a general theory of Riemannian kernels which does not require compactness.
+Since some Lie groups are non-compact, studying kernels on these and related spaces, including certain matrix manifolds, is a promising avenue towards developing a general theory of Riemannian kernels which does not require compactness.
 Here, one would need to appeal to a more general spectral theory than that built using Sturm--Liouville decompositions.
-Generalizations are available, but they are more mathematically sophisticated, requiring additinal machinery such as integration over projection-valued measures.
+Generalizations are available, but they are more mathematically sophisticated, requiring additinal machinery such as integration over projection-valued measures \cite{lang12}.
 Exploring such generalizations is another promising avenue for further work.
 
 Finally, one can consider extending our constructions to more general spaces than manifolds, such as for example manifolds with boundary, which possess similar spectral properties.
-Spaces like this may be important in potential applications in areas like physics and engineering. 
-Studying heat kernels, which have been considered in settings as general as metric-measure spaces, gives hints about the total scope which may be possible.
+Spaces like this are often important in applications areas \cite{solin18,krainski18,solin19,coveney20}.
+Studying heat kernels, which have been considered in settings as general as metric measure spaces \cite{grigoryan03,grigoryan14}, gives hints about the total scope which may be possible.
 
 Summariaing, the constructions we have studied only begin to describe the full scope of geometry-aware kernels such as the Matérn and squared exponential class constructed using Sturm--Liouville theory and described here.
 We hope this first step leads to further substantive understanding of this class of methods.
@@ -4160,6 +4161,6 @@ We hope the ideas presented enable more people to consider using Gaussian proces
 
 
 
-\printbibliography
+\printbibliography[heading=bibintoc,title={References}]
 
 \end{document}
