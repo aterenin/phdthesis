@@ -78,15 +78,21 @@ Please seek permission from the copyright holder for uses of this work that are 
 
 \chapter*{Abstract}
 
-Bayesian learning using Gaussian processes provides a foundational platform for making decisions in a manner that balances what is known with what could be learned by gathering data. In this dissertation, we develop techniques for broadening the applicability of Gaussian processes in two ways.
+Bayesian learning using Gaussian processes provides a foundational framework for making decisions in a manner that balances what is known with what could be learned by gathering data. 
+In this dissertation, we develop techniques for broadening the applicability of Gaussian processes.
+This is done in two ways.
+
 Firstly, we develop pathwise conditioning techniques for Gaussian processes, which allow one to express posterior random functions as prior random functions plus a dependent update term.
 We introduce a wide class of efficient approximations built from this viewpoint, which can be sampled once in advance, and evaluated at arbitrary locations without any subsequent stochasticity.
-These improves efficiency and makes it simpler to deploy Gaussian process models within decision-making settings.
+These improves efficiency and makes it simpler to deploy Gaussian process models in decision-making settings.
+
 Secondly, we develop a collection of Gaussian process models over non-Euclidean spaces, including Riemannian manifolds and graphs.
 We derive fully constructive expressions for the covariance kernels of scalar-valued Gaussian processes on Riemannian manifolds and graphs.
-This enables such models to be trained using standard computational techniques well-studied in the Euclidean case.
-Using these ideas as a key building block, we describe a formalism for defining and constructing vector-valued Gaussian processes on Riemannian manifolds. 
-In total, these contributions make Gaussian processes easier to work with, and allow them to effectively used within a wider class of domains and decision-making settings.
+Building on these ideas, we describe a formalism for defining vector-valued Gaussian processes on Riemannian manifolds. 
+In total, the introduced techniques allow all of these models to be trained using standard computational methods.
+
+In total, these contributions make Gaussian processes easier to work with and allows them to be used within a wider class of domains in an effective and principled manner.
+This, in turn, makes it possible to potentially apply Gaussian processes to novel decision-making settings.
 
 \tableofcontents
 
@@ -129,7 +135,7 @@ Studying Gaussian processes is therefore a promising avenue towards improved und
 
 The goals of this dissertation are twofold: (i) to make Gaussian processes easier to work with when used within larger decision systems, and (ii) to expand the set of settings where Gaussian processes can used, enabling construction of decision systems for applications not previously considered.
 Contributions toward (i) include path-wise conditioning techniques studied in \Cref{ch:pathwise}, and contributions toward (ii) include non-Euclidean Gaussian processes studied in \Cref{ch:noneuclidean}.
-Following these, \Cref{ch:conclusion} concludes.
+Following these, \Cref{ch:discussion} concludes.
 
 To pursue these goals, it is critically important that all of the concepts described in the preceding paragraphs be made into rigorous mathematics, so that the ideas described in the sequel ultimately reduce to definitions and implications, and not metaphor or opinion.
 Together, we therefore begin by defining the key mathematical notions needed.
@@ -143,7 +149,7 @@ In \Cref{ch:pathwise}, we present pathwise conditioning techniques: this work is
 My contributions include (i) development of the random-function-based formalism for describing pathwise conditioning of Gaussian processes, (ii) error analysis of basis-function-approximation-based pathwise sampling, (iii) re-interpretation of inducing point methods, and (iv) review of prior sampling methods.
 All of these were developed jointly with the other authors. 
 
-In \Cref{ch:noneuclidean}, we present Matérn Gaussian processes in non-Euclidean settings: this work is published in \textcite{borovitskiy20,borovitskiy21} and under review in \textcite{hutchinson21,jacquier21}.
+In \Cref{ch:noneuclidean}, we present Matérn Gaussian processes in non-Euclidean settings: this work is published in \textcite{borovitskiy20,borovitskiy21,jacquier21} and under review in \textcite{hutchinson21}.
 My contributions include (i) developing of all of the differential-geometric and stochastic-partial-differential-equation-based formalisms for defining these processes, and (ii) describing computational techniques for working with these models in practice.
 All these ideas were developed jointly with the other authors.
 
@@ -1917,7 +1923,7 @@ More recently, \textcite{doucet10} describes the algorithm in a technical report
 This note contains no original material and will never be submitted anywhere for publication. However, it might be of interest to people working with [Gaussian processes] so I am making it publicly available.
 \end{quotation}
 
-Moreover, \Cref{thm:mvn-pw} is reasonably well-known in geostatistics, and has been used or described by \textcite{journel78,defouquet94,emery07,oliver96} in addition to the above.
+Additionally, \Cref{thm:mvn-pw} is reasonably well-known in geostatistics, and has been used or described by \textcite{journel78,defouquet94,emery07,oliver96} in addition to the above authors.
 In parallel, these ideas were rediscovered in the astrophysics community, with \textcite{hoffman91} describing approximations similar in spirit to the ones we study in the sequel.
 
 The present state of affairs therefore seems to be that a small set of technical experts are aware of \Cref{thm:mvn-pw} but believe it to be too trivial to write about, while practitioners working in areas such as Bayesian optimization do not know that it exists.
@@ -2090,12 +2096,8 @@ From this viewpoint, our approximate posterior is
 which shows that our proposed approximation involves writing the posterior Gaussian process of interest as a sum of \emph{two} finite sets of basis functions---one for the prior, another for the data.
 The basis coefficients $w_i$ and $v_j$ here are dependent random variables.
 We illustrate the overall approximation in \Cref{fig:gp-pw-approx}.
-
-Observe that approximate pathwise sampling involves only matrix inverses, and does not require computation of matrix square roots.
-This makes applying Gaussian-process-specific iterative schemes for solving linear settings, such as those proposed by \textcite{gardner18,pleiss18,meanti20}, particularly straightforward.
-Note, however, that training may require computation of log-determinant terms: \textcite{dong17,pleiss20} develop techniques which can be used to handle this.
-
 Summarizing, pathwise representations of posterior Gaussian processes provide a useful framework for constructing posterior approximations which are actual random functions.
+
 In Bayesian optimization, such approximations offer a promising avenue to avoid the computational difficulties that result from working with finite-dimensional marginals.
 Computing the Thompson sampling acquisition function
 \[
@@ -2113,7 +2115,6 @@ The key advantage of this approach is that once the random weights are sampled, 
 This allows us to not only evaluate it in linear time, but also to differentiate through posterior samples using automatic differentiation---here, enabling us to maximize them using gradient descent without computing gradient processes or employing special considerations of any kind.
 
 In total, we obtain a simple, accurate, and efficient way to compute acquisition functions such as Thompson sampling.
-Moreover, acquisition functions can possess properties which make them easy to optimize: see \textcite{wilson18} for details.
 To obtain a complete algorithm, all that remains is to find finite basis approximations to Gaussian process priors: this will require additional structure present in specific classes of kernels.
 We proceed to explore a number of techniques for doing so.
 
@@ -2324,7 +2325,7 @@ For the moment, however, we consider a third class of approximations.
 
 We now introduce the third class of approximations we will consider: those constructed via \emph{finite element approximations} of solutions of stochastic partial differential equations \cite{lord14,lototsky17,krainski18}.
 Many Gaussian process priors, including the widely-used Matérn class, following \textcite{whittle54,whittle63,lindgren11}, can be expressed in such a manner.
-Such Gaussian processes are also of direct interest in non-Euclidean settings considered in \Cref{ch:noneuclidean}.
+Such Gaussian processes are also of direct interest in the non-Euclidean settings considered in \Cref{ch:noneuclidean}.
 
 Let $X$ be a sufficiently well-behaved subset of a Euclidean space, or a Riemannian manifold.
 Suppose our Gaussian process $f$ satisfies the equation 
@@ -2484,11 +2485,11 @@ Better yet, the constructions above are straightforward, principled, and mathema
 In particular, we do not rely on heuristic arguments involving \emph{evidence lower bounds} which effectively require us to \emph{posit} that optimizing certain quantities will result in improved posterior approximation.
 Instead, by virtue of the Kullback--Leibler divergence generating a Hausdorff topology on the space of probability measures, this is proven.
 
-The inducing point approximation presented above is particularly interesting because the matrix $\m{K}_{\v{x}\v{x}} + \m\Lambda$ which needs to be inverted is generally better-conditioned compared to that present in other approximations, owing to the presence of $\m\Lambda$, whose learned values tend to be large.
-This makes this variational family a particularly attractive choice for use in combination with iterative solvers \cite{dong17,gardner18,pleiss18,meanti20,pleiss20}.
-
 Inducing point approximations perform well in many settings, and are particularly effective in cases involving large quantities of data that contain redundant information about the posterior.
 In certain asymptotic regimes, \textcite{burt19} have shown that the number of inducing points can be taken logaritmic in the size of the data while maintaining approximation accuracy.
+
+Among such approximations, the variational family presented above is particularly interesting because the matrix $\m{K}_{\v{x}\v{x}} + \m\Lambda$ which needs to be inverted is generally better-behaved numerically compared to matrices present in other approximations, owing to the presence of $\m\Lambda$, whose learned values tend to concentrate away from zero.
+This makes this choice particularly attractive for use in combination with iterative solvers \cite{dong17,gardner18,pleiss18,meanti20,pleiss20}: we discuss this idea, along with other avenues for future work, in \Cref{ch:discussion}.
 
 This concludes our study of inducing point methods from the pathwise perspective, which are identified with sparsified pathwise approximations where instead of a sum of $n$ kernel terms, we have a smaller sum of $m \ll n$ kernel terms.
 We now consider another class of approximations that one can consider using in practice.
@@ -2776,7 +2777,7 @@ The benefits of using a method that avoids solving arbitrarily large linear syst
 From these perspectives, our results show that already in $d=4$ the improvements are enough to make a noticeable difference in downstream tasks.
 
 
-\section{Discussion}
+\section{Conclusion}
 
 In the Gaussian case, the distributional notion of \emph{conditioning} can be re-formualted using random variables, yielding a notion of \emph{pathwise conditioning}.
 In the preceding sections, we developed and studied this point of view for Gaussian processes, allowing us to express a posterior Gaussian process as the sum of a \emph{prior term}, and a \emph{data-dependent term}.
@@ -3991,8 +3992,7 @@ Results can be seen in \Cref{fig:gabo}.
 For manifolds embedded within Euclidean space, geometry-aware Bayesian optimization can be viewed as a form of Bayesian optimization with enforced constraints that require evaluations to lie on the embedded submanifold.
 Techniques such as the ones we have developed are therefore a promising tool for introducing geometric constraints into Bayesian optimization, potentially enabling new applications.
 
-\section{Discussion}
-\label{sec:noneuclidean-discussion}
+\section{Conclusion}
 
 In the preceding section, we have developed three key classes of \emph{non-Euclidean Gaussian process} models: the \emph{Riemannian Matérn} and \emph{graph Matérn} classes of scalar-valued Gaussian processes, and the \emph{projected kernel} class of vector-valued Gaussian processes on Riemannian manifolds.
 Each of these provides a unifying view of previously-proposed methods, and expands Gaussian processes models' scope of applicability.
@@ -4030,16 +4030,135 @@ We hope that techniques such as the ones presented here proivde a foundation upo
 We therefore conclude our presentation of contributions, and move to discuss the state and overall picture of Gaussian processes and decision systems that we have studied.
 
 
+\chapter{Discussion}
+\label{ch:discussion}
+
+\lettrine{B}{ayesian learning} with Gaussian process models offers a clear and comprehensive framework for making decisions that assess and propagate uncertainty in order to resolve explore-exploit tradeoffs inherent in decision-making settings.
+In this dissertation, we explored two avenues for broadening applicability of Gaussian process models in such settings.
+
+In \Cref{ch:pathwise}, we presented pathwise conditioning methods.
+These methods allow a posterior Gaussian process, as an actual random function, to be expressed as a sum of a prior Gaussian process and a dependent update term.
+Pathwise conditioning gives rise to Gaussian process approximations for which all stochasticity can be evaluated in advance, which makes it substantially easier for upstream algorithms to interface with the Gaussian process.
+
+In \Cref{ch:noneuclidean}, we presented a collection of techniques for working with Gaussian process models defined on non-Euclidean spaces, including Riemannian manifolds and graphs. 
+For such models, we derived constructive and practical expressions which enable such models to be trained using standard methods.
+For the Riemannian setting, we did so for both scalar-valued and vector-valued processes.
+
+For both pathwise conditioning and non-Euclidean Gaussian process models, the end result of our constructions was the ability to perform Bayesian optimization in a flexible and effective manner tailored to the setting at hand.
+This allowed us to benchmark our ideas in one of the simplest, but most important, classes of decision systems.
+
+\section{Future work}
+
+One end goal of Gaussian process research is the design of decision making systems which simply work in the settings where they apply, without the usual tuning or numerical difficulties, and fail gracefully in settings where they do not apply.
+The ideas presented naturally lead to a number of further research directions towards this goal, which we briefly comment on now.
+
+\subsection*{Decision systems beyond optimization}
+
+Perhaps the most promising research direction made possible by pathwise conditioning methods is the design of data-efficient decision systems for tasks beyond optimization.
+\textcite{neiswanger21} propose \emph{Bayesian algorithm execution}, a framework which generalizes Bayesian optimization by allowing for the task to be defined by using a general \emph{underlying algorithm} in place of optimization.
+
+For this, \textcite{neiswanger21} further propose \emph{InfoBAX}, an information-theoretic acquisition function constructed directly from the algorithm being considered.
+This enables the introduction of \emph{Bayesian Dijkstra's algorithm} for finding shortest paths in a graph in a data-efficient manner, and other novel decision systems.
+
+Pathwise conditioning methods play a key role in computing the InfoBAX acquisition function.
+Specifically, one runs the underlying algorithm on posterior random functions, producing a set of \emph{execution traces} of points queried by the algorithm.
+InfoBAX is then constructed from the execution trace and output via a set of information-theoretic calculations.
+Approximate pathwise conditiong makes it possible to compute the required execution traces in an efficient, accurate, and convenient manner.
+
+Gaussian processes have not yet been widely considered for tasks not conveniently expressed as maximization of rewards.
+Bayesian algorithm execution enables such methods to be considered for settings beyond Bayesian optimization and model-based reinforcement learning. 
+Developing this framework to the same degree of detail afforded to those cases is therefore a particularly promising research direction.
+
+From a theoretical point of view, one of the first questions to be addressed in understanding Bayesian algorothm execution is to understand what is the appropriate notion of \emph{regret} for this setting.
+Given there are a number of variations of regret, used for proving different kinds of bounds, it is not immediately clear what this should be.
+Developing techniques for studying regret in this very general setting is a promising first step.
+
+In parallel, it seems fruitful to look for applications where more general data-efficient decision systems beyond optimization are potentially useful, and yet where Gaussian process models are viable. 
+Multi-objective Bayesian optimization, where the goal is finding a Pareto frontier, rather than obtaining a global minima, gives one concrete algorithm class to consider when looking for such applications.
+
+From the Bayesian algorithm execution framework alone, we see that pathwise conditioning methods enable potential new avenues for constructing decision systems and therefore growing the applicability and scope of Gaussian process methods within machine learning.
+We hope that, in the coming years, more of these avenues are explored, enabling Gaussian processes to have larger role in the machine learning toolbox.
+
+
+\subsection*{Connections to numerical analysis}
+
+Another promising direction is exploring the connections between Gaussian processes and numerical analysis.
+Here, one can study use of iterative solvers, such as the conjugate gradient method, in combination with pathwise conditioning and inducing points.
+Iterative solvers are promising because they can in principle tackle larger linear systems for which Cholesky factorization simply fails, provided they are set up correctly.
+
+The computational costs of an iterative solver depend on how many iterations are required for convergence.
+This, in turn, varies according to the condition number of the linear system being solved.
+Variational approximations such as the inducing point construction presented in \Cref{ch:pathwise} make it possible to work with linear systems that are substantially better-conditioned than those in the true posterior, due to additional terms added to the diagonal.
+Exploring such combinations is a promising route for improving performance.
+
+Pathwise conditioning makes it possible to avoid computation of matrix square roots when working with itrative solvers.
+Matrix square roots generally require further considerations than simply solving linear systems and are less convenient.
+This means that the only additional quantities needed, beyond solution of the linear system itself, are generally log-determinant terms.
+Understanding how to efficiently compute such terms accurately is therefore a key issue to address in tackling these questions.
+
+In the partial differential equation and mathematical physics communities, iterative solvers for linear systems constructed using finite element methods achieve state-of-the-art performance for many problems.
+Connections with stochastic partial differential equations, such as the ones explored here, offer a fruitful avenue for seeking inspiration for improving Gaussian process performance further.
+
+A key lesson from numerical analysis is that, in order to solve a linear, the most important step is often the construction of a \emph{preconditioner} to partially solve the linear system before an iterative method is used.
+There, the degree of sophistication used in constructing preconditioners is often at least as large as that used in constructing iterative solvers themselves.
+
+Multi-grid methods provide a broad framework for constructing preconditioners which achieve state-of-the-art performance for many partial differential equations. 
+In essence, such methods provide a framework for resolving long-range effects at a coarse resolution, and short-range effects at a fine resolution, improving computational efficiency in the process.
+Adapting such ideas to the Gaussian process setting is a particularly promising avenue for improvement.
+
+Numerical analysis can also be a source of inspiration for improving variational inference.
+Inducing points often struggle on datasets where the overall data size is large, but the amount of data points within any given length scale ball is small.
+Multi-scale methods suggest that right kind of approximation for this regime should involve replacing long-range effects with averaged, sparsified versions thereof.
+Understanding how construct such a variational approximation is therefore also a promising avenue for future work.
+
+In total, ideas from numerical analysis provide a fruitful source of ideas for improving Gaussian processes further.
+We hope that in the coming years, these ideas come to fruition, and using Gaussian processes in most practical settings become just as easy and seamless as training neural networks on well-understood problem classes has become.
+
 \chapter{Conclusion}
 \label{ch:conclusion}
 
-Future work: pathwise with iterative solvers
+\subsection*{Improved understanding of kernels on geometric spaces}
 
-Future work: infoBAX
+The constructions presented in \Cref{ch:noneuclidean} for building non-Euclidean Gaussian process models give general formulas applicable for a wide variety of spaces.
+Many manifolds encountered in practice, particularly those used in physics and engineering, possess additional mathematical structure, which can be used to both construct new kernels and provide avenues for more efficiently computing the Matérn and squared exponential kernels studied previously.
 
-Future work: geometric kernels on more spaces
+For example, on the sphere, the eigenfunctions of the Laplace--Beltrami operator are the spherical harmonics.
+The spherical harmonics, in turn, can be re-expressed in terms of the \emph{Gegenbauer polynomials}, which are a set of polynomials on $[-1,1]$ which are orthogonal with respect to a certain weight function.
+The Riemannian Matérn and squared exponential kernels can therefore be written in terms of these polynomials, and turn out to only depend on the geodesic distance between two points.
 
-Future work: applications of geometric methods
+This is a substantial simplification compared to the general case, and one can use it to pre-compute the kernel for various values of the geodesic distance, and interpolate the resulting values, rather than evaluate an infinite series each time the kernel needs to be computed.
+Note that the spherical squared exponential kernel, when expressed using this simplification, is not the squared exponential of the geodesic distance: instead, it is a different, more complicated function of the geodesic distance.
+
+Similar simplifications also occur on the special orthogonal group, suggesting that there may be a general theory that describes them.
+Finding such a theory is a promising direction for future work.
+To do so, the first step would be to understand how symmetries of a manifold affect kernels defined over it via spectral methods similar to the ones we have used.
+
+Simplifications may also occur due to other structures beyond symmetries.
+Lie groups are particularly important in many areas, including robotics, computer vision, physics, and many engineering disciplines.
+Due to their prominence, it therefore seems fruitful to study potential methods for computing kernels on Lie groups, provided they are equipped with a Riemannian metric compatible with the group structure.
+
+Since some Lie groups are non-compact, studying kernels on Lie groups and related spaces such as certain matrix manifolds is a promising avenue towards developing a general theory of Riemannian kernels which does not require compactness.
+Here, one would need to appeal to a more general spectral theory than that built using Sturm--Liouville decompositions.
+Generalizations are available, but they are more mathematically sophisticated, requiring additinal machinery such as integration over projection-valued measures.
+Exploring such generalizations is another promising avenue for further work.
+
+Finally, one can consider extending our constructions to more general spaces than manifolds, such as for example manifolds with boundary, which possess similar spectral properties.
+Spaces like this may be important in potential applications in areas like physics and engineering. 
+Studying heat kernels, which have been considered in settings as general as metric-measure spaces, gives hints about the total scope which may be possible.
+
+Summariaing, the constructions we have studied only begin to describe the full scope of geometry-aware kernels such as the Matérn and squared exponential class constructed using Sturm--Liouville theory and described here.
+We hope this first step leads to further substantive understanding of this class of methods.
+
+\section{Conclusion}
+
+The contributions presented in this thesis expand the set of settings where Gaussian processes can be used.
+In particular, pathwise conditioning methods reduce the barriers needed to deploy Gaussian process models once they have been trained, and make it easier to obtain posterior quantities of interest for the setting at hand.
+Simultaneously, the obtained kernel expressions for non-Euclidean Gaussian processes enable these models to be trained using off-the-shelf methods in a standard manner.
+
+Overall, these ideas reduce the barriers that need to be overcome in order for practitioners to use Gaussian processes in day-to-day work.
+We hope the ideas presented enable more people to consider using Gaussian process models as part of their workflow, and bring decision-making systems such as Bayesian optimization to new areas of science, technology, and engineering.
+
+
 
 \printbibliography
 
