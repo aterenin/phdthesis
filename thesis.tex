@@ -2749,7 +2749,7 @@ To understand the effect of posterior approximation, we examine both basis-funct
 For the pathwise approximate posterior, this is the sum of both the number of basis functions used for the prior with the number of canonical basis functions---this choice helps avoid unfairly penalizing the random fourier Feature model.
 We use random-phase-based Fourier features in both approximate posteriors.
 
-Results can be seen in \Cref{fig:parallel-ts}, where we plot regret curves 
+Results can be seen in \Cref{fig:parallel-ts}, where we plot median regret curves, along with first and third quartiles.
 Immediately, we see that the effect of the strategy used for computing the acqusition function varies according to dimension.
 
 In the two-dimensional setting, all Gaussian process methods perform comparably, outperforming the random search and dividing rectangles baselines.
@@ -3952,45 +3952,69 @@ We now study the role that geometry plays when working with decision systems bui
 To do so, we perform Bayesian optimization of standard benchmark functions on Riemannian manifolds using the Riemannian Matérn and squared exponential Gaussian processes with the numerical techniques developed herein.
 Following \textcite{jaquier20}, we call this setting \emph{geometry-aware Bayesian optimization}.
 
-We work with three manifolds, namely the spheres $\bb{S}^3$ and $\bb{S}^5$, and the special orthogonal group $SO(3)$.
-We view each of these as embedded within a $d'$-dimensional Euclidean space in the natural manner.
-We use three target functions commonly used as benchmark functions for global optimization, namely the \emph{Ackley} \cite{ackley87}, \emph{Rosenbrock} \cite{rosenbrock60}, and \emph{Levy} \cite{levy82} functions.
-In the ambient Euclidean space, these are defined as 
-\[
-f_{\f{A}}(x_1,..,x_{d'}) &= -20\exp\del{-0.2\sqrt{\frac{1}{d'} \sum_{i=1}^d x_i^2}} 
+\begin{figure}
+\vspace*{10ex}
+[TODO]
+\vspace*{10ex}
+\caption{Global optimization benchmark functions used in the geometry-aware Bayesian optimization experiments. All three are defined and shown on an ambient Euclidean space with dimension two.}
+\label{fig:benchmark-functions}
+\end{figure}
+
+We consider three manifolds: the spheres $\bb{S}^3$ and $\bb{S}^5$, and the special orthogonal group $SO(3)$, each embedded within a Euclidean space in the natural manner.
+We use three target functions commonly used as benchmarks in global optimization: the \emph{Ackley} \cite{ackley87}, \emph{Levy} \cite{levy82}, and \emph{Rosenbrock} \cite{rosenbrock60} functions.\footnote{The Ackley, Levy, and Rosenbrock benchmark functions, respectively, are given as
+{\setlength{\tabcolsep}{0.25ex}\begin{tabular}{r c l}
+$f_{\f{A}}(x_1,..,x_d)$ & $=$ & $20-20\exp(-0.2 (\frac{1}d \sum_{i=1}^d x_i^2)^{1/2}) - \exp(\frac{1}d \sum_{i=1}^d \cos(2\pi x_i)) + e$
 \\
-&\qquad - \exp\del{\frac{1}{d'} \sum_{i=1}^{d'} \cos(2\pi x_i)} + 20 + e
+$f_{\f{L}}(x_1,..,x_d)$ & $=$ & \makebox[10.375cm][s]{$\sin(\pi w_i)^2 + \sum_{i=1}^{d-1} (w_i - 1)^2 (1 + 10\sin(\pi w_i + 1)^2) + (w_d - 1)^2 (1 + \sin(2\pi w_d)^2)$}
 \\
-f_{\f{R}}(x_1,..,x_{d'}) &= \sum_{i=1}^{d'-1} 100(x_{i+1} - x_i^2)^2 + (x_i - 1)^2
-\\
-f_{\f{L}}(x_1,..,x_{d'}) &= \sin(\pi w_i)^2 + \sum_{i=1}^{d-1} (w_i - 1)^2 (1 + 10\sin(\pi w_i + 1)^2) 
-\\
-&\qquad + (w_d - 1)^2 (1 + \sin^2(2\pi w_d))
-\]
-where $w_i = 1 + \frac{x_i - 1}{4}$, $-32 \leq x_i \leq 32$ for $f_{\f{A}}$, $-5 \leq x_i \leq 10$ for $f_{\f{R}}$, and $-10 \leq x_i \leq 10$ for $f_{\f{L}}$.
-The target function we seek to optimize is the restriction of each of these functions onto the desired manifold.
+$f_{\f{R}}(x_1,..,x_d)$ & $=$ & $\sum_{i=1}^{d-1} 100(x_{i+1} - x_i^2)^2 + (x_i - 1)^2$
+\end{tabular}\newline}
+where $w_i = 1 + \frac{x_i - 1}{4}$ and $d$ is the dimension of the space on which the functions are defined.}
+These are defined in the ambient Euclidean spaces: the target functions we optimize are the restrictions of the functions onto the manifold of interest.
+\Cref{fig:benchmark-functions} plots these benchmark functions for a Euclidean space of dimension two.
+
+
+
 
 \begin{figure*}[p!]
-\vspace*{40ex}
-[GaBO comparison]
-\vspace*{40ex}
-\caption{Geometry-aware Bayesian optimization comparison.}
+\input{figures/tex/gabo.tex}
+\caption{Geometry-aware Bayesian optimization benchmark results.}
 \label{fig:gabo}
 \end{figure*}
 
-
-For each manifold, we use two priors: Matérn with smoothness $\nu = 5/2$ and squared exponential, as well as a Gaussian likelihood.
+For each manifold, we use two priors: Matérn with smoothness $\nu = 5/2$ and squared exponential, both with a Gaussian likelihood.
 The remaining kernel hyperparameters and likelihood error variance are learned from observed data via gradient descent.
-We run for a total of $n=256$ iterations, and repeat each experiment $32$ times to assess variability.
+We use expected improvement for our acquisition function, computed directly from the kernel.
+We run for a total of $n=200$ iterations, and repeat each experiment $30$ times to assess variability.
 
-For the acquisition function, we use expected improvement, which was previously defined in \Cref{sec:bayesian-optimization}.
-Since this acquisition function can be computed from the Gaussian process directly, we work only with the kernel and do not rely on pathwise sampling.
-
+To establish a performance baseline, we compare against Bayesian optimization in ambient Euclidean space.
+Here, the acquisition point is selected by performing constrained optimization on the acquisition function, ensuring that points selected for evaluation are located on that manifold.
 
 Results can be seen in \Cref{fig:gabo}.
+We plot median regret curves, along with first and third quartiles.
+From this, we see that the performance of geometry-aware Bayesian optimization depends on interplay between the manifold and the overall shape of the function being optimized. 
 
-For manifolds embedded within Euclidean space, geometry-aware Bayesian optimization can be viewed as a form of Bayesian optimization with enforced constraints that require evaluations to lie on the embedded submanifold.
-Techniques such as the ones we have developed are therefore a promising tool for introducing geometric constraints into Bayesian optimization, potentially enabling new applications.
+For the $3$-dimensional sphere, all techniques produce comparable regret curves.
+This shows working with geometry-aware models and acquisition optimization, compared to constrained acquisition optimization on Euclidean models defined in ambient spaces, offers less benefit in cases where the ambient space is not too different from the manifold.
+The performance of Matérn and squared exponential models, in this case, is similar.
+
+For the $5$-dimensional sphere, the role of geometry becomes more pronounced.
+For the Ackley and Levy functions, we see a clear improvement from using geometry-aware methods.
+For the Rosenbrock function, which possesses less local variability, performance of all methods remains similar.
+For all three target functions, Matérn and squared exponential models perform similarly.
+
+On the $3$-dimensional special orthogonal group, geometry-aware models perform similarly to models defined on the ambient Euclidean spaces for all three benchmark functions.
+On the other hand, here, Matérn models outperform squared exponential models. 
+Therefore, we see that the effect of kernel smoothness on performance of Bayesian optimization may depend on the geometry of the manifold, as well as the target function.
+
+Overall, the results show that Riemannian models perform comparably to Euclidean ones in some cases, and outperform them in others.
+The effect varies according to the interplay between the target function being optimized and the manifold's geometry.
+We also see that slightly less smooth Matérn Gaussian processes perform comparably to squared exponential Gaussian processes in some cases, and outperform them in others.
+
+Bayesian optimization is often used in settings where function evaluations are extremely expensive, and therefore even the relatively modest performance gains seen here can be consequential.
+In such cases, taking advantage of constraints, symmetries, and other geometric properties is a promising route towards improved performance.
+Geometry-aware Bayesian optimization offers a principled framework for doing so.
+
 
 \section{Conclusion}
 
