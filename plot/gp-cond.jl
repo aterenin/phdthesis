@@ -1,4 +1,4 @@
-using PGFPlotsX; @eval(PGFPlotsX, _OLD_LUALATEX = true); push!(PGFPlotsX.CLASS_OPTIONS, "11pt")
+include("plot.jl")
 using Colors
 using Distributions
 using Random

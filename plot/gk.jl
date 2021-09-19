@@ -10,8 +10,8 @@ for graph_name in ("comp","star","reg","ba")
     @pgf Axis(
             {
                 axis_lines = "none",
-                height = "5cm",
-                width = "6.5cm",
+                height = "4cm",
+                width = "5.5cm",
                 xmin=-1.0625, xmax=1.0625, ymin=-1.0625, ymax=1.0625,
             },
             [raw"\node at (-1.0625,-1.0625) {};"],

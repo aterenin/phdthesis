@@ -54,7 +54,7 @@ for (dist,name) in ((MvNormal(m, [1. 0.6; 0.6 1]),"mvn-pos"),(joint,"mvn-neg"),(
     @pgf [raw"\tikzexternaldisable",
         TikzFadingFromPicture(
             {
-                name = "densityfade"
+                name = "fade-$name"
             },
             Axis(
                 {
@@ -97,7 +97,7 @@ for (dist,name) in ((MvNormal(m, [1. 0.6; 0.6 1]),"mvn-pos"),(joint,"mvn-neg"),(
                 y_cond
             ) else [] end,
             [raw"\fill", {
-                path_fading = "densityfade",
+                path_fading = "fade-$name",
                 fill = colorant"#1f77b4",
                 fit_fading = true,
             }, raw"(-3,-3) rectangle (3,3);"],

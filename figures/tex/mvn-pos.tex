@@ -1,5 +1,6 @@
 \documentclass[tikz,11pt]{standalone}
 \usepackage{lmodern}
+\usepackage{amssymb}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.17}
 \usepgfplotslibrary{external}
@@ -9,7 +10,7 @@
 \begin{document}
 \tikzsetnextfilename{mvn-pos}
 \tikzexternaldisable
-\begin{tikzfadingfrompicture}[name={densityfade}]
+\begin{tikzfadingfrompicture}[name={fade-mvn-pos}]
     \begin{axis}[axis lines={none}, height={3.375cm}, width={3.375cm}, xmin={-3}, xmax={3}, ymin={-3}, ymax={3}]
         \addplot[patch, patch type={rectangle}, point meta={\thisrow{c}}, shader={interp}, colormap={{blackwhite}{gray(0cm)=(0); gray(1cm)=(0.75)}}]
             table[row sep={\\}]
@@ -2331,7 +2332,7 @@
     \node at (3,3) {};
     \node at (3,-3) {};
     \fill
-    [path fading={densityfade}, fill={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, fit fading={true}] (-3,-3) rectangle (3,3);
+    [path fading={fade-mvn-pos}, fill={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, fit fading={true}] (-3,-3) rectangle (3,3);
     \draw
     [draw={none}, fill={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, fill opacity={0.5}] (0,0) circle (1.6pt);
     \addplot[no markers, smooth, ultra thick, color={rgb,1:red,0.1216;green,0.4667;blue,0.7059}, opacity={0.5}]
