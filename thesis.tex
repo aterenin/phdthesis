@@ -886,8 +886,8 @@ f^+_t(x) &= \mu_t(x) + c_t\sigma_t(x)
 where $\mu_t$ are the empirical means, $\sigma_t(x) = \sqrt{\frac{1}{n_t(x)}}$, and $c_t = \sqrt{2\ln(T)}$.
 \end{definition}
 
-Many algorithms within the upper confidence bound class have been proposed \cite{lai85,agrawal95,auer02}: we focus on the variant analyzed by \textcite{auer02}.
-We study this algorithm's regret, and present a simplified but less sharp analysis compared to the one given in that work.
+Many algorithms within the upper confidence bound class have been proposed \cite{lai85,agrawal95,auer02}: we focus on the variant analyzed by \textcite{auer02}, but illustrate an alternative in \Cref{fig:bb-ucb}.
+We study the Hoeffding-based algorithm's regret, and present a simplified but less sharp analysis compared to the one given in that work.
 It turns out the simple modification, of adding a set of error bars with a threshold growing in time and decreasing with data size is enough to result in favorable regret behavior.
 
 \begin{theorem}
@@ -1131,7 +1131,7 @@ This level of generality will be important for two reasons: (i) to provide a for
 In what follows, our goal will be to lay the groundwork for subsequent development.
 Thus, we will not discuss Bayesian learning with Gaussian processes, which will instead be presented in \Cref{ch:pathwise}.
 We use \textcite{lifshits12} as our standard reference.
-We begin with the scalar case, before generalizing to other settings.
+We first study the scalar case, before generalizing to other settings.
 
 \subsection{Review of vector spaces}
 Since Gaussian processes are closely connected to vector spaces and related mathematical structures, here we review ideas from functional analysis that are useful in understanding them.
@@ -2997,7 +2997,7 @@ which converges unconditionally in $L^2(X)$ for all $f \in D(\lap_g)$.
 \end{result}
 
 \begin{proof}
-\textcite[139]{chavel84}.
+\textcite[139]{chavel84}, or \textcite[Theorem 44]{canzani13}.
 \end{proof}
 
 This is a powerful result: the eigenfunctions $f_n$, shown in \Cref{fig:eig-s1-t2,fig:eig-s2-dr}, can be viewed as analogs of the Fourier basis adapted to the manifold's geometry.
@@ -3526,7 +3526,7 @@ Alternatively, Krylov subspace methods for sparse linear systems can be applied,
 \input{figures/tex/gk-ba.tex}
 \caption{Barabási--Albert random graph}
 \end{subfigure}
-\caption{Here, we show the prior variance of a graph Gaussian process at each node for a number of different graphs. Variances for each graphs are plotted using a common scale. In general, this prior variance is non-uniform and instead reflects the structure of the graph.}
+\caption{Here, we show the prior variance of a graph Gaussian process at each node for a number of different graphs. Variances for all graphs are plotted using a common scale. In general, this prior variance is non-uniform and instead reflects the structure of the graph.}
 \label{fig:graph-variance}
 \end{figure}
 
@@ -3656,7 +3656,7 @@ This requirement is very intuitive: it says that for any point $x$, the tangent 
 Vector fields on manifolds exhibit certain mathematical behaviors not present in the Euclidean case---we illustrate one of the most important kinds below.
 
 \begin{result}[Hairy Ball Theorem]
-There does not exist a nowhere-vanishing smooth section on any even-dimensional sphere of dimension is at least two.
+There does not exist a nowhere-vanishing continuous section on any even-dimensional sphere of dimension is at least two.
 \end{result}
 
 \begin{proof}
@@ -3684,10 +3684,10 @@ We proceed as follows.
 
 \begin{figure}
 \vspace*{10ex}
-[Frame 3D Visual]
+[Vector Field 3D Visual]
 \vspace*{10ex}
-\caption{A vector field can be represented by specifying its values in any frame. Here, we illustrate the same vector field on the sphere represented using two different frames.}
-\label{fig:frame}
+\caption{Three samples from a Gaussian vector field. Each of these samples, by virtue of being a continuous vector field on a two-dimensional sphere, automatically contains at least one location whose value is zero.}
+\label{fig:gvf}
 \end{figure}
 
 \begin{definition}[Gaussian vector field]
@@ -3716,6 +3716,7 @@ Since Gaussianity is preserved by linearity, every set of finite-dimensional mar
 \end{proof}
 
 This confirms that out definition of a vector-valued Gaussian process is the right one: if we embed the manifold in a Euclidean space, we obtain the correct kind of stochastic process.
+We show random samples from a Gaussian vector field, constructed using the technique presented in the sequel, in \Cref{fig:gvf}.
 
 As before, the mean of such a process will simply be a given vector field.
 The next step is to determine what is an appropriate notion of a \emph{kernel}.
@@ -3826,6 +3827,14 @@ Define a \emph{frame} $F$ to be a collection of not necessarily smooth sections 
 Given a frame, define the \emph{coframe} $F^*$ to be the collection of sections $e^i : X \-> T^* X$ defined pointwise using the dual basis with respect to $F$.
 \end{definition}
 
+\begin{figure}
+\vspace*{10ex}
+[Frame 3D Visual]
+\vspace*{10ex}
+\caption{A vector field can be represented by specifying its values in any frame. Here, we illustrate the same vector field on the sphere represented using two different frames.}
+\label{fig:frame}
+\end{figure}
+
 The key words in the above definition are \emph{not necessarily smooth}: recall again that for many manifolds, choosing a frame which varies smoothly in space is impossible---a single component of such a frame would yield a non-vanishing vector field, and such a vector field might not exist.
 An example of a vector field represented in two different frames can be seen in \Cref{fig:frame}.
 We can use this to calculate the coordinate expression of a cross-covariance kernel with respect to a frame.
@@ -3922,29 +3931,41 @@ In particular, our constructions are automatically compatible with standard trai
 
 \begin{figure}
 \vspace*{10ex}
-[Posterior Vector Field 3D Visual]
+[TODO]
 \vspace*{10ex}
-\caption{Posterior mean and trace of posterior cross-covariance for a projected Gaussian vector field constructed using three independent Matérn-3/2 Gaussian processes on the sphere. Training locations are shown in white. We observe that uncertainty increases as we move away from the training locations.}
+\caption{Posterior mean and trace of the posterior cross-covariance for a projected Gaussian vector field constructed using three independent Matérn-3/2 Gaussian processes on the sphere. Training data is shown in gray. The Gaussian process is seen to oversmooth data in locations with large jumps, such as near the easterly trade wind deviations in the center. We also observe that uncertainty increases as we move away from the training locations.}
 \label{fig:posterior-vector-field}
 \end{figure}
-
 We now explore training Gaussian vector fields on Riemannian manifolds on observed data. 
 Our goal is to demonstrate that the developed techniques are, in total, sufficiently explicit so as to enable Gaussian vector fields to be trained using standard methods without the need for any additional machinery.
 
 We work with the sphere.
-For training data, we consider interpolations of wind velocity data.
+For training data, we consider interpolations of wind velocity data, chosen because it is freely and readily available.
 Specifically, we consider interpolation of wind velocity deviations from historical average, at a fixed height, using wind velocity data directly observed by a satellite.
 For the prior, we use a Gaussian vector field model constructed using a projected kernel whose components are independent Matérn-3/2 scalar-valued Gaussian processes on the sphere.
 
 We train the Gaussian process using exactly the same procedure as that used in the preceding sections: by optimizing kernel hyperparameters using gradient descent, and computing the value of the vector field at all locations using pathwise sampling.
 All computations are performed in a with respect to a fixed frame defined by the latitude-longitude coordinate system.
 
-Results can be seen in \Cref{fig:posterior-vector-field}.
-We observe that for the vector field shown, posterior uncertainty increases as we move away from locations where training data is available.
-We also observe that the trained Gaussian process model is smooth, even though the choice of frame is non-smooth at the top of the sphere---one of our key motivations behind developing the theory for working with vector fields in a geometrically-sound way in the first place.
+Results are shown in \Cref{fig:posterior-vector-field}.
+Immediately, we see that this dataset exhibits behavior not suitable for the chosen model.
+Specifically: in some regions, the data exhibits large jumps, while in other regions, it is very smooth over large distances.
+This means the effective length scale governing variability is spatially non-uniform, which requires a more sophisticated model, such as one with a spatially varying length scale, to effectively capture.
+The chosen Gaussian process model responds to this by overinterpolating the data and reverting to the overall mean in regions with rapidly changing wind velocity.
+While this is not ideal from a modeling perspective, it is at least a relatively graceful failure mode, compared to numerical instability or incorrect results in other regions where rapid shifts do not occur.
+Effects such as these are closely linked to non-linear behavior in the differential equations governing weather phenomena, and generally require special consideration.
 
-While the model used here is, as in the preceding section, not at all realistic owing to the fact that it does not incorporate time or any kind of physical information into its design, we believe that it nonetheless serves as a demonstration that constructing vector-valued Gaussian processes using the ideas developed is practical.
-We hope this motivates further development to apply such models more broadly, both for the sphere and for other manifolds.
+On the other hand, we observe that the trained Gaussian process model is smooth, even though the choice of frame is non-smooth at the top of the sphere---a key motivation behind developing the theory for working with vector fields in a geometrically-sound way in the first place.
+Similarly, we see that, posterior uncertainty increases as we move away from locations where training data is available.
+This shows that the model correctly incorporates geometry and behaves in a manner mirroring its scalar-valued analogs.
+
+One notable characteristic of the obtained posterior vector field is that the covariance of the output vectors at any given point is close to isotropic.
+This can be seen from the ellipsoids in \Cref{fig:posterior-vector-field}, which appear circular, though they are clearly elliptical from numerical examination.
+This behavior appears to be a feature of the data locations chosen in this particular example, which lie approximately on a great circle, and does not necessarily occur in general.
+
+The model used is also not realistic in other ways, beyond its use of a single global length scale: in particular, it does not incorporate time or any kind of physical information into its design.
+Nonetheless, we believe that it serves as a useful demonstration that constructing vector-valued Gaussian processes using the ideas developed is practical.
+We hope this motivates further development to apply such models and extensions thereof more broadly, both for the sphere and for other manifolds.
 
 \section{Geometry-aware Bayesian optimization}
 
@@ -3970,11 +3991,8 @@ $f_{\f{L}}(x_1,..,x_d)$ & $=$ & \makebox[10.375cm][s]{$\sin(\pi w_i)^2 + \sum_{i
 $f_{\f{R}}(x_1,..,x_d)$ & $=$ & $\sum_{i=1}^{d-1} 100(x_{i+1} - x_i^2)^2 + (x_i - 1)^2$
 \end{tabular}\newline}
 where $w_i = 1 + \frac{x_i - 1}{4}$ and $d$ is the dimension of the space on which the functions are defined.}
-These are defined in the ambient Euclidean spaces: the target functions we optimize are the restrictions of the functions onto the manifold of interest.
-\Cref{fig:benchmark-functions} plots these benchmark functions for a Euclidean space of dimension two.
-
-
-
+These are defined in the ambient spaces: we optimize their restrictions onto the manifold of interest, centered to ensure the minima is on the manifold.
+\Cref{fig:benchmark-functions} plots these benchmark functions for a Euclidean space.
 
 \begin{figure*}[p!]
 \input{figures/tex/gabo.tex}
@@ -4147,7 +4165,7 @@ We hope that in the coming years, these ideas come to fruition, and using Gaussi
 The constructions presented in \Cref{ch:noneuclidean} for building non-Euclidean Gaussian process models give general formulas applicable for a wide variety of spaces.
 Many manifolds encountered in practice, particularly those used in physics and engineering, possess additional mathematical structure, which can be used to both construct new kernels and provide avenues for more efficiently computing the Matérn and squared exponential kernels studied previously.
 
-For example, the eigenfunctions of the Laplace--Beltrami operator on the sphere are the spherical harmonics \cite{chavel84}.
+For example, the eigenfunctions of the Laplace--Beltrami operator on the sphere are the spherical harmonics \cite{chavel84,canzani13}.
 The spherical harmonics, in turn, can be re-expressed in terms of the \emph{Gegenbauer polynomials}, which are a set of polynomials on $[-1,1]$ which are orthogonal with respect to a certain weight function \cite{gradshteyn14}.
 The Riemannian Matérn and squared exponential kernels can therefore be written in terms of these polynomials, and turn out to only depend on the geodesic distance between two points.
 
