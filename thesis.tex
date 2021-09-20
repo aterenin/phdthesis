@@ -310,7 +310,14 @@ The key result is given as follows.
 \input{figures/tex/bayes.tex}
 \end{subfigure}
 \begin{subfigure}{0.44\textwidth}
-[Bayes' Rule Visual]
+\tikzset{external/export next=false}
+\begin{tikzpicture}
+\begin{axis}[axis lines={none}, height={7.5cm}, axis equal, view={{310}{22.5}}, xmin={-0.6}, xmax={1.75}, ymin={-1.75}, ymax={1.75}, zmin={0}, zmax={1}]
+\node at (0,0.03,0.31) {\includegraphics[scale=0.25]{figures/png/bayes.png}};
+\addplot3[no markers, domain={-1.75:1.75}, smooth, samples={32}, samples y={0}, thick, color={black}, opacity={0}] ({-0.5},{x},{0.9 * exp(-x^2) * exp(-(x + 0.5)^2)});
+\addplot3[no markers, very thick, color={black}, line cap={round}, dashed] coordinates {(-0.5,-1.75,0) (-0.5,1.75,0)};
+\end{axis}
+\end{tikzpicture}
 \end{subfigure}
 \caption{Here, we illustrate a Bayesian model. For all possible values of the quantity of interest, the likelihood describes the respective distribution of the data, shown on the left. This is combined with the prior, also shown on the left, to form a joint distribution, shown on the right. From this, the posterior distribution, also shown on the right, is obtained by conditioning. Note that the two plots are shown not to scale, and that the joint and posterior live on different spaces, hence are normalized differently.}
 \label{fig:bayes-rule}
@@ -1274,9 +1281,14 @@ A random variable $\v{y} : \Omega\->\R^d$ is called \emph{multivariate Gaussian}
 
 
 \begin{figure}
-\vspace*{10ex}
-[Multivariate Gaussian 3D Visual]
-\vspace*{10ex}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[scale=0.25]{figures/png/mvn_pos.png}
+\caption{$\rho = 0.9$}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[scale=0.25]{figures/png/mvn_neg.png}
+\caption{$\rho = -0.6$}
+\end{subfigure}
 \caption{Two multivariate Gaussian densities, in dimension two, with unit variances and different correlation coefficients $\rho$. As $|\rho| \to 1$, the individual components of the multivariate Gaussian become more and more dependent.}
 \label{fig:mvn-density}
 \end{figure}
@@ -2912,9 +2924,11 @@ This identifies Riemannian manifolds as geometric shapes located within Euclidea
 This perspective is often avoided for both technical and conceptual reasons: if the spacetime of the universe is a manifold, can an ambient Euclidean space actually have physical meaning?
 
 \begin{figure}
-\vspace*{10ex}
-[Common Manifolds 3D Visual]
-\vspace*{10ex}
+\tikzset{external/export next=false}
+\begin{tikzpicture}
+\node at (0,0) {\includegraphics[scale=0.25]{figures/png/s2.png}};
+\node at (5.5,-0.5) {\includegraphics[scale=0.25]{figures/png/t2.png}};
+\end{tikzpicture}
 \caption{Two common manifolds: the sphere $\mathbb{S}^2$ and torus $\mathbb{T}^2$.}
 \label{fig:common-manifolds}
 \end{figure}
@@ -2960,11 +2974,12 @@ Define the \emph{Laplace--Beltrami operator} to be
 \begin{subfigure}{0.19\textwidth}
 \input{figures/tex/s1-e16.tex}
 \end{subfigure}
-\begin{subfigure}{0.29\textwidth}
-[TODO]
-\end{subfigure}
-\begin{subfigure}{0.29\textwidth}
-[TODO]
+\begin{subfigure}{0.59\textwidth}
+\tikzset{external/export next=false}
+\begin{tikzpicture}
+\node at (0,0) {\includegraphics[scale=0.25]{figures/png/t2_e15.png}};
+\node at (3.5,0) {\includegraphics[scale=0.25]{figures/png/t2_e125.png}};
+\end{tikzpicture}
 \end{subfigure}
 \caption{Eigenfunctions of the Laplace--Beltrami operator on a circle and torus.}
 \label{fig:eig-s1-t2}
@@ -3007,9 +3022,13 @@ The Sturm--Liouvile decomposition gives rise to a notion of \emph{functional cal
 
 
 \begin{figure}
-\vspace*{10ex}
-[Eigenfunction 3D Visual]
-\vspace*{10ex}
+\tikzset{external/export next=false}
+\begin{tikzpicture}
+\node at (0,0) {\includegraphics[scale=0.25]{figures/png/s2_e11.png}};
+\node at (2.625,0) {\includegraphics[scale=0.25]{figures/png/s2_e109.png}};
+\node at (5.75,0) {\includegraphics[scale=0.25]{figures/png/dr_e3.png}};
+\node at (9.125,0) {\includegraphics[scale=0.25]{figures/png/dr_e100.png}};
+\end{tikzpicture}
 \caption{Eigenfunctions of the Laplace--Beltrami operator on a sphere and dragon manifold.}
 \label{fig:eig-s2-dr}
 \end{figure}
@@ -3199,7 +3218,7 @@ The resulting kernel, shown in \Cref{fig:ker-s1-t2,fig:ker-s2-dr} is well-define
 \input{figures/tex/s1-ker.tex}
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
-[Torus 3D Visual]
+\includegraphics[scale=0.25]{figures/png/t2_ker.png}
 \end{subfigure}
 \caption{The Matérn-1/2 kernel $k_{1/2}(x,\.)$ defined on a circle and torus, where the point $x$ is marked by a black dot. The kernel on the circle is computed using a Poisson summation formula, which relates Laplacian eigenvalues and eigenfunctions on the circle with those on the real line, and therefore also relates kernels on the circle with kernels on the real line.}
 \label{fig:ker-s1-t2}
@@ -3219,9 +3238,12 @@ Though Kolmogorov's Extension Theorem does imply there is a random variable $\c{
 
 
 \begin{figure}
-\vspace*{10ex}
-[Sphere and Dragon 3D Visual]
-\vspace*{10ex}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[scale=0.25]{figures/png/s2_ker.png}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[scale=0.25]{figures/png/dr_ker.png}
+\end{subfigure}
 \caption{The Matérn-1/2 kernel $k_{1/2}(x,\.)$ defined on a sphere and dragon manifold, where the point $x$ is marked by a black dot.}
 \label{fig:ker-s2-dr}
 \end{figure}
@@ -3392,9 +3414,22 @@ We train a Matérn prior with smoothness $\nu = 3/2$ on this data using gradient
 Finally, we obtain the posterior samples over the entire mesh using pathwise sampling.
 
 \begin{figure}
-\vspace*{10ex}
-[Posterior 3D Visual]
-\vspace*{10ex}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[scale=0.25]{figures/png/dr_gt.png}
+\caption{Ground truth}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[scale=0.25]{figures/png/dr_m.png}
+\caption{Mean}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[scale=0.25]{figures/png/dr_std.png}
+\caption{Standard deviation}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[scale=0.25]{figures/png/dr_fn.png}
+\caption{One posterior sample}
+\end{subfigure}
 \caption{A posterior Matérn Gaussian process on the dragon manifold. We plot true function values, along with the posterior mean and standard deviations. Here, the black dots represent data. We observe that the standard deviation generally increases as we move away from the training locations.}
 \label{fig:dr-posterior}
 \end{figure}
@@ -3576,9 +3611,13 @@ Still, this kernel converges to the graph squared exponential kernel: if we set 
 This provides another view of the connection between the graph squared exponential kernel and random walk models.
 
 \begin{figure}
-\vspace*{10ex}
-[Graph Convergence 3D Visual]
-\vspace*{10ex}
+\tikzset{external/export next=false}
+\begin{tikzpicture}
+\node at (0,0) {\includegraphics[scale=0.25]{figures/png/ico1_ker.png}};
+\node at (3,0) {\includegraphics[scale=0.25]{figures/png/ico2_ker.png}};
+\node at (6,0) {\includegraphics[scale=0.25]{figures/png/ico3_ker.png}};
+\node at (9,0) {\includegraphics[scale=0.25]{figures/png/s2_lim.png}};
+\end{tikzpicture}
 \caption{Illustration of a sequence of graph Matérn-1/2 kernels, each defined on an icosahedral graph. For every icosahedron, such a graph is defined by letting each face corresponds to a node on the graph, and neighboring faces correspond to edges on the graph. The limiting kernel for this sequence of graphs is a Riemannian Matérn-1/2 kernel on the sphere.}
 \label{fig:graph-limit}
 \end{figure}
@@ -3681,9 +3720,12 @@ The first question that arises, then, is what should one actually mean when desc
 The preceding sections suggest two possible approaches.
 
 \begin{figure}
-\vspace*{10ex}
-[Vector Field 3D Visual]
-\vspace*{10ex}
+\tikzset{external/export next=false}
+\begin{tikzpicture}
+\node at (0,0) {\includegraphics[scale=0.25]{figures/png/s2_sv1.png}};
+\node at (4,0) {\includegraphics[scale=0.25]{figures/png/s2_sv2.png}};
+\node at (8,0) {\includegraphics[scale=0.25]{figures/png/s2_sv3.png}};
+\end{tikzpicture}
 \caption{Three samples from a Gaussian vector field. Each of these samples, by virtue of being a continuous vector field on a two-dimensional sphere, automatically contains at least one location whose value is zero.}
 \label{fig:gvf}
 \end{figure}
@@ -3834,9 +3876,22 @@ Given a frame, define the \emph{coframe} $F^*$ to be the collection of sections 
 \end{definition}
 
 \begin{figure}
-\vspace*{10ex}
-[Frame 3D Visual]
-\vspace*{10ex}
+\tikzset{external/export next=false}
+\begin{tikzpicture}
+\node at (0,2.125) {\includegraphics[scale=0.25]{figures/png/s2_a.png}};
+\node at (0,0) {\includegraphics[scale=0.25]{figures/png/s2_x.png}};
+\node at (2.0625,2.125) {\includegraphics[scale=0.25]{figures/png/s2_b.png}};
+\node at (2.0625,0) {\includegraphics[scale=0.25]{figures/png/s2_y.png}};
+\node at (3.34375,2.125) {\LARGE\ensuremath{\x}};
+\node at (3.34375,0) {\LARGE\ensuremath{\x}};
+\node at (4.875,2.125) {\includegraphics[scale=0.25]{figures/png/s2_vab.png}};
+\node at (4.875,0) {\includegraphics[scale=0.25]{figures/png/s2_vxy.png}};
+\node at (6.125,1.0625) {\Huge\ensuremath{=}};
+\node at (8.875,1) {\includegraphics[scale=0.25]{figures/png/s2_xy.png}};
+\node at (0.875,3.625) {Basis coefficients};
+\node at (4.71875,3.625) {Frame};
+\node at (8.53125,3.625) {Vector field};
+\end{tikzpicture}
 \caption{A vector field can be represented by specifying its values in any frame. Here, we illustrate the same vector field on the sphere represented using two different frames.}
 \label{fig:frame}
 \end{figure}
@@ -3901,9 +3956,17 @@ In particular, if $X$ is Riemannian with metric $g$, we have $\m{P}^T \m{P} = \m
 It is now clear how to make our idea precise.
 
 \begin{figure}
-\vspace*{10ex}
-[Projected Kernel 3D Visual]
-\vspace*{10ex}
+\tikzset{external/export next=false}
+\begin{tikzpicture}
+\node at (1,1) {\includegraphics[scale=0.25]{figures/png/s2_ex.png}};
+\node at (0,-0.875) {\includegraphics[scale=0.25]{figures/png/s2_ey.png}};
+\node at (2,-0.875) {\includegraphics[scale=0.25]{figures/png/s2_ez.png}};
+\node at (5.125,0) {\includegraphics[scale=0.25]{figures/png/s2_ev.png}};
+\node at (9.125,0) {\includegraphics[scale=0.25]{figures/png/s2_pr.png}};
+\node at (0.84375,2.40625) {Scalar processes};
+\node at (4.8125,2.40625) {Embedded process};
+\node at (8.8125,2.40625) {Projected process};
+\end{tikzpicture}
 \caption{Here, we show how to construct Gaussian process on the sphere whose cross-covariance kernel is a projected kernel. First, we construct three scalar Gaussian processes on the sphere. Then, embed the sphere in $\R^3$, and the scalar Gaussian processes to form a vector-valued Gaussian process on the embedded sphere. Finally, we project the resulting Gaussian process onto the sphere, yielding the desired tangential vector field.}
 \label{fig:proj-ker}
 \end{figure}
@@ -3952,9 +4015,14 @@ Specifically: in some regions, the data exhibits large jumps, while in other reg
 This means the effective length scale governing variability is spatially non-uniform, which requires a more sophisticated model, such as one with a spatially varying length scale, to effectively capture.
 
 \begin{figure}
-\vspace*{10ex}
-[Posterior Vector Field 3D Visual]
-\vspace*{10ex}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[scale=0.25]{figures/png/s2_pm.png}
+\caption{Posterior mean}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\includegraphics[scale=0.25]{figures/png/s2_pcc.png}
+\caption{Data and posterior covariance}
+\end{subfigure}
 \caption{Posterior mean and trace of the posterior cross-covariance for a projected Gaussian vector field constructed using three independent Matérn-3/2 Gaussian processes on the sphere. Training data is shown in gray. The Gaussian process is seen to oversmooth data in locations with large jumps, such as near the easterly trade wind deviations in the center. We also observe that uncertainty increases as we move away from the training locations.}
 \label{fig:posterior-vector-field}
 \end{figure}
@@ -3982,9 +4050,18 @@ To do so, we perform Bayesian optimization of standard benchmark functions on Ri
 Following \textcite{jaquier20}, we call this setting \emph{geometry-aware Bayesian optimization}.
 
 \begin{figure}
-\vspace*{10ex}
-[TODO]
-\vspace*{10ex}
+\begin{subfigure}{0.32\textwidth}
+\includegraphics[scale=0.25]{figures/png/fn_a.png}
+\caption{Ackley function}
+\end{subfigure}
+\begin{subfigure}{0.32\textwidth}
+\includegraphics[scale=0.25]{figures/png/fn_l.png}
+\caption{Levy function}
+\end{subfigure}
+\begin{subfigure}{0.32\textwidth}
+\includegraphics[scale=0.25]{figures/png/fn_r.png}
+\caption{Rosenbrock function}
+\end{subfigure}
 \caption{Global optimization benchmark functions used in the geometry-aware Bayesian optimization experiments. All three are defined and shown on an ambient Euclidean space with dimension two.}
 \label{fig:benchmark-functions}
 \end{figure}
