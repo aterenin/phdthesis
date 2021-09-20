@@ -50,7 +50,7 @@ samples_cond = rand(cond, 250)
 
 
 
-for (dist,name) in ((MvNormal(m, [1. 0.6; 0.6 1]),"mvn-pos"),(joint,"mvn-neg"),(joint,"mvn-dist-joint"))
+for (dist,name) in ((MvNormal(m, [1. 0.9; 0.9 1]),"mvn-pos"),(MvNormal(m, [1. -0.6; -0.6 1]),"mvn-neg"),(joint,"mvn-dist-joint"))
     @pgf [raw"\tikzexternaldisable",
         TikzFadingFromPicture(
             {
