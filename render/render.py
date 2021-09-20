@@ -1,5 +1,6 @@
 import bpy
 import bmesh
+from functools import partial
 import numpy as np
 import os
 from mathutils import Vector
@@ -27,6 +28,8 @@ def reset_scene():
     for view_layer in bpy.context.scene.view_layers:
         if view_layer.name != "View Layer":
             bpy.context.scene.view_layers.remove(view_layer)
+        else:
+            view_layer.use = True
 
 
 def cleanup(objects = None, materials = None, modifiers = None, force = False):
@@ -36,18 +39,39 @@ def cleanup(objects = None, materials = None, modifiers = None, force = False):
                 bpy.data.materials.remove(material, do_unlink=True)
         if modifiers is not None:
             for modifier in modifiers:
-                bpy.data.node_groups.remove(modifier.node_group, do_unlink=True)
+                if modifier.type == "NODES":
+                    bpy.data.node_groups.remove(modifier.node_group, do_unlink=True)
         if objects is not None:
             for obj in objects:
                 bpy.data.objects.remove(obj, do_unlink=True)
 
 
-def set_renderer_settings():
+def set_renderer_settings(num_samples = 128):
     bpy.data.scenes["Scene"].render.engine = "CYCLES"
     bpy.data.scenes["Scene"].cycles.device = "GPU"
+    bpy.data.scenes["Scene"].cycles.samples = num_samples
     bpy.data.scenes["Scene"].cycles.use_denoising = True
+    bpy.data.scenes["Scene"].cycles.denoiser = "OPENIMAGEDENOISE"
     bpy.data.scenes["Scene"].cycles.use_preview_denoising = True
+    bpy.data.scenes["Scene"].view_settings.look = "High Contrast"
+    
 
+
+@partial(np.vectorize, signature = "()->()")
+def srgb_to_linear(color):
+    if color < 0.04045:
+        return color / 12.92 
+    else:
+        return ((color + 0.055) / 1.055)**2.4
+
+
+@partial(np.vectorize, signature = "()->()")
+def linear_to_srgb(color):
+    if color < 0.0031308:
+        return 12.92 * color 
+    else:
+        return color**(1 / 2.4) * 1.055 - 0.055
+        
 
 def import_bmesh(mesh_file):
     bpy.ops.import_scene.obj(filepath=mesh_file, split_mode = "OFF")
@@ -73,11 +97,9 @@ def import_bmesh(mesh_file):
     return bm
 
 
-def import_color(bm, data_file = None, palette_file = None, color = None, bounds = None, index = None):
+def import_color(bm, data_file = None, palette_file = None, color = None, bounds = None):
     if color is None:
         data = np.genfromtxt(data_file, delimiter=",")
-        if index is not None:
-            data = data[index,:]
         if bounds is None:
             min = data.min()
             max = data.max()
@@ -105,16 +127,16 @@ def import_color(bm, data_file = None, palette_file = None, color = None, bounds
             loop[color_layer] = colors[:,loop.vert.index]
     
 
-def add_mesh(bm):
-    mesh = bpy.data.meshes.new("Mesh")
-    obj = bpy.data.objects.new("Mesh", mesh)
+def add_mesh(bm, name="Mesh"):
+    mesh = bpy.data.meshes.new(name)
+    obj = bpy.data.objects.new(name, mesh)
     bpy.context.collection.objects.link(obj)
     bm.to_mesh(mesh)
 
     return obj
     
 
-def add_vertex_colors(obj):
+def add_vertex_colors(obj, shade_smooth = True):
     mat = bpy.data.materials.new(name = "Surface Color")
     mat.use_nodes = True
     
@@ -127,8 +149,9 @@ def add_vertex_colors(obj):
     obj.data.materials.clear()
     obj.data.materials.append(mat)
 
-    obj.data.polygons.foreach_set("use_smooth",  [True] * len(obj.data.polygons))
-    obj.data.update()
+    if shade_smooth:
+        obj.data.polygons.foreach_set("use_smooth",  [True] * len(obj.data.polygons))
+        obj.data.update()
     
     return mat
     
@@ -138,9 +161,28 @@ def import_vector_field(vf_file):
 
     bm = bmesh.new()
     arrow_layer = bm.verts.layers.float_vector.new("arrow")
+    normal_x_layer = bm.verts.layers.float_vector.new("normal_x")
+    normal_z_layer = bm.verts.layers.float_vector.new("normal_z")
     for row in vector_field:
         vert = bm.verts.new(row[0:3])
         vert[arrow_layer] = row[3:6]
+        if row.size == 12:
+            vert[normal_x_layer] = row[6:9]
+            vert[normal_z_layer] = row[9:12]
+        else:
+            if np.all(row[3:6] == 0):
+                vert[normal_x_layer] = np.zeros(3)
+                vert[normal_z_layer] = np.zeros(3)
+            else:
+                length = np.linalg.norm(row[3:6])
+                arrow = row[3:6] / length
+                axis = np.array((0,0,1)) if np.allclose(arrow,np.array((1,0,0))) or np.allclose(arrow,np.array((-1,0,0))) else np.array((1,0,0))
+                normal_x = np.cross(arrow, axis)
+                unit_x = normal_x / np.linalg.norm(normal_x)
+                normal_z = np.cross(arrow, normal_x)
+                unit_z = normal_z / np.linalg.norm(normal_z)
+                vert[normal_x_layer] = length * unit_x
+                vert[normal_z_layer] = length * unit_z
 
     return bm
 
@@ -154,16 +196,36 @@ def add_vector_field(vec_bm, arr_obj, scale = 1):
     mod = vf_obj.modifiers.new("Vector Field", "NODES")
     input_node = mod.node_group.nodes["Group Input"]
     output_node = mod.node_group.nodes["Group Output"]
-    attribute_length_node = mod.node_group.nodes.new("GeometryNodeAttributeVectorMath")
-    attribute_length_node.operation = "LENGTH"
-    attribute_length_node.inputs["A"].default_value = "arrow"
-    attribute_length_node.inputs["Result"].default_value = "length"
-    length_point_scale_node = mod.node_group.nodes.new("GeometryNodePointScale")
-    length_point_scale_node.input_type = "ATTRIBUTE"
-    length_point_scale_node.inputs["Factor"].default_value = "length"
-    constant_point_scale_node  = mod.node_group.nodes.new("GeometryNodePointScale")
-    constant_point_scale_node.input_type = "FLOAT"
-    constant_point_scale_node.inputs[3].default_value = scale
+    arrow_length_node = mod.node_group.nodes.new("GeometryNodeAttributeVectorMath")
+    arrow_length_node.operation = "LENGTH"
+    arrow_length_node.inputs["A"].default_value = "arrow"
+    arrow_length_node.inputs["Result"].default_value = "arrow_length"
+    normal_x_length_node = mod.node_group.nodes.new("GeometryNodeAttributeVectorMath")
+    normal_x_length_node.operation = "LENGTH"
+    normal_x_length_node.inputs["A"].default_value = "normal_x"
+    normal_x_length_node.inputs["Result"].default_value = "normal_x_length"
+    normal_z_length_node = mod.node_group.nodes.new("GeometryNodeAttributeVectorMath")
+    normal_z_length_node.operation = "LENGTH"
+    normal_z_length_node.inputs["A"].default_value = "normal_z"
+    normal_z_length_node.inputs["Result"].default_value = "normal_z_length"
+    combine_node = mod.node_group.nodes.new("GeometryNodeAttributeCombineXYZ")
+    combine_node.input_type_x = "ATTRIBUTE"
+    combine_node.inputs["X"].default_value = "normal_x_length"
+    combine_node.input_type_y = "ATTRIBUTE"
+    combine_node.inputs["Y"].default_value = "arrow_length"
+    combine_node.input_type_z = "ATTRIBUTE"
+    combine_node.inputs["Z"].default_value = "normal_z_length"
+    combine_node.inputs["Result"].default_value = "arrow_scale"
+    arrow_scale_node = mod.node_group.nodes.new("GeometryNodePointScale")
+    arrow_scale_node.input_type = "ATTRIBUTE"
+    arrow_scale_node.inputs["Factor"].default_value = "arrow_scale"
+    constant_scale_node  = mod.node_group.nodes.new("GeometryNodePointScale")
+    constant_scale_node.input_type = "FLOAT"
+    constant_scale_node.inputs[3].default_value = scale
+    align_rotation_normal_node = mod.node_group.nodes.new("GeometryNodeAlignRotationToVector")
+    align_rotation_normal_node.axis = "X"
+    align_rotation_normal_node.input_type_vector = "ATTRIBUTE"
+    align_rotation_normal_node.inputs["Vector"].default_value = "normal_x"
     align_rotation_node = mod.node_group.nodes.new("GeometryNodeAlignRotationToVector")
     align_rotation_node.axis = "Y"
     align_rotation_node.input_type_vector = "ATTRIBUTE"
@@ -172,10 +234,14 @@ def add_vector_field(vec_bm, arr_obj, scale = 1):
     point_instance_node.inputs["Object"].default_value = arr_obj
 
     mod.node_group.links.clear()
-    mod.node_group.links.new(input_node.outputs["Geometry"], attribute_length_node.inputs["Geometry"])
-    mod.node_group.links.new(attribute_length_node.outputs["Geometry"], length_point_scale_node.inputs["Geometry"])
-    mod.node_group.links.new(length_point_scale_node.outputs["Geometry"], constant_point_scale_node.inputs["Geometry"])
-    mod.node_group.links.new(constant_point_scale_node.outputs["Geometry"], align_rotation_node.inputs["Geometry"])
+    mod.node_group.links.new(input_node.outputs["Geometry"], arrow_length_node.inputs["Geometry"])
+    mod.node_group.links.new(arrow_length_node.outputs["Geometry"], normal_x_length_node.inputs["Geometry"])
+    mod.node_group.links.new(normal_x_length_node.outputs["Geometry"], normal_z_length_node.inputs["Geometry"])
+    mod.node_group.links.new(normal_z_length_node.outputs["Geometry"], combine_node.inputs["Geometry"])
+    mod.node_group.links.new(combine_node.outputs["Geometry"], arrow_scale_node.inputs["Geometry"])
+    mod.node_group.links.new(arrow_scale_node.outputs["Geometry"], constant_scale_node.inputs["Geometry"])
+    mod.node_group.links.new(constant_scale_node.outputs["Geometry"], align_rotation_normal_node.inputs["Geometry"])
+    mod.node_group.links.new(align_rotation_normal_node.outputs["Geometry"], align_rotation_node.inputs["Geometry"])
     mod.node_group.links.new(align_rotation_node.outputs["Geometry"], point_instance_node.inputs["Geometry"])
     mod.node_group.links.new(point_instance_node.outputs["Geometry"], output_node.inputs["Geometry"])
 
@@ -229,7 +295,7 @@ def create_vector_arrow(length = 10, ratio = 0.1, vertices = 25):
     return obj
 
 
-def create_dot(location, radius, color):
+def create_dot(location = (0,0,0), radius = 1, color = (0,0,0,1)):
     bm = bmesh.new()
     bmesh.ops.create_icosphere(bm, subdivisions = 5, diameter = radius*2)
 
@@ -308,7 +374,6 @@ def create_linear_to_srgb_bw_node_group():
     
     group.links.new(combined_add.outputs["Value"], output.inputs["Value"])
 
-    
 
 def create_srgb_to_linear_bw_node_group():
     group = bpy.data.node_groups.new(type = "CompositorNodeTree", name = "sRGB to Linear BW")
@@ -434,59 +499,48 @@ def create_srgb_to_linear_color_node_group():
 def setup_layers():
     scene = bpy.context.scene
     view_layer = scene.view_layers["View Layer"]
+    view_layer.use = False
+    object_layer = scene.view_layers.new("Object Layer")
     shadow_layer = scene.view_layers.new("Shadow Layer")
     background_layer = scene.view_layers.new("Background Layer")
     
-    primary = bpy.data.collections.new("Primary")
-    scene.collection.children.link(primary)
-    secondary = bpy.data.collections.new("Secondary")
-    scene.collection.children.link(secondary)
-    shadow_color = bpy.data.collections.new("Shadow Color")
-    scene.collection.children.link(shadow_color)
-    ground = bpy.data.collections.new("Ground")
-    scene.collection.children.link(ground)
+    object = bpy.data.collections.new("Object")
+    scene.collection.children.link(object)
+    backdrop = bpy.data.collections.new("Backdrop")
+    scene.collection.children.link(backdrop)
     instancing = bpy.data.collections.new("Instancing")
     scene.collection.children.link(instancing)
     
-    view_layer.layer_collection.children["Shadow Color"].exclude = True
-    view_layer.layer_collection.children["Ground"].indirect_only = True
     view_layer.layer_collection.children["Instancing"].exclude = True
     
-    shadow_layer.layer_collection.children["Primary"].indirect_only = True
-    shadow_layer.layer_collection.children["Secondary"].indirect_only = True
-    shadow_layer.layer_collection.children["Shadow Color"].exclude = True
+    object_layer.layer_collection.children["Backdrop"].indirect_only = True
+    object_layer.layer_collection.children["Instancing"].exclude = True
+    
+    shadow_layer.layer_collection.children["Object"].indirect_only = True
     shadow_layer.layer_collection.children["Instancing"].exclude = True
     
-    background_layer.layer_collection.children["Primary"].exclude = True
-    background_layer.layer_collection.children["Secondary"].exclude = True
-    background_layer.layer_collection.children["Shadow Color"].exclude = True
+    background_layer.layer_collection.children["Object"].exclude = True
     background_layer.layer_collection.children["Instancing"].exclude = True
     
 
-def set_object_collections(primary = [], secondary = [], shadow_color = [], ground = [], instancing = []):
-    for obj in primary:
-        bpy.data.collections["Primary"].objects.link(obj)
+def set_object_collections(object = [], backdrop = [], instancing = []):
+    for obj in object:
+        bpy.data.collections["Object"].objects.link(obj)
         bpy.context.scene.collection.objects.unlink(obj)
-    for obj in secondary:
-        bpy.data.collections["Secondary"].objects.link(obj)
-        bpy.context.scene.collection.objects.unlink(obj)
-    for obj in shadow_color:
-        bpy.data.collections["Shadow Color"].objects.link(obj)
-        bpy.context.scene.collection.objects.unlink(obj)
-    for obj in ground:
-        bpy.data.collections["Ground"].objects.link(obj)
+    for obj in backdrop:
+        bpy.data.collections["Backdrop"].objects.link(obj)
         bpy.context.scene.collection.objects.unlink(obj)
     for obj in instancing:
         bpy.data.collections["Instancing"].objects.link(obj)
         bpy.context.scene.collection.objects.unlink(obj)
 
 
-def setup_compositor():
+def setup_compositor(mask_center = (0.5,0.15), mask_size = (0.95,0.2), mask_blur_size = 32, shadow_color_correction_exponent = 1):
     scene = bpy.context.scene
     scene.use_nodes = True
     
-    view_layer = scene.node_tree.nodes.new("CompositorNodeRLayers")
-    view_layer.layer = "View Layer"
+    object_layer = scene.node_tree.nodes.new("CompositorNodeRLayers")
+    object_layer.layer = "Object Layer"
     shadow_layer = scene.node_tree.nodes.new("CompositorNodeRLayers")
     shadow_layer.layer = "Shadow Layer"
     background_layer = scene.node_tree.nodes.new("CompositorNodeRLayers")
@@ -496,6 +550,11 @@ def setup_compositor():
     ratio_node.blend_type = "DIVIDE"
     invert_node = scene.node_tree.nodes.new("CompositorNodeInvert")
     rgb_to_bw_node = scene.node_tree.nodes.new("CompositorNodeRGBToBW")
+    shadow_color_correction_node = scene.node_tree.nodes.new("CompositorNodeMath")
+    shadow_color_correction_node.operation = "POWER"
+    shadow_color_correction_node.inputs[1].default_value = shadow_color_correction_exponent
+    mask_multiply_node = scene.node_tree.nodes.new("CompositorNodeMath")
+    mask_multiply_node.operation = "MULTIPLY"
     
     if not "Linear to sRGB Color" in bpy.data.node_groups.keys():
         create_linear_to_srgb_color_node_group()
@@ -522,17 +581,33 @@ def setup_compositor():
     
     alpha_over_node = scene.node_tree.nodes.new("CompositorNodeAlphaOver")
     composite_node = scene.node_tree.nodes.new("CompositorNodeComposite")
+    viewer_node = scene.node_tree.nodes.new("CompositorNodeViewer")
+    
+    ellipse_mask_node = scene.node_tree.nodes.new("CompositorNodeEllipseMask")
+    ellipse_mask_node.width = mask_size[0]
+    ellipse_mask_node.height = mask_size[1]
+    ellipse_mask_node.x = mask_center[0]
+    ellipse_mask_node.y = mask_center[1]
+    
+    blur_node = scene.node_tree.nodes.new("CompositorNodeBlur")
+    blur_node.size_x = mask_blur_size
+    blur_node.size_y = mask_blur_size
     
     scene.node_tree.links.new(shadow_layer.outputs["Image"], ratio_node.inputs[1])
     scene.node_tree.links.new(background_layer.outputs["Image"], ratio_node.inputs[2])
-    scene.node_tree.links.new(view_layer.outputs["Image"], alpha_over_node.inputs[2])
+    scene.node_tree.links.new(object_layer.outputs["Image"], alpha_over_node.inputs[2])
     scene.node_tree.links.new(ratio_node.outputs["Image"], linear_to_srgb_node.inputs["Image"])
     scene.node_tree.links.new(ratio_node.outputs["Image"], invert_node.inputs["Color"])
     
     scene.node_tree.links.new(invert_node.outputs["Color"], rgb_to_bw_node.inputs["Image"])
     scene.node_tree.links.new(rgb_to_bw_node.outputs["Val"], add_node.inputs[2])
     scene.node_tree.links.new(rgb_to_bw_node.outputs["Val"], divide_node.inputs[2])
-    scene.node_tree.links.new(rgb_to_bw_node.outputs["Val"], set_alpha_node.inputs["Alpha"])
+    scene.node_tree.links.new(rgb_to_bw_node.outputs["Val"], shadow_color_correction_node.inputs[0])
+    scene.node_tree.links.new(shadow_color_correction_node.outputs["Value"], mask_multiply_node.inputs[0])
+    scene.node_tree.links.new(mask_multiply_node.outputs["Value"], set_alpha_node.inputs["Alpha"])
+    
+    scene.node_tree.links.new(ellipse_mask_node.outputs["Mask"], blur_node.inputs["Image"])
+    scene.node_tree.links.new(blur_node.outputs["Image"], mask_multiply_node.inputs[1])
     
     scene.node_tree.links.new(linear_to_srgb_node.outputs["Image"], subtract_node.inputs[1])
     scene.node_tree.links.new(subtract_node.outputs["Image"], add_node.inputs[1])
@@ -544,35 +619,42 @@ def setup_compositor():
     scene.node_tree.links.new(srgb_to_linear_node.outputs["Image"], alpha_over_node.inputs[1])
     
     scene.node_tree.links.new(alpha_over_node.outputs["Image"], composite_node.inputs["Image"])
+    scene.node_tree.links.new(alpha_over_node.outputs["Image"], viewer_node.inputs["Image"])
 
 
-def create_ground_plane(location, scale):
+def create_backdrop(location, scale):
     bm = bmesh.new()
-    bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=1.0)
-
-    mesh = bpy.data.meshes.new("Ground Plane")
-    obj = bpy.data.objects.new("Ground Plane", mesh)
+    
+    v1 = bm.verts.new((-1,-1,0))
+    v2 = bm.verts.new((1,-1,0))
+    v3 = bm.verts.new((1,1,0))
+    v4 = bm.verts.new((-1,1,0))
+    v5 = bm.verts.new((-1,1,1))
+    v6 = bm.verts.new((1,1,1))
+    
+    bm.faces.new((v1,v2,v3,v4))
+    bm.faces.new((v6,v5,v4,v3))
+    
+    mesh = bpy.data.meshes.new("Backdrop")
+    obj = bpy.data.objects.new("Backdrop", mesh)
     bpy.context.collection.objects.link(obj)
     
     bm.to_mesh(mesh)
     bm.free()
     
+    mod = obj.modifiers.new("Geometry Nodes", "BEVEL")
+    mod.width = 0.25
+    mod.segments = 64
+    
     mat = bpy.data.materials.new(name = "Shadow Only")
     mat.use_nodes = True
     
     shader_node = mat.node_tree.nodes["Principled BSDF"]
-    shader_node.inputs["Base Color"].default_value = bpy.data.worlds["World"].node_tree.nodes["Background"].inputs["Color"].default_value
-    camera_shader_node = mat.node_tree.nodes.new("ShaderNodeBsdfPrincipled")
-    light_path_node = mat.node_tree.nodes.new("ShaderNodeLightPath")
-    mix_node =  mat.node_tree.nodes.new("ShaderNodeMixShader")
-    output_node = mat.node_tree.nodes["Material Output"]
-    
-    mat.node_tree.links.new(light_path_node.outputs["Is Camera Ray"], mix_node.inputs["Fac"])
-    mat.node_tree.links.new(camera_shader_node.outputs["BSDF"], mix_node.inputs[2])
-    mat.node_tree.links.new(shader_node.outputs["BSDF"], mix_node.inputs[1])
-    mat.node_tree.links.new(mix_node.outputs["Shader"], output_node.inputs["Surface"])
     obj.data.materials.clear()
     obj.data.materials.append(mat)
+    
+    obj.data.polygons.foreach_set("use_smooth",  [True] * len(obj.data.polygons))
+    obj.data.update()
     
     obj.location = location
     obj.scale = scale
@@ -580,34 +662,72 @@ def create_ground_plane(location, scale):
     return obj
 
 
-def setup_camera(location, angle, lens, x, y):
+def set_resolution(height, crop = None):
+    scene = bpy.data.scenes["Scene"]
+    scene.render.resolution_x = height // 2 * 3
+    scene.render.resolution_y = height
+    
+    if crop is not None:
+        if np.array_equal(np.array(crop), np.array((0,1,0,1))):
+            scene.render.use_border = False
+            scene.render.use_crop_to_border = False
+        else:
+            scene.render.use_border = True
+            scene.render.use_crop_to_border = True
+        bpy.data.scenes["Scene"].render.border_min_x = crop[0]
+        bpy.data.scenes["Scene"].render.border_max_x = crop[1]
+        bpy.data.scenes["Scene"].render.border_min_y = crop[2]
+        bpy.data.scenes["Scene"].render.border_max_y = crop[3]
+    
+
+def setup_camera(offset = (0,0,0), distance = 1, angle = (0,0,0), lens = 85, height = 640, crop = None):
     cam_data = bpy.data.cameras.new(name="Camera")
     cam_obj = bpy.data.objects.new("Camera", cam_data)
+    cam_axis = bpy.data.objects.new(name = "Camera Axis", object_data = None)
+    cam_obj.parent = cam_axis
+    cam_obj.location = (0,-distance,0)
+    cam_obj.rotation_euler = (np.pi/2,0,0)
+    cam_axis.location = offset
+    cam_axis.rotation_euler = angle 
     bpy.context.scene.collection.objects.link(cam_obj)
-    cam_obj.location = location
-    cam_obj.rotation_euler = angle 
+    bpy.context.scene.collection.objects.link(cam_axis)
     cam_data.lens = lens
-    scene = bpy.data.scenes["Scene"]
-    scene.camera = cam_obj
-    scene.render.resolution_x = x
-    scene.render.resolution_y = y
+    bpy.data.scenes["Scene"].camera = cam_obj
     
-    return cam_obj
-
-
-def setup_lighting(angle, energy = 10):
-    light_data = bpy.data.lights.new(name="Sun", type="SUN")
-    light_obj = bpy.data.objects.new(name="Sun", object_data=light_data)
-    bpy.context.scene.collection.objects.link(light_obj)
-    light_obj.rotation_euler = angle
-    light_data.energy = energy
+    set_resolution(height, crop)
     
-    return light_obj
+    return (cam_axis, cam_obj)
 
 
-def setup_background(energy = 1):
+def setup_lighting(offset = (0,0,0), shifts = (-1,-1,1), energies = (1,1,1), sizes = (1,1,1),
+                   horizontal_angles = (-np.pi/4, np.pi/4, np.pi/4), 
+                   vertical_angles = (-np.pi/4, -np.pi/4, np.pi/4),
+                   types = ("AREA","AREA","POINT"),
+                   names = ("Key","Fill","Rim")):
     bpy.data.scenes["Scene"].render.film_transparent = True
-    bpy.data.worlds["World"].node_tree.nodes["Background"].inputs["Strength"].default_value = energy
+    bpy.data.worlds["World"].node_tree.nodes["Background"].inputs["Strength"].default_value = 0
+    
+    lights = []
+    for i in range(len(shifts)):
+        light = bpy.data.lights.new(name = names[i], type = types[i])
+        obj = bpy.data.objects.new(name = names[i], object_data = light)
+        axis = bpy.data.objects.new(name = names[i] + " Axis", object_data = None)
+        obj.parent = axis
+        obj.location = (0,shifts[i],0)
+        obj.rotation_euler = (np.pi/2,0,0)
+        axis.location = offset
+        axis.rotation_euler = (vertical_angles[i],0,horizontal_angles[i])
+        light.energy = energies[i]
+        if types[i] == "AREA":
+            light.shape = "DISK"
+            light.size = sizes[i]
+        elif types[i] == "POINT":
+            light.shadow_soft_size = sizes[i]
+        bpy.context.scene.collection.objects.link(obj)
+        bpy.context.scene.collection.objects.link(axis)
+        lights.append((axis,obj))
+    
+    return lights
 
 
 def create_poisson_disk_samples(obj):
