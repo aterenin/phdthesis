@@ -18,7 +18,7 @@ This repository contains the LaTeX source for the PhD thesis written by [Alexand
 It also includes the scripts and data used for generating the figures in the thesis, which are created with a combination of [TikZ](https://ctan.org/pkg/pgf) and [PGFPlots](http://pgfplots.sourceforge.net) via the [PGFPlotsX.jl](https://kristofferc.github.io/PGFPlotsX.jl/stable/) [Julia](https://julialang.org) interface, as well as [Blender](https://www.blender.org).
 Code for running the experiments presented in the thesis can be found in each respective publication's repository, linked below.
 
-<a href="https://github.com/aterenin/phdthesis/releases/download/submission/aterenin-phdthesis.pdf"><img alt="PDF" height="24" src="https://img.shields.io/github/downloads/aterenin/phdthesis/total?label=PDF"></a>
+<a href="https://github.com/aterenin/phdthesis/releases/download/submission/aterenin-phdthesis.pdf"><img alt="Download PDF" height="24" src="https://img.shields.io/github/downloads/aterenin/phdthesis/total?label=Download%20PDF"></a>
 
 # Publications in this thesis
 
@@ -64,6 +64,13 @@ AISTATS 2021<br>
 <strong>Geometry-aware Bayesian Optimization in Robotics using Riemannian Matérn Kernels</strong><br>
 Noémie Jaquier, Viacheslav Borovitskiy, Andrei Smolensky, Alexander Terenin, Tamim Asfour, and Leonel Rozo<br>
 CoRL 2021<br>
+</td>
+</tr>
+<tr>
+<td>
+<strong>Vector-valued Gaussian Processes on Riemannian Manifolds via Gauge Equivariant Projected Kernels</strong><br>
+Michael John Hutchinson,* Alexander Terenin,* Viacheslav Borovitskiy,* So Takao,* Yee Whye Teh, and Marc Peter Deisenroth<br>
+NeurIPS 2021<br>
 </td>
 </tr>
 </table>
