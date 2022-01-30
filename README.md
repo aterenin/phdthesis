@@ -64,13 +64,17 @@ AISTATS 2021<br>
 <strong>Geometry-aware Bayesian Optimization in Robotics using Riemannian Matérn Kernels</strong><br>
 Noémie Jaquier, Viacheslav Borovitskiy, Andrei Smolensky, Alexander Terenin, Tamim Asfour, and Leonel Rozo<br>
 CoRL 2021<br>
+<a href="https://arxiv.org/abs/2111.01460"><img alt="Paper" src="https://img.shields.io/badge/-Paper-gray"></a>
+<a href="https://github.com/NoemieJaquier/MaternGaBO"><img alt="Code" src="https://img.shields.io/badge/-Code-gray" ></a>
 </td>
 </tr>
 <tr>
 <td>
-<strong>Vector-valued Gaussian Processes on Riemannian Manifolds via Gauge Equivariant Projected Kernels</strong><br>
+<strong>Vector-valued Gaussian Processes on Riemannian Manifolds via Gauge Independent Projected Kernels</strong><br>
 Michael John Hutchinson,* Alexander Terenin,* Viacheslav Borovitskiy,* So Takao,* Yee Whye Teh, and Marc Peter Deisenroth<br>
 NeurIPS 2021<br>
+<a href="https://arxiv.org/abs/2110.14423"><img alt="Paper" src="https://img.shields.io/badge/-Paper-gray"></a>
+<a href="https://github.com/MJHutchinson/ExtrinsicGaugeIndependentVectorGPs"><img alt="Code" src="https://img.shields.io/badge/-Code-gray" ></a>
 </td>
 </tr>
 </table>

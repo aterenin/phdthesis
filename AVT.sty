@@ -54,6 +54,11 @@
 \SetSymbolFont{stmry}{bold}{U}{stmry}{m}{n}
 \DeclareMathAlphabet\bc{OMS}{cmsy}{b}{n}
 
+\ifAVT@citations\else
+\RequirePackage{xurl}
+\fi
+\newcommand{\email}[1]{\href{mailto:#1}{\UrlFont#1}} % correct email hyperlinking
+
 % requires packages bbold and bbold-type1 to avoid bitmap font
 \DeclareSymbolFont{bbold}{U}{bbold}{m}{n}
 \DeclareSymbolFontAlphabet{\mathbbold}{bbold}
@@ -108,8 +113,6 @@
 \RegisterPairedDelimiter{\evalpaired}{\evaldelim}
 
 \newcommand{\eval}[1][-1]{\@ifnextchar\bgroup{\expandafter\evalpaired[#1]}{\ifnum#1=-1 |\fi\ifnum#1=0 |\fi\ifnum#1=1 \big|\fi\ifnum#1=2 \Big|\fi\ifnum#1=3 \bigg|\fi\ifnum#1=4 \Bigg|\fi}}
-
-\newcommand{\email}[1]{\href{mailto:#1}{\UrlFont#1}} % correct email hyperlinking
 
 \renewmathcommand{\P}{\operatorname{\mathbb{P}}} % probability
 \DeclareMathOperator{\E}{\mathbb{E}} % expectation
@@ -265,6 +268,9 @@
 % load BibLaTeX
 \RequirePackage[backref=true, useprefix, uniquename=false, maxcitenames=2, sortcites=false]{biblatex}
 
+% enable URL hyphenation
+\RequirePackage{xurl}
+
 % never decapitalize paper titles
 \DeclareFieldFormat{titlecase}{#1}
 
@@ -361,10 +367,12 @@
 % fonts
 \ifAVT@notes@nofonts\let\@AVTsemibold\bfseries\else
 \RequirePackage{lmodern}
-\IfFileExists{mlmodern.sty}{\newcommand{\@AVTsemibold}{\fontfamily{mlmr}\fontencoding{T1}\selectfont}}{\ifdef\XeTeXrevision{\RequirePackage{fontspec}\newfontfamily{\@AVTsemibold}{mlmr10.otf}[SmallCapsFont=mlmcsc10.otf]
-\DeclareMicrotypeAlias{mlmr10.otf}{cmr10}\DeclareMicrotypeAlias{mlmcsc10.otf}{cmcsc10}}{\pdfmapfile{+mlm.map}\newcommand{\@AVTsemibold}{\fontfamily{mlmr}\fontencoding{T1}\selectfont}}}
+\IfFileExists{mlmodern.sty}{}{\pdfmapfile{+mlm.map}}
+\newcommand{\@AVTsemibold}{\fontfamily{mlmr}\fontencoding{T1}\selectfont}
 \fi
 
+% italicize quotations
+\g@addto@macro\quotation{\slshape}
 
 % URLs
 \let\UrlFont\scshape
@@ -375,7 +383,7 @@
 % title format
 \RequirePackage{titling}
 \pretitle{\begin{center}\huge}
-\posttitle{\par\end{center}\vskip 0.5em}
+\posttitle{\par\end{center}\vskip 1em}
 \renewcommand{\maketitlehooka}{\list{}{\rightmargin\dimexpr-\marginparwidth-\marginparsep\relax\leftmargin\z@}\item[]\@AVTsemibold\scshape}
 \renewcommand{\maketitlehookc}{\ifx\thedate\empty\predate{\@gobble}\postdate{}\fi}
 \renewcommand{\maketitlehookd}{\endlist}
@@ -459,8 +467,11 @@
 
 % full width starred figures and tables
 \RequirePackage{ifoddpage}
-\renewenvironment{figure*}[1][]{\if\relax\detokenize{#1}\relax\@float{figure}\else\@float{figure}[#1]\fi\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
-\renewenvironment{table*}[1][]{\if\relax\detokenize{#1}\relax\@float{table}\else\@float{table}[#1]\fi\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\checkoddpage\ifoddpage\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\else\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}\fi}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
+\@ifclassloaded{book}{\newcommand{\@AVT@fullwidthfigure@setlength}{\checkoddpage\@ifoddpage{\@AVT@fullwidthfigure@setlength@odd}{\@AVT@fullwidthfigure@setlength@even}}}{\newcommand{\@AVT@fullwidthfigure@setlength}{\@AVT@fullwidthfigure@setlength@odd}}
+\newcommand{\@AVT@fullwidthfigure@setlength@odd}{\setlength{\leftmargin}{\z@}\setlength{\rightmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}}
+\newcommand{\@AVT@fullwidthfigure@setlength@even}{\setlength{\leftmargin}{\dimexpr-\marginparwidth-\marginparsep\relax}\setlength{\rightmargin}{\z@}}
+\renewenvironment{figure*}[1][]{\if\relax\detokenize{#1}\relax\@float{figure}\else\@float{figure}[#1]\fi\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\@AVT@fullwidthfigure@setlength}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
+\renewenvironment{table*}[1][]{\if\relax\detokenize{#1}\relax\@float{table}\else\@float{table}[#1]\fi\list{}{\topsep\z@\listparindent\parindent\parsep\parskip\@AVT@fullwidthfigure@setlength}\item[]\hsize\linewidth\textwidth\linewidth\centering}{\endlist\end@float}
 
 % place figures at the top by default
 \def\fps@figure{t}
@@ -496,7 +507,7 @@
 \RequirePackage{amsthm}
 \RequirePackage{thmtools}
 \RequirePackage{cleveref}
-\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberwithin=\ifAVT@notes chapter\else\relax\fi]{theorem}
+\declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberwithin=\ifAVT@notes\@ifclassloaded{book}{chapter}\relax\else\relax\fi]{theorem}
 \declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{algorithm}
 \declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{assumption}
 \declaretheorem[style=\ifAVT@notes marginnotethm\else plain\fi,numberlike=theorem]{axiom}
