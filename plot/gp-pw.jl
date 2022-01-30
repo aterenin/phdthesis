@@ -31,7 +31,7 @@ samples_noise = rand(dist_noise, l)
 
 samples_cond = samples_prior + K_xz * ((K_zz + s*I) \ (u .- samples_prior[idx_z,:] .- samples_noise))
 
-for (f,m,K,name) in ((samples_prior, 0, K_xx, "gp-pw-prior"),(samples_cond, m_cond, K_cond, "gp-pw-cond"))
+for (f,m,K,name) in ((samples_prior, zeros(length(x)), K_xx, "gp-pw-prior"),(samples_cond, m_cond, K_cond, "gp-pw-cond"))
     @pgf Axis(
         {
             axis_lines = "none",
@@ -70,12 +70,14 @@ for (f,m,K,name) in ((samples_prior, 0, K_xx, "gp-pw-prior"),(samples_cond, m_co
             },
             raw"fill between [of = upper and lower]",
         ),
-        HLine(
+        Plot(
             { 
+                no_markers,
+                smooth,
                 ultra_thick,
                 color=colorant"#1f77b4",
             }, 
-            0
+            Coordinates(x, m)
         ),
         [Plot(
             {
