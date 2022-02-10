@@ -100,3 +100,19 @@ for (f,m,K,name) in ((samples_prior, zeros(length(x)), K_xx, "gp-pw-prior"),(sam
         ),
     ) |> TikzPicture |> save_tex("$name.tex")
 end
+
+
+@pgf Axis(
+    {
+        hide_axis,
+        xmin = 0,
+        xmax = 1,
+        ymin = 0,
+        ymax = 1,
+        legend_columns = -1, 
+        legend_style = raw"draw={none}, legend cell align={center}, font={\footnotesize}, column sep={0.0625cm}, /tikz/every even column/.append style={column sep=0.375cm}",
+    },
+    legend_entry("only marks, mark options={very thick}, mark={*}, mark size={2.5pt}, fill=$(color_to_pgf(weighted_color_mean(0.875,colorant"#ffffff",colorant"#1f77b4")))" => "Data points"),
+    legend_entry("fill opacity={0.25}, area legend, very thick, color=$(color_to_pgf(colorant"#1f77b4")), fill=$(color_to_pgf(colorant"#1f77b4"))" => "Prior and conditional processes"),
+    legend_entry("opacity={0.5}, thick, color=$(color_to_pgf(colorant"#1f77b4"))" => "Samples"),
+) |> TikzPicture |> save_tex("gp-pw-lgnd.tex")

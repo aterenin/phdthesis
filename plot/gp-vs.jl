@@ -141,3 +141,20 @@ for (s,m,K,name) in ((f_cond,m_f_cond,K_f_cond,"gp-vs"),(g_cond,m_g_cond,K_g_con
         ),
     ) |> TikzPicture |> save_tex("$name.tex")
 end
+
+
+@pgf Axis(
+    {
+        hide_axis,
+        xmin = 0,
+        xmax = 1,
+        ymin = 0,
+        ymax = 1,
+        legend_columns = -1, 
+        legend_style = raw"draw={none}, legend cell align={center}, font={\footnotesize}, column sep={0.0625cm}, /tikz/every even column/.append style={column sep=0.375cm}",
+    },
+    legend_entry("only marks, mark options={thick}, mark={*}, fill=$(color_to_pgf(weighted_color_mean(0.875,colorant"#ffffff",colorant"#1f77b4")))" => "Data"),
+    legend_entry("fill opacity={0.25}, area legend, very thick, color=$(color_to_pgf(colorant"#1f77b4")), fill=$(color_to_pgf(colorant"#1f77b4"))" => "Approximate posteriors"),
+    legend_entry("fill opacity={0}, area legend, thick, color={black}, dash pattern={on 0pt off 1.25pt on 3pt off 2.4375pt on 3pt off 3pt on 3pt off 3pt on 3pt off 2.4375pt on 3pt off 2.4375pt on 3pt off 3pt on 3pt off 3pt on 3pt off 3pt}" => "Exact posterior"),
+    legend_entry("opacity={0.5}, thick, color=$(color_to_pgf(colorant"#1f77b4"))" => "Samples"),
+) |> TikzPicture |> save_tex("gp-vs-lgnd.tex")

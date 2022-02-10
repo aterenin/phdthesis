@@ -9,6 +9,7 @@
 *.dpth
 *.fdb_latexmk
 *.fls
+*.lof
 *.log
 *.md5
 *.nav
@@ -21,4 +22,3 @@
 *.toc
 *.tcb
 *.vrb
-*.otf

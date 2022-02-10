@@ -172,7 +172,6 @@ This, in turn, makes it possible to potentially apply Gaussian processes to nove
 
 \listoffigures
 
-\chapter*{Principal Notation}
 
 
 
@@ -321,7 +320,7 @@ The most common technique is to specify two components: (i) a probability distri
 These are called the \emph{prior distribution} and \emph{likelihood}, respectively.
 For example, a simple Gaussian model is given by
 \[
-y_i \given &\theta \~[N](\theta, 1)
+y_i \given \theta &\~[N](\theta, 1)
 &
 \theta &\~[N](0,1)
 .
@@ -383,9 +382,6 @@ Note that any two uncountable Polish spaces are Borel-isomorphic: see \textcite[
 The key result is given as follows.
 
 \begin{figure}
-\begin{subfigure}{0.98\textwidth}
-LEGEND
-\end{subfigure}
 \begin{subfigure}{0.55\textwidth}
 \input{figures/tex/bayes.tex}
 \end{subfigure}
@@ -497,7 +493,7 @@ Then for every $\gamma\in Y$, the posterior distribution satisfies
 \[
 \pi_{\theta\given y}(\.\given \gamma) = \argmin_{\bb{q}_\theta \in \c{M}_1(\Theta)} D_{\f{KL}}(\bb{q}_\theta \from \pi_\theta) - \operatorname*{\E}_{\vartheta\~\bb{q}_\theta} \ln f_{y\given\theta}(\gamma\given\vartheta)
 \]
-where the minima does not depend on the choice of $\lambda$.
+where $D_{\f{KL}}$ is the Kullback--Leibler divergence between probability measures, and the minima does not depend on the choice of $\lambda$.
 \end{proposition}
 
 \begin{proof}
@@ -1133,7 +1129,7 @@ Here, the space of observed values is $Y = \R^n$, and our quantity of interest i
 
 \begin{figure}
 \begin{subfigure}{0.98\textwidth}
-LEGEND
+\input{figures/tex/gp-ts-lgnd.tex}
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gp-ts-1.tex}
@@ -1800,6 +1796,9 @@ Improved understanding of these phenomena may yield lessons of broad interest to
 Contributions presented here include development of \emph{pathwise conditioning} methods for making Gaussian process models easier to work with, and a variety of \emph{non-Euclidean Gaussian processes}, both described next.
 
 
+
+
+
 \chapter{Pathwise Conditioning}
 \label{ch:pathwise}
 
@@ -1868,7 +1867,7 @@ By non-singularity, $(\v\theta,\v{y})$ admits a Lebesgue density, and the claim 
 
 \begin{figure}
 \begin{subfigure}{0.98\textwidth}
-LEGEND
+\input{figures/tex/mvn-dist-lgnd.tex}
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/mvn-dist-joint.tex}
@@ -1932,7 +1931,7 @@ To do so, we first prove a general result about conditioning.
 
 \begin{figure}
 \begin{subfigure}{0.98\textwidth}
-LEGEND
+\input{figures/tex/mvn-pw-lgnd.tex}
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/mvn-pw-joint.tex}
@@ -2078,7 +2077,7 @@ Apply \Cref{prop:mvn-cond} to a set of finite-dimensional marginals.
 
 \begin{figure}
 \begin{subfigure}{0.98\textwidth}
-LEGEND
+\input{figures/tex/gp-dist-lgnd.tex}
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gp-dist-cond.tex}
@@ -2144,7 +2143,7 @@ Apply \Cref{thm:mvn-pw} to a set of finite-dimensional marginals.
 
 \begin{figure}
 \begin{subfigure}{0.98\textwidth}
-LEGEND
+\input{figures/tex/gp-pw-lgnd.tex}
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gp-pw-prior.tex}
@@ -2546,7 +2545,7 @@ This interpretation applies to most variational approximations, including the cl
 
 \begin{figure}
 \begin{subfigure}{0.98\textwidth}
-LEGEND
+\input{figures/tex/gp-ip-lgnd.tex}
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gp-ex-cond.tex}
@@ -2617,7 +2616,7 @@ An obvious question one can ask is, instead of approximating the prior term, why
 
 \begin{figure}
 \begin{subfigure}{0.98\textwidth}
-LEGEND
+\input{figures/tex/gp-vs-lgnd.tex}
 \end{subfigure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gp-vs.tex}
@@ -2627,7 +2626,7 @@ LEGEND
 \input{figures/tex/gp-vs-phase.tex}
 \caption{Random phase}
 \end{subfigure}
-\caption[Variance starvation in Fourier feature models]{Example of the \emph{variance starvation} phenomenon in two different random Fourier feature models (solid), compared to the true posterior (dashed).
+\caption[Variance starvation in Fourier feature models]{Example of the \emph{variance starvation} phenomenon in two different random Fourier feature models, compared to the true posterior.
 We see two problems: the mean spuriously oscillates and the error bars grow too slowly away from the data.
 This can cause the upper confidence bound acquisition, which is global minima of the error bars, to appear in the completely wrong location.
 With the given hyperparameter choices, $n=10$ data points is enough to exhibit considerable approximation error.}
@@ -2937,9 +2936,6 @@ We now proceed to study a different route for expanding the set of settings Gaus
 
 
 
-
-
-
 \chapter{Non-Euclidean Matérn Gaussian Processes}
 \label{ch:noneuclidean}
 
@@ -3084,6 +3080,20 @@ Define the \emph{Laplace--Beltrami operator} to be
 \]
 \end{definition}
 
+The Laplace--Beltrami operator, then, maps functions into the divergence of their gradient at every point.
+There are multiple equivalent ways of defining the Laplace--Beltrami operator: an alternative is to define is as the trace of the Riemannian Hessian, and another is to define it in coordinates.
+The latter expression illustrates that a Laplace--Beltrami operator maps functions into their locally averaged analogs, in a sense.
+For us, the relatively rich spectral properties possessed by this operator will be of key interest.
+
+\begin{result}
+Let $(X,g)$ be a compact Riemannian manifold.
+Then the operator $-\lap_g : C^\infty(X) \-> C^\infty(X)$ is positive semi-definite, and extends uniquely to a self-adjoint unbounded positive operator $-\lap_g: D(\lap_g) \-> L^2(X)$, where $D(\lap_g) \subseteq L^2(X)$.
+\end{result}
+
+\begin{proof}
+\textcite[Theorem 2.4]{strichartz83}.
+\end{proof}
+
 \begin{figure}
 \begin{subfigure}{0.19\textwidth}
 \input{figures/tex/s1-e4.tex}
@@ -3101,20 +3111,6 @@ Define the \emph{Laplace--Beltrami operator} to be
 \caption[Laplace--Beltrami eigenfunctions: circle and torus]{Eigenfunctions of the Laplace--Beltrami operator on a circle and torus.}
 \label{fig:eig-s1-t2}
 \end{figure}
-
-The Laplace--Beltrami operator, then, maps functions into the divergence of their gradient at every point.
-There are multiple equivalent ways of defining the Laplace--Beltrami operator: an alternative is to define is as the trace of the Riemannian Hessian, and another is to define it in coordinates.
-The latter expression illustrates that a Laplace--Beltrami operator maps functions into their locally averaged analogs, in a sense.
-For us, the relatively rich spectral properties possessed by this operator will be of key interest.
-
-\begin{result}
-Let $(X,g)$ be a compact Riemannian manifold.
-Then the operator $-\lap_g : C^\infty(X) \-> C^\infty(X)$ is positive semi-definite, and extends uniquely to a self-adjoint unbounded positive operator $-\lap_g: D(\lap_g) \-> L^2(X)$, where $D(\lap_g) \subseteq L^2(X)$.
-\end{result}
-
-\begin{proof}
-\textcite[Theorem 2.4]{strichartz83}.
-\end{proof}
 
 Viewed in this way, the range of the Laplace--Beltrami operator is a Hilbert space, enabling us to use ideas from spectral theory to better understand its behavior.
 In particular, one can show that, owing to compactness, the spectrum of $-\lap_g$ is discrete---this gives a particularly simple view of $-\lap_g$ thorugh its eigenvalues and eigenfunctions.
@@ -3306,7 +3302,7 @@ is the unique solution to $\c{L}f = \c{W}$.
 It is remarkable that such a minimalist solution theory, which relies very fundamentally on the fact that Gaussian processes are uniquely determined by their associated reproducing kernel Hilbert spaces or generalizations thereof, gives a description concrete enough for our purposes.
 Indeed, this result generally determines but does not reveal what function space $f$ lies in as a random variable, along with its regularity properties such as continuity---however, for Bayesian learning, we don't actually need these.
 
-For this construction to yield a Gaussian process in the classical sense, we should ensure the space $f$ lies in to be a reproducing kernel Hilbert space, since this lets us build the Gaussian processes of interest from pointwise evaluation functionals as described previously.
+For this construction to yield a Gaussian process in the classical sense, we should ensure the space $f$ lies in is a reproducing kernel Hilbert space, since this lets us build the Gaussian processes of interest from pointwise evaluation functionals as described previously.
 The main challenge, then, is finding appropriate spaces and operators in order to apply the preceding ideas.
 
 \subsection{The Riemannian Matérn kernel}
@@ -3442,7 +3438,7 @@ k(x, x') &= \sum_{n=0}^\infty e^{-\frac{\kappa^2}{2} \lambda_n} f_n(x)f_n(x')
 which are shown to be absolutely convergent in that work.
 This proves the claim for the squared exponential case.
 However, we are interested in general length scales $\kappa > 0$, so this does not suffice for the Matérn case.
-To extend this, the idea will be to let $\tilde{g} = \frac{2\nu}{\kappa^2}g$ be a rescaled metric tensor on $X$, and define 
+To extend this, the idea will be to let $\tilde{g} = \frac{2\nu}{\kappa^2}g$ be a rescaled metric tensor on $X$, and define the equations
 \[
 \del{\frac{2\nu}{\kappa^2} - \lap_g}^{\frac{\nu}{2} + \frac{d}{4}} f &= \c{W}_g
 &
@@ -3525,15 +3521,6 @@ We focus on the dragon manifold from the Stanford 3D scanning repository \cite{c
 This mesh was chosen because it has no boundary and is geometrically more complex than other alternatives.
 We work with the largest connected component of the mesh, which has a total of $100\,179$ vertices and $201\,010$ triangular faces.
 
-On the mesh, discrete analogs of all of the differential-geometric notions we require are available, with reasonably well-understood approximation properties \cite{crane17}.
-We obtain $500$ discretized Laplace--Beltrami eigenpairs numerically in finite element space using the \emph{Firedrake} partial differental equation package \cite{rathgeber16}.
-These, in turn, gives expressions for evaluating the kernel and sampling the prior at any points on the manifold.
-
-To generate training data, we define a ground truth function given by the sine of the geodesic distance from a distinguished point, chosen to be the first vertex on the mesh, which is located at the end of the dragon's snout.
-We observe this function at a total of $52$ points chosen from the mesh's vertices.
-We train a Matérn prior with smoothness $\nu = 3/2$ on this data using gradient descent, obtaining learned variance and length scale hyperparameters.
-Finally, we obtain the posterior samples over the entire mesh using pathwise sampling.
-
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}
 \includegraphics[scale=0.25]{figures/png/dr_gt.png}
@@ -3554,6 +3541,15 @@ Finally, we obtain the posterior samples over the entire mesh using pathwise sam
 \caption[Posterior Gaussian process: dragon manifold]{A posterior Matérn Gaussian process on the dragon manifold. We plot true function values, along with the posterior mean and standard deviations. Here, the black dots represent data. We observe that the standard deviation generally increases as we move away from the training locations.}
 \label{fig:dr-posterior}
 \end{figure}
+
+On the mesh, discrete analogs of all of the differential-geometric notions we require are available, with reasonably well-understood approximation properties \cite{crane17}.
+We obtain $500$ discretized Laplace--Beltrami eigenpairs numerically in finite element space using the \emph{Firedrake} partial differental equation package \cite{rathgeber16}.
+These, in turn, gives expressions for evaluating the kernel and sampling the prior at any points on the manifold.
+
+To generate training data, we define a ground truth function given by the sine of the geodesic distance from a distinguished point, chosen to be the first vertex on the mesh, which is located at the end of the dragon's snout.
+We observe this function at a total of $52$ points chosen from the mesh's vertices.
+We train a Matérn prior with smoothness $\nu = 3/2$ on this data using gradient descent, obtaining learned variance and length scale hyperparameters.
+Finally, we obtain the posterior samples over the entire mesh using pathwise sampling.
 
 Results are given in \Cref{fig:dr-posterior}.
 We observe that the both the mean predictions and uncertainty estimates adapt to the manifold's geometry.
@@ -3672,9 +3668,10 @@ If the precise sparsity pattern is sufficiently well-behaved---for instance in c
 Alternatively, Krylov subspace methods for sparse linear systems can be applied, giving another way to leverage sparsity to improve scalability.
 
 \begin{figure}
-\begin{subfigure}{0.98\textwidth}
-LEGEND
+\begin{subfigure}{0.05\textwidth}
+\input{figures/tex/gk-lgnd.tex}
 \end{subfigure}
+\begin{subfigure}{0.94\textwidth}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gk-comp.tex}
 \caption{Complete graph}
@@ -3690,6 +3687,7 @@ LEGEND
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gk-ba.tex}
 \caption{Barabási--Albert random graph}
+\end{subfigure}
 \end{subfigure}
 \caption[Graph Matérn kernels]{Here, we show the prior variance of a graph Gaussian process at each node for a number of different graphs. Variances for all graphs are plotted using a common scale. In general, this prior variance is non-uniform and instead reflects the structure of the graph.}
 \label{fig:graph-variance}
@@ -4281,6 +4279,9 @@ Since symmetry plays a fundamental role in geometry and in physics, understandin
 
 We hope that techniques such as the ones presented here proivde a foundation upon which these and other developments can be built.
 We therefore conclude our presentation of contributions, and move to discuss the state and overall picture of Gaussian processes and decision systems that we have studied.
+
+
+
 
 
 \chapter{Discussion}

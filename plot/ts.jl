@@ -41,9 +41,9 @@ color = Dict("direct" => "black", "cholesky" => colorant"#2ca02c", "rff" => colo
                 tick_label_style = { font = raw"\small" },
                 x_tick_label_style = "/pgf/number format/1000 sep=",
                 legend_columns = -1, 
-                legend_style = raw"draw=none, fill=none, at={(0.5,1.2)}, anchor=south, font={\footnotesize}, /tikz/every even column/.append style={column sep=0.25cm}"
+                legend_style = raw"draw={none}, fill={none}, at={(0.425,1.2)}, anchor={south}, font={\footnotesize}, column sep={0.0625cm}, /tikz/every even column/.append style={column sep={0.375cm}}"
             },
-            l == 256 ? PGFPlotsX.Options() : PGFPlotsX.Options(:ytick_style => "draw=none", :yticklabels => ",,", :y_axis_line_style => "draw=none"),
+            l == 256 ? PGFPlotsX.Options() : PGFPlotsX.Options(:ytick_style => "draw={none}", :yticklabels => ",,", :y_axis_line_style => "draw={none}"),
             PGFPlotsX.Options(:xtick => d == 2 ? "1,16,32,48,64" : d == 4 ? "1,64,128,192,256" : "1,256,512,768,1024"),
             PGFPlotsX.Options(:ymin => d == 8 ? -2 : -3),
             PGFPlotsX.Options(:ymax => 1),

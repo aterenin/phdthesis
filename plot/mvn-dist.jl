@@ -162,3 +162,21 @@ end
         Coordinates(samples_cond,fill(y_cond,length(samples_cond)))
     ),
 ) |> TikzPicture |> save_tex("mvn-dist-cond.tex")
+
+
+extra_mark = raw"\pgfdeclareplotmark{|||}{\pgfpathmoveto{\pgfqpoint{-2pt}{\pgfplotmarksize}}\pgfpathlineto{\pgfqpoint{-2pt}{-\pgfplotmarksize}}\pgfpathmoveto{\pgfqpoint{0pt}{\pgfplotmarksize}}\pgfpathlineto{\pgfqpoint{0pt}{-\pgfplotmarksize}}\pgfpathmoveto{\pgfqpoint{2pt}{\pgfplotmarksize}}\pgfpathlineto{\pgfqpoint{2pt}{-\pgfplotmarksize}}\pgfusepathqstroke}"
+
+@pgf Axis(
+    {
+        hide_axis,
+        xmin = 0,
+        xmax = 1,
+        ymin = 0,
+        ymax = 1,
+        legend_columns = -1, 
+        legend_style = raw"draw={none}, legend cell align={center}, font={\footnotesize}, column sep={0.0625cm}, /tikz/every even column/.append style={column sep=0.375cm}",
+    },
+    legend_entry("ultra thick" => "Data point"),
+    legend_entry("fill opacity={0.25}, area legend, very thick, color=$(color_to_pgf(colorant"#1f77b4")), fill=$(color_to_pgf(colorant"#1f77b4"))" => "Conditional distribution"),
+    legend_entry("only marks, mark={|||}, mark size={3pt}, color=$(color_to_pgf(colorant"#1f77b4"))" => "Conditional samples"),
+) |> TikzPicture |> save_tex("mvn-dist-lgnd.tex", extra=extra_mark)

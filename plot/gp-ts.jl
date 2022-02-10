@@ -124,3 +124,20 @@ for t in 1:4
         )
     ) |> TikzPicture |> save_tex("gp-ts-$t.tex")
 end
+
+
+@pgf Axis(
+    {
+        hide_axis,
+        xmin = 0,
+        xmax = 1,
+        ymin = 0,
+        ymax = 1,
+        legend_columns = -1, 
+        legend_style = raw"draw={none}, legend cell align={center}, font={\footnotesize}, /tikz/every even column/.append style={column sep=0.375cm}"
+    },
+    legend_entry("thick, dashed" => "True function"),
+    legend_entry("fill opacity={0.25}, area legend, very thick, color=$(color_to_pgf(colorant"#1f77b4")), fill=$(color_to_pgf(colorant"#1f77b4"))" => "Posterior"),
+    legend_entry("color=$(color_to_pgf(colorant"#1f77b4")), ultra thick" => "Sample"),
+    legend_entry("dashed, opacity=0.5" => "Next evaluation point"),
+) |> TikzPicture |> save_tex("gp-ts-lgnd.tex")

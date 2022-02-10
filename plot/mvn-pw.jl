@@ -149,3 +149,22 @@ highlight_cond = highlight_joint[1] + K[1,2] * K[2,2]^-1 * (y_cond .- highlight_
         Coordinates([highlight_joint[1]], [highlight_joint[2]])
     ),
 ) |> TikzPicture |> save_tex("mvn-pw-cond.tex")
+
+
+
+extra_mark = raw"\pgfdeclareplotmark{|||}{\pgfpathmoveto{\pgfqpoint{-2pt}{\pgfplotmarksize}}\pgfpathlineto{\pgfqpoint{-2pt}{-\pgfplotmarksize}}\pgfpathmoveto{\pgfqpoint{0pt}{\pgfplotmarksize}}\pgfpathlineto{\pgfqpoint{0pt}{-\pgfplotmarksize}}\pgfpathmoveto{\pgfqpoint{2pt}{\pgfplotmarksize}}\pgfpathlineto{\pgfqpoint{2pt}{-\pgfplotmarksize}}\pgfusepathqstroke}"
+
+@pgf Axis(
+    {
+        hide_axis,
+        xmin = 0,
+        xmax = 1,
+        ymin = 0,
+        ymax = 1,
+        legend_columns = -1, 
+        legend_style = raw"draw={none}, legend cell align={center}, font={\footnotesize}, column sep={0.0625cm}, /tikz/every even column/.append style={column sep=0.375cm}",
+    },
+    legend_entry("ultra thick" => "Data point"),
+    legend_entry("only marks, mark={*}, color=$(color_to_pgf(colorant"#1f77b4"))" => "Joint samples"),
+    legend_entry("only marks, mark={|||}, mark size={3pt}, color=$(color_to_pgf(colorant"#1f77b4"))" => "Conditional samples"),
+) |> TikzPicture |> save_tex("mvn-pw-lgnd.tex", extra=extra_mark)

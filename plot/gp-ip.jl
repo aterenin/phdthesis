@@ -176,3 +176,20 @@ end
         Coordinates(x, samples_canonical[:,i])
     ) for i in 1:l]...,
 ) |> TikzPicture |> save_tex("gp-ip-samples.tex")
+
+extra_mark = raw"\pgfdeclareplotmark{|||}{\pgfpathmoveto{\pgfqpoint{-2pt}{\pgfplotmarksize}}\pgfpathlineto{\pgfqpoint{-2pt}{-\pgfplotmarksize}}\pgfpathmoveto{\pgfqpoint{0pt}{\pgfplotmarksize}}\pgfpathlineto{\pgfqpoint{0pt}{-\pgfplotmarksize}}\pgfpathmoveto{\pgfqpoint{2pt}{\pgfplotmarksize}}\pgfpathlineto{\pgfqpoint{2pt}{-\pgfplotmarksize}}\pgfusepathqstroke}"
+
+@pgf Axis(
+    {
+        hide_axis,
+        xmin = 0,
+        xmax = 1,
+        ymin = 0,
+        ymax = 1,
+        legend_columns = -1, 
+        legend_style = raw"draw={none}, legend cell align={center}, font={\footnotesize}, column sep={0.0625cm}, /tikz/every even column/.append style={column sep=0.375cm}",
+    },
+    legend_entry("only marks, mark={|||}, mark size={2pt}, color=$(color_to_pgf(colorant"#1f77b4"))" => "Data"),
+    legend_entry("only marks, mark options={thick}, mark={*}, fill=$(color_to_pgf(weighted_color_mean(0.875,colorant"#ffffff",colorant"#1f77b4")))" => "Inducing points"),
+    legend_entry("opacity={0.5}, thick, color=$(color_to_pgf(colorant"#1f77b4"))" => "Samples"),
+) |> TikzPicture |> save_tex("gp-ip-lgnd.tex", extra=extra_mark)
