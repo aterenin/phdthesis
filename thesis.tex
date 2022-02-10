@@ -2270,7 +2270,11 @@ Then there is a unique Hilbert space $H_k \subseteq \R^X$ of real-valued functio
 \textcite[Proposition 2.13 and Theorem 2.14]{paulsen16}.
 \end{proof}
 
-This gives another point of view from which one can study and understand kernels.
+This gives another point of view from which one can study and understand kernels and, by proxy, Gaussian processes.
+The reproducing kernel Hilbert space induced by the covariance kernel of a Gaussian process is sometimes called its \emph{Cameron--Martin space} or \emph{native space}, and encodes its mathematical propeties.
+This perspective can be studied abstractly, leading to the theory of \emph{isonormal Gaussian processes}.
+See \textcite{wendland04, lifshits12, legall16} for details on these and related ideas.
+
 We will need one final notion.
 We say that a function $\varphi : X \-> H_k$ is a \emphmarginnote{feature map} if $k(x,x') = \innerprod{\phi(x)}{\phi(x')}$.
 Now, we introduce the key idea for constructing our approximate Gaussian prior: suppose we have a \emph{finite-dimensional} approximation for such a feature map, namely a vector-valued function $\v\phi : X \-> \R^\ell$ such that $\v\phi(x)^T \v\phi(x') \approx \innerprod{\varphi(x)}{\varphi(x')}$.
