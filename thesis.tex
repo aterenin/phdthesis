@@ -1608,7 +1608,7 @@ At first glance, it is not clear what, if anything, this notion has to do with t
 To better understand this, an illustrative example is in order.
 
 Let $f \~[GP](\mu,k)$ be a Gaussian process defined on $[0,1]$ whose sample paths are almost surely continuous, and note by compactness that they are automatically bounded.
-Our Gaussian process can therefore by assumption be viewed as a random variable $f : \Omega \-> C^0([0,1];\R)$. 
+Our Gaussian process can therefore be viewed as a random variable $f : \Omega \-> C^0([0,1];\R)$. 
 We endow the latter space with the supremum norm, making it into a Banach space.
 If we take another function $\phi \in C^\infty([0,1],\R)$, called the \emph{test function}, we can define the pairing
 \[
@@ -1637,7 +1637,7 @@ The covariance is only slightly more subtle.
 We say that a symmetric positive semi-definite bilinear form $k : W \x W \-> \R$ is a \emph{covariance form}.
 \end{definition}
 
-As before, we can construct such a bilinear form from a given Gaussian process.
+As before, we can construct a covariance form from a given Gaussian process.
 
 \begin{definition}[Covariance form of a Gaussian process]
 The \emph{covariance form} of a Gaussian in the sense of duality is defined by 
@@ -1687,9 +1687,9 @@ One can easily see that the transformation rule for covariance operators under a
 \c{K} \|> \c{A} \c{K}\c{A}^*
 .    
 \]
-If it is often unclear whether or not a Gaussian process with a given covariance form exists, it is generally even less clear whether or not a Gaussian process with a given covariance operator exists.
-Nonetheless, this notion is important, because in certain cases these operators can be studied using spectral theory.
-We now move to the final concept we consider at this level of generality: that of a \emph{standard Gaussian}.
+If it is often unclear whether or not a Gaussian process with a given covariance form exists, it can be even less clear whether or not a Gaussian process with a given covariance operator exists.
+Still, this notion is important, as these operators can potentially be studied using spectral theory.
+We now move to the final concept we consider at this stage: that of a \emph{standard Gaussian}.
 
 \begin{definition}[Gaussian white noise]
 Let $W \subseteq H$ where $H$ is a Hilbert space.
@@ -1707,15 +1707,15 @@ Loosely speaking, we do so by taking $V$ to be a space of distributions, and $\c
 This is chosen to ensure that $\c{A}$ smooths its inputs, so that its output is regular enough to be understood as a random function.
 
 This line of thought leads one to the theory of stochastic partial differential equations driven by Gaussian white noise.
-The main point swept here under the rug is that there is a convenient way to sidestep much of the analysis needed to carry out the above calculations, using the theory of reproducing kernel Hilbert spaces.
-Roughly, this amounts to working with certain Lebesgue and Sobolev spaces, rather than distributions, which nonetheless sufficiently constrain behavior to uniquely determine the kernel of interest.
+The main point swept here under the rug is that there is a convenient way to sidestep much of the analysis needed to carry out the above calculations using the theory of reproducing kernel Hiblert spaces.
+Roughly, this amounts to working with certain vector spaces that uniquely determine the Gaussian processes of interest.
 
 We also use the theory of Gaussians in the sense of duality for a second purpose: to construct a \emph{coordinate-free} notion of Gaussianity as a suitable building block for constructing Gaussian vector fields on Riemannian manifolds.
 The issue here is that the Gaussian process \emph{cannot} be understood as a real-valued random function due to topological obstructions---it is instead a \emph{random section}, which we define in \Cref{ch:noneuclidean}.
 Finite-dimensional Gaussians in the sense of duality end up being the right tool for this setting.
 
 For this, we prove a general existence theorem on Gaussians in the sense of duality in finite-dimensional settings.
-Aside from giving an intrinsic reinterpretation of the multivariate Gaussians described previously, this ensures our technical framework is suited for its desired purpose in the coordinate-free setting.
+Aside from giving an intrinsic reinterpretation of the multivariate Gaussians described previously, this ensures our framework is suited for its purpose in the coordinate-free setting.
 
 \begin{proposition}
 Let $V$ be a finite-dimensional real topological vector space, and let $W = V^*$ be its topological dual.
@@ -1754,7 +1754,7 @@ Here, finite-dimensionality suffices to ensure existence: the story in infinite-
 To conclude, we reflect on the introduced ideas. 
 We began by studying Gaussian random variables and random vectors, before generalizing these to Gaussian random functions, which offered a concrete framework where certain aspects of Gaussianity were seemingly lost.
 Adopting a function-analytic view restored these aspects, at cost of increased abstraction.
-This view also gave a coordinate-free way to reinterpret the preceding multivariate constructions.
+This also gave a coordinate-free way to reinterpret the preceding multivariate constructions.
 
 While much of the technical power of the duality framework is extraneous for our purposes, studying it nonetheless helps provide a unified conceptual perspective from which to interpret our developments.
 By considering these notions, it becomes much clearer how one should understand the constructions encountered later, which might otherwise appear as if they arise out of thin air.
@@ -1765,8 +1765,8 @@ This completes our study of Gaussianity for its own sake, independent of Bayesia
 The preceding sections paint a rich and detailed picture of what a mathematical theory of decision-making under uncertainty looks like.
 We now recap the steps taken so far, and reflect on them, before proceeding to describe contributions to be presented.
 
-We began with the concept of probability, built and defined using the language of measure theory. 
-We used this language to formalize the concept of learning using the notion of conditional probability, thereby obtaining the theory of \emph{Bayesian learning}.
+We began with the concept of probability, constructed in the language of measure theory. 
+We used this language to formalize the concept of learning via the notion of conditional probability, thereby obtaining the theory of \emph{Bayesian learning}.
 By working in an abstract measure-theoretic setting, we obtained a formalism suitable for learning about very general unknown quantities of interest.
 
 We then took a step back, examining how to formalize the notion of an agent selecting actions in an unknown environment on basis of interactions, obtaining the key concept of a \emph{Markov decision process}.
@@ -1787,9 +1787,9 @@ In many reinforcement learning problems of interest in robotics, the complexity 
 Gaussian processes are largely not expressive enough to represent multi-object collision dynamics and related phenomena.
 We have also not addressed partial observations---another key difficulty in that setting.
 
-On the other hand, no other currently known theoretical framework comes close to understanding decision to the degree of command one can obtain from the notions we have described.
-In the absence of a probabilistic framework, it is highly non-trivial how to assess, represent, and propagate uncertainty in a manner that resolves explore-exploit tradeoffs to achieve optimal regret in non-trivial settings.
-Thus, in settings where probabilistic methods can be used, they absolutely should be.
+On the other hand, no other currently known theoretical framework comes close to understanding decision to the degree of command one can obtain from the notions described.
+In the absence of a probabilistic framework, it is unclear how to assess, represent, and propagate uncertainty to resolve explore-exploit tradeoffs and minimize regret in non-trivial settings.
+Thus, when probabilistic methods can be used, they absolutely should be.
 
 As a step towards building increasingly sophisticated decision systems, it seems fruitful to expand probabilistic approaches built via Bayesian learning to more general settings.
 Improved understanding of these phenomena may yield lessons of broad interest to understanding of decision.
