@@ -4,6 +4,7 @@
 \usepackage{hyperref}
 \usepackage{microtype}
 \usepackage{lettrine}
+\usepackage{xltabular}
 
 \usepackage{standalone}
 \usepackage{pgfplots}
@@ -172,6 +173,130 @@ This, in turn, makes it possible to potentially apply Gaussian processes to nove
 
 \listoffigures
 
+\chapter*{Principal Notation}
+\chaptermark{Principal Notation}
+
+\section*{General}
+
+\begin{xltabular}{\textwidth}{p{1.5cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+$(\Omega,\c{F},\P)$ & probability space & \labelcpageref{ntn:prob-space} \\
+$\E(\.)$ & expectation of a real-or-vector-valued random variable & \labelcpageref{ntn:expectation} \\
+$\Cov$ & covariance of real-or-vector-valued random variables & \labelcpageref{ntn:cov} \\
+$y \~ \pi$ & $\pi$-distributed random variable $y$ & \labelcpageref{ntn:distr} \\
+$D_{\f{KL}}(\.||\.)$ & Kullback--Leibler divergence of probability measures & \labelcpageref{ntn:kl-div} \\
+$W_{p,d}(\.,\.)$ & Wasserstein distance of $p$th order over metric $d$ & \labelcpageref{ntn:wass-dist} \\
+$\N$ & natural numbers, not including zero \\ 
+$\Z$ & integers \\
+$\R$ & real numbers \\ 
+$\C$ & complex numbers \\
+$\R^d$ & $d$-dimensional Euclidean space \\ 
+$\R^X$ & space of functions from $X$ to $\R$ \\
+$\v{a}$ & Euclidean vector (bold italic) \\ 
+$\m{A}$ & matrix (bold upface) \\
+$\c{O}(\.)$ & asymptotic order of a function \\
+$\tl{\c{O}}(\.)$ & asymptotic order up to logarithmic factors & \labelcpageref{ntn:big-o-tilde} \\
+$V^*$ & dual space of a topological vector space $V$ & \labelcpageref{ntn:dual-space} \\
+$\norm{\.}$ & norm of a vector in a Banach space & \labelcpageref{ntn:norm} \\
+$\innerprod{\.}{\.}$ & inner product between vectors in a Hilbert space & \labelcpageref{ntn:inner-prod} \\
+$\dualprod{\.}{\.}$ & duality pairing between topological vector spaces & \labelcpageref{ntn:dual-pair} \\
+$L(V;W)$ & Banach space of bounded linear operators & \labelcpageref{ntn:space-of-operators} \\
+$C^0(X;\R)$ & Banach space of real-valued continuous functions on $X$ & \labelcpageref{ntn:conts-fns} \\
+$L^p(X;\R)$ & Lebesgue space & \labelcpageref{ntn:leb-space} \\
+\end{xltabular}
+
+\section*{Bayesian learning}
+
+\begin{xltabular}{\textwidth}{p{1.5cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+$(\Theta,\mathit\Theta)$ & measurable space representing quantity of interest & \labelcpageref{ntn:meas-space} \\ 
+$(Y,\c{Y})$ & measurable space representing the data & \labelcpageref{ntn:meas-space} \\
+$A_{(\.)}$ & measurable set & \labelcpageref{ntn:meas-space} \\
+$\theta, y$ & random variables & \labelcpageref{ntn:rv} \\ 
+$\pi_{(\.)}$ & probability measure & \labelcpageref{ntn:prob-meas} \\ 
+$f_{(\.)}$ & probability density & \labelcpageref{ntn:density} \\
+$(\.\given\.)$ & jointly measurable stochastic process & \labelcpageref{ntn:jmsp} \\
+$\pi_{(\. \given \.)}$ & probability kernel & \labelcpageref{ntn:prob-ker} \\ 
+$f_{(\.\given\.)}$ & conditional probability density & \labelcpageref{ntn:cond-density} \\
+\end{xltabular}
+
+\section*{Markov decision processes}
+
+\begin{xltabular}{\textwidth}{p{1.5cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+$S$ & state space & \labelcpageref{ntn:mdp} \\ 
+$A$ & action space & \labelcpageref{ntn:mdp} \\ 
+$r(\.\given\.,\.)$ & reward kernel & \labelcpageref{ntn:mdp} \\ 
+$p(\.\given\.,\.)$ & transition kernel & \labelcpageref{ntn:mdp} \\ 
+$\pi$ & policy & \labelcpageref{ntn:mdp-policy} \\ 
+$V^{(\pi)}$ & value function with respect to policy $\pi$ & \labelcpageref{ntn:mdp-value} \\
+$R^{(\pi)}$ & regret of policy $\pi$ & \labelcpageref{ntn:mdp-regret} \\
+\end{xltabular}
+
+\section*{Multi-armed bandits}
+
+\begin{xltabular}{\textwidth}{p{1.5cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+$X$ & space of arms & \labelcpageref{ntn:mab} \\
+$K$ & number of arms & \labelcpageref{ntn:mab-number-arms} \\ 
+$T$ & maximum time & \labelcpageref{ntn:mab-regret} \\
+$y$ & observed stochastic rewards & \labelcpageref{ntn:mab} \\
+$f(\.)$ & expected rewards & \labelcpageref{ntn:mab} \\
+$\eps$ & observation noise & \labelcpageref{ntn:mab} \\ 
+$R$ & cumulative stochastic regret of a bandit algorithm & \labelcpageref{ntn:mab-regret} \\ 
+$\Delta(\.)$ & regret of a specific arm & \labelcpageref{ntn:mab-regret-arms} \\ 
+$n_t$ & cumulative number of arm pulls up to time $t$ & \labelcpageref{ntn:mab-regret-arms} \\
+$f^+_t(\.)$ & upper confidence bound at time $t$ & \labelcpageref{ntn:mab-ucb} \\
+$\mu_t(\.)$ & empirical mean rewards at time $t$ & \labelcpageref{ntn:mab-means} \\
+$\sigma_t(\.)$ & width of confidence bounds at time $t$ & \labelcpageref{ntn:mab-ucb} \\
+$c_t$ & scaling constant for confidence bound width at time $t$ & \labelcpageref{ntn:mab-ucb} \\
+\end{xltabular}
+
+\section*{Gaussian processes}
+
+\begin{xltabular}{\textwidth}{p{1.5cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+$\f{N}(\mu,\sigma^2)$ & Gaussian distribution with mean $\mu$ and variance $\sigma^2$ & \labelcpageref{ntn:norm-dist} \\
+$\f{N}(\v\mu,\m\Sigma)$ & multivariate Gaussian with mean $\v\mu$ and covariance $\m\Sigma$ & \labelcpageref{ntn:mvn-dist} \\ 
+$k(x,x')$ & positive semi-definite kernel & \labelcpageref{ntn:kernel} \\ 
+$\m{K}_{\v{x}\v{x}'}$ & kernel matrix with entries $k(x_i, x'_j)$ & \labelcpageref{ntn:kernel} \\
+$\f{GP}(\mu,k)$ & Gaussian process with mean $\mu$ and covariance kernel $k$ & \labelcpageref{ntn:gp-dist} \\ 
+$f$ & prior Gaussian process & \labelcpageref{ntn:gp-model} \\ 
+$\v\eps$ & likelihood noise & \labelcpageref{ntn:gp-model} \\
+$\m\Sigma$ & covariance of likelihood noise & \labelcpageref{ntn:gp-model} \\
+$(\v{x},\v\gamma)$ & data used to condition the model $y_i = f(x_i) + \eps_i$  & \labelcpageref{ntn:gp-model} \\
+$f\given\v{y}$ & posterior Gaussian process conditioned on $\v{y} = \v\gamma$ & \labelcpageref{ntn:gp-model} \\ 
+$n$ & training data size & \labelcpageref{ntn:gp-complexity} \\ 
+$n_*$ & number of evaluation locations & \labelcpageref{ntn:gp-complexity} \\
+$\tilde{f}$ & approximate prior defined via a finite basis expansion & \labelcpageref{ntn:gp-approx-prior} \\
+$\phi_i(\.)$ & basis function used by approximate prior & \labelcpageref{ntn:gp-approx-prior} \\
+$w_i$ & random weight of basis function $\phi_i$ & \labelcpageref{ntn:gp-approx-prior} \\
+$\ell$ & number of basis functions used in approximate prior & \labelcpageref{ntn:gp-approx-prior} \\
+$k(x_j,\.)$ & canonical basis function & \labelcpageref{ntn:canonical-basis-fns} \\ 
+$v_j$ & weight of canonical basis function $k(x_j,\.)$ & \labelcpageref{ntn:canonical-basis-fns} \\
+$H_k$ & reproducing kernel Hilbert space with kernel $k$ & \labelcpageref{ntn:rkhs} \\ 
+$\v\phi$ & finite-dimensional approximate feature map & \labelcpageref{ntn:approx-feature-map} \\ 
+$m$ & number of inducing points in sparse approximation & \labelcpageref{ntn:gp-num-inducing} \\
+
+\end{xltabular}
+
+\section*{Manifolds and graphs}
+
+\begin{xltabular}{\textwidth}{p{1.5cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+$X$ & manifold & \labelcpageref{ntn:manifold} \\ 
+$TX$ & tangent bundle over $X$ & \labelcpageref{ntn:tangent-bdl} \\ 
+$T^*X$ & cotangent bundle over $X$ & \labelcpageref{ntn:cotangent-bdl} \\ 
+$\Gamma(TX)$ & space of smooth sections over $TX$ & \labelcpageref{ntn:smooth-sections} \\
+$d$ & dimension of $X$ & \labelcpageref{ntn:manifold} \\ 
+$f_*$ & pushforward of a function $f$ & \labelcpageref{ntn:vector-pushforward} \\ 
+$g(\.,\.)$ & metric tensor of a Riemannian manifold $X$ & \labelcpageref{ntn:metric-tensor} \\ 
+$d_g(\.,\.)$ & geodesic distance induced by $g$ & \labelcpageref{ntn:geodesic} \\ 
+$\lap_g$ & Laplace--Beltrami operator induced by $g$ & \labelcpageref{ntn:laplace-beltrami} \\ 
+$(\lambda_n, f_n)$ & $n$th Laplace--Beltrami eigenpair & \labelcpageref{ntn:laplace-beltrami-eigenpairs} \\ 
+$\Phi(\lap_g)$ & operator defined via functional calculus & \labelcpageref{ntn:functional-calculus} \\ 
+$\c{W}_g$ & Gaussian white noise induced by $g$ & \labelcpageref{ntn:riemannian-white-noise} \\
+$\m\lap$ & graph Laplacian & \labelcpageref{ntn:graph-laplacian} \\ 
+$\bc{W}$ & standard Gaussian & \labelcpageref{ntn:graph-white-noise} \\
+$\Phi(\m\lap)$ & matrix defined via functional calculus & \labelcpageref{ntn:matrix-functional-calculus} \\ 
+$F$ & frame over $X$ & \labelcpageref{ntn:frame} \\ 
+$\m{P}_F(\.)$ & projection map induced by frame & \labelcpageref{ntn:frame-projection} \\ 
+\end{xltabular}
+
 
 
 
@@ -248,6 +373,7 @@ We adopt the language of measure-theoretic probability, which we now describe.
 To ease presentation, we state the definitions together with useful ways of thinking about them.
 We use \textcite{kallenberg06} as our standard reference, along with certain results from \textcite{bogachev07a,bogachev07b}.
 
+\label{ntn:meas-space}
 We say that \emphmarginnote{measurable space} is a pair $(Y,\c{Y})$ consisting of a set $Y$ and a $\sigma$-algebra $\c{Y}$ over $Y$.
 A \emph{$\sigma$-algebra} is a set of subsets of $Y$ containing the space itself which is closed under countable unions, intersections, complements, and therefore set-theoretic monotone limits.
 These can be reinterpreted as Boolean logical operations, so $\c{Y}$ can be thought of as the set of all true-false questions one can ask about elements of the set $Y$. 
@@ -267,15 +393,21 @@ A map $f : Y \-> Y'$ between measurable spaces $(Y,\c{Y})$ and $(Y',\c{Y}')$ is 
 This intuitively means that true-false questions for the space $Y'$ can be asked and answered relative to those in $Y$.
 On product spaces, a map $f : Y \-> \Theta \x \Theta'$ is measurable if its components are measurable, but a map $f : Y \x Y' \-> \Theta$ \emph{need not} automatically be measurable if $f(\.,y') : Y \-> \Theta$ and $f(y,\.) : Y' \-> \Theta$ are measurable for all $y$ and $y'$.
 
+\label{ntn:prob-space}
+\label{ntn:prob-meas}
 A \emphmarginnote{probability measure} is a non-negative countably additive map $\pi_y : \c{Y} \-> \R$ satisfying $\pi_Y(Y) = 1$. 
 This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is according to the measure---in this view, probability measures describe uncertainty.
 A \emphmarginnote{probability space} $(\Omega,\c{F},\P)$ consists of a measurable space and probability measure.
 The set $\Omega$ can be thought of as a space of abstract random numbers, with a random number generator described by $\P$.
 
+\label{ntn:expectation}
+\label{ntn:distr}
+\label{ntn:rv}
 Given a probability space, we say that a \emphmarginnote{random variable} is a measurable map $y : \Omega \-> Y$.
 A random variable, then, maps random numbers $\omega\in\Omega$ into the space $Y$.
 The \emph{distribution}\marginnote{Distribution} of a random variable is defined as the \emph{pushforward measure} $\pi_y = y_* \P$ where $y_*$ is defined as $(y_* \P)(A_y) = \P(y^{-1}(A_y))$ for all $A_y\in\c{Y}$.
-The probability of an event $A_y$, then, is determined by measuring the probability of random numbers under which $A_y$ occurs---measurability guarantees this is possible.
+The probability of an event $A_y$, then, is determined by measuring the probability of random numbers under which $A_y$ occurs.
+The \emphmarginnote{expectation} of a real-valued random variable is given by its integral with respect to $\P$.
 
 \parmarginnote{Notation for random variables}
 In this work, we will generally \emph{not} adopt the standard convention of suppressing $\omega$-arguments of random variables from our notation, and will write such arguments explicitly in cases that other function arguments are also used.
@@ -293,10 +425,12 @@ For a given probability space $(\Omega,\c{F},\P)$, a random variable $y : \Omega
 However, if it does not, there always exists another probability space $(\Omega',\c{F}',\P')$ and a measurable map $i : \Omega' \-> \Omega$ such that $\P = i_* \P'$, and for which a $\pi_y$-distributed random variable $y : \Omega' \-> Y$ \emph{does} exist.
 We thus implicitly assume all probability spaces are large enough to ensure all random variables with prescribed distributions exist.
 
+\label{ntn:prob-ker}
 \parmarginnote{Probability kernel}
 We will be interested in probability measures extended to allow them to be parameterized by other quantities.
 A \emph{probability kernel} is defined to be a map $\pi_{y\given\theta} : \c{Y} \x \Theta \-> \R$ satisfying two conditions: (i) the map $\pi_{y\given\theta}(\.,\vartheta) : \c{Y} \-> \R$ is a probability measure for all $\vartheta\in\Theta$, and (ii) the map $\pi_{y\given\theta}(A_y,\.) : \Theta \-> \R$ is measurable for all $A_y\in\c{Y}$.
 
+\label{ntn:jmsp}
 \parmarginnote{Conditional distribution}
 Random variables can also be extended to parameterize them by other quantities.
 A $\c{F}\ox \mathit\Theta$-measurable map $y\given\theta : \Omega \x \Theta \-> Y$ is called a \emph{jointly measurable stochastic process}---we largely eschew this terminology to emphasize the Bayesian formalism.
@@ -418,6 +552,8 @@ In its full abstract formulation, however, Bayes' Rule is \emph{non-constructive
 Moreover, the null sets can be problematic: to ensure that $\pi_{\theta\given y}$ is defined pointwise, one needs further properties such as continuity.
 Fortunately, in many settings these issues are resolved by virtue of additional structure.
 
+\label{ntn:density}
+\label{ntn:cond-density}
 The simplest such structure occurs when $\pi_{\theta,y}$ admits a density with respect to a product measure $\lambda$.
 In this case, it follows from \Cref{lem:ref-density} that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
 Define a \emph{conditional density} as the ratio of joint and marginal densities, for instance $f_{\theta\given y} = \frac{f_{\theta,y}}{f_y}$, and let $\propto$ denote equality up to a multiplicative proportionality constant.
@@ -486,6 +622,7 @@ In particular, we can map an infinite-dimensional function space into finite-dim
 
 We now introduce the \emph{variational formulation} of Bayes' Rule, which expresses the posterior as the solution to an infinite-dimensional optimization problem.
 
+\label{ntn:kl-div}
 \begin{proposition}[Bayes' Rule in variational form]
 \label{prop:variational-bayes}
 Let $\pi_{y,\theta}$ be a Bayesian model, and assume it admits the density $f_{\theta,y}$ with respect to a product measure $\lambda$.
@@ -624,6 +761,7 @@ We use \textcite{sutton18,bertsekas19} as our references.
 A Markov decision process is a stochastic system consisting of a set of states, actions, and transitions between states, together with a rewards that vary depending on states and actions.
 This is defined as follows.
 
+\label{ntn:mdp}
 \begin{definition}[Discrete-time Markov decision process]
 A \emph{discrete-time Markov decision process} is a $4$-tuple consisting of the following.
 \1 State space: a measurable space $S$.
@@ -745,7 +883,7 @@ Note that \emph{time} can, and often will, be part of the state $s$.
 The agent's goal is to choose actions so as to control the full trajectory of states in order to obtain maximum rewards.
 The choice of action in every state is called a \emph{policy}, and is formalized as follows.
 
-
+\label{ntn:mdp-policy}
 \begin{definition}[Policy]
 Define the following.
 \1 A measurable function $\pi : S \-> A$ is called a \emph{deterministic policy}.
@@ -760,6 +898,7 @@ Different policies yield different state trajectories, and therefore different r
 Of these, some obtain more rewards than others.
 We therefore introduce notions for distinguishing between policies according to the rewards they obtain.
 
+\label{ntn:mdp-value}
 \begin{definition}[Optimal policy]
 Let $T \in \N$ be the \emph{time horizon}.
 A policy is called \emph{optimal} if it maximizes the \emph{value function} 
@@ -786,6 +925,7 @@ Due to the rewards or dynamics being \emph{unknown}, they cannot simply be maxim
 This forces one to consider whether to take advantage of actions known to be good, or to try others in case they might be better---this is known as the \emph{explore-exploit tradeoff}.
 For such settings, we need an appropriate solution concept---to obtain one, define the following.
 
+\label{ntn:mdp-regret}
 \begin{definition}[Regret]
 The \emph{regret} of a policy $\pi$ is defined as 
 \[
@@ -860,6 +1000,7 @@ We use \textcite{slivkins19,lattimore20} as references.
 \label{fig:mab}
 \end{figure}
 
+\label{ntn:mab}
 \begin{definition}[Multi-armed bandit]
 Let $f : X \-> \R$ be a bounded above measurable function, let $\eps : \Omega \x X \-> \R$ be a jointly measurable stochastic process such that $\E(\eps(x)) = 0$ for all $x$, and let $y(\omega,x) = f(x) + \eps(\omega,x)$.
 Define the following.
@@ -873,7 +1014,8 @@ An algorithm, then, assigns every dataset of arbitrary size to a probability mea
 Each dataset consists of $(x, y)$ pairs where $x$ are the locations chosen by the algorithm, and $y$ are the noisy observed values---recall $\omega$ is the randomness used by the noise.
 Some algorithms maximize $f$ faster than others---we consider this next.
 
-
+\label{ntn:mab-maximum-time}
+\label{ntn:mab-regret}
 \begin{definition}[Regret]
 For a given multi-armed bandit, let $f(x^*)$ be the global maxima of $f$, which we assume to exist. 
 Define the \emph{regret} of an algorithm $\pi$ at time $T$ to be
@@ -890,6 +1032,7 @@ Regret behavior in multi-armed bandit problems is strongly dependent on properti
 It is clear by considering for instance $X = \R$ that if $X$ is too large or too unstructured, no algorithm achieves better than linear regret.
 We therefore begin studying the simplest non-trivial domain class.
 
+\label{ntn:mab-number-arms}
 \begin{definition}[$K$-armed bandit]
 We say that a multi-armed bandit defined over a finite set with cardinality $K=|X|$ is a \emph{$K$-armed bandit}.
 Moreover, if $y(\.,x)$ is a Bernoulli random variable for all $x$, we say it is a \emph{Bernoulli bandit}.
@@ -897,6 +1040,7 @@ Moreover, if $y(\.,x)$ is a Bernoulli random variable for all $x$, we say it is 
 
 For such bandits, regret can be decomposed on a per-arm basis in the manner given as follows.
 
+\label{ntn:mab-regret-arms}
 \begin{lemma}
 \label{lem:regret-arms}
 Regret satisfies 
@@ -933,6 +1077,7 @@ This result tells us that regret is necessarily incurred as consequence of not k
 The next step, then, is to ask: is there an algorithm which achieves this rate?
 We first consider simply evaluating each arm once, and then making choices according to the empirical averages.
 
+\label{ntn:mab-means}
 \begin{proposition}
 For a Bernoulli bandit, the algorithm which chooses actions by first trying each arm out once, and then selecting arms according to the maximum empirical average
 \[
@@ -982,6 +1127,7 @@ This process is repeated iteratively as additional data is obtained, with the qu
 \label{fig:bb-ucb}
 \end{figure}
 
+\label{ntn:mab-ucb}
 \begin{definition}[Hoeffding--UCB algorithm]
 Define the \emph{Hoeffding upper confidence bound} algorithm for Bernoulli bandits, which tries each arm once, and then, for a total of $T$ rounds, selects actions by
 \[
@@ -996,6 +1142,7 @@ Many algorithms within the upper confidence bound class have been proposed \cite
 We study the Hoeffding-based algorithm's regret, and present a simplified but less sharp analysis compared to the one given in that work.
 It turns out the simple modification, of adding a set of error bars with a threshold growing in time and decreasing with data size is enough to result in favorable regret behavior.
 
+\label{ntn:big-o-tilde}
 \begin{theorem}
 Hoeffding--UCB achieves an expected regret of
 \[
@@ -1166,9 +1313,9 @@ To determine the next point to query, we introduce and optimize an acquisition f
 Typical acquisition functions include the \emph{upper confidence bound} \cite{auer02} acquisition function considered previously, as well as \emph{Thompson sampling} \cite{thompson33,russo18}, first proposed half a century before Bayesian optimization was otherwise popularized. 
 This is defined as a random acquisition function given by
 \[
-x_{t+1}(\omega) &= \argmin_{x\in X} \phi_t(\omega,x)
+x_{t+1}(\omega) &= \argmin_{x\in X} \alpha_t(\omega,x)
 &
-\phi_t&\~ f \given y_1,..,y_t
+\alpha_t&\~ f \given y_1,..,y_t
 .
 \]
 We show an example of Bayesian optimization using Thompson sampling in \Cref{fig:ts}.
@@ -1236,6 +1383,8 @@ We work with vector spaces where the underlying field is the real numbers.
 A \emph{topological vector space} is a vector space equipped with a \emph{topology} under which the vector operations are continuous---the topology gives rise to notions of \emph{convergence}, \emph{continuity}, \emph{compactness}, and many others.
 Many interesting spaces of functions and generalizations thereof are topological vector spaces.
 
+\label{ntn:norm}
+\label{ntn:inner-prod}
 A \emphmarginnote{Banach space} is a topological vector space equipped with a \emph{norm}, which assigns a notion of size to all vectors, and induces a notion of distance given by a topologically complete metric, which in turn induces the space's topology.
 A \emphmarginnote{Hilbert space}, similarly, is a topological vector space equipped with an \emph{inner product} which induces a complete norm.
 Many, but not all, useful spaces of functions are Banach or Hilbert spaces.
@@ -1253,18 +1402,23 @@ By linearity, continuous maps between Banach spaces are automatically bounded wi
 Given two respective bases, linear maps between finite-dimensional vector spaces can be viewed as matrices via their action on a vector's basis coefficients.
 In doing so, composition of linear maps becomes matrix multiplication.
 
+\label{ntn:dual-space}
+\label{ntn:space-of-operators}
 \parmarginnote{Dual space}
 For a topological vector space $V$, the space $V^*$ consisting of continuous linear maps $\phi : V \-> \R$ into the underlying scalar field is called the \emph{dual space}.
 The dual space can be made into a vector space: for many topological vector spaces, including Banach and Hilbert spaces, it can canonically be assigned a topology making it into a topological vector space.
 \marginnote{Functional}
 We generally call elements of $V^*$ \emph{linear functionals}.
+Similarly, let $L(V;W)$ be the Banach space of bounded linear operators between Banach spaces.
 
+\label{ntn:conts-fns}
 \parmarginnote{Space of continuous functions}
 We now describe some particularly important function spaces.
 The space of \emph{continuous functions} is denoted $C^0(X;\R)$: if $X$ is a compact set, this space can be equipped with the supremum norm to obtain a Banach space.
 This is not the only useful topology on this space: in many settings, for instance, the topology induced by convergence of all bounded linear functionals is also used.
 The space of infinitely differentiable functions is denoted by $C^\infty(X;\R)$: this space, in contrast, is generally not a Banach space.
 
+\label{ntn:leb-space}
 For a measure space $X$, the \emphmarginnote{Lebesgue space} $L^p(X;\R)$, defined for $1 \leq p < \infty$, is the Banach space of equivalence classes of measurable functions $f : X \-> \R$, identified up to almost sure equality, whose norm, given by integration of absolute $p$th powers, is finite.
 Of these spaces, only $L^2(X;\R)$ is a Hilbert space.
 The space $L^\infty(X;\R)$ is the Banach space of essentially bounded equivalence classes of functions equipped with the essential supremum norm.
@@ -1298,6 +1452,7 @@ y = \sigma z + \mu
 \]
 \end{definition}
 
+\label{ntn:norm-dist}
 Note that we do \emph{not} require $\sigma \geq 0$: hence, every Gaussian random variable is determined uniquely in 
 distribution by the pair $(\mu,\sigma^2)$, which we call its \emph{mean} and \emph{variance}, respectively. 
 We write $y \~[N](\mu,\sigma^2)$.
@@ -1376,6 +1531,8 @@ A random variable $\v{y} : \Omega\->\R^d$ is called \emph{multivariate Gaussian}
 \label{fig:mvn-density}
 \end{figure}
 
+\label{ntn:cov}
+\label{ntn:mvn-dist}
 Every multivariate Gaussian is determined by its \emph{mean vector} $\v\mu$ and positive semi-definite \emph{covariance matrix} $\m\Sigma = \m{L}\m{L}^T$, and, as before, is called \emph{centered} if $\v\mu = \v{0}$.
 We write $\v{y}\~[N](\v\mu,\m\Sigma)$.
 We can obtain a centered multivariate Gaussian with a given distribution by calculating a \emph{matrix square root} of $\m\Sigma$, multiplying it with a standard Gaussian.
@@ -1440,7 +1597,7 @@ Therefore, we introduce an alternative definition to help build intuition for la
 \begin{definition}[Multivariate Gaussian (duality)]
 A random variable $\v{y} : \Omega \-> \R^d$ is called \emph{multivariate Gaussian} if, for any vector $\v\phi \in \R^d$, the Euclidean dot product 
 \[
-\dualprod{\v\phi}{\v{y}} : \Omega \-> \R 
+\v\phi\.\v{y} : \Omega \-> \R 
 \]
 is univariate Gaussian.
 \end{definition}
@@ -1508,7 +1665,7 @@ Under general conditions on the finite-dimensional marginals, Kolmogorov's Consi
 Thus, Gaussian processes exist so long as a family of multivariate Gaussians satisfying the conditions of Kolmogorov's Consistency Theorem can be found.
 
 The same results also allow us to reinterpret Gaussian processes as \emph{function-valued random variables}, which, in many ways, are a more natural point of view to take.
-Define $\R^X = \{f : X \-> \R\}$ and equip it with the cylindrical $\sigma$-algebra, namely the smallest $\sigma$-algebra containing all sets of the form $\{f \in \R^X : f(x_1),..,f(x_n) \in A\}$, where $A$ is a measurable set on $\R^n$, to make it into a measurable space. 
+Define $\R^X = \{f : X \-> \R\}$ and equip it with the cylindrical $\sigma$-algebra, namely the smallest $\sigma$-algebra containing all sets of the form $\{f \in \R^X : f(x_1),..,f(x_n) \in A\}$, where $A$ is a measurable set on $\R^n$, for all $n$, to make it into a measurable space. 
 Let $V \subseteq \R^X$, and let $\c{V}$ be the subset $\sigma$-algebra.
 We can then reinterpret Gaussian processes as follows.
 
@@ -1526,6 +1683,7 @@ Since a Gaussian process is uniquely determined by its finite-dimensional margin
 The former is straightforward: every function $\mu : X \-> \R$ can be evaluated at a finite set of points $x_1,..,x_n$ to obtain a mean vector $\v\mu = \mu(x_1,..,x_n)$.
 The latter requires only slightly more thinking.
 
+\label{ntn:kernel}
 \begin{definition}[Positive semi-definite kernel]
 A symmetric function $k : X \x X \-> \R$ is called a \emph{positive semi-definite kernel} if, for any finite set of points $x_1,..,x_n\in X$, the kernel matrix
 \[
@@ -1550,6 +1708,7 @@ k(x,x') = \Cov(f(\.,x),f(\.,x'))
 \]
 \end{definition}
 
+\label{ntn:gp-dist}
 It is then clear that the pair $(\mu,k)$ uniquely define a Gaussian process, and so we write $f\~[GP](\mu,k)$.
 Defining a centered Gaussian process then amounts to defining a positive semi-definite kernel. 
 
@@ -1597,7 +1756,7 @@ In the preceding section, we established a notion of a \emph{Gaussian process}, 
 In developing this viewpoint, some of the appeal of Gaussianity was lost: in particular, unlike in the finite-dimensional setting, no simple covariance kernel transformation rule was available.
 Here, we consider an alternative function-analytic view which avoids these limitations at cost of a higher degree of abstraction.
 
-
+\label{ntn:dual-pair}
 \begin{definition}[Gaussian process (duality)]
 Let $V$ and $W$ be a pair of measurable real vector spaces equipped with a jointly measurable non-degenerate bilinear form $\dualprod{\.}{\.} : V \x W \-> \R$.
 We say that a random variable $f : \Omega \-> V$ is a \emph{Gaussian process in the sense of duality} if, for any $\phi \in W$, the scalar-valued random variable $\dualprod{\phi}{f}$ is Gaussian.
@@ -1885,7 +2044,7 @@ See \textcite[Appendix A]{rasmussen06}, for a full derivation.
 The non-singularity requirement here is more-or-less necessary: otherwise, the marginal distribution of $\v{y}$ may admit too many null sets, rendering the desired conditional distribution non-unique, except in regions where one can apply a linear map to recover a suitable Lebesgue density and apply the above argument on the obtained subspace.
 
 If one wants to work with this expression numerically, then it's possible to simply compute the desired conditional mean and covariance. 
-Then, one can generate conditional sample via the expression
+Then, one can generate conditional samples via the expression
 \[
 (\v\theta\given\v{y})(\omega,\v\gamma) &= \m{L}_{\v\theta\given\v{y}}\v{z}(\omega) + \v\mu_{\v\theta\given\v{y}}
 &
@@ -2051,11 +2210,12 @@ Since conditioning and marginalization commute, conditioning the Gaussian proces
 We now describe this.
 
 To ease notation, we now set the prior mean to zero: the general case can be recovered by adding and subtracting mean functions.
-Additionally, wn what follows, we let $\v{x} = (x_1,..,x_n)$ denote the data locations.
+Additionally, in what follows, we let $\v{x} = (x_1,..,x_n)$ denote the data locations.
 For this usage specifically, we use bold italic fonts to indicate a product structure rather than a linear structure, and in particular do not require $X$ to be a vector space.
 Finally, functions applied to product spaces are understood component-wise.
 With this notation in place, we are ready to state the claim.
 
+\label{ntn:gp-model}
 \begin{proposition}[Posterior Gaussian process]
 \label{prop:gp-cond}
 The Bayesian model
@@ -2108,6 +2268,7 @@ Given the minimization involved in this objective, there is no chance in finding
 Just about any numerical procedure one can imagine---for instance, gradient descent---will involve drawing random samples from $f\given\v{y}$ at different locations, and performing the necessary algorithmic operations on them.
 Summarizing, the computational costs of this expression are as follows.
 
+\label{ntn:gp-complexity}
 \1 Data: $\c{O}(n^3)$ where $n$ is the size of the training set, due to the intermediate term $(\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1}$ in the posterior covariance.
 \2 Predictions: $\c{O}(n_*^3)$ where $n_*$ is the number of locations the posterior Gaussian process needs to be jointly evaluated at, due to the need to factorize the posterior covariance $\m{K}_{(\.,\.)} - \m{K}_{(\.)\v{x}} (\m{K}_{\v{x}\v{x}} + \m\Sigma)^{-1} \m{K}_{\v{x}(\.)}$.
 \0
@@ -2169,6 +2330,7 @@ In this case, we sample the prior at the data and evaluation locations jointly, 
 Examining the computational costs, we see these are $\c{O}(n^3)$ with respect to data size, and $\c{O}(n_*^3)$ with respect to the number of evaluation locations.
 At this stage, then, we have seemingly only gained numerical stability.
 
+\label{ntn:gp-approx-prior}
 \Cref{cor:gp-pw}, however, is not merely a computational result: it gives us a powerful way of thinking about posterior Gaussian processes. 
 In particular, we can use the point of view it offers to construct posterior approximations.
 Observe that the cubic costs $\c{O}(n_*^3)$ occur entirely due to the need to jointly sample the prior at all evaluation locations.
@@ -2194,6 +2356,7 @@ We show in the sequel that for appropriate choices of $\tilde{f}$, such approxim
 \label{fig:gp-pw-approx}
 \end{figure*}
 
+\label{ntn:canonical-basis-fns}
 We now examine a different aspect of the pathwise representation of posterior Gaussian processes: the role of the data.
 By re-expressing the matrix-vector product of the kernel matrix term $\m{K}_{(\.)\v{x}}$ as a sum, we obtain
 \[
@@ -2214,9 +2377,9 @@ Summarizing, pathwise representations of posterior Gaussian processes provide a 
 In Bayesian optimization, such approximations offer a promising avenue to avoid the computational difficulties that result from working with finite-dimensional marginals.
 Computing the Thompson sampling acquisition function
 \[
-x_{t+1}(\omega) &= \argmax_{x\in X} \phi_t(\omega,x)
+x_{t+1}(\omega) &= \argmax_{x\in X} \alpha_t(\omega,x)
 &
-\phi_t&\~ f \given \v{y}
+\alpha_t&\~ f \given \v{y}
 \]
 or any other quantities that require evaluating the Gaussian process at arbitrary locations can be done using a simple Monte Carlo approach as follows.
 
@@ -2248,6 +2411,7 @@ We examine these now.
 To construct a basis function expansion, our strategy will be to find a \emph{feature map} $\varphi : X \-> H_k$ that maps states into vectors in the \emph{reproducing kernel Hilbert space} induced by $k$.
 This is defined as follows.
 
+\label{ntn:rkhs}
 \begin{definition}[Reproducing kernel Hilbert space]
 Let $X$ be a set, and let $H \subseteq \R^X$ be a Hilbert space of functions. 
 We say that $H$ is a \emph{reproducing kernel Hilbert space} if, for any $x\in X$, we have $\f{ev}_x \in H^*$ where $\f{ev}_x : H \-> \R$ is called the \emph{evaluation map} and is defined by $\f{ev}_x f = f(x)$.
@@ -2275,6 +2439,7 @@ The reproducing kernel Hilbert space induced by the covariance kernel of a Gauss
 This perspective can be studied abstractly, leading to the theory of \emph{isonormal Gaussian processes}.
 See \textcite{wendland04, lifshits12, legall16} for details on these and related ideas.
 
+\label{ntn:approx-feature-map}
 We will need one final notion.
 We say that a function $\varphi : X \-> H_k$ is a \emphmarginnote{feature map} if $k(x,x') = \innerprod{\phi(x)}{\phi(x')}$.
 Now, we introduce the key idea for constructing our approximate Gaussian prior: suppose we have a \emph{finite-dimensional} approximation for such a feature map, namely a vector-valued function $\v\phi : X \-> \R^\ell$ such that $\v\phi(x)^T \v\phi(x') \approx \innerprod{\varphi(x)}{\varphi(x')}$.
@@ -2384,7 +2549,7 @@ Among all techniques for constructing approximate priors, different techniques w
 One can then ask: is there an optimal choice?
 Of course, the answer to this question will depend on what one actually means by the word \emph{optimal}.
 
-If we take $X \subset \R^d$ to be closed and compact, and we use expected mean squared error---which we recall is equivalent to the $L^2(\Omega;L^2(X;\R))$ norm---as our notion of optimality, one can affirmatively answer the above question.
+If we take $X \subset \R^d$ to be compact, and we use expected mean squared error---which we recall is equivalent to the $L^2(\Omega;L^2(X;\R))$ norm---as our notion of optimality, one can affirmatively answer the above question.
 Recall that a continuous kernel $k : X \x X \-> \R$ induces a covariance operator
 \[
 \c{K} : L^2(X;\R) &\-> L^2(X;\R)
@@ -2396,7 +2561,7 @@ By compactness, $\c{K}$ will admit a countable set of eigenvalues and eigenfunct
 It turns out, that, by the Karhunen--Loève Theorem, the Gaussian process itself can be written in terms of the same eigenvalues and eigenfunctions as well.
 
 \begin{result}[Karhunen--Loève Theorem]
-Let $X \subseteq \R^d$ be closed and compact, and let $f$ be a Gaussian process with continuous covariance function.
+Let $X \subseteq \R^d$ be compact, and let $f$ be a Gaussian process with continuous covariance function.
 Then we have
 \[
 f(\omega,\.) &= \sum_{i=1}^\infty w_i(\omega) \phi_i(\.)
@@ -2529,6 +2694,7 @@ We now ask: from a pathwise perspective, what techniques are available for reduc
 
 \subsection{Inducing points}
 
+\label{ntn:gp-num-inducing}
 Consider a simple approach to reducing the above cubic costs: instead of conditioning the Gaussian process on the full data $(x_1,y_1),..,(x_n,y_n)$, find a different data set $(z_1,\mu_1),..,(z_m,\mu_m)$, for which $m \ll  n$ and yet the posterior is approximately the same.
 This idea underlies \emph{inducing point} approximations \cite{snelson06,titsias09,opper09,hensman13}.
 
@@ -2683,11 +2849,12 @@ This notion should possess a number of key properties.
 \2 The distance between the true posterior and pathwise approximations should be finite, in order to facilitate meaningful comparisons.
 \0 
 
+\label{ntn:wass-dist}
 The \emphmarginnote{Wasserstein distance} \cite{villani08} between probability measures is defined as 
 \[
-W_{k,d}(\pi,\pi')^k = \inf_{\gamma\in\Gamma(\pi,\pi')} \int_{A\x A} d(a,a')^k \d\gamma(a,a')
+W_{p,d}(\pi,\pi')^p = \inf_{\gamma\in\Gamma(\pi,\pi')} \int_{A\x A} d(a,a')^p \d\gamma(a,a')
 \]
-where $k \geq 1$, $d$ is a metric on $A$, and $\Gamma(\pi,\pi')$ is this set of all \emph{couplings} of $\pi$ with $\pi'$, namely probability measures $\gamma$ supported on $A\x A$ whose marginals equal $\pi$ and $\pi'$.
+where $p \geq 1$, $d$ is a metric on $A$, and $\Gamma(\pi,\pi')$ is this set of all \emph{couplings} of $\pi$ with $\pi'$, namely probability measures $\gamma$ supported on $A\x A$ whose marginals equal $\pi$ and $\pi'$.
 We adopt this expression as our notion of distance.
 
 This distributional distance can be understood as the expected distance between two random variables $a$ and $a'$, with distributions $\pi$ and $\pi'$, where the random numbers used to generate $a$ and $a'$ are linked in order to make the expectation as small as possible.
@@ -2704,13 +2871,13 @@ We now state our main results.
 
 \begin{proposition}[Pathwise posterior Wasserstein error bound]
 \label{prop:wasserstein-bound}
-Assume $X \subseteq \R^d$ is compact and that $f \~[GP](0,k)$ is almost surely continuous.
+Assume $X \subseteq \R^d$ is compact with volume $\vol(X)$ and that $f \~[GP](0,k)$ is almost surely continuous.
 Let $\tilde{f}(\omega,x) = \sum_{i=1}^\ell w_i(\omega) \phi_i(x)$, and let $(\tilde{f}\given\v{y})(\omega,x) = \tilde{f}(\omega,x) + \m{K}_{(\.)\v{x}}\m{K}_{\v{x}\v{x}}^{-1}(\v{y}- \tilde{f}(\v{x}))$.
 Then we have 
 \[
 W_{2,L^2(X)}(\tilde{f}\given\v{y}, f\given\v{y}) \leq C_1 W_{2,C^0(X)}(\tilde{f},f)
 \]
-where $C_1 = \del{2\f{vol}(X)\del{1 + \norm{k}^2_{C^0(X \x X)} \norm{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)}}}^{1/2}$.
+where $C_1 = \del{2\vol(X)\del{1 + \norm{k}^2_{C^0(X \x X)} \norm{\m{K}_{\v{x}\v{x}}^{-1}}^2_{L(\ell^\infty;\ell^1)}}}^{1/2}$.
 \end{proposition}
 
 \begin{proof}
@@ -2833,9 +3000,9 @@ For this, we perform a Bayesian optimization experiment using parallel Thompson 
 This variant of Thompson sampling consists of sampling $p$ independent posterior draws, then computing the acquisition and evaluating the target function at each location simultaneously.
 Specifically, for $s=1,..,p$, define
 \[
-x_{t+1,s}(\omega) &= \argmin_{x\in X} \phi_{t,s}(\omega,x)
+x_{t+1,s}(\omega) &= \argmin_{x\in X} \alpha_{t,s}(\omega,x)
 &
-\phi_{t,s}&\~ f \given y_1,..,y_t
+\alpha_{t,s}&\~ f \given y_1,..,y_t
 \]
 where $f$ is the Gaussian process.
 Our goal is to understand how approximation error affects performance of Bayesian optimization using this acquisition function, particularly among domains of different dimension.
@@ -2982,6 +3149,7 @@ A given set can admit many topologies.
 Topological spaces admit notions of \emph{locality}, \emph{convergence}, \emph{continuity}, \emph{compactness}, \emph{paracompactness}, \emph{denseness}, and many others.
 The \emph{Hausdorff} property implies that limits are unique.
 
+\label{ntn:manifold}
 \parmarginnote{Topological manifold}
 A paracompact Hausdorff topological space $(X,\c{O}_X)$ is called a $d$-dimensional \emph{topological manifold} if it is locally homeomorphic to $\R^d$ equipped with the standard topology.
 For such a manifold, there is a set $\c{A}_X$ called the \emph{atlas} whose elements are the local homeomorphisms, called \emph{charts}.
@@ -2997,19 +3165,23 @@ A \emphmarginnote{manifold with boundary} is one of a wide class of spaces gener
 Such a space is defined analogously to an ordinary manifold, except that it is also possible for it to be locally homeommorphic to a Euclidean half-plane.
 The ideas we consider admit natural generalizations to such settings, but we do not pursue these, and in particular only consider manifolds without boundary.
 
+\label{ntn:tangent-bdl}
 Every smooth manifold $X$ gives rise to its \emphmarginnote{tangent bundle} $(TX,\proj_X,X)$, which contains a smooth manifold $TX$ and a surjective projection map $\proj_X : TX \-> X$.
 The former is defined as $TX = \U_{x\in X} \{(x,v) : v \in T_x X\}$, where $T_x X$ is the tangent space, defined as a vector space of equivalence classes of directional derivatives of smooth curves through $x$.
 This set can be equipped with the structure of a smooth manifold, arising canonically from the smooth structure of $X$.
 
+\label{ntn:vector-pushforward}
 Given a smooth map $f: X \-> Y$ that transforms a smooth manifold $X$ into another smooth manifold $Y$, the \emphmarginnote{pushforward map} $f_* : TX \-> TY$ describes how each tangent space $T_x X$ transforms into $T_{f(x)} Y$ by the action of $f$.
 Since $f$ is smooth, each tangent space is transformed linearly: in this sense, $f_*$ encodes the local behavior of $f$ around each point on its domain.
 
+\label{ntn:smooth-sections}
 A map $f : X \-> TX$ satisfying $\proj_X \after f = \id_X$ is called a \emphmarginnote{vector field}.
 Note that this is \emph{not the same} as a map $X \-> \R^d$ and often cannot usefully be expressed in this way: we expand on this in the sequel.
 If $f$ is smooth as a map between manifolds, we write $f \in \Gamma(TX)$.
 We also say that $f$ is a \emph{cross-section}, or simply a \emphmarginnote{section}, of the tangent bundle.
 Functions can multiply against vector fields by scaling them pointwise.
 
+\label{ntn:cotangent-bdl}
 Analogously, we can define the \emphmarginnote{cotangent bundle} $T^* X = \U_{x\in X} \{(x,\phi) : \phi \in T_x X^*\}$ where, compared to the tangent bundle, we have replaced the vector space $T_x X$ with its topological dual $T_x X^*$.
 A section of this bundle is called a \emphmarginnote{covector field}.
 We can similarly define a number of other bundles, each equipped with a projection map onto the base space.
@@ -3034,6 +3206,7 @@ Differential forms are often used to formalize and encode geometric structure in
 For example, a nowhere-vanishing $d$-form is called a \emph{volume form}---such a form induces a notion of a \emph{volume density}, which induces a notion of \emphmarginnote{integration} of smooth functions, and in turn, by the Riesz--Markov--Kakutani representation theorem, a Radon measure on the manifold, which we call the \emph{volume measure}.
 On a general smooth manifold, the choice of a volume form is heavily non-unique.
 
+\label{ntn:metric-tensor}
 A \emphmarginnote{Riemannian manifold} is a quadruple $(X,\c{O}_X,\c{A}_X,g)$, usually written $(X,g)$, where $X$ is a smooth manifold and $g$ is the \emph{metric tensor}, which is a smooth non-degenerate symmetric positive definite $(0,2)$-tensor field.
 The metric tensor can be thought of as an algebraic object encoding the manifold's quantitative shape, and canonically gives rise to notions such as \emph{volume}, \emph{integration}, and \emph{geodesics}.
 In particular, we denote both the volume measure and volume density induced by the metric tensor as $\vol_g$.
@@ -3060,6 +3233,7 @@ Riemannian manifolds admit many different objects, such as connection one-forms,
 These objects are generally built using the metric along with derivatives and other algebraic operations.
 The \emph{Laplace--Beltrami operator} is one such object, and forms a basic building block for defining differentual equations on manifolds.
 
+\label{ntn:laplace-beltrami}
 \begin{definition}[Laplace--Beltrami operator]
 Let $(X,g)$ be an Riemannian manifold.
 Define the \emph{divergence} of a vector field to be the unique map 
@@ -3123,6 +3297,7 @@ Then the operator $-\lap_g : C^\infty(X) \-> C^\infty(X)$ is positive semi-defin
 Viewed in this way, the range of the Laplace--Beltrami operator is a Hilbert space, enabling us to use ideas from spectral theory to better understand its behavior.
 In particular, one can show that, owing to compactness, the spectrum of $-\lap_g$ is discrete---this gives a particularly simple view of $-\lap_g$ thorugh its eigenvalues and eigenfunctions.
 
+\label{ntn:laplace-beltrami-eigenpairs}
 \begin{result}[Sturm--Liouville decomposition]
 Let $(X,g)$ be a compact Riemannian manifold.
 Then there exists an orthonormal basis $f_n$, $n\in\Z_+$, of $L^2(X)$ such that $-\lap_g f_n = \lambda_n f_n$ with $0 = \lambda_0 \leq \lambda_1 \leq .. \leq \lambda_n$ and $\lambda_n\-> \infty$ as $n\->\infty$.
@@ -3154,6 +3329,7 @@ The Sturm--Liouvile decomposition gives rise to a notion of \emph{functional cal
 \label{fig:eig-s2-dr}
 \end{figure}
 
+\label{ntn:functional-calculus}
 \begin{definition}[Functional calculus]
 Let $\Phi : [0,\infty) \-> \R$. 
 Define the (possibly unbounded) operator $\Phi(-\lap_g) : D(\Phi(-\lap_g)) \-> L^2(X)$ by
@@ -3173,6 +3349,7 @@ First, however, we take a step back and examine why one would want to take this 
 Here, we begin exploring the idea of defining Gaussian processes whose domains are Riemannian manifolds.
 Recall that to define such a Gaussian process, we need to define its kernel, which is a positive semi-definite function $k : X \x X \-> \R$.
 
+\label{ntn:geodesic}
 Before attempting to do so in generality, consider first how to extend the Euclidean squared exponential kernel.
 The simplest idea one can consider is to replace the Euclidean distance $\norm{x-x'}$ with the Riemannian \emph{geodesic distance} $d_g(x,x')$, defined as the length of the shortest path between $x$ and $x'$.
 To ensure $d_g$ behaves like the Euclidean distance, assume that $M$ is \emph{complete} with respect to $d_g$, meaning that all sequences which eventually become close in $d_g$ also converge with respect to $M$.
@@ -3350,6 +3527,7 @@ We develop an alternative, more constructive formalism.
 This is done by improving on the above prior results in two ways: (1) we bypass finite element analysis by instead working with the previously-introduced theory of Gaussian stochastic partial differential equations described by \textcite{lototsky17}, and (2) we deduce numerical expressions for calculating the kernels of the resulting processes, enabling them to be trained using standard methods.
 To start, we define the right-hand-side of our equations.
 
+\label{ntn:riemannian-white-noise}
 \begin{definition}[Riemannian white noise]
 Define the \emph{white noise process} $\c{W}_g : \Omega \x L^2(X) \-> \R$ to be a centered generalized Gaussian field with covariance operator $\id : L^2(X) \-> L^2(X)$, where we recall that the inner product on $L^2(X)$ is defined by integration against the Riemannian volume measure.
 By applying Kolmogorov's Extension Theorem to a family of finite-dimensioanl marginals indexed by $L^2(X)$, we conclude such a process exists and is well-defined.
@@ -3606,6 +3784,7 @@ Such sequences give rise to vector spaces of functions converging monotonically 
 In the Riemannian setting, our strategy for building Gaussian process models essentially amounted to using functional calculus defined using spectral properties of the Laplace--Beltrami operator to construct the Gaussian processes of interest as solutions of stochastic partial differential equations.
 This strategy depended on the manifold only through the Laplace--Beltrami operator, and the white noise process, which suggests that it may also work for other classes of spaces.
 
+\label{ntn:graph-laplacian}
 Weighted directed graphs in particular admit the notion of a \emphmarginnote{graph Laplacian}, which is a symmetric positive semi-definite matrix defined as 
 \[
 \m\lap = \m{D} - \m{W}
@@ -3634,9 +3813,10 @@ as analogues of one-another---in particular, both are positive semi-definite.
 This corresponds to adopting the analyst's rather than geometer's convention for studying $\lap$.
 \end{remark}
 
+\label{ntn:matrix-functional-calculus}
 In the graph case, we can also develop a notion of \emphmarginnote{functional calculus} just as we developed previously.
 This time, however, doing so is mathematically more-or-less trivial: for a function $\Phi : \R \-> \R$ and a diagonal matrix $\m\Lambda$, let $\Phi(\m\Lambda)$ be the matrix obtained by applying $\Phi$ to the diagonal.
-Then, letting $\m\lap = \m{U}\m\Lambda\m{U}^T$ be the eigenvalue decompositin of $\m\lap$, which by positive semi-definiteness always exists, define
+Then, letting $\m\lap = \m{U}\m\Lambda\m{U}^T$ be the eigenvalue decomposition of $\m\lap$, which by positive semi-definiteness always exists, define
 \[
 \Phi(\m\lap) = \m{U}\Phi(\m\Lambda)\m{U}^T
 .
@@ -3647,6 +3827,7 @@ We now examine Gaussian processes from this perspective.
 
 \subsection{The graph Matérn kernel}
 
+\label{ntn:graph-white-noise}
 Our goal now is to construct Gaussian processes $f : G \-> \R$ where $G$ is the set of nodes of a weighted undirected graph.
 We'd like to define processes whose covariance reflects the structure of the graph.
 To do this, we adapt the notions of Matérn and squared exponential Gaussian processes studied previously to the graph setting.
@@ -3726,7 +3907,7 @@ Similarly, if $\m\lap$ is replaced with the symmetric normalized graph Laplacian
 Another way to understand the prior information contained in the given kernels is through limits.
 Mirroring all other settings considered, graph Matérn kernels converge to graph squared exponential kernels as $\nu\->\infty$.
 This is essentially immediate, since their eigenvectors coincide, and eigenvalues converge.
-Graph squared exponential kernels also arise as a limit of the \emph{random walk kernel} of \textcite{smola03}, which is defined as
+Graph squared exponential kernels also arise as a limit of the \emph{random walk kernel} of \textcite{smola03}, defined using the degree matrix $\m{D}$ as
 \[
 (\m{I} - (1-\alpha)\m{D}^{-1/2}\m\lap\m{D}^{-1/2})^s
 .
@@ -3922,7 +4103,7 @@ for any $\alpha_x, \beta_x \in V_x$, $\gamma_{x'}, \delta_{x'} \in V_{x'}$ and $
 This leads to the following notion of a kernel.
 
 \begin{definition}[Positive semi-definite kernel]
-A symmetric fiberwise bilinear function $k : T^* X \x T^* X \-> \R$ is called \emph{positive semi-definite kernel} if for any set of covectors $\alpha_{x_1}, \ldots, \alpha_{x_n} \in T^*X$, we have 
+A symmetric fiberwise bilinear function $k : T^* X \x T^* X \-> \R$ is called a \emph{positive semi-definite kernel} if for any set of covectors $\alpha_{x_1}, \ldots, \alpha_{x_n} \in T^*X$, we have 
 \[
 \sum_{i=1}^n\sum_{j=1}^n k(\alpha_{x_i}, \alpha_{x_j}) \geq 0
 .
@@ -4000,6 +4181,7 @@ Using the preceding recipe, we now understand what needs to be defined in order 
 To make this construction concrete, we proceed to develop the calculations needed to implement such processes numerically.
 The first step is to understand how to represent vector fields in coordinates---we do so using bases in each tangent space.
 
+\label{ntn:frame}
 \begin{definition}[Frame]
 Define a \emph{frame} $F$ to be a collection of not necessarily smooth sections $e_i : X \-> TX$ for $i=1,..,d$ such that, for every $x \in X$, the vectors $e_i(x)$ form a basis of $T_x X$.
 Given a frame, define the \emph{coframe} $F^*$ to be the collection of sections $e^i : X \-> T^* X$ defined pointwise using the dual basis with respect to $F$.
@@ -4056,16 +4238,19 @@ By direct calculation, $\m{K}_F$ can be re-expressed as
 \m{K}_{\tl{F}}(x,x') = \m{A}(x)\m{K}_F(x,x')\m{A}(x)^T
 \]
 with respect to $\tl{F}$.
-This condition is called \emphmarginnote{equivariance} with respect to changes of frame.
+This condition is called \emphmarginnote{equivariance under change of frame}.
 At this point, it is clear why we did not even attempt to generalize matrix-valued kernels directly by positing candidate formulas: for an arbirary manifold, there is very little hope of simply guessing an expression that is simultaneously positive semi-definite and equivariant under change of frame.
 
 \subsection{Projected kernels}
 
 Now that we understand how to write kernels of Gaussian vector fields in coordinates, we are ready to consider techniques for constructing such kernels and calculating them numerically. 
 With our preparation complete, the construction we present is extremely simple, consiting of two steps.
+
 \1 Embed a set of $p$ scalar-valued Riemannian Gaussian processes from $X$ into $i(X) \subseteq \R^p$, and use them to assemble a vector-valued Gaussian process defined on on $i(X)$.
 \2 Project the tangent vectors onto each tangent space, obtaining a tangential vector field in the embedded space, and therefore a vector field on $X$.
 \0 
+
+\label{ntn:frame-projection}
 We now proceed to make this precise.
 Suppose that we have an embedding
 \[
@@ -4074,17 +4259,17 @@ i : X &\-> \R^p
 i_{x,*} : T_x X &\-> \R^p
 \]
 where the pushforward is defined at all points $x\in X$.
-Introducing a frame $F$ allows us to define the projection map, which is a matrix-valued function $\m{P} : X \-> \R^{p \x d}$ defined by
+Introducing a frame $F$ allows us to define the projection map, which is a matrix-valued function $\m{P}_F : X \-> \R^{p \x d}$ defined by
 \[
-\m{P}(x) =\begin{bmatrix}
+\m{P}_F(x) =\begin{bmatrix}
 i_{x,*}(e_i(x)) \\
 \vdots \\ 
 i_{x,*}(e_d(x))
 \end{bmatrix} 
 \]
 which describes how to project arbitrary vectors onto tangent planes.
-Note that the linear map given by this matrix is a right-inverse to the map given by $\m{P}^T$, which describes how a vector field with respect to a frame can be re-expressed with respect to the coordinates in the embedded space.
-In particular, if $X$ is Riemannian with metric $g$, we have $\m{P}^T \m{P} = \m\Gamma$, where $\Gamma_{ij} = g(e_i(x_i), e_j(x))$, giving the coordinate representation of the identity map with respect to the metric.
+Note that the linear map given by this matrix is a right-inverse to the map given by $\m{P}_F^T$, which describes how a vector field with respect to a frame can be re-expressed with respect to the coordinates in the embedded space.
+In particular, if $X$ is Riemannian with metric $g$, we have $\m{P}_F^T \m{P}_F = \m\Gamma$, where $\Gamma_{ij} = g(e_i(x_i), e_j(x))$, giving the coordinate representation of the identity map with respect to the metric.
 It is now clear how to make our idea precise.
 
 \begin{figure}
@@ -4106,15 +4291,15 @@ It is now clear how to make our idea precise.
 \begin{definition}[Projected kernel]
 Let $\v{f} : \Omega \x X \-> \R^{p\x p}$ be a Gaussian process defined on $i(X) \subseteq \R^p$, and define the Gaussian vector field
 \[
-f(\omega, x) = \m{P}(x) \v{f}(\omega, i(x))
+f(\omega, x) = \m{P}_F(x) \v{f}(\omega, i(x))
 .
 \]
 We call the cross-covariance kernel of a process constructed this way a \emph{projected kernel}.
 \end{definition}
 
-It follows that if $\v\kappa : X \x X \-> \R^{p \x p}$ is the cross-covariance kernel of $\v{f}$, then the cross-covariance kernel of our Gaussian vector field is given by 
+It follows that if $\v\kappa : X \x X \-> \R^{p \x p}$ is the matrix-valued cross-covariance kernel of $\v{f}$, then the cross-covariance kernel of our Gaussian vector field is given by 
 \[
-\m{K}_F(x,x') = \m{P}(x) \v\kappa(x,x') \m{P}(x)^T
+\m{K}_F(x,x') = \m{P}_F(x) \v\kappa(x,x') \m{P}_F(x)^T
 .    
 \]
 Note that here, we generally require a Riemannian structure on $X$ in order to define a useful set of scalar-valued processes in order to obtain $\v{f}$ or, equivalently, $\v\kappa$, to begin with.
