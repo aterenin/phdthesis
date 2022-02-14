@@ -67,13 +67,13 @@ All ideas, quotations, and data originating from the works of others, published 
 
 \chapter*{Copyright}
 
-The copyright of this thesis rests with the author. Unless otherwise indicated, its contents are licensed under a Creative Commons Attribution 4.0 International Licence (CC BY).
+The copyright of this thesis rests with the author. Unless otherwise indicated, its contents are licensed under a Creative Commons Attribution 4.0 International License (CC BY).
 
-Under this licence, you may copy and redistribute the material in any medium or format for both commercial and non-commercial purposes. You may also create and distribute modified versions of the work. This on the condition that you credit the author.
+Under this license, you may copy and redistribute the material in any medium or format for both commercial and non-commercial purposes. You may also create and distribute modified versions of the work. This on the condition that you credit the author.
 
-When reusing or sharing this work, ensure you make the licence terms clear to others by naming the licence and linking to the licence text. Where a work has been adapted, you should indicate that the work has been changed and describe those changes.
+When reusing or sharing this work, ensure you make the license terms clear to others by naming the license and linking to the license text. Where a work has been adapted, you should indicate that the work has been changed and describe those changes.
 
-Please seek permission from the copyright holder for uses of this work that are not included in this licence or permitted under UK Copyright Law.
+Please seek permission from the copyright holder for uses of this work that are not included in this license or permitted under UK Copyright Law.
 
 \chapter*{Acknowledgments}
 
@@ -123,7 +123,8 @@ I thank Nick Sharp for teaching me how to make the three-dimensional figures in 
 
 I am grateful to Imperial College, and the Department of Mathematics in particular, for both the opportunity in funding my studies, and for support when things did not go as planned.
 I am particularly thankful to Henrik Jensen: thank you for treating me with kindness in difficult times.
-I am grateful to Pierre Degond, Darryl Holm, and Chris Hallsworth for your ideas in teaching me mathematics. I joined Imperial because I wanted to get better at mathematics, and it is thanks largely to you that I feel I succeeded at this.
+I am grateful to Pierre Degond, Darryl Holm, and Chris Hallsworth for your ideas in teaching me mathematics. 
+I joined Imperial because I wanted to get better at mathematics, and it is thanks largely to you that I feel I succeeded at this.
 
 I am thankful to Måns Magnusson, Leif Jonsson, and Shawfeng Dong for collaborating with me in my early days as a researcher, and helping me learn and get my bearings together.
 In particular, I thank Peter Drake and Raya Feldman for first setting me on this path.
@@ -179,12 +180,12 @@ This, in turn, makes it possible to potentially apply Gaussian processes to nove
 \section*{General}
 
 \begin{xltabular}{\textwidth}{p{1.5cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
-$(\Omega,\c{F},\P)$ & probability space & \labelcpageref{ntn:prob-space} \\
-$\E(\.)$ & expectation of a real-or-vector-valued random variable & \labelcpageref{ntn:expectation} \\
+$(\Omega,\c{F},\P)$ & probability space & \labelcpageref{ntn:prob} \\
+$\E(\.)$ & expectation of a real-or-vector-valued random variable & \labelcpageref{ntn:rv} \\
 $\Cov$ & covariance of real-or-vector-valued random variables & \labelcpageref{ntn:cov} \\
-$y \~ \pi$ & $\pi$-distributed random variable $y$ & \labelcpageref{ntn:distr} \\
+$y \~ \pi$ & $\pi$-distributed random variable $y$ & \labelcpageref{ntn:rv} \\
 $D_{\f{KL}}(\.||\.)$ & Kullback--Leibler divergence of probability measures & \labelcpageref{ntn:kl-div} \\
-$W_{p,d}(\.,\.)$ & Wasserstein distance of $p$th order over metric $d$ & \labelcpageref{ntn:wass-dist} \\
+$W_{p,d}(\.,\.)$ & Wasserstein distance of $p$th order over distance $d$ & \labelcpageref{ntn:wass-dist} \\
 $\N$ & natural numbers, not including zero \\ 
 $\Z$ & integers \\
 $\R$ & real numbers \\ 
@@ -207,11 +208,11 @@ $L^p(X;\R)$ & Lebesgue space & \labelcpageref{ntn:leb-space} \\
 \section*{Bayesian learning}
 
 \begin{xltabular}{\textwidth}{p{1.5cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
-$(\Theta,\mathit\Theta)$ & measurable space representing quantity of interest & \labelcpageref{ntn:meas-space} \\ 
-$(Y,\c{Y})$ & measurable space representing the data & \labelcpageref{ntn:meas-space} \\
-$A_{(\.)}$ & measurable set & \labelcpageref{ntn:meas-space} \\
+$(\Theta,\mathit\Theta)$ & measurable space representing quantity of interest & \labelcpageref{ntn:meas} \\ 
+$(Y,\c{Y})$ & measurable space representing the data & \labelcpageref{ntn:meas} \\
+$A_{(\.)}$ & measurable set & \labelcpageref{ntn:meas} \\
 $\theta, y$ & random variables & \labelcpageref{ntn:rv} \\ 
-$\pi_{(\.)}$ & probability measure & \labelcpageref{ntn:prob-meas} \\ 
+$\pi_{(\.)}$ & probability measure & \labelcpageref{ntn:prob} \\ 
 $f_{(\.)}$ & probability density & \labelcpageref{ntn:density} \\
 $(\.\given\.)$ & jointly measurable stochastic process & \labelcpageref{ntn:jmsp} \\
 $\pi_{(\. \given \.)}$ & probability kernel & \labelcpageref{ntn:prob-ker} \\ 
@@ -373,7 +374,7 @@ We adopt the language of measure-theoretic probability, which we now describe.
 To ease presentation, we state the definitions together with useful ways of thinking about them.
 We use \textcite{kallenberg06} as our standard reference, along with certain results from \textcite{bogachev07a,bogachev07b}.
 
-\label{ntn:meas-space}
+\label{ntn:meas}
 We say that \emphmarginnote{measurable space} is a pair $(Y,\c{Y})$ consisting of a set $Y$ and a $\sigma$-algebra $\c{Y}$ over $Y$.
 A \emph{$\sigma$-algebra} is a set of subsets of $Y$ containing the space itself which is closed under countable unions, intersections, complements, and therefore set-theoretic monotone limits.
 These can be reinterpreted as Boolean logical operations, so $\c{Y}$ can be thought of as the set of all true-false questions one can ask about elements of the set $Y$. 
@@ -393,15 +394,12 @@ A map $f : Y \-> Y'$ between measurable spaces $(Y,\c{Y})$ and $(Y',\c{Y}')$ is 
 This intuitively means that true-false questions for the space $Y'$ can be asked and answered relative to those in $Y$.
 On product spaces, a map $f : Y \-> \Theta \x \Theta'$ is measurable if its components are measurable, but a map $f : Y \x Y' \-> \Theta$ \emph{need not} automatically be measurable if $f(\.,y') : Y \-> \Theta$ and $f(y,\.) : Y' \-> \Theta$ are measurable for all $y$ and $y'$.
 
-\label{ntn:prob-space}
-\label{ntn:prob-meas}
+\label{ntn:prob}
 A \emphmarginnote{probability measure} is a non-negative countably additive map $\pi_y : \c{Y} \-> \R$ satisfying $\pi_Y(Y) = 1$. 
 This can be thought of as a map that takes a true/false question, and assigns a number indicating how close to true or false its answer is according to the measure---in this view, probability measures describe uncertainty.
 A \emphmarginnote{probability space} $(\Omega,\c{F},\P)$ consists of a measurable space and probability measure.
 The set $\Omega$ can be thought of as a space of abstract random numbers, with a random number generator described by $\P$.
 
-\label{ntn:expectation}
-\label{ntn:distr}
 \label{ntn:rv}
 Given a probability space, we say that a \emphmarginnote{random variable} is a measurable map $y : \Omega \-> Y$.
 A random variable, then, maps random numbers $\omega\in\Omega$ into the space $Y$.
@@ -1328,7 +1326,7 @@ Many other effective acquisition functions, including \emph{probability of impro
 
 Regret analysis for all of these choices can be performed, and will in general depend on the detailed properties of the Bayesian model, acquisition function, and unknown function $f$ \cite{srinivas09}.
 In particular, regularity and smoothness properties may play a role, as well as structure present in the domain $X$.
-In settings where the function $f$ is unknown, it's also possible to analyze the expression 
+In settings where the function $f$ is unknown, it's also possible to analyze the closely related expression 
 \[
 BR(T) = \E \sum_{t=1}^T f(\omega,x_t) - f(\omega,x^*(\omega))    
 \]
@@ -1637,6 +1635,22 @@ Let $X$ be a set.
 A random process $f: \Omega \x X \-> \R$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.,x_1),..,f(\.,x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
 \end{definition}
 
+Immediately upon writing this definition, one is left to wonder: does it actually make sense?
+In particular, do Gaussian processes in the sense given here exist?
+
+Under general conditions on the finite-dimensional marginals, Kolmogorov's Consistency Theorem states that there exists a unique probability measure on a suitable $\sigma$-algebra, called the cylindrical $\sigma$-algebra and defined below, whose finite-dimensional projections coincide with the distributions of the random variables written above.
+Thus, Gaussian processes exist so long as a family of multivariate Gaussians satisfying the conditions of Kolmogorov's Consistency Theorem can be found.
+
+The same results also allow us to reinterpret Gaussian processes as \emph{function-valued random variables}, which, in many ways, are a more natural point of view to take.
+Define $\R^X = \{f : X \-> \R\}$ and equip it with the cylindrical $\sigma$-algebra, namely the smallest $\sigma$-algebra containing all sets of the form $\{f \in \R^X : f(x_1),..,f(x_n) \in A\}$, where $A$ is a measurable set on $\R^n$, for all $n$, to make it into a measurable space. 
+Let $V \subseteq \R^X$, and let $\c{V}$ be the subset $\sigma$-algebra.
+We can then reinterpret Gaussian processes as follows.
+
+\begin{definition}[Gaussian process (random function)]
+Let $X$ be a set. 
+A random variable $f: \Omega \-> V \subseteq \R^X$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.)(x_1),..,f(\.)(x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
+\end{definition}
+
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/gp-sm-12.tex}
@@ -1657,22 +1671,6 @@ A random process $f: \Omega \x X \-> \R$ is called a \emph{Gaussian process} if,
 \caption[Gaussian processes]{Random functions generated from Gaussian processes with four different covariance kernels, which differ in particular according to their regularity, ranging from nowhere-differentiable in the exponential case to infinitely-differentiable in the squared exponential case.}
 \label{fig:gp-smoothness}
 \end{figure}
-
-Immediately upon writing this definition, one is left to wonder: does it actually make sense?
-In particular, do Gaussian processes in the sense given here exist?
-
-Under general conditions on the finite-dimensional marginals, Kolmogorov's Consistency Theorem states that there exists a unique probability measure on a suitable $\sigma$-algebra, called the cylindrical $\sigma$-algebra and defined below, whose finite-dimensional projections coincide with the distributions of the random variables written above.
-Thus, Gaussian processes exist so long as a family of multivariate Gaussians satisfying the conditions of Kolmogorov's Consistency Theorem can be found.
-
-The same results also allow us to reinterpret Gaussian processes as \emph{function-valued random variables}, which, in many ways, are a more natural point of view to take.
-Define $\R^X = \{f : X \-> \R\}$ and equip it with the cylindrical $\sigma$-algebra, namely the smallest $\sigma$-algebra containing all sets of the form $\{f \in \R^X : f(x_1),..,f(x_n) \in A\}$, where $A$ is a measurable set on $\R^n$, for all $n$, to make it into a measurable space. 
-Let $V \subseteq \R^X$, and let $\c{V}$ be the subset $\sigma$-algebra.
-We can then reinterpret Gaussian processes as follows.
-
-\begin{definition}[Gaussian process (random function)]
-Let $X$ be a set. 
-A random variable $f: \Omega \-> V \subseteq \R^X$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.)(x_1),..,f(\.)(x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
-\end{definition}
 
 It is clear that every Gaussian process in the random process sense induces a Gaussian process in the random variable sense, and vice versa.
 Thus, these two notions are simply two different ways of viewing the same object.
@@ -2247,7 +2245,7 @@ Apply \Cref{prop:mvn-cond} to a set of finite-dimensional marginals.
 \input{figures/tex/gp-dist-samples.tex}
 \caption{Draw samples}
 \end{subfigure}
-\caption[Distributional conditioning of Gaussian processes]{Illustration of distributional conditioning of a Gaussian process. Here, we calculate the conditional distribution at a finite set of locations, and then draw samples from a multivariate Gaussian, obtaining the value of the posterior Gaussian process at a set of points. This view of conditioning is called \emph{distributional}, since random variables appear only at the end of the process.}
+\caption[Distributional conditioning of Gaussian processes]{Illustration of distributional conditioning of a Gaussian process. Here, we calculate the conditional distribution at a finite set of locations, and then draw samples from a multivariate Gaussian, obtaining the value of the posterior Gaussian process at a set of points. This view of conditioning is called \emph{distributional}, since random variables appear only at the very end of the algorithmic process.}
 \label{fig:gp-cond}
 \end{figure}
 
@@ -2259,9 +2257,9 @@ Calculating posterior moments clearly entails cubic costs with respect to the da
 Now, suppose we are are interested in computing quantities involving the posterior distribution.
 Consider for instance computing the Thompson sampling acquisition function considered in \Cref{sec:bayesian-optimization}, which we recall is 
 \[
-x_{t+1}(\omega) &= \argmax_{x\in X} \phi_t(\omega,x)
+x_{t+1}(\omega) &= \argmax_{x\in X} \alpha_t(\omega,x)
 &
-\phi_t&\~ f \given \v{y}
+\alpha_t&\~ f \given \v{y}
 .
 \]
 Given the minimization involved in this objective, there is no chance in finding an analytic expression for $x_{t+1}$, and we must resort to numerical methods.
@@ -3211,12 +3209,6 @@ A \emphmarginnote{Riemannian manifold} is a quadruple $(X,\c{O}_X,\c{A}_X,g)$, u
 The metric tensor can be thought of as an algebraic object encoding the manifold's quantitative shape, and canonically gives rise to notions such as \emph{volume}, \emph{integration}, and \emph{geodesics}.
 In particular, we denote both the volume measure and volume density induced by the metric tensor as $\vol_g$.
 
-\parmarginnote{Nash Embedding}
-Riemannian manifolds are, by definition, topological spaces with additional structure.
-By Nash's Embedding Theorem, every Riemannian manifold can be isometrically embedded within an $\c{O}(d^2)$-dimensional Euclidean space.
-This identifies Riemannian manifolds as geometric shapes located within Euclidean spaces.
-This perspective is often avoided for both technical and conceptual reasons: if the spacetime of the universe is a manifold, can an ambient Euclidean space actually have physical meaning?
-
 \begin{figure}
 \tikzset{external/export next=false}
 \begin{tikzpicture}
@@ -3226,6 +3218,12 @@ This perspective is often avoided for both technical and conceptual reasons: if 
 \caption[Common manifolds]{Two common manifolds: the sphere $\mathbb{S}^2$ and torus $\mathbb{T}^2$.}
 \label{fig:common-manifolds}
 \end{figure}
+
+\parmarginnote{Nash Embedding}
+Riemannian manifolds are, by definition, topological spaces with additional structure.
+By Nash's Embedding Theorem, every Riemannian manifold can be isometrically embedded within an $\c{O}(d^2)$-dimensional Euclidean space.
+This identifies Riemannian manifolds as geometric shapes located within Euclidean spaces.
+This perspective is often avoided for both technical and conceptual reasons: if the spacetime of the universe is a manifold, can an ambient Euclidean space actually have physical meaning?
 
 \subsection{The Laplace--Beltrami operator}
 
@@ -3472,7 +3470,7 @@ The idea behind this definition is to take advantage of Gaussianity and use it t
 Instead, the operator $\c{L}$ is thought of as a map between the associated Hilbert spaces: if one or both are function spaces admitting reproducing kernels, the generalized Gaussian fields respectively yield Gaussian processes in the classical sense.
 In the given setting, this solution concept ends up being useful, thanks to the following general result.
 
-\begin{result}[SPDE solution]
+\begin{result}[Solution of stochastic partial differential equation]
 If $\c{L}$ is invertible, then
 \[
 f(\omega,h) = \c{W}(\omega, \c{L}^{-*} h)
@@ -3510,7 +3508,7 @@ This kernel is very well-studied and among the most widely-used Euclidean kernel
 Building on this idea, \textcite{lindgren11} proposed a formalism based on Galerkin finite element analysis for giving precise meaning to such calculations, including treatment of boundary conditions and other considerations.
 
 In particular, \textcite{lindgren11} define the \emphmarginnote{Riemannian Matérn kernel} to be the covariance kernel of the solutions of analogs of the above stochastic partial differential equation, where $\R^d$ is replaced with a Riemannian manifold $X$, and the Euclidean Laplacian $\lap$ is replaced by the Laplace--Beltrami operator $\lap_g$.
-The resulting kernel, shown in \Cref{fig:ker-s1-t2,fig:ker-s2-dr} is well-defined, but implicit: \textcite{lindgren11} provide techniques for training the resulting processes by solving the stochastic partial differential equation numerically.
+The resulting kernel, shown in \Cref{fig:ker-s1-t2,fig:ker-s2-dr}, is well-defined, but implicit: \textcite{lindgren11} provide techniques for training the resulting processes by solving the stochastic partial differential equation numerically.
 
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}
