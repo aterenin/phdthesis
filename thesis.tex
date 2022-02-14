@@ -181,8 +181,8 @@ This, in turn, makes it possible to potentially apply Gaussian processes to nove
 
 \begin{xltabular}{\textwidth}{p{1.5cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
 $(\Omega,\c{F},\P)$ & probability space & \labelcpageref{ntn:prob} \\
-$\E(\.)$ & expectation of a real-or-vector-valued random variable & \labelcpageref{ntn:rv} \\
-$\Cov$ & covariance of real-or-vector-valued random variables & \labelcpageref{ntn:cov} \\
+$\E(\.)$ & expectation of a real-valued random variable & \labelcpageref{ntn:expectation-cov} \\
+$\Cov(\.,\.)$ & covariance between a pair of real-valued random variables & \labelcpageref{ntn:expectation-cov} \\
 $y \~ \pi$ & $\pi$-distributed random variable $y$ & \labelcpageref{ntn:rv} \\
 $D_{\f{KL}}(\.||\.)$ & Kullback--Leibler divergence of probability measures & \labelcpageref{ntn:kl-div} \\
 $W_{p,d}(\.,\.)$ & Wasserstein distance of $p$th order over distance $d$ & \labelcpageref{ntn:wass-dist} \\
@@ -192,15 +192,15 @@ $\R$ & real numbers \\
 $\C$ & complex numbers \\
 $\R^d$ & $d$-dimensional Euclidean space \\ 
 $\R^X$ & space of functions from $X$ to $\R$ \\
-$\v{a}$ & Euclidean vector (bold italic) \\ 
-$\m{A}$ & matrix (bold upface) \\
+$\v{a}$ & Euclidean vector (bold italic letters) \\ 
+$\m{A}$ & matrix (bold upface letters) \\
 $\c{O}(\.)$ & asymptotic order of a function \\
 $\tl{\c{O}}(\.)$ & asymptotic order up to logarithmic factors & \labelcpageref{ntn:big-o-tilde} \\
-$V^*$ & dual space of a topological vector space $V$ & \labelcpageref{ntn:dual-space} \\
-$\norm{\.}$ & norm of a vector in a Banach space & \labelcpageref{ntn:norm} \\
-$\innerprod{\.}{\.}$ & inner product between vectors in a Hilbert space & \labelcpageref{ntn:inner-prod} \\
+$V^*$ & dual space of a topological vector space $V$ & \labelcpageref{ntn:dual-space-ops} \\
+$\norm{\.}$ & norm of a vector in a Banach space & \labelcpageref{ntn:banach-hilbert} \\
+$\innerprod{\.}{\.}$ & inner product between vectors in a Hilbert space & \labelcpageref{ntn:banach-hilbert} \\
 $\dualprod{\.}{\.}$ & duality pairing between topological vector spaces & \labelcpageref{ntn:dual-pair} \\
-$L(V;W)$ & Banach space of bounded linear operators & \labelcpageref{ntn:space-of-operators} \\
+$L(V;W)$ & Banach space of bounded linear operators & \labelcpageref{ntn:dual-space-ops} \\
 $C^0(X;\R)$ & Banach space of real-valued continuous functions on $X$ & \labelcpageref{ntn:conts-fns} \\
 $L^p(X;\R)$ & Lebesgue space & \labelcpageref{ntn:leb-space} \\
 \end{xltabular}
@@ -216,7 +216,7 @@ $\pi_{(\.)}$ & probability measure & \labelcpageref{ntn:prob} \\
 $f_{(\.)}$ & probability density & \labelcpageref{ntn:density} \\
 $(\.\given\.)$ & jointly measurable stochastic process & \labelcpageref{ntn:jmsp} \\
 $\pi_{(\. \given \.)}$ & probability kernel & \labelcpageref{ntn:prob-ker} \\ 
-$f_{(\.\given\.)}$ & conditional probability density & \labelcpageref{ntn:cond-density} \\
+$f_{(\.\given\.)}$ & conditional probability density & \labelcpageref{ntn:density} \\
 \end{xltabular}
 
 \section*{Markov decision processes}
@@ -404,8 +404,7 @@ The set $\Omega$ can be thought of as a space of abstract random numbers, with a
 Given a probability space, we say that a \emphmarginnote{random variable} is a measurable map $y : \Omega \-> Y$.
 A random variable, then, maps random numbers $\omega\in\Omega$ into the space $Y$.
 The \emph{distribution}\marginnote{Distribution} of a random variable is defined as the \emph{pushforward measure} $\pi_y = y_* \P$ where $y_*$ is defined as $(y_* \P)(A_y) = \P(y^{-1}(A_y))$ for all $A_y\in\c{Y}$.
-The probability of an event $A_y$, then, is determined by measuring the probability of random numbers under which $A_y$ occurs.
-The \emphmarginnote{expectation} of a real-valued random variable is given by its integral with respect to $\P$.
+The probability of an event $A_y$, then, is determined by measuring the probability of random numbers under which $A_y$ occurs---measurability guarantees this is possible.
 
 \parmarginnote{Notation for random variables}
 In this work, we will generally \emph{not} adopt the standard convention of suppressing $\omega$-arguments of random variables from our notation, and will write such arguments explicitly in cases that other function arguments are also used.
@@ -434,6 +433,13 @@ Random variables can also be extended to parameterize them by other quantities.
 A $\c{F}\ox \mathit\Theta$-measurable map $y\given\theta : \Omega \x \Theta \-> Y$ is called a \emph{jointly measurable stochastic process}---we largely eschew this terminology to emphasize the Bayesian formalism.
 In particular, unlike most presentations of stochastic processes, we \emph{never} think of $\Theta$ as representing time.
 Define the \emph{conditional distribution} of $y\given\theta$ to be $(y\given\theta)_*\P$, with the pushforward taken in the first argument---by \Cref{lem:rcrv-rvm-equiv}, this is a probability kernel.
+
+\label{ntn:expectation-cov}
+The \emphmarginnote{expectation} $\E(y)$ of a real-valued random variable $y$, if it exists, is defined as its integral with respect to $\P$. 
+This can be thought of as the average value of $y$ under the random numbers generated from $\P$, with averaging performed via the algebraic structure of the reals.
+This notion extends to vector-valued random variables.
+The \emphmarginnote{covariance} of two real-valued random variables, if it exists, is defined as $\Cov(y,y') = \E(yy') - \E(y)\E(y')$.
+From this, we define the covariance of a finite-dimensional random vector componentwise.
 
 
 \subsection{Bayes' Rule for probability measures}
@@ -551,7 +557,6 @@ Moreover, the null sets can be problematic: to ensure that $\pi_{\theta\given y}
 Fortunately, in many settings these issues are resolved by virtue of additional structure.
 
 \label{ntn:density}
-\label{ntn:cond-density}
 The simplest such structure occurs when $\pi_{\theta,y}$ admits a density with respect to a product measure $\lambda$.
 In this case, it follows from \Cref{lem:ref-density} that $\pi_\theta$ admits the density $f_\theta$ with respect to $\lambda(\.\x Y)$, and similarly for $\pi_y$ and $f_y$.
 Define a \emph{conditional density} as the ratio of joint and marginal densities, for instance $f_{\theta\given y} = \frac{f_{\theta,y}}{f_y}$, and let $\propto$ denote equality up to a multiplicative proportionality constant.
@@ -1012,7 +1017,6 @@ An algorithm, then, assigns every dataset of arbitrary size to a probability mea
 Each dataset consists of $(x, y)$ pairs where $x$ are the locations chosen by the algorithm, and $y$ are the noisy observed values---recall $\omega$ is the randomness used by the noise.
 Some algorithms maximize $f$ faster than others---we consider this next.
 
-\label{ntn:mab-maximum-time}
 \label{ntn:mab-regret}
 \begin{definition}[Regret]
 For a given multi-armed bandit, let $f(x^*)$ be the global maxima of $f$, which we assume to exist. 
@@ -1381,8 +1385,7 @@ We work with vector spaces where the underlying field is the real numbers.
 A \emph{topological vector space} is a vector space equipped with a \emph{topology} under which the vector operations are continuous---the topology gives rise to notions of \emph{convergence}, \emph{continuity}, \emph{compactness}, and many others.
 Many interesting spaces of functions and generalizations thereof are topological vector spaces.
 
-\label{ntn:norm}
-\label{ntn:inner-prod}
+\label{ntn:banach-hilbert}
 A \emphmarginnote{Banach space} is a topological vector space equipped with a \emph{norm}, which assigns a notion of size to all vectors, and induces a notion of distance given by a topologically complete metric, which in turn induces the space's topology.
 A \emphmarginnote{Hilbert space}, similarly, is a topological vector space equipped with an \emph{inner product} which induces a complete norm.
 Many, but not all, useful spaces of functions are Banach or Hilbert spaces.
@@ -1400,8 +1403,7 @@ By linearity, continuous maps between Banach spaces are automatically bounded wi
 Given two respective bases, linear maps between finite-dimensional vector spaces can be viewed as matrices via their action on a vector's basis coefficients.
 In doing so, composition of linear maps becomes matrix multiplication.
 
-\label{ntn:dual-space}
-\label{ntn:space-of-operators}
+\label{ntn:dual-space-ops}
 \parmarginnote{Dual space}
 For a topological vector space $V$, the space $V^*$ consisting of continuous linear maps $\phi : V \-> \R$ into the underlying scalar field is called the \emph{dual space}.
 The dual space can be made into a vector space: for many topological vector spaces, including Banach and Hilbert spaces, it can canonically be assigned a topology making it into a topological vector space.
@@ -1529,7 +1531,6 @@ A random variable $\v{y} : \Omega\->\R^d$ is called \emph{multivariate Gaussian}
 \label{fig:mvn-density}
 \end{figure}
 
-\label{ntn:cov}
 \label{ntn:mvn-dist}
 Every multivariate Gaussian is determined by its \emph{mean vector} $\v\mu$ and positive semi-definite \emph{covariance matrix} $\m\Sigma = \m{L}\m{L}^T$, and, as before, is called \emph{centered} if $\v\mu = \v{0}$.
 We write $\v{y}\~[N](\v\mu,\m\Sigma)$.
@@ -4326,7 +4327,7 @@ All computations are performed in a with respect to a fixed frame defined by the
 
 Results are shown in \Cref{fig:posterior-vector-field}.
 Immediately, we see that this dataset exhibits behavior not suitable for the chosen model.
-Specifically: in some regions, the data exhibits large jumps, while in other regions, it is very smooth over large distances.
+Specifically: in some regions, the da ta exhibits large jumps, while in other regions, it is very smooth over large distances.
 This means the effective length scale governing variability is spatially non-uniform, which requires a more sophisticated model, such as one with a spatially varying length scale, to effectively capture.
 
 \begin{figure}
