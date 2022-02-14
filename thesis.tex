@@ -196,11 +196,11 @@ $\v{a}$ & Euclidean vector (bold italic letters) \\
 $\m{A}$ & matrix (bold upface letters) \\
 $\c{O}(\.)$ & asymptotic order of a function \\
 $\tl{\c{O}}(\.)$ & asymptotic order up to logarithmic factors & \labelcpageref{ntn:big-o-tilde} \\
-$V^*$ & dual space of a topological vector space $V$ & \labelcpageref{ntn:dual-space-ops} \\
+$V^*$ & dual space of a topological vector space $V$ & \labelcpageref{ntn:dual-space} \\
 $\norm{\.}$ & norm of a vector in a Banach space & \labelcpageref{ntn:banach-hilbert} \\
 $\innerprod{\.}{\.}$ & inner product between vectors in a Hilbert space & \labelcpageref{ntn:banach-hilbert} \\
 $\dualprod{\.}{\.}$ & duality pairing between topological vector spaces & \labelcpageref{ntn:dual-pair} \\
-$L(V;W)$ & Banach space of bounded linear operators & \labelcpageref{ntn:dual-space-ops} \\
+$L(V;W)$ & Banach space of bounded linear operators & \labelcpageref{ntn:bounded-operators} \\
 $C^0(X;\R)$ & Banach space of real-valued continuous functions on $X$ & \labelcpageref{ntn:conts-fns} \\
 $L^p(X;\R)$ & Lebesgue space & \labelcpageref{ntn:leb-space} \\
 \end{xltabular}
@@ -986,23 +986,6 @@ Multi-armed bandits can be viewed as discrete-time Markov decision processes wit
 We thus begin by introducing formalism and notation better suited to the given setting, which can be viewed as special cases of the notions considered previously.
 We use \textcite{slivkins19,lattimore20} as references.
 
-\begin{figure}
-\begin{subfigure}{0.3\textwidth}
-\input{figures/tex/mab-dist.tex}
-\caption{Rewards}
-\end{subfigure}
-\begin{subfigure}{0.3\textwidth}
-\input{figures/tex/mab-data.tex}
-\caption{Data}
-\end{subfigure}
-\begin{subfigure}{0.3\textwidth}
-\input{figures/tex/mab-regret.tex}
-\caption{Regret}
-\end{subfigure}
-\caption[Multi-armed bandits]{Here, we illustrate a simple three-armed bandit. Each of the three arms has its own reward distribution, shown on the left. These are unknown to the agent, which only sees the rewards obtained by actions it takes, shown in the center, and must use the obtained information to decide which arm to pick. Each arm's regret is given by its expected decrease in reward compared to the optimal arm, shown on the right.}
-\label{fig:mab}
-\end{figure}
-
 \label{ntn:mab}
 \begin{definition}[Multi-armed bandit]
 Let $f : X \-> \R$ be a bounded above measurable function, let $\eps : \Omega \x X \-> \R$ be a jointly measurable stochastic process such that $\E(\eps(x)) = 0$ for all $x$, and let $y(\omega,x) = f(x) + \eps(\omega,x)$.
@@ -1026,6 +1009,23 @@ R(\omega,T) = \sum_{t=1}^T f(x^*) - f(x_t(\omega))
 \]
 where $x_t \~ \pi(y_0,..,y_{t-1})$, $y_t(\omega) = f(x_t) + \eps_t(\omega)$, and $\eps_t \~ \eps(\.,x_t)$.
 \end{definition}
+
+\begin{figure}
+\begin{subfigure}{0.3\textwidth}
+\input{figures/tex/mab-dist.tex}
+\caption{Rewards}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\input{figures/tex/mab-data.tex}
+\caption{Data}
+\end{subfigure}
+\begin{subfigure}{0.3\textwidth}
+\input{figures/tex/mab-regret.tex}
+\caption{Regret}
+\end{subfigure}
+\caption[Multi-armed bandits]{Here, we illustrate a simple three-armed bandit. Each of the three arms has its own reward distribution, shown on the left. These are unknown to the agent, which only sees the rewards obtained by actions it takes, shown in the center, and must use the obtained information to decide which arm to pick. Each arm's regret is given by its expected decrease in reward compared to the optimal arm, shown on the right.}
+\label{fig:mab}
+\end{figure}
 
 Regret thus counts the total reward lost by virtue of not knowing the optimal arm in advance---this is illustrated in \Cref{fig:mab}.
 Algorithms which achieve small regret therefore learn the optimal rewards effectively, and avoid getting stuck pulling bad arms.
@@ -1330,7 +1330,7 @@ Many other effective acquisition functions, including \emph{probability of impro
 
 Regret analysis for all of these choices can be performed, and will in general depend on the detailed properties of the Bayesian model, acquisition function, and unknown function $f$ \cite{srinivas09}.
 In particular, regularity and smoothness properties may play a role, as well as structure present in the domain $X$.
-In settings where the function $f$ is unknown, it's also possible to analyze the closely related expression 
+In settings where the function $f$ is unknown, it's also possible to analyze
 \[
 BR(T) = \E \sum_{t=1}^T f(\omega,x_t) - f(\omega,x^*(\omega))    
 \]
@@ -1403,13 +1403,19 @@ By linearity, continuous maps between Banach spaces are automatically bounded wi
 Given two respective bases, linear maps between finite-dimensional vector spaces can be viewed as matrices via their action on a vector's basis coefficients.
 In doing so, composition of linear maps becomes matrix multiplication.
 
-\label{ntn:dual-space-ops}
+\label{ntn:bounded-operators}
+\parmarginnote{Space of bounded linear operators}
+The spaces of linear operators between two vector spaces can itself be given the structure of a vector space.
+Using this, if $V$ and $W$ are Banach spaces, then one can consider the space of $L(V;W)$ of bounded linear operators.
+This space can be made into a Banach space by introducing the \emphmarginnote{operator norm}, defined as the largest possible size of a unit-norm vector in $V$ after it is mapped into $W$ by the given operator. 
+
+\label{ntn:dual-space}
 \parmarginnote{Dual space}
 For a topological vector space $V$, the space $V^*$ consisting of continuous linear maps $\phi : V \-> \R$ into the underlying scalar field is called the \emph{dual space}.
 The dual space can be made into a vector space: for many topological vector spaces, including Banach and Hilbert spaces, it can canonically be assigned a topology making it into a topological vector space.
 \marginnote{Functional}
 We generally call elements of $V^*$ \emph{linear functionals}.
-Similarly, let $L(V;W)$ be the Banach space of bounded linear operators between Banach spaces.
+
 
 \label{ntn:conts-fns}
 \parmarginnote{Space of continuous functions}
@@ -1452,6 +1458,12 @@ y = \sigma z + \mu
 \]
 \end{definition}
 
+\begin{figure}
+\input{figures/tex/norm-dist.tex}
+\caption[Gaussian distributions]{Probability density functions for a set of Gaussian random variables, each with different mean and standard deviation parameters. All of these can be obtained by shifting and rescaling any of the others via affine transformations.}
+\label{fig:norm}
+\end{figure} 
+
 \label{ntn:norm-dist}
 Note that we do \emph{not} require $\sigma \geq 0$: hence, every Gaussian random variable is determined uniquely in 
 distribution by the pair $(\mu,\sigma^2)$, which we call its \emph{mean} and \emph{variance}, respectively. 
@@ -1474,12 +1486,6 @@ f(y) = \frac{1}{\sqrt{2\pi}\sigma} \exp\del{-\frac{(y-\mu)^2}{2\sigma^2}}
 This density is visualized in \Cref{fig:norm}.
 Note that the density will not exist if $\sigma^2 = 0$: the distributions of such Gaussians are Dirac measures centered at $\mu$.
 By examining this density, one sees that Gaussian random variables respect the additive and multiplicative structures of the reals.
-
-\begin{figure}
-\input{figures/tex/norm-dist.tex}
-\caption[Gaussian distributions]{Probability density functions for a set of Gaussian random variables, each with different mean and standard deviation parameters. All of these can be obtained by shifting and rescaling any of the others via affine transformations.}
-\label{fig:norm}
-\end{figure}
 
 \begin{proposition}[Affine maps between Gaussians]
 Let $y \~[N](\mu,\sigma^2)$.
@@ -1590,8 +1596,9 @@ where $e_i$ is any orthonormal basis.
 By noting that the choice of basis $e_i$ induces a Borel isomorphism $V \isom \R^d$, it is easy to see that this definition is basis-independent, since linear maps associated with changes of orthonormal bases are represented by orthogonal matrices.
 This expression therefore defines a standard Gaussian with respect to the given inner product.
 
-Subtle difference such as the ones considered become increasingly important in the sequel.
-Therefore, we introduce an alternative definition to help build intuition for later.
+Subtle difference such as the ones considered become increasingly important in the sequel, particularly in settings where working with bases is not possible or less convenient.
+The preceding observations suggest re-orienting the formulation to focus less on the components of the Gaussian random vector, and more on the maps which define the geometric structure of the vector space it takes values in.
+To do so, we introduce the following alternative definition, which will help build intuition for later.
 
 \begin{definition}[Multivariate Gaussian (duality)]
 A random variable $\v{y} : \Omega \-> \R^d$ is called \emph{multivariate Gaussian} if, for any vector $\v\phi \in \R^d$, the Euclidean dot product 
@@ -1631,6 +1638,27 @@ If we have a set of points $x_1,..,x_n \in X$, we can plug them into $f$ to obta
 We call its distribution a \emphmarginnote{finite-dimensional marginal distribution}.
 Using this notion, we define Gaussian processes.
 
+\begin{figure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-sm-12.tex}
+\caption{Exponential}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-sm-32.tex}
+\caption{Matérn-3/2}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-sm-52.tex}
+\caption{Matérn-5/2}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-sm-inf.tex}
+\caption{Squared exponential}
+\end{subfigure}
+\caption[Gaussian processes]{Random functions generated from Gaussian processes with four different covariance kernels, which differ in particular according to their regularity, ranging from nowhere-differentiable in the exponential case to infinitely-differentiable in the squared exponential case.}
+\label{fig:gp-smoothness}
+\end{figure}  
+
 \begin{definition}[Gaussian process (stochastic process)]
 Let $X$ be a set. 
 A random process $f: \Omega \x X \-> \R$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.,x_1),..,f(\.,x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
@@ -1651,27 +1679,6 @@ We can then reinterpret Gaussian processes as follows.
 Let $X$ be a set. 
 A random variable $f: \Omega \-> V \subseteq \R^X$ is called a \emph{Gaussian process} if, for any finite set of points $x_1,..,x_n \in X$, the random variable $(f(\.)(x_1),..,f(\.)(x_n)) : \Omega \-> \R^n$ is multivariate Gaussian.
 \end{definition}
-
-\begin{figure}
-\begin{subfigure}{0.49\textwidth}
-\input{figures/tex/gp-sm-12.tex}
-\caption{Exponential}
-\end{subfigure}
-\begin{subfigure}{0.49\textwidth}
-\input{figures/tex/gp-sm-32.tex}
-\caption{Matérn-3/2}
-\end{subfigure}
-\begin{subfigure}{0.49\textwidth}
-\input{figures/tex/gp-sm-52.tex}
-\caption{Matérn-5/2}
-\end{subfigure}
-\begin{subfigure}{0.49\textwidth}
-\input{figures/tex/gp-sm-inf.tex}
-\caption{Squared exponential}
-\end{subfigure}
-\caption[Gaussian processes]{Random functions generated from Gaussian processes with four different covariance kernels, which differ in particular according to their regularity, ranging from nowhere-differentiable in the exponential case to infinitely-differentiable in the squared exponential case.}
-\label{fig:gp-smoothness}
-\end{figure}
 
 It is clear that every Gaussian process in the random process sense induces a Gaussian process in the random variable sense, and vice versa.
 Thus, these two notions are simply two different ways of viewing the same object.
@@ -3947,18 +3954,6 @@ We now illustrate a few possibilities.
 
 \subsection{Illustrated examples}
 
-To illustrate the graph Matérn Gaussian processes, we demonstrate their use in a setting which departs considerably from the Euclidean and Riemannian settings considered before.
-Our goal is to show how such models may enable applications that are very different from those in which Gaussian processes have been traditionally used.
-
-To do so, we consider probabilistic interpolation of traffic data along a road network consisting of highways in the city of San Jose, California, obtained from OpenStreetMap \cite{osm17}.
-In this graph, nodes are traffic sensors, and edges are roads between sensors, one for each side of the street.
-Edges are weighted by inverse distance.
-We work with the largest connected component of the graph, which has $1016$ nodes and $1173$ edges.
-
-For trainign data, we examine traffic flow speed, which is available at $325$ nodes, using $250$ randomly chosen nodes for the training set and the remainder as the test set.
-To simplify the problem and aid visualization, we focus on a single time slice consisting of traffic on Monday at 5:30pm, and do not consider space-time behavior.
-We compute the kernel approximately using $500$ Laplace--Beltrami eigenpairs, and train the model by optimizing kernel hyperparameters and likelihood error variance.
-
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/ggp-mean.tex}
@@ -3985,7 +3980,17 @@ We compute the kernel approximately using $500$ Laplace--Beltrami eigenpairs, an
 \label{fig:graph-posterior-zoom}
 \end{figure}
 
+To illustrate the graph Matérn Gaussian processes, we demonstrate their use in a setting which departs considerably from the Euclidean and Riemannian settings considered before.
+Our goal is to show how such models may enable applications that are very different from those in which Gaussian processes have been traditionally used.
 
+To do so, we consider probabilistic interpolation of traffic data along a road network consisting of highways in the city of San Jose, California, obtained from OpenStreetMap \cite{osm17}.
+In this graph, nodes are traffic sensors, and edges are roads between sensors, one for each side of the street.
+Edges are weighted by inverse distance.
+We work with the largest connected component of the graph, which has $1016$ nodes and $1173$ edges.
+
+For trainign data, we examine traffic flow speed, which is available at $325$ nodes, using $250$ randomly chosen nodes for the training set and the remainder as the test set.
+To simplify the problem and aid visualization, we focus on a single time slice consisting of traffic on Monday at 5:30pm, and do not consider space-time behavior.
+We compute the kernel approximately using $500$ Laplace--Beltrami eigenpairs, and train the model by optimizing kernel hyperparameters and likelihood error variance.
 
 Results can be seen in \Cref{fig:graph-posterior,fig:graph-posterior-zoom}.
 Here, we see that in spite of the heavily non-manifold-like geometry present in this graph, the Gaussian process still reflects the graph's geometric structure.
