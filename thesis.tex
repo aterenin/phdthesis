@@ -147,8 +147,7 @@ I am grateful to my stepmom, Rheesa Eddings, for both your deeply insightful way
 My gratitude to family includes those who are family by virtue of their friendship and support for my entire adult life, including Jerry Hirsch, John Halper, Lois Morera, Christian Morera, and Peter Morera.
 Thank you for continuing to stay in touch, for being the extended family I never otherwise had, and for being with me as my journey has unfolded.
 
-Though this list of acknowledgments has ballooned beyond what 
-might otherwise be expected in a dissertation, I nonetheless feel compelled to write it in full by virtue of my path being what it was.
+Though this list of acknowledgments has ballooned beyond what might otherwise be expected in a dissertation, I nonetheless feel compelled to write it in full by virtue of my path being what it was.
 It is also without a doubt incomplete, so I am grateful to anyone whose name should have been here but has been accidentally omitted.
 To conclude, I offer you, the reader, my exceeding gratitude for taking the time to read my work and ideas.
 
@@ -1235,7 +1234,7 @@ where $(\mu_t, \sigma_t)$ are the mean and standard deviation of the posterior d
 \end{definition}
 
 One can show this algorithm, illustrated in \Cref{fig:bb-ucb}, achieves the same regret as Hoeffding-based analogue: the proof is similar, but instead uses the empirical Bernstein inequality, and is significantly more messy owing to the complicated form of the upper confidence bound.
-Even more generally, one can select arms by optimizing a function $\alpha : X \-> \R$, called an \emph{acquition function}, built from a posterior distribution, confidence set, or other appropriate construction.
+Even more generally, one can select arms by optimizing a function $\alpha : X \-> \R$, called an \emph{acquisition function}, built from a posterior distribution, confidence set, or other appropriate construction.
 Many different acquisition functions have been proposed.
 
 We have made no attempt to optimize the bound, and significant improvements are possible, particularly when considering variations of the upper confidence bound algorithm---see \textcite{lattimore20} for state-of-the-art results.
@@ -1344,7 +1343,7 @@ We now proceed to develop the final piece of the puzzle not yet studied in detai
 
 In the preceding section, considerations arising from Bayesian decision-making algorithms motivated us to find a way to place priors on spaces of functions $f : X \-> \R$.
 Gaussian processes are a broad class of random functions capable of this.
-In \Cref{fig:ts}, to perform Bayesian optimization using Thompson sampling, we used a Gaussian process model to define the posterior distribution over random functions, as needed by the decsion rule.
+In \Cref{fig:ts}, to perform Bayesian optimization using Thompson sampling, we used a Gaussian process model to define the posterior distribution over random functions, as needed by the decision rule.
 
 To develop Gaussian processes, we will need to start with simpler notions and gradually work towards increasing levels of generality.
 Gaussian processes are defined by the key property that no matter what angle one views them from, they yield Gaussian marginal distributions.
@@ -1872,7 +1871,7 @@ Loosely speaking, we do so by taking $V$ to be a space of distributions, and $\c
 This is chosen to ensure that $\c{A}$ smooths its inputs, so that its output is regular enough to be understood as a random function.
 
 This line of thought leads one to the theory of stochastic partial differential equations driven by Gaussian white noise.
-The main point swept here under the rug is that there is a convenient way to sidestep much of the analysis needed to carry out the above calculations using the theory of reproducing kernel Hiblert spaces.
+The main point swept here under the rug is that there is a convenient way to sidestep much of the analysis needed to carry out the above calculations using the theory of reproducing kernel Hilbert spaces.
 Roughly, this amounts to working with certain vector spaces that uniquely determine the Gaussian processes of interest.
 
 We also use the theory of Gaussians in the sense of duality for a second purpose: to construct a \emph{coordinate-free} notion of Gaussianity as a suitable building block for constructing Gaussian vector fields on Riemannian manifolds.
@@ -2441,7 +2440,7 @@ Then there is a unique Hilbert space $H_k \subseteq \R^X$ of real-valued functio
 \end{proof}
 
 This gives another point of view from which one can study and understand kernels and, by proxy, Gaussian processes.
-The reproducing kernel Hilbert space induced by the covariance kernel of a Gaussian process is sometimes called its \emph{Cameron--Martin space} or \emph{native space}, and encodes its mathematical propeties.
+The reproducing kernel Hilbert space induced by the covariance kernel of a Gaussian process is sometimes called its \emph{Cameron--Martin space} or \emph{native space}, and encodes its mathematical properties.
 This perspective can be studied abstractly, leading to the theory of \emph{isonormal Gaussian processes}.
 See \textcite{wendland04, lifshits12, legall16} for details on these and related ideas.
 
@@ -2777,7 +2776,7 @@ In particular, we do not rely on heuristic arguments involving \emph{evidence lo
 Instead, by virtue of the Kullback--Leibler divergence generating a Hausdorff topology on the space of probability measures, this is proven.
 
 Inducing point approximations perform well in many settings, and are particularly effective in cases involving large quantities of data that contain redundant information about the posterior.
-In certain asymptotic regimes, \textcite{burt19} have shown that the number of inducing points can be taken logaritmic in the size of the data while maintaining approximation accuracy.
+In certain asymptotic regimes, \textcite{burt19} have shown that the number of inducing points can be taken logarithmic in the size of the data while maintaining approximation accuracy.
 
 Among such approximations, the variational family presented above is particularly interesting because the matrix $\m{K}_{\v{x}\v{x}} + \m\Lambda$ which needs to be inverted is generally better-behaved numerically compared to matrices present in other approximations, owing to the presence of $\m\Lambda$, whose learned values tend to concentrate away from zero.
 This makes this choice particularly attractive for use in combination with iterative solvers \cite{dong17,gardner18,pleiss18,meanti20,pleiss20}: we discuss this idea, along with other avenues for future work, in \Cref{ch:discussion}.
@@ -3049,7 +3048,7 @@ For the pathwise approximate posterior, this is the sum of both the number of ba
 We use random-phase-based Fourier features in both approximate posteriors.
 
 Results can be seen in \Cref{fig:parallel-ts}, where we plot median regret curves, along with first and third quartiles.
-Immediately, we see that the effect of the strategy used for computing the acqusition function varies according to dimension.
+Immediately, we see that the effect of the strategy used for computing the acquisition function varies according to dimension.
 
 In the two-dimensional setting, all Gaussian process methods perform comparably, outperforming the random search and dividing rectangles baselines.
 This occurs even in the regime with $\ell = 256$ basis functions, and shows that posterior approximation error does not play a particularly significant role for the given comparisons and parameters.
@@ -3065,7 +3064,7 @@ With $\ell = 4096$ basis functions, the performance of Fourier features recovers
 In contrast, the pathwise approximation is insensitive to the number of basis functions.
 
 In summary, these results largely confirm the viewpoint developed using the preceding theory.
-We saw previously that the pathwise approximate posterior can be seen as modfying the random Fourier feature posterior by replacing certain Monte Carlo approximations with their expected values.
+We saw previously that the pathwise approximate posterior can be seen as modifying the random Fourier feature posterior by replacing certain Monte Carlo approximations with their expected values.
 It is therefore reasonable to suppose that this gives a more accurate approximation of the true posterior.
 Our results are thus consistent with the true Gaussian process being a better-performing model for Bayesian optimization.
 
@@ -3078,7 +3077,7 @@ From these perspectives, our results show that already in $d=4$ the improvements
 
 \section{Conclusion}
 
-In the Gaussian case, the distributional notion of \emph{conditioning} can be re-formualted using random variables, yielding a notion of \emph{pathwise conditioning}.
+In the Gaussian case, the distributional notion of \emph{conditioning} can be re-formulated using random variables, yielding a notion of \emph{pathwise conditioning}.
 In the preceding sections, we developed and studied this point of view for Gaussian processes, allowing us to express a posterior Gaussian process as the sum of a \emph{prior term}, and a \emph{data-dependent term}.
 
 Pathwise conditioning gives a powerful way to think about posterior Gaussian processes.
@@ -3101,7 +3100,7 @@ We presented a number of methods for doing so, each suited to their respective s
 For stationary kernels, random Fourier feature methods are particularly attractive due to their good behavior with respect to dimension, but are by no means the only choice.
 We hope these developments prompt further study of other possible choices for approximate priors.
 
-Pathwise approximations are also of interst as a potential organizing principle for designing Gaussian process software packages.
+Pathwise approximations are also of interest as a potential organizing principle for designing Gaussian process software packages.
 In particular, one can consider implementing a Gaussian processes with separate methods for evaluating the process and re-sampling its random weights.
 Depending on the situation, this might be a more convenient application programming interface than working with distributions at user-specified locations.
 Exploring these alternatives is a promising avenue for further work.
@@ -3168,7 +3167,7 @@ A smooth manifold is called \emph{oriented} if the Jacobian determinant of all c
 Such atlases admit maximal analogs.
 
 A \emphmarginnote{manifold with boundary} is one of a wide class of spaces generalizing the notion of a manifold while preserving most geometric characteristics that make manifolds useful and interesting in the first place.
-Such a space is defined analogously to an ordinary manifold, except that it is also possible for it to be locally homeommorphic to a Euclidean half-plane.
+Such a space is defined analogously to an ordinary manifold, except that it is also possible for it to be locally homeomorphic to a Euclidean half-plane.
 The ideas we consider admit natural generalizations to such settings, but we do not pursue these, and in particular only consider manifolds without boundary.
 
 \label{ntn:tangent-bdl}
@@ -3237,7 +3236,7 @@ This perspective is often avoided for both technical and conceptual reasons: if 
 
 Riemannian manifolds admit many different objects, such as connection one-forms, Ricci tensors, and other constructions which encode and mathematically describe their geometric properties.
 These objects are generally built using the metric along with derivatives and other algebraic operations.
-The \emph{Laplace--Beltrami operator} is one such object, and forms a basic building block for defining differentual equations on manifolds.
+The \emph{Laplace--Beltrami operator} is one such object, and forms a basic building block for defining differential equations on manifolds.
 
 \label{ntn:laplace-beltrami}
 \begin{definition}[Laplace--Beltrami operator]
@@ -3301,7 +3300,7 @@ Then the operator $-\lap_g : C^\infty(X) \-> C^\infty(X)$ is positive semi-defin
 \end{figure}
 
 Viewed in this way, the range of the Laplace--Beltrami operator is a Hilbert space, enabling us to use ideas from spectral theory to better understand its behavior.
-In particular, one can show that, owing to compactness, the spectrum of $-\lap_g$ is discrete---this gives a particularly simple view of $-\lap_g$ thorugh its eigenvalues and eigenfunctions.
+In particular, one can show that, owing to compactness, the spectrum of $-\lap_g$ is discrete---this gives a particularly simple view of $-\lap_g$ through its eigenvalues and eigenfunctions.
 
 \label{ntn:laplace-beltrami-eigenpairs}
 \begin{result}[Sturm--Liouville decomposition]
@@ -3320,7 +3319,7 @@ which converges unconditionally in $L^2(X)$ for all $f \in D(\lap_g)$.
 
 This is a powerful result: the eigenfunctions $f_n$, shown in \Cref{fig:eig-s1-t2,fig:eig-s2-dr}, can be viewed as analogs of the Fourier basis adapted to the manifold's geometry.
 By expanding a function within the basis of eigenfunctions, we obtain an infinite sequence of basis coefficients---just like representing a periodic function in $L^2([-\pi,\pi];\R)$ by an infinite sum of complex exponentials.
-The Sturm--Liouvile decomposition gives rise to a notion of \emph{functional calculus}, which is key for our purposes, and which we now introduce.
+The Sturm--Liouville decomposition gives rise to a notion of \emph{functional calculus}, which is key for our purposes, and which we now introduce.
 
 
 \begin{figure}
@@ -3536,11 +3535,11 @@ To start, we define the right-hand-side of our equations.
 \label{ntn:riemannian-white-noise}
 \begin{definition}[Riemannian white noise]
 Define the \emph{white noise process} $\c{W}_g : \Omega \x L^2(X) \-> \R$ to be a centered generalized Gaussian field with covariance operator $\id : L^2(X) \-> L^2(X)$, where we recall that the inner product on $L^2(X)$ is defined by integration against the Riemannian volume measure.
-By applying Kolmogorov's Extension Theorem to a family of finite-dimensioanl marginals indexed by $L^2(X)$, we conclude such a process exists and is well-defined.
+By applying Kolmogorov's Extension Theorem to a family of finite-dimensional marginals indexed by $L^2(X)$, we conclude such a process exists and is well-defined.
 \end{definition}
 
 This stochastic process \emph{cannot} be viewed as a scalar-valued random function.
-Though Kolmogorov's Extension Theorem does imply there is a random variable $\c{W}_g : \Omega \-> \R^{L^2(X)}$ whose finite-dimensional marginals coincide with $\c{W}_g : \Omega \x L^2(X) \-> \R$, this is next-to-useless because $\R^{L^2(X)}$ is highly irregular and we can say little about which subspace $\c{W}_g$ concentrates on without additional considersations that we may conveniently avoid.
+Though Kolmogorov's Extension Theorem does imply there is a random variable $\c{W}_g : \Omega \-> \R^{L^2(X)}$ whose finite-dimensional marginals coincide with $\c{W}_g : \Omega \x L^2(X) \-> \R$, this is next-to-useless because $\R^{L^2(X)}$ is highly irregular and we can say little about which subspace $\c{W}_g$ concentrates on without additional considerations that we may conveniently avoid.
 
 
 \begin{figure}
@@ -3670,7 +3669,7 @@ where we have also used $L^2(X)$-orthonormality of $f_n$ as well as
 \sum_{n=0}^\infty \alpha_n^2 = \norm{h}^2_{L^2(X)} = \norm{f}^2_{H^{\nu + \frac{d}{2}}(X)}
 \]
 which follows from orthonormality of $f_n$ along with the definition of $h$ and \Cref{res:riemannian-sobolev}.
-This proves boundedness and invertability.
+This proves boundedness and invertibility.
 To complete the argument, we check that the desired identity holds under a change of metric.
 The change of metric expressions of interest are given by 
 \[
@@ -3735,7 +3734,7 @@ We work with the largest connected component of the mesh, which has a total of $
 \end{figure}
 
 On the mesh, discrete analogs of all of the differential-geometric notions we require are available, with reasonably well-understood approximation properties \cite{crane17}.
-We obtain $500$ discretized Laplace--Beltrami eigenpairs numerically in finite element space using the \emph{Firedrake} partial differental equation package \cite{rathgeber16}.
+We obtain $500$ discretized Laplace--Beltrami eigenpairs numerically in finite element space using the \emph{Firedrake} partial differential equation package \cite{rathgeber16}.
 These, in turn, gives expressions for evaluating the kernel and sampling the prior at any points on the manifold.
 
 To generate training data, we define a ground truth function given by the sine of the geodesic distance from a distinguished point, chosen to be the first vertex on the mesh, which is located at the end of the dragon's snout.
@@ -3894,8 +3893,8 @@ This can be seen in \Cref{fig:graph-variance}.
 Similar phenomena occur in random walk kernels studied by \textcite{urry13}---in that setting, variance is determined by the return time of a certain random walk defined on the graph.
 
 It's also possible to use the \emphmarginnote{Symmetric normalized graph Laplacian}, which is defined as $\m{D}^{-1/2}\m\lap\m{D}^{-1/2}$, to define analogous kernels to the ones above, by using this matrix in place of the graph Laplacian.
-This yields the \emph{symmetric normalized graph Matérn} and \emph{symmetric normalized graph sqaured exponential} Gaussian processes.
-These can be preferrable in domains where symmetric normalized Laplacians are customarily used.
+This yields the \emph{symmetric normalized graph Matérn} and \emph{symmetric normalized graph squared exponential} Gaussian processes.
+These can be preferable in domains where symmetric normalized Laplacians are customarily used.
 
 \parmarginnote{Connection with random walks}
 The graph squared exponential kernel can be connected with \emph{random walks} in a number of ways.
@@ -3907,7 +3906,7 @@ More precisely, if $\v\phi : [0,\infty) \x G \-> \R$ solves the equation
 \v\phi_0 &= \v{v}
 \]
 then $\v\phi(\tau,\.) = e^{-\tau\m\lap}\v{v}$, where our notation again uses the equivalence between vectors and real-valued functions on $G$.
-This equation has a strong physical interpretation: it describes heat transfer along the graph---this gives a way to understand what kind of prior information graph squred exponential kernel introduces.
+This equation has a strong physical interpretation: it describes heat transfer along the graph---this gives a way to understand what kind of prior information graph squared exponential kernel introduces.
 Similarly, if $\m\lap$ is replaced with the symmetric normalized graph Laplacian, then $\v\phi(\tau,\.)$ can be interpreted as the unnormalized probability density of a continuous-time random walk moving along the graph.
 
 Another way to understand the prior information contained in the given kernels is through limits.
@@ -3988,7 +3987,7 @@ In this graph, nodes are traffic sensors, and edges are roads between sensors, o
 Edges are weighted by inverse distance.
 We work with the largest connected component of the graph, which has $1016$ nodes and $1173$ edges.
 
-For trainign data, we examine traffic flow speed, which is available at $325$ nodes, using $250$ randomly chosen nodes for the training set and the remainder as the test set.
+For training data, we examine traffic flow speed, which is available at $325$ nodes, using $250$ randomly chosen nodes for the training set and the remainder as the test set.
 To simplify the problem and aid visualization, we focus on a single time slice consisting of traffic on Monday at 5:30pm, and do not consider space-time behavior.
 We compute the kernel approximately using $500$ Laplace--Beltrami eigenpairs, and train the model by optimizing kernel hyperparameters and likelihood error variance.
 
@@ -4006,7 +4005,7 @@ We thus end our detour and return to the manifold setting.
 In the preceding sections, we studied Gaussian processes in two different non-Euclidean settings, namely those of graphs and manifolds.
 In both cases, the models obtained were scalar-valued.
 We now ask: can we use these models to define vector-valued Gaussian processes on manifolds?
-The first step, then, is to understand what such a notion ougth to actually mean.
+The first step, then, is to understand what such a notion ought to actually mean.
 
 \subsection{Vector fields on manifolds}
 
@@ -4243,12 +4242,12 @@ By direct calculation, $\m{K}_F$ can be re-expressed as
 \]
 with respect to $\tl{F}$.
 This condition is called \emphmarginnote{equivariance under change of frame}.
-At this point, it is clear why we did not even attempt to generalize matrix-valued kernels directly by positing candidate formulas: for an arbirary manifold, there is very little hope of simply guessing an expression that is simultaneously positive semi-definite and equivariant under change of frame.
+At this point, it is clear why we did not even attempt to generalize matrix-valued kernels directly by positing candidate formulas: for an arbitrary manifold, there is very little hope of simply guessing an expression that is simultaneously positive semi-definite and equivariant under change of frame.
 
 \subsection{Projected kernels}
 
 Now that we understand how to write kernels of Gaussian vector fields in coordinates, we are ready to consider techniques for constructing such kernels and calculating them numerically. 
-With our preparation complete, the construction we present is extremely simple, consiting of two steps.
+With our preparation complete, the construction we present is extremely simple, consisting of two steps.
 
 \1 Embed a set of $p$ scalar-valued Riemannian Gaussian processes from $X$ into $i(X) \subseteq \R^p$, and use them to assemble a vector-valued Gaussian process defined on on $i(X)$.
 \2 Project the tangent vectors onto each tangent space, obtaining a tangential vector field in the embedded space, and therefore a vector field on $X$.
@@ -4458,9 +4457,9 @@ These enabled us to apply Matérn Gaussian processes to model phenomena in purel
 
 Finally, we returned to the manifold setting, this time studying formalism for defining \emph{Gaussian vector fields}.
 This setting is non-trivial from the point of conceptualization: a vector-valued Gaussian is only \emph{locally} a vector-valued random function, and instead should be formulated using the differential-geometric formalism of \emph{random sections}.
-We therefore began by clarifying what the appropriate notion of a \emph{Gaussian vector field}  and \emph{cross-covarince kernel} should be, and how to work with this notion numerically.
+We therefore began by clarifying what the appropriate notion of a \emph{Gaussian vector field}  and \emph{cross-covariance kernel} should be, and how to work with this notion numerically.
 
-Having done so, we introduced a wide class of cross-covarince kernels for defining such processes called \emph{projected kernels}.
+Having done so, we introduced a wide class of cross-covariance kernels for defining such processes called \emph{projected kernels}.
 These kernels can be built from the Riemannian Gaussian process models already defined, together with an embedding of the manifold into an ambient Euclidean space, and produce covariances that reflect the manifold's geometry.
 This construction enabled us to implement Bayesian learning of vector-valued data on the sphere.
 
@@ -4474,7 +4473,7 @@ Extensions such as this make excellent candidates for future work.
 Our differential-geometric framework also provides a promising way to study \emph{symmetry} within Gaussian processes and Bayesian optimization.
 Since symmetry plays a fundamental role in geometry and in physics, understanding how to handle symmetries is a promising avenue for building richer classes of Gaussian process models, and applying techniques such as Bayesian optimization to wider classes of scientific problems.
 
-We hope that techniques such as the ones presented here proivde a foundation upon which these and other developments can be built.
+We hope that techniques such as the ones presented here provide a foundation upon which these and other developments can be built.
 We therefore conclude our presentation of contributions, and move to discuss the state and overall picture of Gaussian processes and decision systems that we have studied.
 
 
@@ -4514,13 +4513,13 @@ This enables the introduction of \emph{Bayesian Dijkstra's algorithm} for findin
 Pathwise conditioning methods play a key role in computing the InfoBAX acquisition function.
 Specifically, one runs the underlying algorithm on posterior random functions, producing a set of \emph{execution paths} of points queried by the algorithm.
 InfoBAX is then constructed from the execution trace and output via a set of information-theoretic calculations.
-Approximate pathwise conditiong makes it possible to compute the required execution traces in an efficient, accurate, and convenient manner.
+Approximate pathwise conditioning makes it possible to compute the required execution traces in an efficient, accurate, and convenient manner.
 
 Gaussian processes have not yet been widely considered for tasks not conveniently expressed as maximization of rewards.
 Bayesian algorithm execution enables such methods to be considered for settings beyond Bayesian optimization and model-based reinforcement learning, which are well-established and whose limitations are largely known.
 Developing this framework to the same degree of detail afforded to those cases is therefore a particularly promising research direction.
 
-From a theoretical point of view, one of the first steps to be taken in understanding Bayesian algorothm execution is to understand what is the appropriate notion of \emph{regret} for this setting.
+From a theoretical point of view, one of the first steps to be taken in understanding Bayesian algorithm execution is to understand what is the appropriate notion of \emph{regret} for this setting.
 Given there are a number of variations of regret, used for proving different kinds of bounds, it is not immediately clear what this should be.
 Developing techniques for studying regret in this very general setting is a promising first step.
 The analysis of closely-related state-of-the-art bandit algorithms, such as \emph{information-directed sampling} \cite{russo14}, offers hints on how to proceed.
@@ -4534,8 +4533,8 @@ We hope that, in the coming years, more of these avenues are explored, enabling 
 \subsection*{Connections to numerical analysis}
 
 Another promising research direction is exploring the connections between Gaussian processes and numerical analysis.
-Interst in these connections has grown rapidly in the Gaussian process community within machine learning in recent years, as a way to improve performance and usability of software implementations \cite{matthews17,gardner18,vanderwilk20}. 
-Ideas based on pathwise conditioning and stochastic partial differential equations offers new avenues for takind advantage of these connections.
+Interest in these connections has grown rapidly in the Gaussian process community within machine learning in recent years, as a way to improve performance and usability of software implementations \cite{matthews17,gardner18,vanderwilk20}. 
+Ideas based on pathwise conditioning and stochastic partial differential equations offers new avenues for taking advantage of these connections.
 
 Firstly, one can study use of iterative solvers, such as the conjugate gradient method, in combination with pathwise conditioning and inducing points.
 Iterative solvers are promising because they can in principle tackle larger linear systems for which Cholesky factorization simply fails, provided they are set up correctly.
@@ -4545,7 +4544,7 @@ The computational costs of an iterative solver depend on how many iterations are
 Variational approximations such as the inducing point construction presented in \Cref{ch:pathwise} make it possible to work with linear systems that are substantially better-conditioned than those in the true posterior, due to additional terms added to the diagonal.
 Exploring such combinations is a promising route for improving performance.
 
-Pathwise conditioning makes it possible to avoid computation of matrix square roots when working with itrative solvers.
+Pathwise conditioning makes it possible to avoid computation of matrix square roots when working with iterative solvers.
 Matrix square roots generally require further considerations than simply solving linear systems \cite{pleiss20} and can be less convenient.
 This means that the only additional quantities needed, beyond solution of the linear system itself, are generally log-determinant terms.
 Techniques for computing these terms have been proposed \cite{dong17}, and are key part in making iterative methods effective.
@@ -4591,14 +4590,14 @@ Due to their prominence, it therefore seems fruitful to study potential methods 
 
 Since some Lie groups are non-compact, studying kernels on these and related spaces, including certain matrix manifolds, is a promising avenue towards developing a general theory of Riemannian kernels which does not require compactness.
 Here, one would need to appeal to a more general spectral theory than that built using Sturm--Liouville decompositions.
-Generalizations are available, but they are more mathematically sophisticated, requiring additinal machinery such as integration over projection-valued measures \cite{lang12}.
+Generalizations are available, but they are more mathematically sophisticated, requiring additional machinery such as integration over projection-valued measures \cite{lang12}.
 Exploring such generalizations is another promising avenue for further work.
 
 Finally, one can consider extending our constructions to more general spaces than manifolds, such as for example manifolds with boundary, which possess similar spectral properties.
 Spaces like this are often important in applications areas \cite{solin18,krainski18,solin19,coveney20}.
 Studying heat kernels, which have been considered in settings as general as metric measure spaces \cite{grigoryan03,grigoryan14}, gives hints about the total scope which may be possible.
 
-Summariaing, the constructions we have studied only begin to describe the full scope of geometry-aware kernels such as the Matérn and squared exponential class constructed using Sturm--Liouville theory and described here.
+Summarizing, the constructions we have studied only begin to describe the full scope of geometry-aware kernels such as the Matérn and squared exponential class constructed using Sturm--Liouville theory and described here.
 We hope this first step leads to further substantive understanding of this class of methods.
 
 \section{Conclusion}
