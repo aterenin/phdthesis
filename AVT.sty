@@ -429,6 +429,8 @@
 }
 \pagestyle{headings}
 \widenhead*{\z@}{\dimexpr\marginparwidth+\marginparsep\relax}
+\usepackage{emptypage}
+\renewcommand{\emptypage@emptypage}{\hbox{}\thispagestyle{plain}\newpage\if@twocolumn\hbox{}\newpage\fi}
 }{
 \renewpagestyle{plain}{\setfoot{}{}{\rlap{\hspace*{\dimexpr\marginparwidth+\marginparsep\relax}\llap{\thepage}}}}
 \pagestyle{plain}
@@ -441,6 +443,8 @@
 \titlecontents{chapter}[1.5em]{\addvspace{1pc}\large}{\contentslabel{1.5pc}}{\hspace*{-1.5pc}}{\normalsize\titlerule*[1pc]{.}\large\contentspage}
 \dottedcontents{section}[3.8em]{}{2.3em}{1pc}
 \dottedcontents{subsection}[7em]{}{3.2em}{1pc}
+\dottedcontents{figure}[3.8em]{}{2.3em}{1pc}
+\dottedcontents{table}[3.8em]{}{2.3em}{1pc}
 }{
 \titlecontents{section}[1.5em]{\addvspace{1em}\large}{\contentslabel{1.5pc}}{\hspace*{-1.5pc}}{\normalsize\titlerule*[1pc]{.}\large\contentspage}
 \dottedcontents{subsection}[3.8em]{}{2.3em}{1pc}
