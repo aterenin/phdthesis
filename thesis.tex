@@ -2091,7 +2091,8 @@ and
 where we have cancelled a factor of $\m\Sigma_{\v{y}\v{y}}\m\Sigma_{\v{y}\v{y}}^{-1}$ in the middle term.
 \end{proof}
 
-This affirms the claim, but gives few hints on where this expression originates or how to obtain it from first principles.
+This is illustrated in \Cref{fig:mvn-pw}.
+The above argument affirms the claim, but gives few hints on where this expression originates or how to obtain it from first principles.
 To better understand this, we now prove \Cref{thm:mvn-pw} in a different way.
 To do so, we first prove a general result about conditioning.
 
@@ -2177,7 +2178,7 @@ The claim follows.
 
 From \Cref{thm:mvn-pw}, we obtain a second way of representing multivariate Gaussian conditionals.
 This entails two steps: (i) sample $\v\theta,\v{y}$ jointly, and (ii) transform $\v\theta,\v{y}$ into $\v\theta\given\v{y}=\v\gamma$ by employing the given expression.
-This procedure is presented in \Cref{fig:mvn-pw}.
+For an illustration of this procedure, see \Cref{fig:mvn-pw}.
 
 Remarkably, this result is seemingly missing from every machine learning textbook on Gaussian processes in widespread use, and appears almost entirely unknown within the field.
 It's possible this is because the expression's computational costs are cubic in the combined dimension, which is more expensive than the previous costs.
@@ -2457,7 +2458,11 @@ Then
 w_i &\~[N](0,1)
 \]
 by direct calculation has covariance approximately equal to that of $f$.
+An example can be seen in \Cref{fig:gp-rff}.
 Therefore, to construct an approximate prior, it suffices to find a finite-dimensional approximate feature map.
+
+For stationary kernels, techniques for constructing approximate feature maps are well-studied, originally motivated by questions arising in kernel support vector machines.
+We now introduce the \emph{random Fourier feature} method for constructing such maps, beginning with a fully detailed description of the stationary setting.
 
 \begin{figure}
 \begin{subfigure}{0.49\textwidth}
@@ -2471,9 +2476,6 @@ Therefore, to construct an approximate prior, it suffices to find a finite-dimen
 \caption[Random Fourier feature prior approximations]{Illustration of random Fourier feature methods for sampling from approximate priors. Here, we show a small subset of randomly sampled Fourier basis functions, along with approximate prior samples constructed using the random Fourier basis functions.}
 \label{fig:gp-rff}
 \end{figure}
-
-For stationary kernels, techniques for constructing approximate feature maps are well-studied, originally motivated by questions arising in kernel support vector machines.
-We now introduce the \emph{random Fourier feature} method for constructing such maps, beginning with a fully detailed description of the stationary setting.
 
 \parmarginnote{Stationary kernel}
 Let $X = \R^d$.
@@ -2791,25 +2793,6 @@ In the preceding sections, we presented a number of posterior approximations whi
 We considered approximations where the prior term is replaced with a finite basis function approximation, and where the data term is replaced with a sparser analog.
 An obvious question one can ask is, instead of approximating the prior term, why not just change the model by using a finite basis function prior to begin with?
 
-\begin{figure}
-\begin{subfigure}{0.98\textwidth}
-\input{figures/tex/gp-vs-lgnd.tex}
-\end{subfigure}
-\begin{subfigure}{0.49\textwidth}
-\input{figures/tex/gp-vs.tex}
-\caption{Sine and cosine}
-\end{subfigure}
-\begin{subfigure}{0.49\textwidth}
-\input{figures/tex/gp-vs-phase.tex}
-\caption{Random phase}
-\end{subfigure}
-\caption[Variance starvation in Fourier feature models]{Example of the \emph{variance starvation} phenomenon in two different random Fourier feature models, compared to the true posterior.
-We see two problems: the mean spuriously oscillates and the error bars grow too slowly away from the data.
-This can cause the upper confidence bound acquisition, which is the global minima of the error bars, to appear in the completely wrong location.
-With the given hyperparameter choices, $n=10$ data points is enough to exhibit considerable approximation error.}
-\label{fig:gp-vs}
-\end{figure}
-
 The answer to this question is that the resulting models become fundamentally finite-dimensional, and lose expressive capacity, often resulting in reduced performance \cite{rasmussen05}.
 This is often particularly pronounced in Bayesian optimization using Fourier feature methods \cite{wang18,mutny18}, which have nonetheless attracted attention in that setting owing to their convenience \cite{hernandezlobato14,shahriari15}.
 This can be seen precisely by comparing the Fourier feature pathwise update 
@@ -2828,6 +2811,25 @@ Observe further that since $\tilde{f}(\omega,\.) = \v\phi(\.)^T\v{w}(\omega)$ wh
 \]
 where $\v{\tilde{v}}(\omega) = \v\phi(\v{x}) (\v\phi(\v{x})^T\v\phi(\v{x}) + \m\Sigma)^{-1}(\v\gamma - \tilde{f}(\omega,\v{x}) - \v\eps(\omega))$ are random weights.
 Therefore, if we change the model, then the posterior becomes a sum of the specified finite basis functions, which do not grow in quantity as data size increases.
+
+\begin{figure}
+\begin{subfigure}{0.98\textwidth}
+\input{figures/tex/gp-vs-lgnd.tex}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-vs.tex}
+\caption{Sine and cosine}
+\end{subfigure}
+\begin{subfigure}{0.49\textwidth}
+\input{figures/tex/gp-vs-phase.tex}
+\caption{Random phase}
+\end{subfigure}
+\caption[Variance starvation in Fourier feature models]{Example of the \emph{variance starvation} phenomenon in two different random Fourier feature models, compared to the true posterior.
+We see two problems: the mean spuriously oscillates and the error bars grow too slowly away from the data.
+This can cause the upper confidence bound acquisition, which is the global minima of the error bars, to appear in the completely wrong location.
+With the given hyperparameter choices, $n=10$ data points is enough to exhibit considerable approximation error.}
+\label{fig:gp-vs}
+\end{figure}
 
 If we think of the dimension of the vector space spanned by all basis functions as the representational capacity of the finite-dimensional model, we see that for Fourier feature posteriors this capacity does not grow as data size increases.
 This is to be contrasted with the approximate pathwise update, for which the representational capacity grows in spite of its finite-dimensional nature due to the presence of $n$ kernel functions $k(x_j,\.)$ in the sum.
@@ -4031,6 +4033,7 @@ There does not exist a nowhere-vanishing continuous section on any even-dimensio
 \end{proof}
 
 This result is also called the \emph{hairy ball} theorem due to its interpretation: namely, it tell us in particular that if consider a two-dimensional sphere with hair on its surface, then it is not possible to comb the hair without creating a swirl or other location where the direction of the hair changes abruptly.
+An illustrated set of vector fields, described further in what follows, can be seen in \Cref{fig:gvf}.
 
 This result restricts the kind of technical tools available for studying vector fields on manifolds.
 In particular, it implies that for a generic smooth manifold, it is not possible to choose a smoothly-varying set of basis vectors in each tangent space simultaneously.
@@ -4086,7 +4089,7 @@ Since Gaussianity is preserved by linearity, every set of finite-dimensional mar
 \end{proof}
 
 This confirms that out definition of a vector-valued Gaussian process is the right one: if we embed the manifold in a Euclidean space, we obtain the correct kind of stochastic process.
-We show random samples from a Gaussian vector field, constructed using the technique presented in the sequel, in \Cref{fig:gvf}.
+\Cref{fig:gvf} illustrates a set of random samples from a Gaussian vector field, constructed using the technique presented in the sequel.
 
 As before, the mean of such a process will simply be a given vector field.
 The next step is to determine what is an appropriate notion of a \emph{kernel}.
