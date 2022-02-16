@@ -197,7 +197,7 @@ $\R^d$ & Euclidean space of dimension $d$ \\
 $\R^X$ & Space of functions from $X$ to $\R$ \\
 $\v{a}$ & Euclidean vector (bold italic letters) \\ 
 $\m{A}$ & Matrix (bold upface letters) \\
-$\oplus$ & Vector direct sum & \labelcpageref{ntn:direct-sum} \\
+$\oplus$ & Direct sum of a vector space & \labelcpageref{ntn:direct-sum} \\
 $V^*$ & Dual space of a topological vector space $V$ & \labelcpageref{ntn:dual-space} \\
 $\norm{\.}$ & Norm of a vector in a Banach space & \labelcpageref{ntn:banach-hilbert} \\
 $\innerprod{\.}{\.}$ & Inner product between vectors in a Hilbert space & \labelcpageref{ntn:banach-hilbert} \\
@@ -1467,12 +1467,6 @@ y = \sigma z + \mu
 \]
 \end{definition}
 
-\begin{figure}
-\input{figures/tex/norm-dist.tex}
-\caption[Gaussian distributions]{Probability density functions for a set of Gaussian random variables, each with different mean and standard deviation parameters. All of these can be obtained by shifting and rescaling any of the others via affine transformations.}
-\label{fig:norm}
-\end{figure} 
-
 \label{ntn:norm-dist}
 Note that we do \emph{not} require $\sigma \geq 0$: hence, every Gaussian random variable is determined uniquely in 
 distribution by the pair $(\mu,\sigma^2)$, which we call its \emph{mean} and \emph{variance}, respectively. 
@@ -1495,6 +1489,12 @@ f(y) = \frac{1}{\sqrt{2\pi}\sigma} \exp\del{-\frac{(y-\mu)^2}{2\sigma^2}}
 This density is visualized in \Cref{fig:norm}.
 Note that the density will not exist if $\sigma^2 = 0$: the distributions of such Gaussians are Dirac measures centered at $\mu$.
 By examining this density, one sees that Gaussian random variables respect the additive and multiplicative structures of the reals.
+
+\begin{figure}
+\input{figures/tex/norm-dist.tex}
+\caption[Gaussian distributions]{Probability density functions for a set of Gaussian random variables, each with different mean and standard deviation parameters. All of these can be obtained by shifting and rescaling any of the others via affine transformations.}
+\label{fig:norm}
+\end{figure} 
 
 \begin{proposition}[Affine maps between Gaussians]
 Let $y \~[N](\mu,\sigma^2)$.
@@ -1665,7 +1665,7 @@ Using this notion, we define Gaussian processes.
 \end{subfigure}
 \caption[Gaussian processes]{Random functions generated from Gaussian processes with four different covariance kernels, which differ in particular according to their regularity, ranging from nowhere-differentiable in the exponential case to infinitely-differentiable in the squared exponential case.}
 \label{fig:gp-smoothness}
-\end{figure}  
+\end{figure}
 
 \begin{definition}[Gaussian process (stochastic process)]
 Let $X$ be a set. 
@@ -1677,6 +1677,7 @@ In particular, do Gaussian processes in the sense given here exist?
 
 Under general conditions on the finite-dimensional marginals, Kolmogorov's Consistency Theorem states that there exists a unique probability measure on a suitable $\sigma$-algebra, called the cylindrical $\sigma$-algebra and defined below, whose finite-dimensional projections coincide with the distributions of the random variables written above.
 Thus, Gaussian processes exist so long as a family of multivariate Gaussians satisfying the conditions of Kolmogorov's Consistency Theorem can be found.
+We visualize such processes in \Cref{fig:gp-smoothness}.
 
 The same results also allow us to reinterpret Gaussian processes as \emph{function-valued random variables}, which, in many ways, are a more natural point of view to take.
 Define $\R^X = \{f : X \-> \R\}$ and equip it with the cylindrical $\sigma$-algebra, namely the smallest $\sigma$-algebra containing all sets of the form $\{f \in \R^X : f(x_1),..,f(x_n) \in A\}$, where $A$ is a measurable set on $\R^n$, for all $n$, to make it into a measurable space. 
@@ -1690,7 +1691,6 @@ A random variable $f: \Omega \-> V \subseteq \R^X$ is called a \emph{Gaussian pr
 
 It is clear that every Gaussian process in the random process sense induces a Gaussian process in the random variable sense, and vice versa.
 Thus, these two notions are simply two different ways of viewing the same object.
-We visualize a few examples of such processes in \Cref{fig:gp-smoothness}.
 
 We can then ask, what properties of multivariate Gaussians are still true in this setting?
 Since a Gaussian process is uniquely determined by its finite-dimensional marginals, we need to find functions that generate a family of mean vectors and covariance matrices which are positive semi-definite.
@@ -3177,6 +3177,16 @@ Homeomorphisms compatible with such charts are called \emph{diffeomorphisms}.
 A smooth manifold is called \emph{oriented} if the Jacobian determinant of all chart transition maps in its atlas is positive.
 Such atlases admit maximal analogs.
 
+\begin{figure}
+\tikzset{external/export next=false}
+\begin{tikzpicture}
+\node at (0,0) {\includegraphics[scale=0.25]{figures/png/s2.png}};
+\node at (5.5,-0.5) {\includegraphics[scale=0.25]{figures/png/t2.png}};
+\end{tikzpicture}
+\caption[Common manifolds]{Two common manifolds: the sphere $\mathbb{S}^2$ and torus $\mathbb{T}^2$.}
+\label{fig:common-manifolds}
+\end{figure}
+
 \label{ntn:smooth-fns}
 \parmarginnote{Smooth function}
 The notion of smoothness extends to real-valued functions on manifolds, and functions between manifolds.
@@ -3234,16 +3244,6 @@ On a general smooth manifold, the choice of a volume form is heavily non-unique.
 A \emphmarginnote{Riemannian manifold} is a quadruple $(X,\c{O}_X,\c{A}_X,g)$, usually written $(X,g)$, where $X$ is a smooth manifold and $g$ is the \emph{metric tensor}, which is a smooth symmetric positive definite $(0,2)$-tensor field.
 The metric tensor can be thought of as an algebraic object encoding the manifold's quantitative shape, and canonically gives rise to notions such as \emph{volume}, \emph{integration}, and \emph{geodesics}.
 In particular, we denote both the volume measure and volume density induced by the metric tensor as $\vol_g$.
-
-\begin{figure}
-\tikzset{external/export next=false}
-\begin{tikzpicture}
-\node at (0,0) {\includegraphics[scale=0.25]{figures/png/s2.png}};
-\node at (5.5,-0.5) {\includegraphics[scale=0.25]{figures/png/t2.png}};
-\end{tikzpicture}
-\caption[Common manifolds]{Two common manifolds: the sphere $\mathbb{S}^2$ and torus $\mathbb{T}^2$.}
-\label{fig:common-manifolds}
-\end{figure}
 
 \parmarginnote{Nash Embedding}
 Riemannian manifolds are, by definition, topological spaces with additional structure.
@@ -3980,7 +3980,7 @@ We now illustrate a few possibilities.
 \input{figures/tex/ggp-std.tex}
 \caption{Standard deviation}
 \end{subfigure}
-\caption[Posterior Gaussian process: traffic data, global view]{Posterior means and standard deviations, in miles per hour, for the probabilistic graph interpolation task on the road network. Nodes with white circles indicate sensor locations where data is available. We observe that standard deviation generally increases as we move away from the parts of the state space where there is data. Standard deviation values above $10$ are shown clipped. }
+\caption[Posterior Gaussian process: traffic data, global view]{Posterior means and standard deviations, in miles per hour, for the probabilistic graph interpolation task on the road network. Nodes with white circles indicate sensor locations where data is available. We observe that standard deviation generally increases as we move away from the parts of the state space where there is data. Standard deviation values above $10$ are shown clipped.}
 \label{fig:graph-posterior}
 \end{figure}
 
@@ -4068,6 +4068,7 @@ The preceding sections suggest two possible approaches.
 
 Clearly, the latter approach is more elegant and more general, but it is also also more effortful and potentially less constructive.
 Since we are ultimately interested in working with Gaussian vector fields algorithmically, we adopt the former approach, but keep the latter view in mind to ensure soundness of our overall strategy.
+Recall that the vector direct sum is denoted by $\oplus$.
 We proceed as follows.
 
 \begin{definition}[Gaussian vector field]
