@@ -3971,7 +3971,10 @@ We now illustrate a few possibilities.
 
 \subsection{Illustrated examples}
 
-\begin{figure}
+To illustrate the graph Matérn Gaussian processes, we demonstrate their use in a setting which departs considerably from the Euclidean and Riemannian settings considered before.
+Our goal is to show how such models may enable applications that are very different from those in which Gaussian processes have been traditionally used.
+
+\begin{figure}[p!]
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/ggp-mean.tex}
 \caption{Mean}
@@ -3982,9 +3985,8 @@ We now illustrate a few possibilities.
 \end{subfigure}
 \caption[Posterior Gaussian process: traffic data, global view]{Posterior means and standard deviations, in miles per hour, for the probabilistic graph interpolation task on the road network. Nodes with white circles indicate sensor locations where data is available. We observe that standard deviation generally increases as we move away from the parts of the state space where there is data. Standard deviation values above $10$ are shown clipped.}
 \label{fig:graph-posterior}
-\end{figure}
-
-\begin{figure}
+\bigskip
+\bigskip
 \begin{subfigure}{0.49\textwidth}
 \input{figures/tex/ggp-mean-zoom.tex}
 \caption{Mean}
@@ -3996,9 +3998,6 @@ We now illustrate a few possibilities.
 \caption[Posterior Gaussian process: traffic data, local view]{View of a zoomed-in portion of the posterior means and standard deviations of the probabilistic graph interpolation task on the road network. Note the small-scale variation present within the error bars.}
 \label{fig:graph-posterior-zoom}
 \end{figure}
-
-To illustrate the graph Matérn Gaussian processes, we demonstrate their use in a setting which departs considerably from the Euclidean and Riemannian settings considered before.
-Our goal is to show how such models may enable applications that are very different from those in which Gaussian processes have been traditionally used.
 
 To do so, we consider probabilistic interpolation of traffic data along a road network consisting of highways in the city of San Jose, California, obtained from OpenStreetMap \cite{osm17}.
 In this graph, nodes are traffic sensors, and edges are roads between sensors, one for each side of the street.
