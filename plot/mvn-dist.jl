@@ -75,7 +75,6 @@ for (dist,name) in ((MvNormal(m, [1. 0.9; 0.9 1]),"mvn-pos"),(MvNormal(m, [1. -0
                 ),
             )
         ), 
-        raw"\tikzexternalenable",
         TikzPicture(
             Axis(
             {
@@ -117,7 +116,8 @@ for (dist,name) in ((MvNormal(m, [1. 0.9; 0.9 1]),"mvn-pos"),(MvNormal(m, [1. -0
                 Coordinates(radius .* density_to_ellipse(dist, 48)[:,1], radius .* density_to_ellipse(dist, 48)[:,2])
             ) for radius in [quantile(Normal(0,1),0.8),quantile(Normal(0,1),0.95),quantile(Normal(0,1),0.99)]]...,
         )
-    )] |> save_tex("$name.tex")
+    ), 
+    raw"\tikzexternalenable"] |> save_tex("$name.tex")
 end
 
 
