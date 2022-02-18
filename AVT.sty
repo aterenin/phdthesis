@@ -403,7 +403,7 @@
 }{}
 
 % section title format
-\RequirePackage[explicit,noindentafter]{titlesec}
+\RequirePackage[explicit,noindentafter,pagestyles]{titlesec}
 \titleformat{\part}[display]{\@AVTsemibold\scshape\Huge}{\list{}{\rightmargin-0.75in\leftmargin1in}\item[]\centering\thepart\endlist}{1em}{\list{}{\rightmargin-0.75in\leftmargin1in}\item[]\centering#1}[\endlist]
 \titleformat{\chapter}[display]{\@AVTsemibold\scshape\Huge}{Chapter \thechapter}{1em}{\raggedright#1}
 \@ifclassloaded{book}{
@@ -416,12 +416,11 @@
 \titlespacing{\subsection}{\z@}{*3.5}{*1}
 
 % heading style for book class
-\RequirePackage{titleps}
 \@ifclassloaded{book}{
 \renewpagestyle{headings}{
 \sethead
-[\thepage][\chaptertitle][\ifnum\c@chapter=0\else{Chapter \thechapter}\fi]
-{\ifnum\c@section=0\else{Section \thesection}\fi}{\sectiontitle}{\thepage}
+[\thepage][\chaptertitle][\ifthechapter{Chapter \thechapter}{}]
+{\ifthesection{Section \thesection}{}}{\sectiontitle}{\thepage}
 }
 \renewpagestyle{plain}{
 \sethead[\thepage][][]
@@ -429,7 +428,7 @@
 }
 \pagestyle{headings}
 \widenhead*{\z@}{\dimexpr\marginparwidth+\marginparsep\relax}
-\usepackage{emptypage}
+\RequirePackage{emptypage}
 \renewcommand{\emptypage@emptypage}{\hbox{}\thispagestyle{plain}\newpage\if@twocolumn\hbox{}\newpage\fi}
 }{
 \renewpagestyle{plain}{\setfoot{}{}{\rlap{\hspace*{\dimexpr\marginparwidth+\marginparsep\relax}\llap{\thepage}}}}
@@ -535,21 +534,20 @@
 % poster styles
 \ifAVT@poster
 
-\usepackage{lmodern}
-\usepackage{microtype}
-\usepackage{parskip}
+\RequirePackage{lmodern}
+\RequirePackage{parskip}
 
 \newlength\margin
 \setlength\margin{0.8cm}
 
-\usepackage[a3paper,landscape,margin=\margin]{geometry}
+\RequirePackage[a3paper,landscape,margin=\margin]{geometry}
 \pagestyle{empty}
 
-\usepackage[poster]{tcolorbox}
+\RequirePackage[poster]{tcolorbox}
 
 \definecolor{postercolor}{rgb}{0,0,0}
 
-\usepackage{setspace}
+\RequirePackage{setspace}
 
 \tcbposterset{no coverage}
 \tcbposterset{fontsize=12pt}
