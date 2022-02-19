@@ -180,7 +180,8 @@ This, in turn, makes it possible to potentially apply Gaussian processes to nove
 
 \section*{General}
 
-\begin{xltabular}{\textwidth}{p{1.625cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+\newif\ifnodotfill
+\begin{xltabular}{\textwidth}{@{} p{1.625cm} X<{\ifnodotfill\else\unskip\kern-1pc\leaders\hbox{\makebox[1pc][r]{\makebox[0pc]{.}}}\hfill\kern0pc\fi} @{} >{\raggedleft\arraybackslash}p{0.625cm} @{}}
 $(\Omega,\c{F},\P)$ & Probability space & \labelcpageref{ntn:prob} \\
 $\E(\.)$ & Expectation of a real-valued random variable & \labelcpageref{ntn:expectation-cov} \\
 $\Cov(\.,\.)$ & Covariance between two real-valued random variables & \labelcpageref{ntn:expectation-cov} \\
@@ -188,6 +189,7 @@ $y \~ \pi$ & Random variable $y$ with distribution $\pi$ & \labelcpageref{ntn:rv
 $\c{M}_1(X)$ & Space of probability measures over $X$ & \labelcpageref{ntn:space-of-measures} \\
 $D_{\f{KL}}(\.||\.)$ & Kullback--Leibler divergence of probability measures & \labelcpageref{ntn:kl-div} \\
 $W_{p,d}(\.,\.)$ & Wasserstein distance of $p$th order over distance $d$ & \labelcpageref{ntn:wass-dist} \\
+\global\nodotfilltrue
 $\N$ & Natural numbers, not including zero \\ 
 $\Z$ & Integers \\
 $\R$ & Real numbers \\ 
@@ -196,6 +198,7 @@ $\R^d$ & Euclidean space of dimension $d$ \\
 $\R^X$ & Space of functions from $X$ to $\R$ \\
 $\v{a}$ & Euclidean vector (bold italic letters) \\ 
 $\m{A}$ & Matrix (bold upface letters) \\
+\global\nodotfillfalse
 $\oplus$ & Direct sum of vector spaces & \labelcpageref{ntn:direct-sum} \\
 $V^*$ & Dual space of a topological vector space & \labelcpageref{ntn:dual-space} \\
 $\c{A}^*$ & Adjoint of a bounded linear operator & \labelcpageref{ntn:bounded-operators} \\
@@ -209,7 +212,7 @@ $L^p(X;\R)$ & Lebesgue space & \labelcpageref{ntn:leb-space} \\
 
 \section*{Bayesian learning}
 
-\begin{xltabular}{\textwidth}{p{1.625cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+\begin{xltabular}{\textwidth}{@{} p{1.625cm} X<{\unskip\kern-1pc\leaders\hbox{\makebox[1pc][r]{\makebox[0pc]{.}}}\hfill\kern0pc} @{} >{\raggedleft\arraybackslash}p{0.625cm} @{}}
 $(\Theta,\mathit\Theta)$ & Measurable space representing quantity of interest & \labelcpageref{ntn:meas} \\ 
 $(Y,\c{Y})$ & Measurable space representing the data & \labelcpageref{ntn:meas} \\
 $A_{(\.)}$ & Measurable set & \labelcpageref{ntn:meas} \\
@@ -223,7 +226,7 @@ $f_{(\.\given\.)}$ & Conditional probability density & \labelcpageref{ntn:densit
 
 \section*{Markov decision processes}
 
-\begin{xltabular}{\textwidth}{p{1.625cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+\begin{xltabular}{\textwidth}{@{} p{1.625cm} X<{\unskip\kern-1pc\leaders\hbox{\makebox[1pc][r]{\makebox[0pc]{.}}}\hfill\kern0pc} @{} >{\raggedleft\arraybackslash}p{0.625cm} @{}}
 $S$ & State space & \labelcpageref{ntn:mdp} \\ 
 $A$ & Action space & \labelcpageref{ntn:mdp} \\ 
 $r(\.\given\.,\.)$ & Reward kernel & \labelcpageref{ntn:mdp} \\ 
@@ -235,7 +238,7 @@ $R^{(\pi)}$ & Regret of policy $\pi$ & \labelcpageref{ntn:mdp-regret} \\
 
 \section*{Multi-armed bandits}
 
-\begin{xltabular}{\textwidth}{p{1.625cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+\begin{xltabular}{\textwidth}{@{} p{1.625cm} X<{\unskip\kern-1pc\leaders\hbox{\makebox[1pc][r]{\makebox[0pc]{.}}}\hfill\kern0pc} @{} >{\raggedleft\arraybackslash}p{0.625cm} @{}}
 $X$ & Space of arms & \labelcpageref{ntn:mab} \\
 $K$ & Number of arms & \labelcpageref{ntn:mab-number-arms} \\ 
 $T$ & Maximum time & \labelcpageref{ntn:mab-regret} \\
@@ -253,7 +256,7 @@ $c_t$ & Scaling constant for confidence bound width at time $t$ & \labelcpageref
 
 \section*{Gaussian processes}
 
-\begin{xltabular}{\textwidth}{p{1.625cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+\begin{xltabular}{\textwidth}{@{} p{1.625cm} X<{\unskip\kern-1pc\leaders\hbox{\makebox[1pc][r]{\makebox[0pc]{.}}}\hfill\kern0pc} @{} >{\raggedleft\arraybackslash}p{0.625cm} @{}}
 $\f{N}(\mu,\sigma^2)$ & Gaussian distribution with mean $\mu$ and variance $\sigma^2$ & \labelcpageref{ntn:norm-dist} \\
 $\f{N}(\v\mu,\m\Sigma)$ & Multivariate Gaussian with mean $\v\mu$ and covariance $\m\Sigma$ & \labelcpageref{ntn:mvn-dist} \\ 
 $k(x,x')$ & Positive semi-definite kernel & \labelcpageref{ntn:kernel} \\ 
@@ -280,7 +283,7 @@ $m$ & Number of inducing points in sparse approximation & \labelcpageref{ntn:gp-
 
 \section*{Manifolds and graphs}
 
-\begin{xltabular}{\textwidth}{p{1.625cm} X >{\raggedleft\arraybackslash}p{0.625cm}}
+\begin{xltabular}{\textwidth}{@{} p{1.625cm} X<{\unskip\kern-1pc\leaders\hbox{\makebox[1pc][r]{\makebox[0pc]{.}}}\hfill\kern0pc} @{} >{\raggedleft\arraybackslash}p{0.625cm} @{}}
 $X$ & Manifold & \labelcpageref{ntn:manifold} \\ 
 $TX$ & Tangent bundle & \labelcpageref{ntn:tangent-bdl} \\ 
 $T^*X$ & Cotangent bundle & \labelcpageref{ntn:cotangent-bdl} \\ 

@@ -119,7 +119,6 @@
 \DeclareMathOperator{\Var}{Var} % variance
 \DeclareMathOperator{\Cov}{Cov} % covariance
 \renewmathcommand{\ae}[1][]{\ifx-#1\mathpunct{\text{-a.e.}}\else\t{a.e.}\fi} % almost everywhere with dash
-\newcommand{\notindep}{\mathrel{\hspace*{0.3ex}\not\hspace*{-0.9ex}\rotatebox[origin=c]{90}{\ensuremath{\models}}}} % not independent
 \newcommand{\indep}{\mathrel{\rotatebox[origin=c]{90}{\ensuremath{\models}}}} % independent
 \newcommand{\given}{\mid} % conditional probability
 \newcommand{\from}{\mid\mid} % double bars in divergences
@@ -431,7 +430,7 @@
 \RequirePackage{emptypage}
 \renewcommand{\emptypage@emptypage}{\hbox{}\thispagestyle{plain}\newpage\if@twocolumn\hbox{}\newpage\fi}
 }{
-\renewpagestyle{plain}{\setfoot{}{}{\rlap{\hspace*{\dimexpr\marginparwidth+\marginparsep\relax}\llap{\thepage}}}}
+\renewpagestyle{plain}{\setfoot{}{}{\rlap{\hspace{\dimexpr\marginparwidth+\marginparsep\relax}\llap{\thepage}}}}
 \pagestyle{plain}
 }
 
