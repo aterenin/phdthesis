@@ -284,6 +284,7 @@
       \printlist[pageref][-\value{listtotal}]{pageref}}}}
 
 % print postnotes outside brackets
+\ifAVT@citations@authoryear\else
 \renewbibmacro*{postnote}{%
   \ifbool{cbx:parens}
     {\bibclosebracket\global\boolfalse{cbx:parens}}
@@ -291,6 +292,7 @@
   \iffieldundef{postnote}
     {}
     {\setunit{\printdelim{postnotedelim}}\printfield{postnote}}}
+\fi 
 
 % change authoryear format
 \ifAVT@citations@authoryear
