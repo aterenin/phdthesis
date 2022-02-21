@@ -82,6 +82,14 @@ NeurIPS 2021<br>
 *Equal contribution
 
 
+# Citation
+
+    @phdthesis{terenin22,
+        author = {Alexander Terenin},
+        school = {Imperial College London},
+        title = {Gaussian Processes and Statistical Decision-making in Non-Euclidean Spaces},
+        year = {2022}}
+
 <table>
 <tr>
 <td>
