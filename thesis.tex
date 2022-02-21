@@ -95,7 +95,7 @@ You believed in me in the darkest moments of my academic career, and anything th
 Secondly, I am also profoundly grateful to David Draper for believing in me, and taking me as a student when nobody was willing to talk to me or take my ideas seriously.
 It is thanks to you that I have a master's degree, and though I was not able to finish a doctorate at the time under your guidance, I hope this thesis shows that you did the right thing in supporting me, even when it became clear I had no academic future at the place I was at, and later in helping me return to scientific work.
 
-Thirdly, I am grateful to Eric Xing  for hiring me when my career was otherwise in the midst of full blown chaos.
+Thirdly, I am grateful to Eric Xing  for hiring me when my career was otherwise in the midst of full-blown chaos.
 The time I spent at Petuum convinced me that the machine learning community was the right intellectual home for me, and prompted me to look beyond the narrow scope of ideas I had previously been around.
 Though I was not truly ready to be an independent researcher at that time, and therefore accomplished little, I am grateful for the opportunity and all that I learned from it.
 
@@ -168,7 +168,7 @@ We derive fully constructive expressions for the covariance kernels of scalar-va
 Building on these ideas, we describe a formalism for defining vector-valued Gaussian processes on Riemannian manifolds. 
 The introduced techniques allow all of these models to be trained using standard computational methods.
 
-In total, these contributions make Gaussian processes easier to work with and allows them to be used within a wider class of domains in an effective and principled manner.
+In total, these contributions make Gaussian processes easier to work with and allow them to be used within a wider class of domains in an effective and principled manner.
 This, in turn, makes it possible to potentially apply Gaussian processes to novel decision-making settings.
 
 \tableofcontents
@@ -187,7 +187,7 @@ $\E(\.)$ & Expectation of a real-valued random variable & \labelcpageref{ntn:exp
 $\Cov(\.,\.)$ & Covariance between two real-valued random variables & \labelcpageref{ntn:expectation-cov} \\
 $y \~ \pi$ & Random variable $y$ with distribution $\pi$ & \labelcpageref{ntn:rv} \\
 $\c{M}_1(X)$ & Space of probability measures over $X$ & \labelcpageref{ntn:space-of-measures} \\
-$D_{\f{KL}}(\.||\.)$ & Kullback--Leibler divergence of probability measures & \labelcpageref{ntn:kl-div} \\
+$D_{\f{KL}}(\.||\.)$ & Kullback--Leibler divergence between probability measures & \labelcpageref{ntn:kl-div} \\
 $W_{p,d}(\.,\.)$ & Wasserstein distance of $p$th order over distance $d$ & \labelcpageref{ntn:wass-dist} \\
 \global\nodotfilltrue
 $\N$ & Natural numbers, not including zero \\ 
@@ -300,7 +300,7 @@ $\m\lap$ & Graph Laplacian & \labelcpageref{ntn:graph-laplacian} \\
 $\bc{W}$ & Standard Gaussian & \labelcpageref{ntn:graph-white-noise} \\
 $\Phi(\m\lap)$ & Matrix defined via functional calculus & \labelcpageref{ntn:matrix-functional-calculus} \\ 
 $F$ & Frame over $X$ & \labelcpageref{ntn:frame} \\ 
-$\m{P}_F(\.)$ & Projection map induced by frame & \labelcpageref{ntn:frame-projection} \\ 
+$\m{P}_F(\.)$ & Projection map induced by $F$ & \labelcpageref{ntn:frame-projection} \\ 
 \end{xltabular}
 
 
@@ -321,14 +321,14 @@ This gives rise to a conditional probability distribution describing what was le
 
 Bayesian learning fits naturally within a theory of \emph{decision}, which describes how an abstract decision system should select actions in pursuit of a goal.
 This is done by learning how different actions affect pursuit of the goal, and selecting optimal actions consistent with what was learned.
-By virtue of being probabilistic, such decisions systems assess and propagate uncertainty, enabling them to balance what is already known with what could be learned by taking actions---a concept known as the \emph{explore-exploit tradeoff}.
+By virtue of being probabilistic, such decision systems assess and propagate uncertainty, enabling them to balance what is already known with what could be learned by taking actions---a concept known as the \emph{explore-exploit tradeoff}.
 
 The performance of a decision system can be evaluated by examining how quickly its decisions improve and become optimal.
 A decision system's \emph{regret} is the reduction in its quality of decisions by virtue of not knowing the quantity of interest in advance.
 In most non-trivial settings, one can show that some regret is inevitable: a decision-making system must make some degree of mistakes in order to learn.
 A decision system is considered \emph{optimal} if its regret is within a constant factor of the best possible regret.
 
-Decisions systems with optimal or close-to-optimal regret require less data in order to solve their respective tasks, and are called \emph{data-efficient}.
+Decision systems with optimal or close-to-optimal regret require less data in order to solve their respective tasks, and are called \emph{data-efficient}.
 Data-efficiency is a key concern in practical settings, where data-collection takes time and can be expensive.
 By virtue of resolving explore-exploit tradeoffs in a manner amenable to regret analysis, the Bayesian formalism gives broad tools for constructing data-efficient decision systems.
 
@@ -1370,7 +1370,7 @@ The simplest possible settings one can study arise when $V$ is smallest.
 This random variable is not very interesting, so we do not consider it further.
 \2 Choosing $V = \R$ to coincide with the underlying scalar field yields the setting of \emph{Gaussian random variables}.
 This is the next-simplest setting and the first one we explore in detail.
-\3 Choosing $V = \R^d$ yields the setting of \emph{Gaussian random vectors}, whose components are multivariate Gaussian---or, equivalently, whose \emph{dot products} are scalar-valued Gaussian.
+\3 Choosing $V = \R^d$ yields the setting of \emph{Gaussian random vectors}, whose components are multivariate Gaussian---or, equivalently, whose \emph{dot products} are all scalar-valued Gaussian.
 \4 Choosing $V$ to be a space of functions $f : X \-> \R$ yields the setting of Gaussian processes, whose finite-dimensional marginals are multivariate Gaussian.
 This setting is well-studied when $X$ is itself a Euclidean space: in \Cref{ch:noneuclidean}, we will examine cases where $X$ instead possesses various kinds of geometric structure.
 \5 Finally, choosing $V$ to be a possibly infinite-dimensional topological vector space yields the most general setting we examine.
@@ -1402,7 +1402,7 @@ Similarly, many, but not all, useful notions of convergence come from norms or i
 Every vector space admits a \emph{Hamel basis}, which allows arbitrary vectors to be decomposed into linear combinations of linearly independent vectors in the basis.
 Bases are generally highly non-unique.
 The \emphmarginnote{dimension} of a vector space is the cardinality of such a basis, which does not depend on which basis is chosen.
-Hamel bases of infinite-dimensional vector spaces are usually poorly-behaved, and alternative notions, such as that of \emph{Schauder basis} of a Banach space, are often used instead.
+Hamel bases of infinite-dimensional vector spaces are usually poorly-behaved, and alternative notions, such as that of a \emph{Schauder basis} of a Banach space, are often used instead.
 
 \label{ntn:direct-sum}
 Given two vector spaces $V$ and $W$, we can form the \emphmarginnote{direct sum} vector space $V \oplus W$ by taking the Cartesian product of both spaces, and defining vector operations for $V \oplus W$ componentwise using the vector operations on $V$ and $W$.
@@ -1613,7 +1613,7 @@ Subtle difference such as the ones considered become increasingly important in t
 Therefore, we introduce an alternative definition to help build intuition for later.
 
 \begin{definition}[Multivariate Gaussian (duality)]
-A random variable $\v{y} : \Omega \-> \R^d$ is called \emph{multivariate Gaussian} in the sense of duality if, for any vector $\v\phi \in \R^d$, the Euclidean dot product 
+A random variable $\v{y} : \Omega \-> \R^d$ is called \emph{multivariate Gaussian} if, for any vector $\v\phi \in \R^d$, the Euclidean dot product 
 \[
 \v\phi\.\v{y} : \Omega \-> \R 
 \]
@@ -1685,7 +1685,7 @@ We visualize such processes in \Cref{fig:gp-smoothness}.
 
 The same results also allow us to reinterpret Gaussian processes as \emph{function-valued random variables}, which, in many ways, are a more natural point of view to take.
 Define $\R^X = \{f : X \-> \R\}$ and equip it with the cylindrical $\sigma$-algebra, namely the smallest $\sigma$-algebra containing all sets of the form $\{f \in \R^X : f(x_1),..,f(x_n) \in A\}$, where $A$ is a measurable set on $\R^n$, for all $n$, to make it into a measurable space. 
-Let $V \subseteq \R^X$, and let $\c{V}$ be the subset $\sigma$-algebra.
+Let $V \subseteq \R^X$, and equip it with the subset $\sigma$-algebra.
 We can then reinterpret Gaussian processes as follows.
 
 \begin{definition}[Gaussian process (random function)]
@@ -2634,8 +2634,8 @@ Suppose our Gaussian process $f$ satisfies the equation
 \[
 \c{L}f = \c{W} 
 \]
-where $\c{L} : H \-> L^2(X;\R)$ is a bounded linear operator acting on a certain reproducing kernel Hilbert space which uniquely determines the Gaussian process, and $\c{W}$ is a white noise process over $L^2(X;\R)$.
-Slightly more precisely, this equation is meant in the sense of either an almost sure or a distributional equality
+where $\c{L} : H \-> L^2(X;\R)$ is a bounded linear operator acting on a certain reproducing kernel Hilbert space which uniquely determines the Gaussian process, and $\c{W}$ is a white noise process over $L^2(X;\R)$---a random distribution whose properties are determined by the Lebesgue space.
+Slightly more precisely, the equation is meant as either an almost sure or a distributional equality
 \[
 f(\omega,\c{L}^* h) = \c{W}(\omega, h)
 \]
@@ -3116,7 +3116,7 @@ For stationary kernels, random Fourier feature methods are particularly attracti
 We hope these developments prompt further study of other possible choices for approximate priors.
 
 Pathwise approximations are also of interest as a potential organizing principle for designing Gaussian process software packages.
-In particular, one can consider implementing a Gaussian processes with separate methods for evaluating the process and re-sampling its random weights.
+In particular, one can consider implementing a Gaussian process with separate methods for evaluating the process and re-sampling its random weights.
 Depending on the situation, this might be a more convenient application programming interface than working with distributions at user-specified locations.
 Exploring these alternatives is a promising avenue for further work.
 
@@ -3429,7 +3429,7 @@ Rather than building such processes by defining kernels, loosely speaking, we co
 This yields positive semi-definite kernels implicitly defined as covariances of said processes.
 
 We begin by discussing key notions of abstract Gaussian processes defined on general vector spaces.
-Specifically, we work with Gaussian processes in the sense of duality whose space of test functionals is given by a Hilbert space.
+Specifically, we work with Gaussian processes in the sense of duality whose test functionals are determined by a Hilbert space.
 
 \begin{definition}[Generalized Gaussian~field]
 A \emph{centered generalized Gaussian field} $f$ over a Hilbert space $H$ is a stochastic process $f : \Omega \x H \-> \R$ satisfying two key properties.
@@ -3446,7 +3446,7 @@ We take the right-hand-sides of our stochastic partial differential equations to
 Before continuing, we prove that if $H$ is a reproducing kernel Hilbert space, then generalized Gaussian fields can be reinterpreted as Gaussian processes in the classical sense.
 
 \begin{proposition}
-Let $f : \Omega \x H \-> \R$ be a centered generalized Gaussian field defined over a reproducing kernel Hilbert space $H$ with identity covariance operator.
+Let $f : \Omega \x H \-> \R$ be a centered generalized Gaussian field defined over a reproducing kernel Hilbert space $H$ with identity covariance operator $\id : H \-> H$.
 Then letting $\f{ev}_x \in H^*$ be a pointwise evaluation functional and $\Psi : H \-> H^*$ be the bijective linear isometry given by the Riesz Representation Theorem, the stochastic process $f : \Omega \x X \-> \R$ defined by $f(\omega, x) = f(\omega,\Psi^{-1} \f{ev}_x)$ is a Gaussian process whose covariance is given by the reproducing kernel of $H$.
 \end{proposition}
 
@@ -3556,7 +3556,7 @@ To start, we define the right-hand-side of our equations.
 
 \label{ntn:riemannian-white-noise}
 \begin{definition}[Riemannian white noise]
-Define the \emph{white noise process} $\c{W}_g : \Omega \x L^2(X) \-> \R$ to be a centered generalized Gaussian field with covariance operator $\id : L^2(X) \-> L^2(X)$, where we recall that the inner product on $L^2(X)$ is defined by integration against the Riemannian volume measure.
+Define the \emph{white noise process} $\c{W}_g : \Omega \x L^2(X) \-> \R$ to be a centered generalized Gaussian field with identity covariance operator $\id : L^2(X) \-> L^2(X)$, where we recall that the inner product on $L^2(X)$ is defined by integration against the Riemannian volume measure.
 By applying Kolmogorov's Extension Theorem to a family of finite-dimensional marginals indexed by $L^2(X)$, we conclude such a process exists and is well-defined.
 \end{definition}
 
@@ -3777,7 +3777,7 @@ We now proceed to develop one such analog.
 
 \section{Graph Matérn Gaussian processes}
 
-A general maxim of geometry is that anything one can do with a manifold, one can do with a graph, given a bit of thinking---but, the details and behavior might be slightly different.
+A general maxim of geometry is that anything one can do with a manifold, one can do with a graph, given some thinking---but, the details and behavior might be a bit different.
 In the preceding section, we built Gaussian processes using spectral properties of the Riemannian Laplace--Beltrami operator.
 We now ask: can we repeat these constructions on graphs, obtaining Gaussian processes that can be used in very different settings?
 
@@ -3914,7 +3914,8 @@ In particular, each node's variance is not simply a function of its degree, and 
 This can be seen in \Cref{fig:graph-variance}.
 Similar phenomena occur in random walk kernels studied by \textcite{urry13}---in that setting, variance is determined by the return time of a certain random walk defined on the graph.
 
-It's also possible to use the \emphmarginnote{Symmetric normalized graph Laplacian}, which is defined as $\m{D}^{-1/2}\m\lap\m{D}^{-1/2}$, to define analogous kernels to the ones above, by using this matrix in place of the graph Laplacian.
+\parmarginnote{Symmetric normalized graph Laplacian}
+It's also possible to use the \emph{symmetric normalized graph Laplacian}, which is defined as $\m{D}^{-1/2}\m\lap\m{D}^{-1/2}$, to define analogous kernels to the ones above, by using this matrix in place of the graph Laplacian.
 This yields the \emph{symmetric normalized graph Matérn} and \emph{symmetric normalized graph squared exponential} Gaussian processes.
 These can be preferable in domains where symmetric normalized Laplacians are customarily used.
 
@@ -3956,7 +3957,7 @@ This provides another view of the connection between the graph squared exponenti
 \node at (6,0) {\includegraphics[scale=0.25]{figures/png/ico3_ker.png}};
 \node at (9,0) {\includegraphics[scale=0.25]{figures/png/s2_lim.png}};
 \end{tikzpicture}
-\caption[Manifold limits of graph Matérn kernels]{Illustration of a sequence of graph Matérn-1/2 kernels, each defined on an icosahedral graph. For every icosahedron, such a graph is defined by letting each face corresponds to a node on the graph, and neighboring faces correspond to edges on the graph. The limiting kernel for this sequence of graphs is a Riemannian Matérn-1/2 kernel on the sphere.}
+\caption[Limits of graph Matérn kernels]{Illustration of a sequence of graph Matérn-1/2 kernels, each defined on an icosahedral graph. For every icosahedron, such a graph is defined by letting each face corresponds to a node on the graph, and neighboring faces correspond to edges on the graph. The limiting kernel for this sequence of graphs is a Riemannian Matérn-1/2 kernel on the sphere.}
 \label{fig:graph-limit}
 \end{figure}
 
@@ -4043,7 +4044,7 @@ There does not exist a nowhere-vanishing continuous section on any even-dimensio
 \textcite[Theorem 13.32]{lee10}.
 \end{proof}
 
-This result is also called the \emph{hairy ball} theorem due to its interpretation: namely, it tell us in particular that if consider a two-dimensional sphere with hair on its surface, then it is not possible to comb the hair without creating a swirl or other location where the direction of the hair changes abruptly.
+This result is also called the \emph{hairy ball} theorem due to its interpretation: namely, it tell us in particular that if we consider a two-dimensional sphere with hair on its surface, then it is not possible to comb the hair without creating a swirl or other location where the direction of the hair changes abruptly.
 An illustrated set of vector fields, described further in what follows, can be seen in \Cref{fig:gvf}.
 
 This result restricts the kind of technical tools available for studying vector fields on manifolds.
@@ -4100,7 +4101,7 @@ By definition of vector pushforward maps, $i_*$ maps tangent vectors from $T_{x_
 Since Gaussianity is preserved by linearity, every set of finite-dimensional marginals in the embedded process is Gaussian, and the claim follows.
 \end{proof}
 
-This confirms that out definition of a vector-valued Gaussian process is the right one: if we embed the manifold in a Euclidean space, we obtain the correct kind of stochastic process.
+This confirms that our definition of a vector-valued Gaussian process is the right one: if we embed the manifold in a Euclidean space, we obtain the correct kind of stochastic process.
 \Cref{fig:gvf} illustrates a set of random samples from a Gaussian vector field, constructed using the technique presented in the sequel.
 
 As before, the mean of such a process will simply be a given vector field.
@@ -4158,8 +4159,7 @@ For each finite $B \subseteq A$, let $\mu_B$ be an inner regular probability mea
 \[
 \del{\proj_C}_* \mu_B = \mu_C
 \]
-whenever $C \subseteq B \subseteq A$ are two nested finite subsets of $A$. 
-Here, projections $\proj_C: X_B \-> X_C$ are defined by $\proj_C(\cbr{x_\alpha}_{\alpha \in B}) = \cbr{x_\alpha}_{\alpha \in C}$, and $\del{\proj_C}_*$ denotes the measure-theoretic pushforward by $\proj_{C}$.
+whenever $C \subseteq B \subseteq A$ are two nested finite subsets of $A$, where projections $\proj_C: X_B \-> X_C$ are defined by $\proj_C(\cbr{x_\alpha}_{\alpha \in B}) = \cbr{x_\alpha}_{\alpha \in C}$, and $\del{\proj_C}_*$ denotes the measure-theoretic pushforward by $\proj_{C}$.
 Then there exists a unique probability measure $\mu_A$ on $\c{B}_A$ with the property that $\del{\proj_B}_* \mu_A = \mu_B$ for all finite $B \subseteq A$.
 \end{result}
 
@@ -4376,7 +4376,7 @@ While this is not ideal from a modeling perspective, it is at least a relatively
 Effects such as these are closely linked to non-linear behavior in the differential equations governing weather phenomena, and generally require special consideration.
 
 On the other hand, we observe that the trained Gaussian process model is smooth, even though the choice of frame is non-smooth at the top of the sphere---a key motivation behind developing the theory for working with vector fields in a geometrically-sound way in the first place.
-Similarly, we see that, posterior uncertainty increases as we move away from locations where training data is available.
+Similarly, we see that posterior uncertainty increases as we move away from locations where training data is available.
 This shows that the model correctly incorporates geometry and behaves in a manner mirroring its scalar-valued analogs.
 
 One notable characteristic of the obtained posterior vector field is that the covariance of the output vectors at any given point is close to isotropic.
