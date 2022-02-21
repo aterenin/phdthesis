@@ -18,7 +18,7 @@ This repository contains the LaTeX source for the PhD thesis written by [Alexand
 It also includes the scripts and data used for generating the figures in the thesis, which are created with a combination of [TikZ](https://ctan.org/pkg/pgf) and [PGFPlots](http://pgfplots.sourceforge.net) via the [PGFPlotsX.jl](https://kristofferc.github.io/PGFPlotsX.jl/stable/) [Julia](https://julialang.org) interface, as well as [Blender](https://www.blender.org).
 Code for running the experiments presented in the thesis can be found in each respective publication's repository, linked below.
 
-<a href="https://github.com/aterenin/phdthesis/releases/download/submission/aterenin-phdthesis.pdf"><img alt="Download PDF" height="24" src="https://img.shields.io/github/downloads/aterenin/phdthesis/total?label=Download%20PDF"></a>
+<a href="https://github.com/aterenin/phdthesis/releases/download/corrected/Terenin-A-2022-PhD-Thesis.pdf"><img alt="Download PDF" height="24" src="https://img.shields.io/github/downloads/aterenin/phdthesis/total?label=Download%20PDF"></a>
 
 # Publications in this thesis
 
