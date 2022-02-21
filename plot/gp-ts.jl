@@ -100,14 +100,14 @@ for t in 1:4
             },
             Coordinates(x, F[t][:,1])
         ),
-        Plot(
+        t > 1 ? Plot(
             { 
                 only_marks,
                 thick,
                 fill=weighted_color_mean(0.875,colorant"#ffffff",colorant"#1f77b4"),
             },
             Coordinates(z[1:t-1], u[1:t-1])
-        ),
+        ) : [""],
         VLine(
             { 
                 dashed,
